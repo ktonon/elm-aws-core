@@ -1,6 +1,8 @@
 AWS SDK for elm
 ===============
 
+[![npm version](https://badge.fury.io/js/aws-sdk-elm.svg)](https://badge.fury.io/js/aws-sdk-elm)
+
 __Experimental: Work in progress__
 
 This will be generated.

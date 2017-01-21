@@ -1,6 +1,6 @@
 {
   "name": "aws-sdk-elm",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "WIP -- AWS SDK for elm",
   "main": "index.js",
   "scripts": {
