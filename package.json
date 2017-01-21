@@ -1,0 +1,27 @@
+{
+  "name": "aws-sdk-elm",
+  "version": "1.0.0",
+  "description": "WIP -- AWS SDK for elm",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ktonon/aws-sdk-elm.git"
+  },
+  "keywords": [
+    "aws",
+    "sdk",
+    "elm"
+  ],
+  "author": "Kevin Tonon <kevin@betweenconcepts.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ktonon/aws-sdk-elm/issues"
+  },
+  "homepage": "https://github.com/ktonon/aws-sdk-elm#readme",
+  "dependencies": {
+    "aws-sdk": "^2.7.27"
+  }
+}
