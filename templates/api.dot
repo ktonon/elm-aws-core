@@ -1,8 +1,14 @@
-module AWS.{{= it.moduleName }} exposing (..)
+module AWS.{{= it.mod }} exposing (..)
 
-{-| {{= it.metadata.serviceFullName }} {{= it.apiVersion }}
+{-| {{= it.serviceFullName }} ({{= it.apiVersion }})
+
+[JS Docs]({{= it.link }})
 
 @docs apiVersion
+
+## Operations
+
+@docs {{= it.opNames.join(',') }}
 -}
 
 
@@ -12,4 +18,13 @@ Format `YYYY-MM-DD`
 -}
 apiVersion : String
 apiVersion =
-    "{{= it.metadata.apiVersion }}"
+    "{{= it.apiVersion }}"
+
+{{~ it.ops :op }}
+{-| [JS Docs]({{= op.link }})
+-}
+{{= op.name }} : String
+{{= op.name }} =
+    "{{= op.name }}"
+
+{{~}}
