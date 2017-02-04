@@ -1,7 +1,8 @@
 AWS SDK for elm
 ===============
 
-[![npm version](https://badge.fury.io/js/aws-sdk-elm.svg)](https://badge.fury.io/js/aws-sdk-elm)
+[![npm](https://img.shields.io/npm/v/aws-sdk-elm.svg)](https://www.npmjs.com/package/aws-sdk-elm)
+[![CircleCI](https://img.shields.io/circleci/project/github/ktonon/aws-sdk-elm.svg)](https://circleci.com/gh/ktonon/aws-sdk-elm)
 
 __Experimental: Work in progress__
 
