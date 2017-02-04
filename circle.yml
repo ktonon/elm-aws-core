@@ -1,0 +1,12 @@
+machine:
+  node:
+    version: 6.2.2
+
+dependencies:
+  cache_directories:
+    - ~/sysconfcpus
+    - node_modules
+    - elm-stuff
+  override:
+    - npm install
+    - ./scripts/ci-elm-hack.sh
