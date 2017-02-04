@@ -15,9 +15,10 @@ const jsonSources = fs.readdirSync(serviceRoot)
 
 jsonSources.forEach((filename) => {
   const path = `${serviceRoot}/${filename}`;
+  console.log(`${filename}...`);
   if (fs.existsSync(path)) {
     try {
-      const desc = JSON.parse(fs.readFileSync(path));
+      const desc = JSON.parse(fs.readFileSync(path, 'utf8'));
       processService(desc);
     } catch (err) {
       console.error(`error processing ${filename}: ${err}`);
