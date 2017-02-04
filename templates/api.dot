@@ -1,6 +1,15 @@
 module AWS.{{= it.moduleName }} exposing (..)
 
+{-| {{= it.metadata.serviceFullName }} {{= it.apiVersion }}
 
-version : String
-version =
-    "{{= it.version }}"
+@docs apiVersion
+-}
+
+
+{-| Publish date of this version of the API
+
+Format `YYYY-MM-DD`
+-}
+apiVersion : String
+apiVersion =
+    "{{= it.metadata.apiVersion }}"

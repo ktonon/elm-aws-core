@@ -1,3 +1,5 @@
 /elm-stuff
 /node_modules
-/src/AWS
+/src/AWS/
+/elm-package.json
+/docs.json
