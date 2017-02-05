@@ -7,9 +7,18 @@ __Operations__
 {{~ it.operationNames :name }}* [{{= name }}](#{{= name }})
 {{~}}
 
+__Types__
+
+{{~ it.shapeNames :name }}* [{{= name }}](#{{= name }})
+{{~}}
+
 ## Operations
 
 @docs {{= it.operationNames.join(',') }}
+
+## Types
+
+@docs {{= it.shapeNames.join(',') }}
 -}
 
 -- OPERATIONS
@@ -20,4 +29,12 @@ __Operations__
 {{= op.funcName }} : String
 {{= op.funcName }} =
     "{{= op.funcName }}"
+{{~}}
+
+-- TYPES
+{{~ it.shapes :sh }}
+
+{-| {{= sh.documentation }}
+-}
+type alias {{= sh.shapeName }} = String
 {{~}}

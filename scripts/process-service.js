@@ -9,7 +9,21 @@ const lowCam = (x) => {
   return y[0].toLowerCase() + y.slice(1);
 };
 
+const upCam = (x) => {
+  const y = camelize(x);
+  return y[0].toUpperCase() + y.slice(1);
+};
+
 const outRoot = sysPath.resolve(`${__dirname}/../src/AWS`);
+
+const toBuiltIn = (sh) => {
+  switch (sh.type) {
+    case 'boolean': return 'Bool';
+    case 'list': return 'List';
+    case 'string': return 'String';
+    default: return null;
+  }
+};
 
 module.exports = (data) => {
   const mod = moduleName(data.metadata);
@@ -19,10 +33,22 @@ module.exports = (data) => {
       funcName: lowCam(key),
     }, op);
   });
+
+  const shapes = Object.keys(data.shapes)
+    .map((key) => {
+      const sh = data.shapes[key];
+      return Object.assign({
+        shapeName: upCam(key),
+      }, sh);
+    })
+    .filter(sh => !toBuiltIn(sh));
+
   const context = {
     mod,
     operationNames: operations.map(op => op.funcName),
     operations,
+    shapeNames: shapes.map(sh => sh.shapeName),
+    shapes,
     metadata: data.metadata,
     documentation: data.documentation,
   };
