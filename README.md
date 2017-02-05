@@ -27,7 +27,10 @@ Not sure about the feasibility of the following, but these are my goals:
 * [ ] generate AWS shapes as elm unions and records
   * [x] type name
   * [x] type documentation
-  * [ ] type signature
+  * [ ] record type signature
+  * [x] union type signature
+  * [ ] better handling of nested union types
+  * [ ] better handling of non-string union types
 * [ ] not sure yet what else is involved...
   * [ ] share common shapes as types between modules?
   * [ ] integration tests?

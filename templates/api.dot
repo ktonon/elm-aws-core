@@ -2,23 +2,34 @@ module AWS.{{= it.mod }} exposing (..)
 
 {-| {{= it.documentation }}
 
-__Operations__
+## Table of Contents
+
+* [Operations](#operations){{? it.unionNames.length }}
+* [Union Types](#union-types){{?}}{{? it.recordNames.length }}
+* [Record Types](#record-types){{?}}
+
+## Operations
 
 {{~ it.operationNames :name }}* [{{= name }}](#{{= name }})
 {{~}}
 
-__Types__
-
-{{~ it.shapeNames :name }}* [{{= name }}](#{{= name }})
-{{~}}
-
-## Operations
-
 @docs {{= it.operationNames.join(',') }}
 
-## Types
+{{? it.unionNames.length }}## Union Types
 
-@docs {{= it.shapeNames.join(',') }}
+{{~ it.unionNames :name }}* [{{= name }}](#{{= name }})
+{{~}}
+
+@docs {{= it.unionNames.join(',') }}
+{{?}}
+
+{{? it.recordNames.length }}## Record Types
+
+{{~ it.recordNames :name }}* [{{= name }}](#{{= name }})
+{{~}}
+
+@docs {{= it.recordNames.join(',') }}
+{{?}}
 -}
 
 -- OPERATIONS
@@ -31,10 +42,19 @@ __Types__
     "{{= op.funcName }}"
 {{~}}
 
--- TYPES
-{{~ it.shapes :sh }}
+-- RECORDS
+{{~ it.records :t }}
 
-{-| {{= sh.documentation }}
+{-| {{= t.documentation }}
 -}
-type alias {{= sh.shapeName }} = String
+type alias {{= t.shapeName }} = String
+{{~}}
+
+-- UNIONS
+{{~ it.unions :t }}
+
+{-| {{= t.documentation }}
+-}
+type {{= t.shapeName }}
+    = {{= t.enum.join('\n    | ') }}
 {{~}}
