@@ -1,30 +1,23 @@
 module AWS.{{= it.mod }} exposing (..)
 
-{-| {{= it.serviceFullName }} ({{= it.apiVersion }})
+{-| {{= it.documentation }}
 
-[JS Docs]({{= it.link }})
+__Operations__
 
-@docs apiVersion
+{{~ it.operationNames :name }}* [{{= name }}](#{{= name }})
+{{~}}
 
 ## Operations
 
-@docs {{= it.opNames.join(',') }}
+@docs {{= it.operationNames.join(',') }}
 -}
 
+-- OPERATIONS
+{{~ it.operations :op }}
 
-{-| Publish date of this version of the API
-
-Format `YYYY-MM-DD`
+{-| {{= op.documentation }}
 -}
-apiVersion : String
-apiVersion =
-    "{{= it.apiVersion }}"
-
-{{~ it.ops :op }}
-{-| [JS Docs]({{= op.link }})
--}
-{{= op.name }} : String
-{{= op.name }} =
-    "{{= op.name }}"
-
+{{= op.funcName }} : String
+{{= op.funcName }} =
+    "{{= op.funcName }}"
 {{~}}

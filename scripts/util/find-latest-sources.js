@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const filenamePattern = /^(.*?)-(\d{4}-\d{2}-\d{2})\.min\.json$/;
+const filenamePattern = /^(.*?)-(\d{4}-\d{2}-\d{2})\.normal\.json$/;
 
 module.exports = (serviceRoot) => {
   const sources = {};

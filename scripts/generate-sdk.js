@@ -4,7 +4,7 @@ const dots = require('./util/dots');
 const findLatestSources = require('./util/find-latest-sources');
 const processService = require('./process-service');
 
-const serviceRoot = sysPath.resolve(`${__dirname}/../node_modules/aws-sdk/apis`);
+const serviceRoot = sysPath.resolve(`${__dirname}/../apis`);
 if (!fs.existsSync(serviceRoot)) {
   console.log('Run `npm install` before running this script');
   process.exit(1);

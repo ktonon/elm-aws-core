@@ -10,24 +10,21 @@ const lowCam = (x) => {
 };
 
 const outRoot = sysPath.resolve(`${__dirname}/../src/AWS`);
-const docsRoot = 'http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS';
 
 module.exports = (data) => {
   const mod = moduleName(data.metadata);
-  const opNames = Object.keys(data.operations).map(lowCam);
+  const operations = Object.keys(data.operations).map((key) => {
+    const op = data.operations[key];
+    return Object.assign({
+      funcName: lowCam(key),
+    }, op);
+  });
   const context = {
-    apiVersion: data.metadata.apiVersion,
-    link: `${docsRoot}/${mod}.html`,
     mod,
-    opNames,
-    ops: Object.keys(data.operations).map((key) => {
-      const name = lowCam(key);
-      return {
-        name,
-        link: `${docsRoot}/${mod}.html#${name}-property`,
-      };
-    }),
-    serviceFullName: data.metadata.serviceFullName,
+    operationNames: operations.map(op => op.funcName),
+    operations,
+    metadata: data.metadata,
+    documentation: data.documentation,
   };
   fs.writeFileSync(
     `${outRoot}/${mod}.elm`,
