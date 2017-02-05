@@ -25,8 +25,8 @@ Not sure about the feasibility of the following, but these are my goals:
   * [ ] function signature
   * [ ] function implementation
 * [ ] generate AWS shapes as elm unions and records
-  * [ ] type name
-  * [ ] type documentation
+  * [x] type name
+  * [x] type documentation
   * [ ] type signature
 * [ ] not sure yet what else is involved...
   * [ ] share common shapes as types between modules?
