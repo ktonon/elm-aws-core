@@ -1,60 +1,56 @@
-module AWS.{{= it.mod }} exposing (..)
+module AWS.{{= it.mod }}
+    exposing
+        ( {{= it.operations.map(op => op.name).join('\n        , ')}}
+        , {{= it.types.filter(t => t.shouldDefine).map(t => t.name).join('\n        , ')}}
+        )
 
 {-| {{= it.documentation }}
 
 ## Table of Contents
 
-* [Operations](#operations){{? it.unionNames.length }}
-* [Union Types](#union-types){{?}}{{? it.recordNames.length }}
-* [Record Types](#record-types){{?}}
+* [Operations](#operations){{~ it.categories :c }}
+* [{{= c.name }}s](#{{= c.key }}s){{~}}
 
 ## Operations
 
-{{~ it.operationNames :name }}* [{{= name }}](#{{= name }})
+{{~ it.operations.map(op => op.name) :name }}* [{{= name }}](#{{= name }})
 {{~}}
 
-@docs {{= it.operationNames.join(',') }}
+@docs {{= it.operations.map(op => op.name).join(',') }}
+{{~ it.categories :c }}
+## {{= c.name }}s
 
-{{? it.unionNames.length }}## Union Types
-
-{{~ it.unionNames :name }}* [{{= name }}](#{{= name }})
+@docs {{= c.types.filter(t => t.shouldDefine).map(t => t.name).join(',') }}
 {{~}}
-
-@docs {{= it.unionNames.join(',') }}
-{{?}}
-
-{{? it.recordNames.length }}## Record Types
-
-{{~ it.recordNames :name }}* [{{= name }}](#{{= name }})
-{{~}}
-
-@docs {{= it.recordNames.join(',') }}
-{{?}}
 -}
+
+import Http
+import Json.Decode as JD
+import Json.Decode.Pipeline as JDP
+
 
 -- OPERATIONS
 {{~ it.operations :op }}
 
-{-| {{= op.documentation }}
+{-| {{= op.doc }}
 -}
-{{= op.funcName }} : String
-{{= op.funcName }} =
-    "{{= op.funcName }}"
+{{= op.name }} : Http.Request {{= op.output.type }}
+{{= op.name }} =
+    Http.request
+        { method = "{{= op.http.method }}"
+        , headers = []
+        , url = "{{= op.http.requestUri }}"
+        , body = Http.emptyBody
+        , expect = Http.expectJson {{= op.output.decoder }}
+        , timeout = Nothing
+        , withCredentials = False
+        }
 {{~}}
 
--- RECORDS
-{{~ it.records :t }}
+{{~ it.types.filter(t => t.shouldDefine) :t }}
+{{= t.typeDef }}
 
-{-| {{= t.documentation }}
--}
-type alias {{= t.shapeName }} = String
-{{~}}
 
--- UNIONS
-{{~ it.unions :t }}
+{{= t.decoderDef }}
 
-{-| {{= t.documentation }}
--}
-type {{= t.shapeName }}
-    = {{= t.enum.join('\n    | ') }}
 {{~}}

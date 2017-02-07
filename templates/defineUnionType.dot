@@ -1,0 +1,4 @@
+{-| {{= it.doc }}
+-}
+type {{= it.type }}
+    = {{= it.type }}_{{= it.enum.join(`\n    | ${it.type}_`) }}

@@ -1,0 +1,4 @@
+{{= it.decoder }} : JD.Decoder {{= it.type }}
+{{= it.decoder }} =
+    JDP.decode {{= it.type }}
+        |> {{= it.members.map(it.memberDecoder).join('\n        |> ') }}
