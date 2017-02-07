@@ -1,6 +1,6 @@
 const dots = require('./dots');
 
-const render = module.exports = {};
+const render = {};
 
 render.nothing = sh => Object.assign({
   shouldDefine: false,
@@ -26,3 +26,5 @@ render.structure = sh => Object.assign({
   typeDef: dots.defineRecordType(sh),
   decoderDef: dots.defineRecordDecoder(Object.assign({ memberDecoder }, sh)),
 }, sh);
+
+module.exports = render;

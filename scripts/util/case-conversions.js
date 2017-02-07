@@ -1,4 +1,6 @@
-const camelize = module.exports.camelize = require('camelize');
+const camelize = require('camelize');
+
+module.exports = camelize;
 
 module.exports.lowCam = (x) => {
   const y = camelize(x);
