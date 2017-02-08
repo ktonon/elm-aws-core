@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf src/AWS/*.elm",
-    "postinstall": "elm package install -y",
-    "build": "npm run clean && node scripts/generate-sdk.js && elm make --docs=docs.json",
+    "build": "npm run clean && node scripts/generate-sdk.js && elm package install -y && elm make --docs=docs.json",
     "test": "npm run build",
     "posttest": "eslint ."
   },

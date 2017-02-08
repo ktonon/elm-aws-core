@@ -1,80 +1,60 @@
-const camelize = require('camelize');
 const fs = require('fs');
 const sysPath = require('path');
 const dots = require('./util/dots');
 const moduleName = require('./util/module-name');
-
-const lowCam = (x) => {
-  const y = camelize(x);
-  return y[0].toLowerCase() + y.slice(1);
-};
-
-const upCam = (x) => {
-  const y = camelize(x);
-  return y[0].toUpperCase() + y.slice(1);
-};
+const resolveTypes = require('./util/resolve-types');
+const { lowCam, upCam } = require('./util/case-conversions');
 
 const outRoot = sysPath.resolve(`${__dirname}/../src/AWS`);
 
-const toBuiltIn = (sh) => {
-  if (sh.enum) {
-    return null;
-  }
-  switch (sh.type) {
-    case 'boolean': return 'Bool';
-    case 'double': return 'Float';
-    case 'float': return 'Float';
-    case 'integer': return 'Int';
-    case 'list': return 'List';
-    case 'string': return 'String';
-    default: return null;
-  }
-};
-
 module.exports = (data) => {
+  const types = resolveTypes(data.shapes);
   const mod = moduleName(data.metadata);
-  const operations = Object.keys(data.operations).map((key) => {
-    const op = data.operations[key];
-    return Object.assign({
-      funcName: lowCam(key),
-    }, op);
-  });
 
-  const shapes = Object.keys(data.shapes)
+  const operations = Object.keys(data.operations)
     .map((key) => {
-      const sh = data.shapes[key];
-      return Object.assign({
-        shapeName: upCam(key),
-      }, sh);
-    })
-    .filter(sh => !toBuiltIn(sh));
-
-  const records = shapes.filter(sh => !sh.enum);
-  const unions = shapes
-    .filter(sh => sh.enum)
-    .map((sh) => {
-      sh.enum = sh.enum.map(name =>
-        `${sh.shapeName}_${name.replace(/[^a-z0-9]/ig, '_')}`);
-      return sh;
+      const op = data.operations[key];
+      if (!op.http) {
+        console.log(`${mod}: ${key} doesn't have an http attribute!`);
+        process.exit(1);
+      }
+      return {
+        name: lowCam(key),
+        doc: op.documentation,
+        http: op.http,
+        input: op.input && types.findByShape(op.input.shape),
+        output: op.output
+          ? types.findByShape(op.output.shape)
+          : { type: '()', decoder: '(JD.succeed ())' },
+        errors: op.errors,
+      };
     });
 
-  if (unions.lenth > 0) {
-    console.log('union!', mod);
-  }
+  const categories = [
+    'response',
+    'record',
+    'union',
+    'exception',
+  ].map(key => ({
+    key,
+    name: upCam(key),
+    types: types.filter(t => t.category === key),
+  })).filter(c => c.types.length > 0);
+
   const context = {
+    categories,
+    documentation: data.documentation,
+    metadata: data.metadata,
     mod,
     operationNames: operations.map(op => op.funcName),
     operations,
-    recordNames: records.map(sh => sh.shapeName),
-    records,
-    unionNames: unions.map(sh => sh.shapeName),
-    unions,
-    metadata: data.metadata,
-    documentation: data.documentation,
+    types,
   };
+
   fs.writeFileSync(
     `${outRoot}/${mod}.elm`,
     dots.api(context),
     'utf8');
+
   return context;
 };

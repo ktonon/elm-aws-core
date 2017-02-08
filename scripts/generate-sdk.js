@@ -11,19 +11,16 @@ if (!fs.existsSync(serviceRoot)) {
 }
 
 const sources = findLatestSources(serviceRoot)
+  .filter(source => /acm/.test(source))
   .map((filename) => {
     const path = `${serviceRoot}/${filename}`;
     if (fs.existsSync(path)) {
-      try {
-        const desc = JSON.parse(fs.readFileSync(path, 'utf8'));
-        if (desc.version === '2.0') {
-          console.log(`Processing: ${filename}...`);
-          return processService(desc);
-        }
-        console.log(`Skipping: ${filename}`);
-      } catch (err) {
-        console.error(`error processing ${filename}: ${err}`);
+      const desc = JSON.parse(fs.readFileSync(path, 'utf8'));
+      if (desc.version === '2.0') {
+        console.log(`Processing: ${filename}...`);
+        return processService(desc);
       }
+      console.log(`Skipping: ${filename}`);
     } else {
       console.error(`no such file: ${filename}`);
     }
