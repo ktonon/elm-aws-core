@@ -1,4 +1,4 @@
-const { lowCam } = require('./case-conversions');
+const { lowCam, safeIdentifier } = require('./case-conversions');
 const render = require('./render');
 
 const safeName = name => name.replace(/^(type)$/, '$1_');
@@ -40,11 +40,27 @@ module.exports = (shapesWithoutNames) => {
     decoder: `${jsonDecode}.int`,
   });
 
+  resolve.long = resolve.integer;
+
   resolve.list = (sh) => {
     const child = resolve.shape(sh.member);
     return render.nothing({
       type: `(List ${child.type})`,
       decoder: `(${jsonDecode}.list ${child.decoder})`,
+    });
+  };
+
+  resolve.map = (sh) => {
+    const key = resolve.shape(sh.key);
+    if (key.type !== 'String' && !key.enum) {
+      console.warn(`Unexpected map key type ${key.type}, don't know how to decode`);
+      process.exit(1);
+    }
+    const value = resolve.shape(sh.value);
+    return render.nothing({
+      type: `(Dict ${key.type} ${value.type})`,
+      decoder: `(${jsonDecode}.dict ${value.decoder})`,
+      extraImports: ['import Dict exposing (Dict)'],
     });
   };
 
@@ -61,7 +77,7 @@ module.exports = (shapesWithoutNames) => {
   resolve.enum = sh => render.enum({
     type: sh.name,
     decoder: `${lowCam(sh.name)}Decoder`,
-    enum: sh.enum,
+    enum: sh.enum.map(safeIdentifier),
     doc: render.enumDoc(sh),
     category: 'union',
   });

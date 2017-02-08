@@ -27,7 +27,8 @@ module AWS.{{= it.mod }}
 import Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
-
+{{~ it.extraImports :importExtra }}{{= importExtra }}
+{{~}}
 
 -- OPERATIONS
 {{~ it.operations :op }}
