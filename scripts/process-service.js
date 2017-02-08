@@ -4,6 +4,7 @@ const dots = require('./util/dots');
 const moduleName = require('./util/module-name');
 const resolveTypes = require('./util/resolve-types');
 const { lowCam, upCam } = require('./util/case-conversions');
+const { unique } = require('./util/set');
 
 const outRoot = sysPath.resolve(`${__dirname}/../src/AWS`);
 
@@ -41,6 +42,9 @@ module.exports = (data) => {
     types: types.filter(t => t.category === key),
   })).filter(c => c.types.length > 0);
 
+  const extraImports = unique(
+    types.reduce((acc, t) => acc.concat(t.extraImports || []), []));
+
   const context = {
     categories,
     documentation: data.documentation,
@@ -49,6 +53,7 @@ module.exports = (data) => {
     operationNames: operations.map(op => op.funcName),
     operations,
     types,
+    extraImports,
   };
 
   fs.writeFileSync(

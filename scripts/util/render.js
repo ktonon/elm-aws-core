@@ -14,6 +14,9 @@ render.enum = sh => Object.assign({
 
 render.enumDoc = dots.defineUnionDoc;
 
+const memberType = ({ key, value }) =>
+  `${key} : ${value.type}`;
+
 const memberDecoder = ({ required, key, value }) =>
   [
     `JDP.${required ? 'required' : 'optional'}`,
@@ -23,7 +26,7 @@ const memberDecoder = ({ required, key, value }) =>
 
 render.structure = sh => Object.assign({
   shouldDefine: sh.category !== 'request',
-  typeDef: dots.defineRecordType(sh),
+  typeDef: dots.defineRecordType(Object.assign({ memberType }, sh)),
   decoderDef: dots.defineRecordDecoder(Object.assign({ memberDecoder }, sh)),
 }, sh);
 
