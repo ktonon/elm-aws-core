@@ -72,7 +72,15 @@ module.exports = (shapesWithoutNames) => {
     }));
 
   resolve.blob = resolve.string; // TODO:
-  resolve.timestamp = resolve.string; // TODO:
+
+  resolve.timestamp = () => render.nothing({
+    type: 'Date',
+    decoder: 'JDX.date',
+    extraImports: [
+      'import Date exposing (Date)',
+      'import Json.Decode.Extra as JDX',
+    ],
+  });
 
   resolve.enum = sh => render.enum({
     type: sh.name,
