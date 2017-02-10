@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf src/AWS/*.elm",
     "build": "npm run clean && node scripts/generate-sdk.js && elm package install -y && elm make --docs=docs.json",
-    "test": "npm run build",
+    "test": "npm run build && elm test",
     "posttest": "eslint ."
   },
   "repository": {

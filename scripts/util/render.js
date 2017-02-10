@@ -3,11 +3,11 @@ const dots = require('./dots');
 const render = {};
 
 render.nothing = sh => Object.assign({
-  shouldDefine: false,
+  exposeAs: null,
 }, sh);
 
 render.enum = sh => Object.assign({
-  shouldDefine: true,
+  exposeAs: `${sh.type}(..)`,
   typeDef: dots.defineUnionType(sh),
   decoderDef: dots.defineUnionDecoder(sh),
 }, sh);
@@ -25,7 +25,7 @@ const memberDecoder = ({ required, key, value }) =>
   ].join(' ');
 
 render.structure = sh => Object.assign({
-  shouldDefine: sh.category !== 'request',
+  exposeAs: sh.category !== 'request' ? sh.type : null,
   typeDef: dots.defineRecordType(Object.assign({ memberType }, sh)),
   decoderDef: dots.defineRecordDecoder(Object.assign({ memberDecoder }, sh)),
 }, sh);

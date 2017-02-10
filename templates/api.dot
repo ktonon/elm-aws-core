@@ -1,7 +1,7 @@
 module AWS.{{= it.mod }}
     exposing
         ( {{= it.operations.map(op => op.name).join('\n        , ')}}
-        , {{= it.types.filter(t => t.shouldDefine).map(t => t.name).join('\n        , ')}}
+        , {{= it.types.filter(t => t.exposeAs).map(t => t.exposeAs).join('\n        , ')}}
         )
 
 {-| {{= it.documentation }}
@@ -20,7 +20,7 @@ module AWS.{{= it.mod }}
 {{~ it.categories :c }}
 ## {{= c.name }}s
 
-@docs {{= c.types.filter(t => t.shouldDefine).map(t => t.name).join(',') }}
+@docs {{= c.types.filter(t => t.exposeAs).map(t => t.name).join(',') }}
 {{~}}
 -}
 
@@ -48,7 +48,7 @@ import Json.Decode.Pipeline as JDP
         }
 {{~}}
 
-{{~ it.types.filter(t => t.shouldDefine) :t }}
+{{~ it.types.filter(t => t.exposeAs) :t }}
 {{= t.typeDef }}
 
 
