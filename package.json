@@ -31,6 +31,7 @@
     "camelize": "^1.0.0",
     "dot": "^1.1.1",
     "elm": "^0.18.0",
+    "elm-test": "^0.18.2",
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.0.0",
     "eslint-plugin-import": "^2.2.0",
