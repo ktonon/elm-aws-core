@@ -8,6 +8,7 @@
     ],
     "exposed-modules": [{{~ it :source }}
       "AWS.{{= source.mod }}",{{~}}
+      "AWS.Util.Enum",
       "AWS"
     ],
     "dependencies": {

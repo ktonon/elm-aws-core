@@ -50,6 +50,13 @@ module.exports = (shapesWithoutNames) => {
     });
   };
 
+  const isEnumOf = pattern => key => (
+    key.enum && key.enum.length &&
+    key.enum.every(pattern.test.bind(pattern))
+  );
+
+  const isEnumOfFloats = isEnumOf(/\d+(\.\d+)/);
+
   resolve.map = (sh) => {
     const key = resolve.shape(sh.key);
     if (key.type !== 'String' && !key.enum) {
@@ -57,11 +64,20 @@ module.exports = (shapesWithoutNames) => {
       process.exit(1);
     }
     const value = resolve.shape(sh.value);
-    return render.nothing({
-      type: `(Dict ${key.type} ${value.type})`,
-      decoder: `(${jsonDecode}.dict ${value.decoder})`,
-      extraImports: ['import Dict exposing (Dict)'],
-    });
+    return isEnumOfFloats(key) ?
+      render.nothing({
+        type: `(Dict Float ${value.type})`,
+        decoder: `(JDX.dict2 ${jsonDecode}.float ${value.decoder})`,
+        extraImports: [
+          'import Dict exposing (Dict)',
+          'import Json.Decode.Extra as JDX',
+        ],
+      }) :
+      render.nothing({
+        type: `(Dict String ${value.type})`,
+        decoder: `(${jsonDecode}.dict ${value.decoder})`,
+        extraImports: ['import Dict exposing (Dict)'],
+      });
   };
 
   resolve.string = sh => (sh.enum
