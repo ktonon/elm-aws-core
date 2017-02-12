@@ -11,7 +11,7 @@ if (!fs.existsSync(serviceRoot)) {
 }
 
 const sources = findLatestSources(serviceRoot)
-  .filter(source => /^([a-c]|data)/.test(source))
+  .filter(source => /^(?!(streams\.)?dynamo|elasticmap)/.test(source))
   .map((filename) => {
     const path = `${serviceRoot}/${filename}`;
     if (fs.existsSync(path)) {

@@ -9,7 +9,7 @@ module AWS.{{= it.mod }}
 ## Table of Contents
 
 * [Operations](#operations){{~ it.categories :c }}
-* [{{= c.name }}s](#{{= c.key }}s){{~}}
+* [{{= c.name }}](#{{= c.name.toLowerCase() }}){{~}}
 
 ## Operations
 
@@ -18,9 +18,9 @@ module AWS.{{= it.mod }}
 
 @docs {{= it.operations.map(op => op.name).join(',') }}
 {{~ it.categories :c }}
-## {{= c.name }}s
+## {{= c.name }}
 
-@docs {{= c.types.filter(t => t.exposeAs).map(t => t.name).join(',') }}
+@docs {{= c.types.filter(t => t.exposeAs).map(t => t.type).join(',') }}
 {{~}}
 -}
 
@@ -34,14 +34,20 @@ import Json.Decode.Pipeline as JDP
 {{~ it.operations :op }}
 
 {-| {{= op.doc }}
+{{? op.input && op.input.members }}
+__Parameters__
+
+{{~ op.input.members :m }}* `{{= m.key }}` __:__ `{{= m.value.type }}`
+{{~}}
+{{?}}
 -}
-{{= op.name }} : Http.Request {{= op.output.type }}
-{{= op.name }} =
+{{= op.name }} : {{? op.input }}{{~ op.input.members :m }}{{= m.value.type }} -> {{~}}{{?}}Http.Request {{= op.output.type }}
+{{= op.name }} {{? op.input }}{{~ op.input.members :m }}{{= m.key }} {{~}}{{?}}=
     Http.request
         { method = "{{= op.http.method }}"
         , headers = []
         , url = "{{= op.http.requestUri }}"
-        , body = Http.emptyBody
+        , body = Http.emptyBody -- TODO: replace with op.input encoded as json
         , expect = Http.expectJson {{= op.output.decoder }}
         , timeout = Nothing
         , withCredentials = False
@@ -51,7 +57,7 @@ import Json.Decode.Pipeline as JDP
 {{~ it.types.filter(t => t.exposeAs) :t }}
 {{= t.typeDef }}
 
-
+{{? t.decoderDef }}
 {{= t.decoderDef }}
-
+{{?}}
 {{~}}

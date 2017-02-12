@@ -1,13 +1,13 @@
-const { lowCam, safeIdentifier } = require('./case-conversions');
+const { lowCam, upCam, safeIdentifier } = require('./case-conversions');
 const render = require('./render');
 
-const safeName = name => name.replace(/^(type)$/, '$1_');
 const jsonDecode = 'JD';
 
-module.exports = (shapesWithoutNames) => {
+module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
   const shapes = {};
-  Object.keys(shapesWithoutNames).forEach((name) => {
-    shapes[name] = Object.assign({ name }, shapesWithoutNames[name]);
+  Object.keys(shapesWithoutNames).forEach((rawName) => {
+    const name = upCam(rawName);
+    shapes[rawName] = Object.assign({ name }, shapesWithoutNames[rawName]);
   });
 
   const resolve = {};
@@ -60,8 +60,7 @@ module.exports = (shapesWithoutNames) => {
   resolve.map = (sh) => {
     const key = resolve.shape(sh.key);
     if (key.type !== 'String' && !key.enum) {
-      console.warn(`Unexpected map key type ${key.type}, don't know how to decode`);
-      process.exit(1);
+      throw new Error(`Unexpected map key type ${key.type}, don't know how to decode`);
     }
     const value = resolve.shape(sh.value);
     return isEnumOfFloats(key) ?
@@ -113,7 +112,7 @@ module.exports = (shapesWithoutNames) => {
       decoder: `${lowCam(sh.name)}Decoder`,
       members: Object.keys(sh.members).map(key => ({
         required: true,
-        key: safeName(lowCam(key)),
+        key: safeIdentifier(lowCam(key)),
         value: resolve.shape(sh.members[key]),
       })),
       doc: category === 'response'
@@ -125,8 +124,8 @@ module.exports = (shapesWithoutNames) => {
 
   resolve.structureCategory = (sh) => {
     if (sh.exception) { return 'exception'; }
-    if (sh.name.endsWith('Request')) { return 'request'; }
-    if (sh.name.endsWith('Response')) { return 'response'; }
+    if (outputShapes.indexOf(sh.name) !== -1) { return 'response'; }
+    if (inputShapes.indexOf(sh.name) !== -1) { return 'request'; }
     return 'record';
   };
 
