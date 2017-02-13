@@ -12,5 +12,7 @@ module.exports.upCam = (x) => {
   return y[0].toUpperCase() + y.slice(1);
 };
 
-module.exports.safeIdentifier = x =>
-  x.replace(/[^a-z0-9_]+/ig, '_');
+module.exports.safeIdentifier = x => x
+  .replace(/[^a-z0-9_]+/ig, '_')
+  .replace(/^(type|port)$/, '$1_')
+  ;

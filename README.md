@@ -5,11 +5,11 @@ AWS SDK for elm
 
 __Experimental: Work in progress__
 
-This repo contains scripts which read and translate the AWS SDK [apis/*.json][] files into an elm package. Eventually I will publish the generated code to the elm package repository.
+This repo contains scripts which read and translate the AWS SDK [apis/*.json][] files into an elm package. Eventually the generated code will be published to the elm package repository.
 
 ## Goals
 
-Not sure about the feasibility of the following, but these are my goals:
+These are the project goals:
 
 * Make this a pure elm implementation of the AWS SDK (no falling back to JavaScript AWS SDK)
 * Fully generated. No patching after the generation script is run.
@@ -19,19 +19,23 @@ Not sure about the feasibility of the following, but these are my goals:
 * [x] parse [apis/*.json][] files to get list of AWS APIs
 * [x] generate one elm module per AWS API
   * [x] module documentation
+* [ ] means to provide AWS credentials
 * [ ] generate AWS operations as elm functions
   * [x] function name
   * [x] function documentation
-  * [ ] function signature
-  * [ ] function implementation
+  * [x] function signature
+  * [x] decode response
+  * [ ] encode request body
+  * [ ] authentication header
 * [ ] generate AWS shapes as elm unions and records
   * [x] type name
   * [x] type documentation
-  * [ ] record type signature
+  * [x] record type signature
   * [x] union type signature
-  * [ ] better handling of nested union types
-  * [ ] better handling of non-string union types
-* [ ] not sure yet what else is involved...
+  * [x] better handling of non-string union types
+  * [ ] handle recursive types (like dynamodb `AttributeValue`)
+* [ ] misc.
+  * [ ] handle blob types
   * [ ] share common shapes as types between modules?
   * [ ] integration tests?
 

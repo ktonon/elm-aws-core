@@ -8,8 +8,17 @@ const { unique } = require('./util/set');
 
 const outRoot = sysPath.resolve(`${__dirname}/../src/AWS`);
 
+const findIOShapes = (ops, io) =>
+  Object.keys(ops).map((key) => {
+    const op = ops[key];
+    return op[io] && upCam(op[io].shape);
+  }).filter(x => x);
+
 module.exports = (data) => {
-  const types = resolveTypes(data.shapes);
+  const types = resolveTypes(data.shapes, {
+    inputShapes: findIOShapes(data.operations, 'input'),
+    outputShapes: findIOShapes(data.operations, 'output'),
+  });
   const mod = moduleName(data.metadata);
 
   const operations = Object.keys(data.operations)
@@ -38,7 +47,7 @@ module.exports = (data) => {
     'exception',
   ].map(key => ({
     key,
-    name: upCam(key),
+    name: `${upCam(key)}s`,
     types: types.filter(t => t.category === key),
   })).filter(c => c.types.length > 0);
 
