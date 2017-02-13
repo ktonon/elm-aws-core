@@ -1,0 +1,23 @@
+{-| {{= it.doc }}
+{{? it.input && it.input.members }}
+__Parameters__
+
+{{~ it.input.members :m }}* `{{= m.key }}` __:__ `{{= m.value.type }}`
+{{~}}
+{{?}}
+-}
+{{= it.name }} : {{? it.input }}{{~ it.input.members :m }}{{= m.value.type }} -> {{~}}{{?}}AWS.ServiceConfig -> Http.Request {{= it.output.type }}
+{{= it.name }} {{? it.input }}{{~ it.input.members :m }}{{= m.key }} {{~}}{{?}}serviceConfig =
+    AWSAuth.request
+        "{{= it.name[0].toUpperCase() }}{{= it.name.slice(1) }}"
+        "{{= it.http.method }}"
+        "{{= it.http.requestUri }}"{{? it.http.method === 'GET' }}
+        (AWSRequest.QueryParams
+            [
+            ]
+        ){{?? true }}
+        (AWSRequest.JsonBody
+            JE.null
+        ){{?}}
+        {{= it.output.decoder }}
+        serviceConfig

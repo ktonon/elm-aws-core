@@ -4,15 +4,25 @@ module AWS exposing (..)
 
 __Experimental: Work in progress__
 
-@docs NotYetImplemented
+@docs Credentials, ServiceConfig
 
 -}
 
 
-{-| This will be generated.
-
-The plan is to generate the elm code from the AWS SDK for JavaScript package.
-It contains `apis/*.json` describing all the types and functions used in the SDK.
+{-| Credentials for accessing AWS services
 -}
-type alias NotYetImplemented =
-    ()
+type alias Credentials =
+    { accessKeyId : String
+    , secretAccessKey : String
+    }
+
+
+{-| Configuration for an AWS service
+-}
+type alias ServiceConfig =
+    { host : String
+    , version : String
+    , xAmzJsonVersion : String
+    , xAmzTargetPrefix : String
+    , credentials : Maybe Credentials
+    }

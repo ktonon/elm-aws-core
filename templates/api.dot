@@ -1,10 +1,13 @@
 module AWS.{{= it.mod }}
     exposing
-        ( {{= it.operations.map(op => op.name).join('\n        , ')}}
+        ( config
+        , {{= it.operationNames.join('\n        , ')}}
         , {{= it.types.filter(t => t.exposeAs).map(t => t.exposeAs).join('\n        , ')}}
         )
 
 {-| {{= it.documentation }}
+
+@docs config
 
 ## Table of Contents
 
@@ -13,12 +16,15 @@ module AWS.{{= it.mod }}
 
 ## Operations
 
-{{~ it.operations.map(op => op.name) :name }}* [{{= name }}](#{{= name }})
+{{~ it.operationNames :name }}* [{{= name }}](#{{= name }})
 {{~}}
 
-@docs {{= it.operations.map(op => op.name).join(',') }}
+@docs {{= it.operationNames.join(',') }}
 {{~ it.categories :c }}
 ## {{= c.name }}
+
+{{~ c.types.filter(t => t.exposeAs).map(t => t.type) :t }}* [{{= t }}](#{{= t }})
+{{~}}
 
 @docs {{= c.types.filter(t => t.exposeAs).map(t => t.type).join(',') }}
 {{~}}
@@ -27,32 +33,29 @@ module AWS.{{= it.mod }}
 import Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
+import Json.Encode as JE
+import AWS
+import AWS.Util.Auth as AWSAuth
+import AWS.Util.Request as AWSRequest
 {{~ it.extraImports :importExtra }}{{= importExtra }}
 {{~}}
 
--- OPERATIONS
-{{~ it.operations :op }}
-
-{-| {{= op.doc }}
-{{? op.input && op.input.members }}
-__Parameters__
-
-{{~ op.input.members :m }}* `{{= m.key }}` __:__ `{{= m.value.type }}`
-{{~}}
-{{?}}
+{-| Configuration for this service
 -}
-{{= op.name }} : {{? op.input }}{{~ op.input.members :m }}{{= m.value.type }} -> {{~}}{{?}}Http.Request {{= op.output.type }}
-{{= op.name }} {{? op.input }}{{~ op.input.members :m }}{{= m.key }} {{~}}{{?}}=
-    Http.request
-        { method = "{{= op.http.method }}"
-        , headers = []
-        , url = "{{= op.http.requestUri }}"
-        , body = Http.emptyBody -- TODO: replace with op.input encoded as json
-        , expect = Http.expectJson {{= op.output.decoder }}
-        , timeout = Nothing
-        , withCredentials = False
-        }
-{{~}}
+config : Maybe AWS.Credentials -> AWS.ServiceConfig
+config creds =
+    AWS.ServiceConfig
+        "{{= it.metadata.endpointPrefix }}.amazonaws.com"
+        "{{= it.metadata.apiVersion }}"
+        "{{= it.metadata.jsonVersion }}"
+        "AWS{{= it.metadata.endpointPrefix.toUpperCase() }}_{{= it.metadata.apiVersion.replace(/-/g, '') }}."
+        creds
+
+
+
+-- OPERATIONS
+
+{{= it.operations.join('\n\n') }}
 
 {{~ it.types.filter(t => t.exposeAs) :t }}
 {{= t.typeDef }}

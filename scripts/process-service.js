@@ -59,8 +59,8 @@ module.exports = (data) => {
     documentation: data.documentation,
     metadata: data.metadata,
     mod,
-    operationNames: operations.map(op => op.funcName),
-    operations,
+    operationNames: operations.map(op => op.name),
+    operations: operations.map(dots.defineOperation),
     types,
     extraImports,
   };
