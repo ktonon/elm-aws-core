@@ -6,7 +6,7 @@ const resolveTypes = require('./util/resolve-types');
 const { lowCam, upCam } = require('./util/case-conversions');
 const { unique } = require('./util/set');
 
-const outRoot = sysPath.resolve(`${__dirname}/../src/AWS`);
+const outRoot = sysPath.resolve(`${__dirname}/../src/AWS/Services`);
 
 const findIOShapes = (ops, io) =>
   Object.keys(ops).map((key) => {

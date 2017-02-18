@@ -1,6 +1,7 @@
 module TestHelpers exposing (..)
 
 import Expect exposing (..)
+import Regex exposing (regex, Regex)
 import Test exposing (..)
 
 
@@ -46,3 +47,16 @@ resultExpectation r er =
                 ++ ") but got: "
                 ++ (toString err)
                 |> Expect.fail
+
+
+expectMatches : String -> String -> Expectation
+expectMatches pattern string =
+    string
+        |> Regex.contains (regex pattern)
+        |> Expect.true
+            ("Expected string '"
+                ++ string
+                ++ "' to match Regex /"
+                ++ pattern
+                ++ "/"
+            )

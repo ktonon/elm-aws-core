@@ -6,7 +6,7 @@ const processService = require('./process-service');
 
 const serviceRoot = sysPath.resolve(`${__dirname}/../apis`);
 if (!fs.existsSync(serviceRoot)) {
-  console.log('Run `npm install` before running this script');
+  process.stdout.write('Run `npm install` before running this script\n');
   process.exit(1);
 }
 
@@ -17,12 +17,12 @@ const sources = findLatestSources(serviceRoot)
     if (fs.existsSync(path)) {
       const desc = JSON.parse(fs.readFileSync(path, 'utf8'));
       if (desc.version === '2.0') {
-        console.log(`Processing: ${filename}...`);
+        process.stdout.write('.');
         return processService(desc);
       }
-      console.log(`Skipping: ${filename}`);
+      process.stdout.write('s');
     } else {
-      console.error(`no such file: ${filename}`);
+      process.stderr.write(`no such file: ${filename}\n`);
     }
     return null;
   })
@@ -32,3 +32,5 @@ fs.writeFileSync(
   sysPath.resolve(`${__dirname}/../elm-package.json`),
   dots.elmPackage(sources),
   'utf8');
+
+process.stdout.write('\n');

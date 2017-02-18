@@ -4,7 +4,7 @@
   "description": "WIP -- AWS SDK for elm",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf src/AWS/*.elm",
+    "clean": "rm -rf src/AWS/Services/*.elm",
     "build": "npm run clean && node scripts/generate-sdk.js && elm package install -y && elm make --docs=docs.json",
     "test": "npm run build && elm test",
     "posttest": "eslint ."

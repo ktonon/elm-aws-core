@@ -1,7 +1,7 @@
 module UtilTests.EnumTests exposing (all)
 
-import AWS.APIGateway exposing (CacheClusterSize(..), IntegrationType(..))
-import AWS.Util.Enum as Enum
+import AWS.Services.APIGateway exposing (CacheClusterSize(..), IntegrationType(..))
+import AWS.Enum as Enum
 import Test exposing (describe, Test)
 import TestHelpers exposing (..)
 

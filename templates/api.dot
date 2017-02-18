@@ -1,4 +1,4 @@
-module AWS.{{= it.mod }}
+module AWS.Services.{{= it.mod }}
     exposing
         ( config
         , {{= it.operationNames.join('\n        , ')}}
@@ -30,13 +30,11 @@ module AWS.{{= it.mod }}
 {{~}}
 -}
 
-import Http
+import AWS
+import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
-import AWS
-import AWS.Util.Auth as AWSAuth
-import AWS.Util.Request as AWSRequest
 {{~ it.extraImports :importExtra }}{{= importExtra }}
 {{~}}
 
@@ -45,10 +43,12 @@ import AWS.Util.Request as AWSRequest
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
 config creds =
     AWS.ServiceConfig
-        "{{= it.metadata.endpointPrefix }}.amazonaws.com"
+        "{{= it.metadata.endpointPrefix }}"
         "{{= it.metadata.apiVersion }}"
         "{{= it.metadata.jsonVersion }}"
         "AWS{{= it.metadata.endpointPrefix.toUpperCase() }}_{{= it.metadata.apiVersion.replace(/-/g, '') }}."
+        "{{= it.metadata.endpointPrefix }}.amazonaws.com"
+        "us-east-1"
         creds
 
 

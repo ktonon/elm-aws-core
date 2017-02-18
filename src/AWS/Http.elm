@@ -1,4 +1,4 @@
-module AWS.Util.Request exposing (..)
+module AWS.Http exposing (..)
 
 import AWS exposing (Credentials, ServiceConfig)
 import Json.Encode as JE
@@ -12,7 +12,7 @@ type RequestParams
     | JsonBody JE.Value
 
 
-type alias Request a =
+type alias UnsignedRequest a =
     { method : String
     , headers : List ( String, String )
     , path : String
@@ -22,18 +22,33 @@ type alias Request a =
     }
 
 
-headers : Request a -> List Http.Header
-headers req =
-    req.headers
-        |> List.map (\( key, val ) -> Http.header key val)
+unsignedRequest :
+    String
+    -> String
+    -> String
+    -> RequestParams
+    -> JD.Decoder a
+    -> ServiceConfig
+    -> UnsignedRequest a
+unsignedRequest target method uri params decoder config =
+    UnsignedRequest
+        method
+        [ ( "Host", config.host ++ ":443" )
+        , ( "X-Amz-Target", config.xAmzTargetPrefix ++ target )
+        , ( "Content-Type", jsonContentType config )
+        ]
+        uri
+        params
+        decoder
+        config
 
 
-url : Request a -> String
+url : UnsignedRequest a -> String
 url req =
     "https://" ++ req.config.host ++ req.path ++ (queryString req)
 
 
-queryString : Request a -> String
+queryString : UnsignedRequest a -> String
 queryString req =
     case req.params of
         QueryParams params ->
@@ -49,7 +64,7 @@ queryString req =
             ""
 
 
-body : Request a -> Http.Body
+body : UnsignedRequest a -> Http.Body
 body req =
     case req.params of
         JsonBody value ->
@@ -57,3 +72,8 @@ body req =
 
         _ ->
             Http.emptyBody
+
+
+jsonContentType : ServiceConfig -> String
+jsonContentType config =
+    "application/x-amz-json-" ++ config.xAmzJsonVersion ++ "; charset=utf-8"

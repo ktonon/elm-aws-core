@@ -1,5 +1,5 @@
 /elm-stuff
 /node_modules
-/src/AWS/*.elm
+/src/AWS/Services/*.elm
 /elm-package.json
 /docs.json
