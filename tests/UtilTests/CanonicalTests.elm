@@ -16,6 +16,28 @@ all =
         , canonicalHeadersTests
         , signedHeadersTests
         , canonicalPayloadTests
+        , canonicalTests
+        ]
+
+
+canonicalTests : Test
+canonicalTests =
+    describe "canonical"
+        [ test "does the same request encoding as http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html" <|
+            \_ ->
+                (canonical "get"
+                    ""
+                    [ ( "Content-Type", "application/x-www-form-urlencoded;  charset=utf-8" )
+                    , ( "x-amz-date", "20150830T123600Z" )
+                    , ( "host", "  iam.amazonaws.com" )
+                    ]
+                    (QueryParams
+                        [ ( "Version", "2010-05-08" )
+                        , ( "Action", "ListUsers" )
+                        ]
+                    )
+                )
+                    |> Expect.equal """f536975d06c0309214f805bb90ccff089219ecd68b2577efef23edd43b7e1a59"""
         ]
 
 

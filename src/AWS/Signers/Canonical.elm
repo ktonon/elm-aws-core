@@ -5,23 +5,24 @@ import Char
 import Hex
 import Json.Encode as JE
 import Regex exposing (regex, HowMany(All))
-import Sha256 exposing (sha256)
+import SHA exposing (sha256sum)
 
 
 -- http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html
 
 
-canonical : UnsignedRequest a -> String
-canonical req =
-    [ req.method
-    , canonicalUri req.path
-    , canonicalQueryString req.params
-    , canonicalHeaders req.headers
-    , signedHeaders req.headers
-    , canonicalPayload req.params
+canonical : String -> String -> List ( String, String ) -> RequestParams -> String
+canonical method path headers params =
+    [ String.toUpper method
+    , canonicalUri path
+    , canonicalQueryString params
+    , canonicalHeaders headers
+    , ""
+    , signedHeaders headers
+    , canonicalPayload params
     ]
         |> String.join "\n"
-        |> sha256
+        |> sha256sum
 
 
 canonicalUri : String -> String
@@ -80,7 +81,7 @@ canonicalPayload params =
         _ ->
             ""
     )
-        |> sha256
+        |> sha256sum
 
 
 

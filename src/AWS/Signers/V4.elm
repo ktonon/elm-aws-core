@@ -35,10 +35,6 @@ sign req date =
         }
 
 
-
--- UnsignedRequest SIGNER V4
-
-
 headers : UnsignedRequest a -> Date -> List Http.Header
 headers req date =
     req
@@ -82,11 +78,6 @@ addAuthorization date req =
                 }
             )
         |> Maybe.withDefault req
-
-
-
--- Missing headers
--- ( "X-Amz-Algorithm", "AWS4-HMAC-SHA256")
 
 
 authorization : AWS.Credentials -> Date -> UnsignedRequest a -> String
