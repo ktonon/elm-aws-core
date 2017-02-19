@@ -111,7 +111,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
       type: sh.name,
       decoder: `${lowCam(sh.name)}Decoder`,
       members: Object.keys(sh.members).map(key => ({
-        required: true,
+        required: sh.required && sh.required.indexOf(key) !== -1,
         key: safeIdentifier(lowCam(key)),
         value: resolve.shape(sh.members[key]),
       })),

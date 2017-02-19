@@ -1,13 +1,19 @@
 {-| {{= it.doc }}
-{{? it.input && it.input.members }}
-__Parameters__
+{{? it.requiredParams }}
+__Required Parameters__
 
-{{~ it.input.members :m }}* `{{= m.key }}` __:__ `{{= m.value.type }}`
+{{~ it.requiredParams :p }}* `{{= p.key }}` __:__ `{{= p.value.type }}`
 {{~}}
 {{?}}
 -}
-{{= it.name }} : {{? it.input }}{{~ it.input.members :m }}{{= m.value.type }} -> {{~}}{{?}}AWS.ServiceConfig -> AWS.Http.UnsignedRequest {{= it.output.type }}
-{{= it.name }} {{? it.input }}{{~ it.input.members :m }}{{= m.key }} {{~}}{{?}}serviceConfig =
+{{= it.name }} :
+    {{~ it.requiredParams :p }}{{= p.value.type }}
+    -> {{~}}{{? it.optionalParams.length }}({{= it.optionsName }} -> {{= it.optionsName }})
+    -> {{?}}AWS.Http.UnsignedRequest {{= it.output.type }}
+{{= it.name }} {{~ it.requiredParams :p }}{{= p.key }} {{~}}{{? it.optionalParams.length }}setOptions {{?}}={{? it.optionalParams.length }}
+  let
+    options = setOptions ({{= it.optionsName }} {{= it.optionalParams.map(() => 'Nothing').join(' ') }})
+  in{{?}}
     AWS.Http.unsignedRequest
         "{{= it.name[0].toUpperCase() }}{{= it.name.slice(1) }}"
         "{{= it.http.method }}"
@@ -20,4 +26,11 @@ __Parameters__
             JE.null
         ){{?}}
         {{= it.output.decoder }}
-        serviceConfig
+{{? it.optionalParams.length }}
+
+{-| Options for a {{= it.name }} request
+-}
+type alias {{= it.optionsName }} =
+    { {{= it.optionalParams.map(p => `${p.key} : Maybe ${p.value.type}`).join('\n    , ') }}
+    }
+{{?}}

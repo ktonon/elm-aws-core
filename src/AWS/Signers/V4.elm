@@ -22,25 +22,25 @@ import Regex exposing (HowMany(All), regex)
 sign :
     UnsignedRequest a
     -> Date
+    -> ServiceConfig
     -> Http.Request a
-sign req date =
+sign req date config =
     Http.request
         { method = req.method
-        , headers = headers req date
-        , url = AWS.Http.url req
-        , body = AWS.Http.body req
+        , headers = headers date config
+        , url = AWS.Http.url config.host req.path req.params
+        , body = AWS.Http.body req.params
         , expect = Http.expectJson req.decoder
         , timeout = Nothing
         , withCredentials = False
         }
 
 
-headers : UnsignedRequest a -> Date -> List Http.Header
-headers req date =
-    req
-        |> addAuthorization date
-        |> addSessionToken
-        |> .headers
+headers : Date -> ServiceConfig -> List Http.Header
+headers date config =
+    []
+        |> addAuthorization date config
+        |> addSessionToken config
         |> List.map (\( key, val ) -> Http.header key val)
 
 
@@ -53,57 +53,59 @@ formatDate date =
             (\_ -> "")
 
 
-addSessionToken : UnsignedRequest a -> UnsignedRequest a
-addSessionToken req =
-    req.config.credentials
+addSessionToken : ServiceConfig -> List ( String, String ) -> List ( String, String )
+addSessionToken config headers =
+    config.credentials
         |> Maybe.andThen .sessionToken
         |> Maybe.map
             (\token ->
-                { req | headers = ( "x-amz-security-token", token ) :: req.headers }
+                ( "x-amz-security-token", token ) :: headers
             )
-        |> Maybe.withDefault req
+        |> Maybe.withDefault headers
 
 
-addAuthorization : Date -> UnsignedRequest a -> UnsignedRequest a
-addAuthorization date req =
-    req.config.credentials
+addAuthorization : Date -> ServiceConfig -> List ( String, String ) -> List ( String, String )
+addAuthorization date config headers =
+    config.credentials
         |> Maybe.map
             (\creds ->
-                { req
-                    | headers =
-                        [ ( "X-Amz-Date", formatDate date )
-                        , ( "Authorization", authorization creds date req )
-                        ]
-                            |> List.append req.headers
-                }
+                [ ( "X-Amz-Date", formatDate date )
+                , ( "Authorization", authorization creds date config headers )
+                ]
+                    |> List.append headers
             )
-        |> Maybe.withDefault req
+        |> Maybe.withDefault headers
 
 
-authorization : AWS.Credentials -> Date -> UnsignedRequest a -> String
-authorization creds date req =
+authorization : AWS.Credentials -> Date -> ServiceConfig -> List ( String, String ) -> String
+authorization creds date config headers =
     [ "AWS4-HMAC-SHA256 Credentials="
         ++ creds.accessKeyId
         ++ "/"
-        ++ credentialsString date req
+        ++ credentialsString date config
     , "SignedHeaders="
-        ++ signedHeaders req.headers
+        ++ signedHeaders headers
     , "Signature="
-        ++ signature creds req
+        ++ signature creds
     ]
         |> String.join ", "
 
 
-credentialsString : Date -> UnsignedRequest a -> String
-credentialsString date req =
+credentialsString : Date -> ServiceConfig -> String
+credentialsString date config =
     [ date |> formatDate |> String.slice 0 8
-    , req.config.region
-    , req.config.serviceName
+    , config.region
+    , config.serviceName
     , "aws4_request"
     ]
         |> String.join "/"
 
 
-signature : AWS.Credentials -> UnsignedRequest a -> String
-signature creds req =
+signature : AWS.Credentials -> String
+signature creds =
     ""
+
+
+jsonContentType : ServiceConfig -> String
+jsonContentType config =
+    "application/x-amz-json-" ++ config.xAmzJsonVersion ++ "; charset=utf-8"

@@ -14,15 +14,17 @@ render.enum = sh => Object.assign({
 
 render.enumDoc = dots.defineUnionDoc;
 
-const memberType = ({ key, value }) =>
-  `${key} : ${value.type}`;
+const memberType = ({ required, key, value }) => (
+  required
+    ? `${key} : ${value.type}`
+    : `${key} : Maybe ${value.type}`
+);
 
-const memberDecoder = ({ required, key, value }) =>
-  [
-    `JDP.${required ? 'required' : 'optional'}`,
-    `"${key}"`,
-    `${value.decoder}`,
-  ].join(' ');
+const memberDecoder = ({ required, key, value }) => (
+  required
+    ? `JDP.required "${key}" ${value.decoder}`
+    : `JDP.optional "${key}" (JD.nullable ${value.decoder}) Nothing`
+);
 
 render.structure = sh => Object.assign({
   exposeAs: sh.category !== 'request' ? sh.type : null,

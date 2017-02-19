@@ -24,15 +24,22 @@ module.exports = (data) => {
   const operations = Object.keys(data.operations)
     .map((key) => {
       const op = data.operations[key];
+      const params = op.input
+        ? types.findByShape(op.input.shape).members
+        : [];
+      const requiredParams = params.filter(m => m.required);
+      const optionalParams = params.filter(m => !m.required);
       if (!op.http) {
         console.log(`${mod}: ${key} doesn't have an http attribute!`);
         process.exit(1);
       }
       return {
         name: lowCam(key),
+        optionsName: `${key}Options`,
         doc: op.documentation,
         http: op.http,
-        input: op.input && types.findByShape(op.input.shape),
+        requiredParams,
+        optionalParams,
         output: op.output
           ? types.findByShape(op.output.shape)
           : { type: '()', decoder: '(JD.succeed ())' },
@@ -59,7 +66,11 @@ module.exports = (data) => {
     documentation: data.documentation,
     metadata: data.metadata,
     mod,
-    operationNames: operations.map(op => op.name),
+    operationNames: operations.reduce((acc, op) =>
+      acc.concat(op.optionalParams.length
+        ? [op.name, op.optionsName]
+        : [op.name]),
+      []),
     operations: operations.map(dots.defineOperation),
     types,
     extraImports,
