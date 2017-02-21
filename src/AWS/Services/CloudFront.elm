@@ -525,7 +525,7 @@ createInvalidation distributionId invalidationBatch =
     AWS.Http.unsignedRequest
         "CreateInvalidation"
         "POST"
-        "/2016-11-25/distribution/{DistributionId}/invalidation"
+        ("/2016-11-25/distribution/" ++ distributionId ++ "/invalidation")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -598,7 +598,7 @@ deleteCloudFrontOriginAccessIdentity id setOptions =
     AWS.Http.unsignedRequest
         "DeleteCloudFrontOriginAccessIdentity"
         "DELETE"
-        "/2016-11-25/origin-access-identity/cloudfront/{Id}"
+        ("/2016-11-25/origin-access-identity/cloudfront/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -632,7 +632,7 @@ deleteDistribution id setOptions =
     AWS.Http.unsignedRequest
         "DeleteDistribution"
         "DELETE"
-        "/2016-11-25/distribution/{Id}"
+        ("/2016-11-25/distribution/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -666,7 +666,7 @@ deleteStreamingDistribution id setOptions =
     AWS.Http.unsignedRequest
         "DeleteStreamingDistribution"
         "DELETE"
-        "/2016-11-25/streaming-distribution/{Id}"
+        ("/2016-11-25/streaming-distribution/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -696,7 +696,7 @@ getCloudFrontOriginAccessIdentity id =
     AWS.Http.unsignedRequest
         "GetCloudFrontOriginAccessIdentity"
         "GET"
-        "/2016-11-25/origin-access-identity/cloudfront/{Id}"
+        ("/2016-11-25/origin-access-identity/cloudfront/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -720,7 +720,7 @@ getCloudFrontOriginAccessIdentityConfig id =
     AWS.Http.unsignedRequest
         "GetCloudFrontOriginAccessIdentityConfig"
         "GET"
-        "/2016-11-25/origin-access-identity/cloudfront/{Id}/config"
+        ("/2016-11-25/origin-access-identity/cloudfront/" ++ id ++ "/config")
         (AWS.Http.QueryParams
             [
             ]
@@ -744,7 +744,7 @@ getDistribution id =
     AWS.Http.unsignedRequest
         "GetDistribution"
         "GET"
-        "/2016-11-25/distribution/{Id}"
+        ("/2016-11-25/distribution/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -768,7 +768,7 @@ getDistributionConfig id =
     AWS.Http.unsignedRequest
         "GetDistributionConfig"
         "GET"
-        "/2016-11-25/distribution/{Id}/config"
+        ("/2016-11-25/distribution/" ++ id ++ "/config")
         (AWS.Http.QueryParams
             [
             ]
@@ -794,7 +794,7 @@ getInvalidation distributionId id =
     AWS.Http.unsignedRequest
         "GetInvalidation"
         "GET"
-        "/2016-11-25/distribution/{DistributionId}/invalidation/{Id}"
+        ("/2016-11-25/distribution/" ++ distributionId ++ "/invalidation/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -818,7 +818,7 @@ getStreamingDistribution id =
     AWS.Http.unsignedRequest
         "GetStreamingDistribution"
         "GET"
-        "/2016-11-25/streaming-distribution/{Id}"
+        ("/2016-11-25/streaming-distribution/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -842,7 +842,7 @@ getStreamingDistributionConfig id =
     AWS.Http.unsignedRequest
         "GetStreamingDistributionConfig"
         "GET"
-        "/2016-11-25/streaming-distribution/{Id}/config"
+        ("/2016-11-25/streaming-distribution/" ++ id ++ "/config")
         (AWS.Http.QueryParams
             [
             ]
@@ -938,7 +938,7 @@ listDistributionsByWebACLId webACLId setOptions =
     AWS.Http.unsignedRequest
         "ListDistributionsByWebACLId"
         "GET"
-        "/2016-11-25/distributionsByWebACLId/{WebACLId}"
+        ("/2016-11-25/distributionsByWebACLId/" ++ webACLId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -974,7 +974,7 @@ listInvalidations distributionId setOptions =
     AWS.Http.unsignedRequest
         "ListInvalidations"
         "GET"
-        "/2016-11-25/distribution/{DistributionId}/invalidation"
+        ("/2016-11-25/distribution/" ++ distributionId ++ "/invalidation")
         (AWS.Http.QueryParams
             [
             ]
@@ -1120,7 +1120,7 @@ updateCloudFrontOriginAccessIdentity cloudFrontOriginAccessIdentityConfig id set
     AWS.Http.unsignedRequest
         "UpdateCloudFrontOriginAccessIdentity"
         "PUT"
-        "/2016-11-25/origin-access-identity/cloudfront/{Id}/config"
+        ("/2016-11-25/origin-access-identity/cloudfront/" ++ id ++ "/config")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1156,7 +1156,7 @@ updateDistribution distributionConfig id setOptions =
     AWS.Http.unsignedRequest
         "UpdateDistribution"
         "PUT"
-        "/2016-11-25/distribution/{Id}/config"
+        ("/2016-11-25/distribution/" ++ id ++ "/config")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1192,7 +1192,7 @@ updateStreamingDistribution streamingDistributionConfig id setOptions =
     AWS.Http.unsignedRequest
         "UpdateStreamingDistribution"
         "PUT"
-        "/2016-11-25/streaming-distribution/{Id}/config"
+        ("/2016-11-25/streaming-distribution/" ++ id ++ "/config")
         (AWS.Http.JsonBody
             JE.null
         )

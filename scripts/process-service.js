@@ -2,6 +2,7 @@ const fs = require('fs');
 const sysPath = require('path');
 const dots = require('./util/dots');
 const moduleName = require('./util/module-name');
+const replacePathParams = require('./util/replace-path-params');
 const resolveTypes = require('./util/resolve-types');
 const { lowCam, upCam } = require('./util/case-conversions');
 const { unique } = require('./util/set');
@@ -21,6 +22,8 @@ module.exports = (data) => {
   });
   const mod = moduleName(data.metadata);
 
+  const sumExtraImports = types.reduce((acc, t) => acc.concat(t.extraImports || []), []);
+
   const operations = Object.keys(data.operations)
     .map((key) => {
       const op = data.operations[key];
@@ -29,15 +32,18 @@ module.exports = (data) => {
         : [];
       const requiredParams = params.filter(m => m.required);
       const optionalParams = params.filter(m => !m.required);
+      const { requestPath, extraImports } = replacePathParams(op.http.requestUri, params);
+      (extraImports || []).forEach(extraImport => sumExtraImports.push(extraImport));
+
       if (!op.http) {
-        console.log(`${mod}: ${key} doesn't have an http attribute!`);
-        process.exit(1);
+        throw new Error(`${mod}: ${key} doesn't have an http attribute!`);
       }
       return {
         name: lowCam(key),
         optionsName: `${key}Options`,
         doc: op.documentation,
         http: op.http,
+        requestPath,
         requiredParams,
         optionalParams,
         output: op.output
@@ -58,9 +64,6 @@ module.exports = (data) => {
     types: types.filter(t => t.category === key),
   })).filter(c => c.types.length > 0);
 
-  const extraImports = unique(
-    types.reduce((acc, t) => acc.concat(t.extraImports || []), []));
-
   const context = {
     categories,
     documentation: data.documentation,
@@ -73,7 +76,7 @@ module.exports = (data) => {
       []),
     operations: operations.map(dots.defineOperation),
     types,
-    extraImports,
+    extraImports: unique(sumExtraImports),
   };
 
   fs.writeFileSync(

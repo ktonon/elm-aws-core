@@ -240,7 +240,7 @@ cancelJob id =
     AWS.Http.unsignedRequest
         "CancelJob"
         "DELETE"
-        "/2012-09-25/jobs/{Id}"
+        ("/2012-09-25/jobs/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -384,7 +384,7 @@ deletePipeline id =
     AWS.Http.unsignedRequest
         "DeletePipeline"
         "DELETE"
-        "/2012-09-25/pipelines/{Id}"
+        ("/2012-09-25/pipelines/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -407,7 +407,7 @@ deletePreset id =
     AWS.Http.unsignedRequest
         "DeletePreset"
         "DELETE"
-        "/2012-09-25/presets/{Id}"
+        ("/2012-09-25/presets/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -434,7 +434,7 @@ listJobsByPipeline pipelineId setOptions =
     AWS.Http.unsignedRequest
         "ListJobsByPipeline"
         "GET"
-        "/2012-09-25/jobsByPipeline/{PipelineId}"
+        ("/2012-09-25/jobsByPipeline/" ++ pipelineId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -470,7 +470,7 @@ listJobsByStatus status setOptions =
     AWS.Http.unsignedRequest
         "ListJobsByStatus"
         "GET"
-        "/2012-09-25/jobsByStatus/{Status}"
+        ("/2012-09-25/jobsByStatus/" ++ status ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -570,7 +570,7 @@ readJob id =
     AWS.Http.unsignedRequest
         "ReadJob"
         "GET"
-        "/2012-09-25/jobs/{Id}"
+        ("/2012-09-25/jobs/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -594,7 +594,7 @@ readPipeline id =
     AWS.Http.unsignedRequest
         "ReadPipeline"
         "GET"
-        "/2012-09-25/pipelines/{Id}"
+        ("/2012-09-25/pipelines/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -618,7 +618,7 @@ readPreset id =
     AWS.Http.unsignedRequest
         "ReadPreset"
         "GET"
-        "/2012-09-25/presets/{Id}"
+        ("/2012-09-25/presets/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -675,7 +675,7 @@ updatePipeline id setOptions =
     AWS.Http.unsignedRequest
         "UpdatePipeline"
         "PUT"
-        "/2012-09-25/pipelines/{Id}"
+        ("/2012-09-25/pipelines/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -713,7 +713,7 @@ updatePipelineNotifications id notifications =
     AWS.Http.unsignedRequest
         "UpdatePipelineNotifications"
         "POST"
-        "/2012-09-25/pipelines/{Id}/notifications"
+        ("/2012-09-25/pipelines/" ++ id ++ "/notifications")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -738,7 +738,7 @@ updatePipelineStatus id status =
     AWS.Http.unsignedRequest
         "UpdatePipelineStatus"
         "POST"
-        "/2012-09-25/pipelines/{Id}/status"
+        ("/2012-09-25/pipelines/" ++ id ++ "/status")
         (AWS.Http.JsonBody
             JE.null
         )

@@ -653,7 +653,7 @@ abortMultipartUpload bucket key uploadId setOptions =
     AWS.Http.unsignedRequest
         "AbortMultipartUpload"
         "DELETE"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -691,7 +691,7 @@ completeMultipartUpload bucket key uploadId setOptions =
     AWS.Http.unsignedRequest
         "CompleteMultipartUpload"
         "POST"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -730,7 +730,7 @@ copyObject bucket copySource key setOptions =
     AWS.Http.unsignedRequest
         "CopyObject"
         "PUT"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -793,7 +793,7 @@ createBucket bucket setOptions =
     AWS.Http.unsignedRequest
         "CreateBucket"
         "PUT"
-        "/{Bucket}"
+        ("/" ++ bucket ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -835,7 +835,7 @@ createMultipartUpload bucket key setOptions =
     AWS.Http.unsignedRequest
         "CreateMultipartUpload"
         "POST"
-        "/{Bucket}/{Key+}?uploads"
+        ("/" ++ bucket ++ "/" ++ key ++ "?uploads")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -884,7 +884,7 @@ deleteBucket bucket =
     AWS.Http.unsignedRequest
         "DeleteBucket"
         "DELETE"
-        "/{Bucket}"
+        ("/" ++ bucket ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -909,7 +909,7 @@ deleteBucketAnalyticsConfiguration bucket id =
     AWS.Http.unsignedRequest
         "DeleteBucketAnalyticsConfiguration"
         "DELETE"
-        "/{Bucket}?analytics"
+        ("/" ++ bucket ++ "?analytics")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -932,7 +932,7 @@ deleteBucketCors bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketCors"
         "DELETE"
-        "/{Bucket}?cors"
+        ("/" ++ bucket ++ "?cors")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -957,7 +957,7 @@ deleteBucketInventoryConfiguration bucket id =
     AWS.Http.unsignedRequest
         "DeleteBucketInventoryConfiguration"
         "DELETE"
-        "/{Bucket}?inventory"
+        ("/" ++ bucket ++ "?inventory")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -980,7 +980,7 @@ deleteBucketLifecycle bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketLifecycle"
         "DELETE"
-        "/{Bucket}?lifecycle"
+        ("/" ++ bucket ++ "?lifecycle")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1005,7 +1005,7 @@ deleteBucketMetricsConfiguration bucket id =
     AWS.Http.unsignedRequest
         "DeleteBucketMetricsConfiguration"
         "DELETE"
-        "/{Bucket}?metrics"
+        ("/" ++ bucket ++ "?metrics")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1028,7 +1028,7 @@ deleteBucketPolicy bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketPolicy"
         "DELETE"
-        "/{Bucket}?policy"
+        ("/" ++ bucket ++ "?policy")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1051,7 +1051,7 @@ deleteBucketReplication bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketReplication"
         "DELETE"
-        "/{Bucket}?replication"
+        ("/" ++ bucket ++ "?replication")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1074,7 +1074,7 @@ deleteBucketTagging bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketTagging"
         "DELETE"
-        "/{Bucket}?tagging"
+        ("/" ++ bucket ++ "?tagging")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1097,7 +1097,7 @@ deleteBucketWebsite bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketWebsite"
         "DELETE"
-        "/{Bucket}?website"
+        ("/" ++ bucket ++ "?website")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1126,7 +1126,7 @@ deleteObject bucket key setOptions =
     AWS.Http.unsignedRequest
         "DeleteObject"
         "DELETE"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1164,7 +1164,7 @@ deleteObjectTagging bucket key setOptions =
     AWS.Http.unsignedRequest
         "DeleteObjectTagging"
         "DELETE"
-        "/{Bucket}/{Key+}?tagging"
+        ("/" ++ bucket ++ "/" ++ key ++ "?tagging")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1200,7 +1200,7 @@ deleteObjects bucket delete setOptions =
     AWS.Http.unsignedRequest
         "DeleteObjects"
         "POST"
-        "/{Bucket}?delete"
+        ("/" ++ bucket ++ "?delete")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1231,7 +1231,7 @@ getBucketAccelerateConfiguration bucket =
     AWS.Http.unsignedRequest
         "GetBucketAccelerateConfiguration"
         "GET"
-        "/{Bucket}?accelerate"
+        ("/" ++ bucket ++ "?accelerate")
         (AWS.Http.QueryParams
             [
             ]
@@ -1255,7 +1255,7 @@ getBucketAcl bucket =
     AWS.Http.unsignedRequest
         "GetBucketAcl"
         "GET"
-        "/{Bucket}?acl"
+        ("/" ++ bucket ++ "?acl")
         (AWS.Http.QueryParams
             [
             ]
@@ -1281,7 +1281,7 @@ getBucketAnalyticsConfiguration bucket id =
     AWS.Http.unsignedRequest
         "GetBucketAnalyticsConfiguration"
         "GET"
-        "/{Bucket}?analytics"
+        ("/" ++ bucket ++ "?analytics")
         (AWS.Http.QueryParams
             [
             ]
@@ -1305,7 +1305,7 @@ getBucketCors bucket =
     AWS.Http.unsignedRequest
         "GetBucketCors"
         "GET"
-        "/{Bucket}?cors"
+        ("/" ++ bucket ++ "?cors")
         (AWS.Http.QueryParams
             [
             ]
@@ -1331,7 +1331,7 @@ getBucketInventoryConfiguration bucket id =
     AWS.Http.unsignedRequest
         "GetBucketInventoryConfiguration"
         "GET"
-        "/{Bucket}?inventory"
+        ("/" ++ bucket ++ "?inventory")
         (AWS.Http.QueryParams
             [
             ]
@@ -1355,7 +1355,7 @@ getBucketLifecycle bucket =
     AWS.Http.unsignedRequest
         "GetBucketLifecycle"
         "GET"
-        "/{Bucket}?lifecycle"
+        ("/" ++ bucket ++ "?lifecycle")
         (AWS.Http.QueryParams
             [
             ]
@@ -1379,7 +1379,7 @@ getBucketLifecycleConfiguration bucket =
     AWS.Http.unsignedRequest
         "GetBucketLifecycleConfiguration"
         "GET"
-        "/{Bucket}?lifecycle"
+        ("/" ++ bucket ++ "?lifecycle")
         (AWS.Http.QueryParams
             [
             ]
@@ -1403,7 +1403,7 @@ getBucketLocation bucket =
     AWS.Http.unsignedRequest
         "GetBucketLocation"
         "GET"
-        "/{Bucket}?location"
+        ("/" ++ bucket ++ "?location")
         (AWS.Http.QueryParams
             [
             ]
@@ -1427,7 +1427,7 @@ getBucketLogging bucket =
     AWS.Http.unsignedRequest
         "GetBucketLogging"
         "GET"
-        "/{Bucket}?logging"
+        ("/" ++ bucket ++ "?logging")
         (AWS.Http.QueryParams
             [
             ]
@@ -1453,7 +1453,7 @@ getBucketMetricsConfiguration bucket id =
     AWS.Http.unsignedRequest
         "GetBucketMetricsConfiguration"
         "GET"
-        "/{Bucket}?metrics"
+        ("/" ++ bucket ++ "?metrics")
         (AWS.Http.QueryParams
             [
             ]
@@ -1477,7 +1477,7 @@ getBucketNotification bucket =
     AWS.Http.unsignedRequest
         "GetBucketNotification"
         "GET"
-        "/{Bucket}?notification"
+        ("/" ++ bucket ++ "?notification")
         (AWS.Http.QueryParams
             [
             ]
@@ -1501,7 +1501,7 @@ getBucketNotificationConfiguration bucket =
     AWS.Http.unsignedRequest
         "GetBucketNotificationConfiguration"
         "GET"
-        "/{Bucket}?notification"
+        ("/" ++ bucket ++ "?notification")
         (AWS.Http.QueryParams
             [
             ]
@@ -1525,7 +1525,7 @@ getBucketPolicy bucket =
     AWS.Http.unsignedRequest
         "GetBucketPolicy"
         "GET"
-        "/{Bucket}?policy"
+        ("/" ++ bucket ++ "?policy")
         (AWS.Http.QueryParams
             [
             ]
@@ -1549,7 +1549,7 @@ getBucketReplication bucket =
     AWS.Http.unsignedRequest
         "GetBucketReplication"
         "GET"
-        "/{Bucket}?replication"
+        ("/" ++ bucket ++ "?replication")
         (AWS.Http.QueryParams
             [
             ]
@@ -1573,7 +1573,7 @@ getBucketRequestPayment bucket =
     AWS.Http.unsignedRequest
         "GetBucketRequestPayment"
         "GET"
-        "/{Bucket}?requestPayment"
+        ("/" ++ bucket ++ "?requestPayment")
         (AWS.Http.QueryParams
             [
             ]
@@ -1597,7 +1597,7 @@ getBucketTagging bucket =
     AWS.Http.unsignedRequest
         "GetBucketTagging"
         "GET"
-        "/{Bucket}?tagging"
+        ("/" ++ bucket ++ "?tagging")
         (AWS.Http.QueryParams
             [
             ]
@@ -1621,7 +1621,7 @@ getBucketVersioning bucket =
     AWS.Http.unsignedRequest
         "GetBucketVersioning"
         "GET"
-        "/{Bucket}?versioning"
+        ("/" ++ bucket ++ "?versioning")
         (AWS.Http.QueryParams
             [
             ]
@@ -1645,7 +1645,7 @@ getBucketWebsite bucket =
     AWS.Http.unsignedRequest
         "GetBucketWebsite"
         "GET"
-        "/{Bucket}?website"
+        ("/" ++ bucket ++ "?website")
         (AWS.Http.QueryParams
             [
             ]
@@ -1675,7 +1675,7 @@ getObject bucket key setOptions =
     AWS.Http.unsignedRequest
         "GetObject"
         "GET"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1728,7 +1728,7 @@ getObjectAcl bucket key setOptions =
     AWS.Http.unsignedRequest
         "GetObjectAcl"
         "GET"
-        "/{Bucket}/{Key+}?acl"
+        ("/" ++ bucket ++ "/" ++ key ++ "?acl")
         (AWS.Http.QueryParams
             [
             ]
@@ -1766,7 +1766,7 @@ getObjectTagging bucket key setOptions =
     AWS.Http.unsignedRequest
         "GetObjectTagging"
         "GET"
-        "/{Bucket}/{Key+}?tagging"
+        ("/" ++ bucket ++ "/" ++ key ++ "?tagging")
         (AWS.Http.QueryParams
             [
             ]
@@ -1803,7 +1803,7 @@ getObjectTorrent bucket key setOptions =
     AWS.Http.unsignedRequest
         "GetObjectTorrent"
         "GET"
-        "/{Bucket}/{Key+}?torrent"
+        ("/" ++ bucket ++ "/" ++ key ++ "?torrent")
         (AWS.Http.QueryParams
             [
             ]
@@ -1834,7 +1834,7 @@ headBucket bucket =
     AWS.Http.unsignedRequest
         "HeadBucket"
         "HEAD"
-        "/{Bucket}"
+        ("/" ++ bucket ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1863,7 +1863,7 @@ headObject bucket key setOptions =
     AWS.Http.unsignedRequest
         "HeadObject"
         "HEAD"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1907,7 +1907,7 @@ listBucketAnalyticsConfigurations bucket setOptions =
     AWS.Http.unsignedRequest
         "ListBucketAnalyticsConfigurations"
         "GET"
-        "/{Bucket}?analytics"
+        ("/" ++ bucket ++ "?analytics")
         (AWS.Http.QueryParams
             [
             ]
@@ -1942,7 +1942,7 @@ listBucketInventoryConfigurations bucket setOptions =
     AWS.Http.unsignedRequest
         "ListBucketInventoryConfigurations"
         "GET"
-        "/{Bucket}?inventory"
+        ("/" ++ bucket ++ "?inventory")
         (AWS.Http.QueryParams
             [
             ]
@@ -1977,7 +1977,7 @@ listBucketMetricsConfigurations bucket setOptions =
     AWS.Http.unsignedRequest
         "ListBucketMetricsConfigurations"
         "GET"
-        "/{Bucket}?metrics"
+        ("/" ++ bucket ++ "?metrics")
         (AWS.Http.QueryParams
             [
             ]
@@ -2034,7 +2034,7 @@ listMultipartUploads bucket setOptions =
     AWS.Http.unsignedRequest
         "ListMultipartUploads"
         "GET"
-        "/{Bucket}?uploads"
+        ("/" ++ bucket ++ "?uploads")
         (AWS.Http.QueryParams
             [
             ]
@@ -2074,7 +2074,7 @@ listObjectVersions bucket setOptions =
     AWS.Http.unsignedRequest
         "ListObjectVersions"
         "GET"
-        "/{Bucket}?versions"
+        ("/" ++ bucket ++ "?versions")
         (AWS.Http.QueryParams
             [
             ]
@@ -2114,7 +2114,7 @@ listObjects bucket setOptions =
     AWS.Http.unsignedRequest
         "ListObjects"
         "GET"
-        "/{Bucket}"
+        ("/" ++ bucket ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2154,7 +2154,7 @@ listObjectsV2 bucket setOptions =
     AWS.Http.unsignedRequest
         "ListObjectsV2"
         "GET"
-        "/{Bucket}?list-type=2"
+        ("/" ++ bucket ++ "?list-type=2")
         (AWS.Http.QueryParams
             [
             ]
@@ -2200,7 +2200,7 @@ listParts bucket key uploadId setOptions =
     AWS.Http.unsignedRequest
         "ListParts"
         "GET"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2235,7 +2235,7 @@ putBucketAccelerateConfiguration bucket accelerateConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketAccelerateConfiguration"
         "PUT"
-        "/{Bucket}?accelerate"
+        ("/" ++ bucket ++ "?accelerate")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2262,7 +2262,7 @@ putBucketAcl bucket setOptions =
     AWS.Http.unsignedRequest
         "PutBucketAcl"
         "PUT"
-        "/{Bucket}?acl"
+        ("/" ++ bucket ++ "?acl")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2303,7 +2303,7 @@ putBucketAnalyticsConfiguration bucket id analyticsConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketAnalyticsConfiguration"
         "PUT"
-        "/{Bucket}?analytics"
+        ("/" ++ bucket ++ "?analytics")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2332,7 +2332,7 @@ putBucketCors bucket cORSConfiguration setOptions =
     AWS.Http.unsignedRequest
         "PutBucketCors"
         "PUT"
-        "/{Bucket}?cors"
+        ("/" ++ bucket ++ "?cors")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2366,7 +2366,7 @@ putBucketInventoryConfiguration bucket id inventoryConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketInventoryConfiguration"
         "PUT"
-        "/{Bucket}?inventory"
+        ("/" ++ bucket ++ "?inventory")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2393,7 +2393,7 @@ putBucketLifecycle bucket setOptions =
     AWS.Http.unsignedRequest
         "PutBucketLifecycle"
         "PUT"
-        "/{Bucket}?lifecycle"
+        ("/" ++ bucket ++ "?lifecycle")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2428,7 +2428,7 @@ putBucketLifecycleConfiguration bucket setOptions =
     AWS.Http.unsignedRequest
         "PutBucketLifecycleConfiguration"
         "PUT"
-        "/{Bucket}?lifecycle"
+        ("/" ++ bucket ++ "?lifecycle")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2464,7 +2464,7 @@ putBucketLogging bucket bucketLoggingStatus setOptions =
     AWS.Http.unsignedRequest
         "PutBucketLogging"
         "PUT"
-        "/{Bucket}?logging"
+        ("/" ++ bucket ++ "?logging")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2498,7 +2498,7 @@ putBucketMetricsConfiguration bucket id metricsConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketMetricsConfiguration"
         "PUT"
-        "/{Bucket}?metrics"
+        ("/" ++ bucket ++ "?metrics")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2527,7 +2527,7 @@ putBucketNotification bucket notificationConfiguration setOptions =
     AWS.Http.unsignedRequest
         "PutBucketNotification"
         "PUT"
-        "/{Bucket}?notification"
+        ("/" ++ bucket ++ "?notification")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2559,7 +2559,7 @@ putBucketNotificationConfiguration bucket notificationConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketNotificationConfiguration"
         "PUT"
-        "/{Bucket}?notification"
+        ("/" ++ bucket ++ "?notification")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2588,7 +2588,7 @@ putBucketPolicy bucket policy setOptions =
     AWS.Http.unsignedRequest
         "PutBucketPolicy"
         "PUT"
-        "/{Bucket}?policy"
+        ("/" ++ bucket ++ "?policy")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2624,7 +2624,7 @@ putBucketReplication bucket replicationConfiguration setOptions =
     AWS.Http.unsignedRequest
         "PutBucketReplication"
         "PUT"
-        "/{Bucket}?replication"
+        ("/" ++ bucket ++ "?replication")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2660,7 +2660,7 @@ putBucketRequestPayment bucket requestPaymentConfiguration setOptions =
     AWS.Http.unsignedRequest
         "PutBucketRequestPayment"
         "PUT"
-        "/{Bucket}?requestPayment"
+        ("/" ++ bucket ++ "?requestPayment")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2696,7 +2696,7 @@ putBucketTagging bucket tagging setOptions =
     AWS.Http.unsignedRequest
         "PutBucketTagging"
         "PUT"
-        "/{Bucket}?tagging"
+        ("/" ++ bucket ++ "?tagging")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2732,7 +2732,7 @@ putBucketVersioning bucket versioningConfiguration setOptions =
     AWS.Http.unsignedRequest
         "PutBucketVersioning"
         "PUT"
-        "/{Bucket}?versioning"
+        ("/" ++ bucket ++ "?versioning")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2769,7 +2769,7 @@ putBucketWebsite bucket websiteConfiguration setOptions =
     AWS.Http.unsignedRequest
         "PutBucketWebsite"
         "PUT"
-        "/{Bucket}?website"
+        ("/" ++ bucket ++ "?website")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2805,7 +2805,7 @@ putObject bucket key setOptions =
     AWS.Http.unsignedRequest
         "PutObject"
         "PUT"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2864,7 +2864,7 @@ putObjectAcl bucket key setOptions =
     AWS.Http.unsignedRequest
         "PutObjectAcl"
         "PUT"
-        "/{Bucket}/{Key+}?acl"
+        ("/" ++ bucket ++ "/" ++ key ++ "?acl")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2911,7 +2911,7 @@ putObjectTagging bucket key tagging setOptions =
     AWS.Http.unsignedRequest
         "PutObjectTagging"
         "PUT"
-        "/{Bucket}/{Key+}?tagging"
+        ("/" ++ bucket ++ "/" ++ key ++ "?tagging")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2948,7 +2948,7 @@ restoreObject bucket key setOptions =
     AWS.Http.unsignedRequest
         "RestoreObject"
         "POST"
-        "/{Bucket}/{Key+}?restore"
+        ("/" ++ bucket ++ "/" ++ key ++ "?restore")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2990,7 +2990,7 @@ uploadPart bucket key partNumber uploadId setOptions =
     AWS.Http.unsignedRequest
         "UploadPart"
         "PUT"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3038,7 +3038,7 @@ uploadPartCopy bucket copySource key partNumber uploadId setOptions =
     AWS.Http.unsignedRequest
         "UploadPartCopy"
         "PUT"
-        "/{Bucket}/{Key+}"
+        ("/" ++ bucket ++ "/" ++ key ++ "")
         (AWS.Http.JsonBody
             JE.null
         )

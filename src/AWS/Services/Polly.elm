@@ -160,7 +160,7 @@ deleteLexicon name =
     AWS.Http.unsignedRequest
         "DeleteLexicon"
         "DELETE"
-        "/v1/lexicons/{LexiconName}"
+        ("/v1/lexicons/" ++ name ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -217,7 +217,7 @@ getLexicon name =
     AWS.Http.unsignedRequest
         "GetLexicon"
         "GET"
-        "/v1/lexicons/{LexiconName}"
+        ("/v1/lexicons/" ++ name ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -276,7 +276,7 @@ putLexicon name content =
     AWS.Http.unsignedRequest
         "PutLexicon"
         "PUT"
-        "/v1/lexicons/{LexiconName}"
+        ("/v1/lexicons/" ++ name ++ "")
         (AWS.Http.JsonBody
             JE.null
         )

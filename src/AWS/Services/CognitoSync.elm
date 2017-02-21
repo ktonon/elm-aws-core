@@ -213,7 +213,7 @@ bulkPublish identityPoolId =
     AWS.Http.unsignedRequest
         "BulkPublish"
         "POST"
-        "/identitypools/{IdentityPoolId}/bulkpublish"
+        ("/identitypools/" ++ identityPoolId ++ "/bulkpublish")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -240,7 +240,7 @@ deleteDataset identityPoolId identityId datasetName =
     AWS.Http.unsignedRequest
         "DeleteDataset"
         "DELETE"
-        "/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}"
+        ("/identitypools/" ++ identityPoolId ++ "/identities/" ++ identityId ++ "/datasets/" ++ datasetName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -267,7 +267,7 @@ describeDataset identityPoolId identityId datasetName =
     AWS.Http.unsignedRequest
         "DescribeDataset"
         "GET"
-        "/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}"
+        ("/identitypools/" ++ identityPoolId ++ "/identities/" ++ identityId ++ "/datasets/" ++ datasetName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -291,7 +291,7 @@ describeIdentityPoolUsage identityPoolId =
     AWS.Http.unsignedRequest
         "DescribeIdentityPoolUsage"
         "GET"
-        "/identitypools/{IdentityPoolId}"
+        ("/identitypools/" ++ identityPoolId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -317,7 +317,7 @@ describeIdentityUsage identityPoolId identityId =
     AWS.Http.unsignedRequest
         "DescribeIdentityUsage"
         "GET"
-        "/identitypools/{IdentityPoolId}/identities/{IdentityId}"
+        ("/identitypools/" ++ identityPoolId ++ "/identities/" ++ identityId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -341,7 +341,7 @@ getBulkPublishDetails identityPoolId =
     AWS.Http.unsignedRequest
         "GetBulkPublishDetails"
         "POST"
-        "/identitypools/{IdentityPoolId}/getBulkPublishDetails"
+        ("/identitypools/" ++ identityPoolId ++ "/getBulkPublishDetails")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -364,7 +364,7 @@ getCognitoEvents identityPoolId =
     AWS.Http.unsignedRequest
         "GetCognitoEvents"
         "GET"
-        "/identitypools/{IdentityPoolId}/events"
+        ("/identitypools/" ++ identityPoolId ++ "/events")
         (AWS.Http.QueryParams
             [
             ]
@@ -388,7 +388,7 @@ getIdentityPoolConfiguration identityPoolId =
     AWS.Http.unsignedRequest
         "GetIdentityPoolConfiguration"
         "GET"
-        "/identitypools/{IdentityPoolId}/configuration"
+        ("/identitypools/" ++ identityPoolId ++ "/configuration")
         (AWS.Http.QueryParams
             [
             ]
@@ -418,7 +418,7 @@ listDatasets identityPoolId identityId setOptions =
     AWS.Http.unsignedRequest
         "ListDatasets"
         "GET"
-        "/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets"
+        ("/identitypools/" ++ identityPoolId ++ "/identities/" ++ identityId ++ "/datasets")
         (AWS.Http.QueryParams
             [
             ]
@@ -492,7 +492,7 @@ listRecords identityPoolId identityId datasetName setOptions =
     AWS.Http.unsignedRequest
         "ListRecords"
         "GET"
-        "/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}/records"
+        ("/identitypools/" ++ identityPoolId ++ "/identities/" ++ identityId ++ "/datasets/" ++ datasetName ++ "/records")
         (AWS.Http.QueryParams
             [
             ]
@@ -532,7 +532,7 @@ registerDevice identityPoolId identityId platform token =
     AWS.Http.unsignedRequest
         "RegisterDevice"
         "POST"
-        "/identitypools/{IdentityPoolId}/identity/{IdentityId}/device"
+        ("/identitypools/" ++ identityPoolId ++ "/identity/" ++ identityId ++ "/device")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -557,7 +557,7 @@ setCognitoEvents identityPoolId events =
     AWS.Http.unsignedRequest
         "SetCognitoEvents"
         "POST"
-        "/identitypools/{IdentityPoolId}/events"
+        ("/identitypools/" ++ identityPoolId ++ "/events")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -584,7 +584,7 @@ setIdentityPoolConfiguration identityPoolId setOptions =
     AWS.Http.unsignedRequest
         "SetIdentityPoolConfiguration"
         "POST"
-        "/identitypools/{IdentityPoolId}/configuration"
+        ("/identitypools/" ++ identityPoolId ++ "/configuration")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -621,7 +621,7 @@ subscribeToDataset identityPoolId identityId datasetName deviceId =
     AWS.Http.unsignedRequest
         "SubscribeToDataset"
         "POST"
-        "/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}/subscriptions/{DeviceId}"
+        ("/identitypools/" ++ identityPoolId ++ "/identities/" ++ identityId ++ "/datasets/" ++ datasetName ++ "/subscriptions/" ++ deviceId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -650,7 +650,7 @@ unsubscribeFromDataset identityPoolId identityId datasetName deviceId =
     AWS.Http.unsignedRequest
         "UnsubscribeFromDataset"
         "DELETE"
-        "/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}/subscriptions/{DeviceId}"
+        ("/identitypools/" ++ identityPoolId ++ "/identities/" ++ identityId ++ "/datasets/" ++ datasetName ++ "/subscriptions/" ++ deviceId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -683,7 +683,7 @@ updateRecords identityPoolId identityId datasetName syncSessionToken setOptions 
     AWS.Http.unsignedRequest
         "UpdateRecords"
         "POST"
-        "/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}"
+        ("/identitypools/" ++ identityPoolId ++ "/identities/" ++ identityId ++ "/datasets/" ++ datasetName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )

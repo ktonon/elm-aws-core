@@ -271,7 +271,7 @@ abortMultipartUpload accountId vaultName uploadId =
     AWS.Http.unsignedRequest
         "AbortMultipartUpload"
         "DELETE"
-        "/{accountId}/vaults/{vaultName}/multipart-uploads/{uploadId}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/multipart-uploads/" ++ uploadId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -296,7 +296,7 @@ abortVaultLock accountId vaultName =
     AWS.Http.unsignedRequest
         "AbortVaultLock"
         "DELETE"
-        "/{accountId}/vaults/{vaultName}/lock-policy"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/lock-policy")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -325,7 +325,7 @@ addTagsToVault accountId vaultName setOptions =
     AWS.Http.unsignedRequest
         "AddTagsToVault"
         "POST"
-        "/{accountId}/vaults/{vaultName}/tags?operation=add"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/tags?operation=add")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -363,7 +363,7 @@ completeMultipartUpload accountId vaultName uploadId setOptions =
     AWS.Http.unsignedRequest
         "CompleteMultipartUpload"
         "POST"
-        "/{accountId}/vaults/{vaultName}/multipart-uploads/{uploadId}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/multipart-uploads/" ++ uploadId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -398,7 +398,7 @@ completeVaultLock accountId vaultName lockId =
     AWS.Http.unsignedRequest
         "CompleteVaultLock"
         "POST"
-        "/{accountId}/vaults/{vaultName}/lock-policy/{lockId}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/lock-policy/" ++ lockId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -423,7 +423,7 @@ createVault accountId vaultName =
     AWS.Http.unsignedRequest
         "CreateVault"
         "PUT"
-        "/{accountId}/vaults/{vaultName}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -450,7 +450,7 @@ deleteArchive accountId vaultName archiveId =
     AWS.Http.unsignedRequest
         "DeleteArchive"
         "DELETE"
-        "/{accountId}/vaults/{vaultName}/archives/{archiveId}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/archives/" ++ archiveId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -475,7 +475,7 @@ deleteVault accountId vaultName =
     AWS.Http.unsignedRequest
         "DeleteVault"
         "DELETE"
-        "/{accountId}/vaults/{vaultName}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -500,7 +500,7 @@ deleteVaultAccessPolicy accountId vaultName =
     AWS.Http.unsignedRequest
         "DeleteVaultAccessPolicy"
         "DELETE"
-        "/{accountId}/vaults/{vaultName}/access-policy"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/access-policy")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -525,7 +525,7 @@ deleteVaultNotifications accountId vaultName =
     AWS.Http.unsignedRequest
         "DeleteVaultNotifications"
         "DELETE"
-        "/{accountId}/vaults/{vaultName}/notification-configuration"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/notification-configuration")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -552,7 +552,7 @@ describeJob accountId vaultName jobId =
     AWS.Http.unsignedRequest
         "DescribeJob"
         "GET"
-        "/{accountId}/vaults/{vaultName}/jobs/{jobId}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/jobs/" ++ jobId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -578,7 +578,7 @@ describeVault accountId vaultName =
     AWS.Http.unsignedRequest
         "DescribeVault"
         "GET"
-        "/{accountId}/vaults/{vaultName}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -602,7 +602,7 @@ getDataRetrievalPolicy accountId =
     AWS.Http.unsignedRequest
         "GetDataRetrievalPolicy"
         "GET"
-        "/{accountId}/policies/data-retrieval"
+        ("/" ++ accountId ++ "/policies/data-retrieval")
         (AWS.Http.QueryParams
             [
             ]
@@ -634,7 +634,7 @@ getJobOutput accountId vaultName jobId setOptions =
     AWS.Http.unsignedRequest
         "GetJobOutput"
         "GET"
-        "/{accountId}/vaults/{vaultName}/jobs/{jobId}/output"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/jobs/" ++ jobId ++ "/output")
         (AWS.Http.QueryParams
             [
             ]
@@ -667,7 +667,7 @@ getVaultAccessPolicy accountId vaultName =
     AWS.Http.unsignedRequest
         "GetVaultAccessPolicy"
         "GET"
-        "/{accountId}/vaults/{vaultName}/access-policy"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/access-policy")
         (AWS.Http.QueryParams
             [
             ]
@@ -693,7 +693,7 @@ getVaultLock accountId vaultName =
     AWS.Http.unsignedRequest
         "GetVaultLock"
         "GET"
-        "/{accountId}/vaults/{vaultName}/lock-policy"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/lock-policy")
         (AWS.Http.QueryParams
             [
             ]
@@ -719,7 +719,7 @@ getVaultNotifications accountId vaultName =
     AWS.Http.unsignedRequest
         "GetVaultNotifications"
         "GET"
-        "/{accountId}/vaults/{vaultName}/notification-configuration"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/notification-configuration")
         (AWS.Http.QueryParams
             [
             ]
@@ -749,7 +749,7 @@ initiateJob accountId vaultName setOptions =
     AWS.Http.unsignedRequest
         "InitiateJob"
         "POST"
-        "/{accountId}/vaults/{vaultName}/jobs"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/jobs")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -785,7 +785,7 @@ initiateMultipartUpload accountId vaultName setOptions =
     AWS.Http.unsignedRequest
         "InitiateMultipartUpload"
         "POST"
-        "/{accountId}/vaults/{vaultName}/multipart-uploads"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/multipart-uploads")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -822,7 +822,7 @@ initiateVaultLock accountId vaultName setOptions =
     AWS.Http.unsignedRequest
         "InitiateVaultLock"
         "POST"
-        "/{accountId}/vaults/{vaultName}/lock-policy"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/lock-policy")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -858,7 +858,7 @@ listJobs accountId vaultName setOptions =
     AWS.Http.unsignedRequest
         "ListJobs"
         "GET"
-        "/{accountId}/vaults/{vaultName}/jobs"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/jobs")
         (AWS.Http.QueryParams
             [
             ]
@@ -898,7 +898,7 @@ listMultipartUploads accountId vaultName setOptions =
     AWS.Http.unsignedRequest
         "ListMultipartUploads"
         "GET"
-        "/{accountId}/vaults/{vaultName}/multipart-uploads"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/multipart-uploads")
         (AWS.Http.QueryParams
             [
             ]
@@ -938,7 +938,7 @@ listParts accountId vaultName uploadId setOptions =
     AWS.Http.unsignedRequest
         "ListParts"
         "GET"
-        "/{accountId}/vaults/{vaultName}/multipart-uploads/{uploadId}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/multipart-uploads/" ++ uploadId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -970,7 +970,7 @@ listProvisionedCapacity accountId =
     AWS.Http.unsignedRequest
         "ListProvisionedCapacity"
         "GET"
-        "/{accountId}/provisioned-capacity"
+        ("/" ++ accountId ++ "/provisioned-capacity")
         (AWS.Http.QueryParams
             [
             ]
@@ -996,7 +996,7 @@ listTagsForVault accountId vaultName =
     AWS.Http.unsignedRequest
         "ListTagsForVault"
         "GET"
-        "/{accountId}/vaults/{vaultName}/tags"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/tags")
         (AWS.Http.QueryParams
             [
             ]
@@ -1024,7 +1024,7 @@ listVaults accountId setOptions =
     AWS.Http.unsignedRequest
         "ListVaults"
         "GET"
-        "/{accountId}/vaults"
+        ("/" ++ accountId ++ "/vaults")
         (AWS.Http.QueryParams
             [
             ]
@@ -1056,7 +1056,7 @@ purchaseProvisionedCapacity accountId =
     AWS.Http.unsignedRequest
         "PurchaseProvisionedCapacity"
         "POST"
-        "/{accountId}/provisioned-capacity"
+        ("/" ++ accountId ++ "/provisioned-capacity")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1085,7 +1085,7 @@ removeTagsFromVault accountId vaultName setOptions =
     AWS.Http.unsignedRequest
         "RemoveTagsFromVault"
         "POST"
-        "/{accountId}/vaults/{vaultName}/tags?operation=remove"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/tags?operation=remove")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1119,7 +1119,7 @@ setDataRetrievalPolicy accountId setOptions =
     AWS.Http.unsignedRequest
         "SetDataRetrievalPolicy"
         "PUT"
-        "/{accountId}/policies/data-retrieval"
+        ("/" ++ accountId ++ "/policies/data-retrieval")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1155,7 +1155,7 @@ setVaultAccessPolicy accountId vaultName setOptions =
     AWS.Http.unsignedRequest
         "SetVaultAccessPolicy"
         "PUT"
-        "/{accountId}/vaults/{vaultName}/access-policy"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/access-policy")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1191,7 +1191,7 @@ setVaultNotifications accountId vaultName setOptions =
     AWS.Http.unsignedRequest
         "SetVaultNotifications"
         "PUT"
-        "/{accountId}/vaults/{vaultName}/notification-configuration"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/notification-configuration")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1227,7 +1227,7 @@ uploadArchive vaultName accountId setOptions =
     AWS.Http.unsignedRequest
         "UploadArchive"
         "POST"
-        "/{accountId}/vaults/{vaultName}/archives"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/archives")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1267,7 +1267,7 @@ uploadMultipartPart accountId vaultName uploadId setOptions =
     AWS.Http.unsignedRequest
         "UploadMultipartPart"
         "PUT"
-        "/{accountId}/vaults/{vaultName}/multipart-uploads/{uploadId}"
+        ("/" ++ accountId ++ "/vaults/" ++ vaultName ++ "/multipart-uploads/" ++ uploadId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
