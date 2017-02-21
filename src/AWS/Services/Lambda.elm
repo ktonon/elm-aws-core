@@ -287,7 +287,7 @@ addPermission functionName statementId action principal setOptions =
     AWS.Http.unsignedRequest
         "AddPermission"
         "POST"
-        "/2015-03-31/functions/{FunctionName}/policy"
+        ("/2015-03-31/functions/" ++ functionName ++ "/policy")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -328,7 +328,7 @@ createAlias functionName name functionVersion setOptions =
     AWS.Http.unsignedRequest
         "CreateAlias"
         "POST"
-        "/2015-03-31/functions/{FunctionName}/aliases"
+        ("/2015-03-31/functions/" ++ functionName ++ "/aliases")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -449,7 +449,7 @@ deleteAlias functionName name =
     AWS.Http.unsignedRequest
         "DeleteAlias"
         "DELETE"
-        "/2015-03-31/functions/{FunctionName}/aliases/{Name}"
+        ("/2015-03-31/functions/" ++ functionName ++ "/aliases/" ++ name ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -472,7 +472,7 @@ deleteEventSourceMapping uUID =
     AWS.Http.unsignedRequest
         "DeleteEventSourceMapping"
         "DELETE"
-        "/2015-03-31/event-source-mappings/{UUID}"
+        ("/2015-03-31/event-source-mappings/" ++ uUID ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -499,7 +499,7 @@ deleteFunction functionName setOptions =
     AWS.Http.unsignedRequest
         "DeleteFunction"
         "DELETE"
-        "/2015-03-31/functions/{FunctionName}"
+        ("/2015-03-31/functions/" ++ functionName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -553,7 +553,7 @@ getAlias functionName name =
     AWS.Http.unsignedRequest
         "GetAlias"
         "GET"
-        "/2015-03-31/functions/{FunctionName}/aliases/{Name}"
+        ("/2015-03-31/functions/" ++ functionName ++ "/aliases/" ++ name ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -577,7 +577,7 @@ getEventSourceMapping uUID =
     AWS.Http.unsignedRequest
         "GetEventSourceMapping"
         "GET"
-        "/2015-03-31/event-source-mappings/{UUID}"
+        ("/2015-03-31/event-source-mappings/" ++ uUID ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -605,7 +605,7 @@ getFunction functionName setOptions =
     AWS.Http.unsignedRequest
         "GetFunction"
         "GET"
-        "/2015-03-31/functions/{FunctionName}"
+        ("/2015-03-31/functions/" ++ functionName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -640,7 +640,7 @@ getFunctionConfiguration functionName setOptions =
     AWS.Http.unsignedRequest
         "GetFunctionConfiguration"
         "GET"
-        "/2015-03-31/functions/{FunctionName}/configuration"
+        ("/2015-03-31/functions/" ++ functionName ++ "/configuration")
         (AWS.Http.QueryParams
             [
             ]
@@ -675,7 +675,7 @@ getPolicy functionName setOptions =
     AWS.Http.unsignedRequest
         "GetPolicy"
         "GET"
-        "/2015-03-31/functions/{FunctionName}/policy"
+        ("/2015-03-31/functions/" ++ functionName ++ "/policy")
         (AWS.Http.QueryParams
             [
             ]
@@ -710,7 +710,7 @@ invoke functionName setOptions =
     AWS.Http.unsignedRequest
         "Invoke"
         "POST"
-        "/2015-03-31/functions/{FunctionName}/invocations"
+        ("/2015-03-31/functions/" ++ functionName ++ "/invocations")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -746,7 +746,7 @@ invokeAsync functionName invokeArgs =
     AWS.Http.unsignedRequest
         "InvokeAsync"
         "POST"
-        "/2014-11-13/functions/{FunctionName}/invoke-async/"
+        ("/2014-11-13/functions/" ++ functionName ++ "/invoke-async/")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -773,7 +773,7 @@ listAliases functionName setOptions =
     AWS.Http.unsignedRequest
         "ListAliases"
         "GET"
-        "/2015-03-31/functions/{FunctionName}/aliases"
+        ("/2015-03-31/functions/" ++ functionName ++ "/aliases")
         (AWS.Http.QueryParams
             [
             ]
@@ -880,7 +880,7 @@ listVersionsByFunction functionName setOptions =
     AWS.Http.unsignedRequest
         "ListVersionsByFunction"
         "GET"
-        "/2015-03-31/functions/{FunctionName}/versions"
+        ("/2015-03-31/functions/" ++ functionName ++ "/versions")
         (AWS.Http.QueryParams
             [
             ]
@@ -916,7 +916,7 @@ publishVersion functionName setOptions =
     AWS.Http.unsignedRequest
         "PublishVersion"
         "POST"
-        "/2015-03-31/functions/{FunctionName}/versions"
+        ("/2015-03-31/functions/" ++ functionName ++ "/versions")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -953,7 +953,7 @@ removePermission functionName statementId setOptions =
     AWS.Http.unsignedRequest
         "RemovePermission"
         "DELETE"
-        "/2015-03-31/functions/{FunctionName}/policy/{StatementId}"
+        ("/2015-03-31/functions/" ++ functionName ++ "/policy/" ++ statementId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -989,7 +989,7 @@ updateAlias functionName name setOptions =
     AWS.Http.unsignedRequest
         "UpdateAlias"
         "PUT"
-        "/2015-03-31/functions/{FunctionName}/aliases/{Name}"
+        ("/2015-03-31/functions/" ++ functionName ++ "/aliases/" ++ name ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1024,7 +1024,7 @@ updateEventSourceMapping uUID setOptions =
     AWS.Http.unsignedRequest
         "UpdateEventSourceMapping"
         "PUT"
-        "/2015-03-31/event-source-mappings/{UUID}"
+        ("/2015-03-31/event-source-mappings/" ++ uUID ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1060,7 +1060,7 @@ updateFunctionCode functionName setOptions =
     AWS.Http.unsignedRequest
         "UpdateFunctionCode"
         "PUT"
-        "/2015-03-31/functions/{FunctionName}/code"
+        ("/2015-03-31/functions/" ++ functionName ++ "/code")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1098,7 +1098,7 @@ updateFunctionConfiguration functionName setOptions =
     AWS.Http.unsignedRequest
         "UpdateFunctionConfiguration"
         "PUT"
-        "/2015-03-31/functions/{FunctionName}/configuration"
+        ("/2015-03-31/functions/" ++ functionName ++ "/configuration")
         (AWS.Http.JsonBody
             JE.null
         )

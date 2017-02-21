@@ -460,6 +460,7 @@ import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
 import Date exposing (Date)
 import Json.Decode.Extra as JDX
+import AWS.Enum
 
 
 {-| Configuration for this service
@@ -500,7 +501,7 @@ associateVPCWithHostedZone hostedZoneId vPC setOptions =
     AWS.Http.unsignedRequest
         "AssociateVPCWithHostedZone"
         "POST"
-        "/2013-04-01/hostedzone/{Id}/associatevpc"
+        ("/2013-04-01/hostedzone/" ++ hostedZoneId ++ "/associatevpc")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -532,7 +533,7 @@ changeResourceRecordSets hostedZoneId changeBatch =
     AWS.Http.unsignedRequest
         "ChangeResourceRecordSets"
         "POST"
-        "/2013-04-01/hostedzone/{Id}/rrset/"
+        ("/2013-04-01/hostedzone/" ++ hostedZoneId ++ "/rrset/")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -561,7 +562,7 @@ changeTagsForResource resourceType resourceId setOptions =
     AWS.Http.unsignedRequest
         "ChangeTagsForResource"
         "POST"
-        "/2013-04-01/tags/{ResourceType}/{ResourceId}"
+        ("/2013-04-01/tags/" ++ (AWS.Enum.toString resourceType |> Result.withDefault "") ++ "/" ++ resourceId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -762,7 +763,7 @@ createTrafficPolicyVersion id document setOptions =
     AWS.Http.unsignedRequest
         "CreateTrafficPolicyVersion"
         "POST"
-        "/2013-04-01/trafficpolicy/{Id}"
+        ("/2013-04-01/trafficpolicy/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -794,7 +795,7 @@ createVPCAssociationAuthorization hostedZoneId vPC =
     AWS.Http.unsignedRequest
         "CreateVPCAssociationAuthorization"
         "POST"
-        "/2013-04-01/hostedzone/{Id}/authorizevpcassociation"
+        ("/2013-04-01/hostedzone/" ++ hostedZoneId ++ "/authorizevpcassociation")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -817,7 +818,7 @@ deleteHealthCheck healthCheckId =
     AWS.Http.unsignedRequest
         "DeleteHealthCheck"
         "DELETE"
-        "/2013-04-01/healthcheck/{HealthCheckId}"
+        ("/2013-04-01/healthcheck/" ++ healthCheckId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -840,7 +841,7 @@ deleteHostedZone id =
     AWS.Http.unsignedRequest
         "DeleteHostedZone"
         "DELETE"
-        "/2013-04-01/hostedzone/{Id}"
+        ("/2013-04-01/hostedzone/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -863,7 +864,7 @@ deleteReusableDelegationSet id =
     AWS.Http.unsignedRequest
         "DeleteReusableDelegationSet"
         "DELETE"
-        "/2013-04-01/delegationset/{Id}"
+        ("/2013-04-01/delegationset/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -888,7 +889,7 @@ deleteTrafficPolicy id version =
     AWS.Http.unsignedRequest
         "DeleteTrafficPolicy"
         "DELETE"
-        "/2013-04-01/trafficpolicy/{Id}/{Version}"
+        ("/2013-04-01/trafficpolicy/" ++ id ++ "/" ++ (toString version) ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -911,7 +912,7 @@ deleteTrafficPolicyInstance id =
     AWS.Http.unsignedRequest
         "DeleteTrafficPolicyInstance"
         "DELETE"
-        "/2013-04-01/trafficpolicyinstance/{Id}"
+        ("/2013-04-01/trafficpolicyinstance/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -936,7 +937,7 @@ deleteVPCAssociationAuthorization hostedZoneId vPC =
     AWS.Http.unsignedRequest
         "DeleteVPCAssociationAuthorization"
         "POST"
-        "/2013-04-01/hostedzone/{Id}/deauthorizevpcassociation"
+        ("/2013-04-01/hostedzone/" ++ hostedZoneId ++ "/deauthorizevpcassociation")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -965,7 +966,7 @@ disassociateVPCFromHostedZone hostedZoneId vPC setOptions =
     AWS.Http.unsignedRequest
         "DisassociateVPCFromHostedZone"
         "POST"
-        "/2013-04-01/hostedzone/{Id}/disassociatevpc"
+        ("/2013-04-01/hostedzone/" ++ hostedZoneId ++ "/disassociatevpc")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -995,7 +996,7 @@ getChange id =
     AWS.Http.unsignedRequest
         "GetChange"
         "GET"
-        "/2013-04-01/change/{Id}"
+        ("/2013-04-01/change/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1076,7 +1077,7 @@ getHealthCheck healthCheckId =
     AWS.Http.unsignedRequest
         "GetHealthCheck"
         "GET"
-        "/2013-04-01/healthcheck/{HealthCheckId}"
+        ("/2013-04-01/healthcheck/" ++ healthCheckId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1122,7 +1123,7 @@ getHealthCheckLastFailureReason healthCheckId =
     AWS.Http.unsignedRequest
         "GetHealthCheckLastFailureReason"
         "GET"
-        "/2013-04-01/healthcheck/{HealthCheckId}/lastfailurereason"
+        ("/2013-04-01/healthcheck/" ++ healthCheckId ++ "/lastfailurereason")
         (AWS.Http.QueryParams
             [
             ]
@@ -1146,7 +1147,7 @@ getHealthCheckStatus healthCheckId =
     AWS.Http.unsignedRequest
         "GetHealthCheckStatus"
         "GET"
-        "/2013-04-01/healthcheck/{HealthCheckId}/status"
+        ("/2013-04-01/healthcheck/" ++ healthCheckId ++ "/status")
         (AWS.Http.QueryParams
             [
             ]
@@ -1170,7 +1171,7 @@ getHostedZone id =
     AWS.Http.unsignedRequest
         "GetHostedZone"
         "GET"
-        "/2013-04-01/hostedzone/{Id}"
+        ("/2013-04-01/hostedzone/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1216,7 +1217,7 @@ getReusableDelegationSet id =
     AWS.Http.unsignedRequest
         "GetReusableDelegationSet"
         "GET"
-        "/2013-04-01/delegationset/{Id}"
+        ("/2013-04-01/delegationset/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1242,7 +1243,7 @@ getTrafficPolicy id version =
     AWS.Http.unsignedRequest
         "GetTrafficPolicy"
         "GET"
-        "/2013-04-01/trafficpolicy/{Id}/{Version}"
+        ("/2013-04-01/trafficpolicy/" ++ id ++ "/" ++ (toString version) ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1266,7 +1267,7 @@ getTrafficPolicyInstance id =
     AWS.Http.unsignedRequest
         "GetTrafficPolicyInstance"
         "GET"
-        "/2013-04-01/trafficpolicyinstance/{Id}"
+        ("/2013-04-01/trafficpolicyinstance/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1456,7 +1457,7 @@ listResourceRecordSets hostedZoneId setOptions =
     AWS.Http.unsignedRequest
         "ListResourceRecordSets"
         "GET"
-        "/2013-04-01/hostedzone/{Id}/rrset"
+        ("/2013-04-01/hostedzone/" ++ hostedZoneId ++ "/rrset")
         (AWS.Http.QueryParams
             [
             ]
@@ -1526,7 +1527,7 @@ listTagsForResource resourceType resourceId =
     AWS.Http.unsignedRequest
         "ListTagsForResource"
         "GET"
-        "/2013-04-01/tags/{ResourceType}/{ResourceId}"
+        ("/2013-04-01/tags/" ++ (AWS.Enum.toString resourceType |> Result.withDefault "") ++ "/" ++ resourceId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1552,7 +1553,7 @@ listTagsForResources resourceType resourceIds =
     AWS.Http.unsignedRequest
         "ListTagsForResources"
         "POST"
-        "/2013-04-01/tags/{ResourceType}"
+        ("/2013-04-01/tags/" ++ (AWS.Enum.toString resourceType |> Result.withDefault "") ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1726,7 +1727,7 @@ listTrafficPolicyVersions id setOptions =
     AWS.Http.unsignedRequest
         "ListTrafficPolicyVersions"
         "GET"
-        "/2013-04-01/trafficpolicies/{Id}/versions"
+        ("/2013-04-01/trafficpolicies/" ++ id ++ "/versions")
         (AWS.Http.QueryParams
             [
             ]
@@ -1762,7 +1763,7 @@ listVPCAssociationAuthorizations hostedZoneId setOptions =
     AWS.Http.unsignedRequest
         "ListVPCAssociationAuthorizations"
         "GET"
-        "/2013-04-01/hostedzone/{Id}/authorizevpcassociation"
+        ("/2013-04-01/hostedzone/" ++ hostedZoneId ++ "/authorizevpcassociation")
         (AWS.Http.QueryParams
             [
             ]
@@ -1839,7 +1840,7 @@ updateHealthCheck healthCheckId setOptions =
     AWS.Http.unsignedRequest
         "UpdateHealthCheck"
         "POST"
-        "/2013-04-01/healthcheck/{HealthCheckId}"
+        ("/2013-04-01/healthcheck/" ++ healthCheckId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1886,7 +1887,7 @@ updateHostedZoneComment id setOptions =
     AWS.Http.unsignedRequest
         "UpdateHostedZoneComment"
         "POST"
-        "/2013-04-01/hostedzone/{Id}"
+        ("/2013-04-01/hostedzone/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1920,7 +1921,7 @@ updateTrafficPolicyComment id version comment =
     AWS.Http.unsignedRequest
         "UpdateTrafficPolicyComment"
         "POST"
-        "/2013-04-01/trafficpolicy/{Id}/{Version}"
+        ("/2013-04-01/trafficpolicy/" ++ id ++ "/" ++ (toString version) ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1949,7 +1950,7 @@ updateTrafficPolicyInstance id tTL trafficPolicyId trafficPolicyVersion =
     AWS.Http.unsignedRequest
         "UpdateTrafficPolicyInstance"
         "POST"
-        "/2013-04-01/trafficpolicyinstance/{Id}"
+        ("/2013-04-01/trafficpolicyinstance/" ++ id ++ "")
         (AWS.Http.JsonBody
             JE.null
         )

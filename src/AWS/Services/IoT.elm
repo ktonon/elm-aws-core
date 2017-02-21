@@ -455,7 +455,7 @@ acceptCertificateTransfer certificateId setOptions =
     AWS.Http.unsignedRequest
         "AcceptCertificateTransfer"
         "PATCH"
-        "/accept-certificate-transfer/{certificateId}"
+        ("/accept-certificate-transfer/" ++ certificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -487,7 +487,7 @@ attachPrincipalPolicy policyName principal =
     AWS.Http.unsignedRequest
         "AttachPrincipalPolicy"
         "PUT"
-        "/principal-policies/{policyName}"
+        ("/principal-policies/" ++ policyName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -512,7 +512,7 @@ attachThingPrincipal thingName principal =
     AWS.Http.unsignedRequest
         "AttachThingPrincipal"
         "PUT"
-        "/things/{thingName}/principals"
+        ("/things/" ++ thingName ++ "/principals")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -535,7 +535,7 @@ cancelCertificateTransfer certificateId =
     AWS.Http.unsignedRequest
         "CancelCertificateTransfer"
         "PATCH"
-        "/cancel-certificate-transfer/{certificateId}"
+        ("/cancel-certificate-transfer/" ++ certificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -626,7 +626,7 @@ createPolicy policyName policyDocument =
     AWS.Http.unsignedRequest
         "CreatePolicy"
         "POST"
-        "/policies/{policyName}"
+        ("/policies/" ++ policyName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -655,7 +655,7 @@ createPolicyVersion policyName policyDocument setOptions =
     AWS.Http.unsignedRequest
         "CreatePolicyVersion"
         "POST"
-        "/policies/{policyName}/version"
+        ("/policies/" ++ policyName ++ "/version")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -689,7 +689,7 @@ createThing thingName setOptions =
     AWS.Http.unsignedRequest
         "CreateThing"
         "POST"
-        "/things/{thingName}"
+        ("/things/" ++ thingName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -724,7 +724,7 @@ createThingType thingTypeName setOptions =
     AWS.Http.unsignedRequest
         "CreateThingType"
         "POST"
-        "/thing-types/{thingTypeName}"
+        ("/thing-types/" ++ thingTypeName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -756,7 +756,7 @@ createTopicRule ruleName topicRulePayload =
     AWS.Http.unsignedRequest
         "CreateTopicRule"
         "POST"
-        "/rules/{ruleName}"
+        ("/rules/" ++ ruleName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -779,7 +779,7 @@ deleteCACertificate certificateId =
     AWS.Http.unsignedRequest
         "DeleteCACertificate"
         "DELETE"
-        "/cacertificate/{caCertificateId}"
+        ("/cacertificate/" ++ certificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -802,7 +802,7 @@ deleteCertificate certificateId =
     AWS.Http.unsignedRequest
         "DeleteCertificate"
         "DELETE"
-        "/certificates/{certificateId}"
+        ("/certificates/" ++ certificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -825,7 +825,7 @@ deletePolicy policyName =
     AWS.Http.unsignedRequest
         "DeletePolicy"
         "DELETE"
-        "/policies/{policyName}"
+        ("/policies/" ++ policyName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -850,7 +850,7 @@ deletePolicyVersion policyName policyVersionId =
     AWS.Http.unsignedRequest
         "DeletePolicyVersion"
         "DELETE"
-        "/policies/{policyName}/version/{policyVersionId}"
+        ("/policies/" ++ policyName ++ "/version/" ++ policyVersionId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -898,7 +898,7 @@ deleteThing thingName setOptions =
     AWS.Http.unsignedRequest
         "DeleteThing"
         "DELETE"
-        "/things/{thingName}"
+        ("/things/" ++ thingName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -928,7 +928,7 @@ deleteThingType thingTypeName =
     AWS.Http.unsignedRequest
         "DeleteThingType"
         "DELETE"
-        "/thing-types/{thingTypeName}"
+        ("/thing-types/" ++ thingTypeName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -951,7 +951,7 @@ deleteTopicRule ruleName =
     AWS.Http.unsignedRequest
         "DeleteTopicRule"
         "DELETE"
-        "/rules/{ruleName}"
+        ("/rules/" ++ ruleName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -978,7 +978,7 @@ deprecateThingType thingTypeName setOptions =
     AWS.Http.unsignedRequest
         "DeprecateThingType"
         "POST"
-        "/thing-types/{thingTypeName}/deprecate"
+        ("/thing-types/" ++ thingTypeName ++ "/deprecate")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1008,7 +1008,7 @@ describeCACertificate certificateId =
     AWS.Http.unsignedRequest
         "DescribeCACertificate"
         "GET"
-        "/cacertificate/{caCertificateId}"
+        ("/cacertificate/" ++ certificateId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1032,7 +1032,7 @@ describeCertificate certificateId =
     AWS.Http.unsignedRequest
         "DescribeCertificate"
         "GET"
-        "/certificates/{certificateId}"
+        ("/certificates/" ++ certificateId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1078,7 +1078,7 @@ describeThing thingName =
     AWS.Http.unsignedRequest
         "DescribeThing"
         "GET"
-        "/things/{thingName}"
+        ("/things/" ++ thingName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1102,7 +1102,7 @@ describeThingType thingTypeName =
     AWS.Http.unsignedRequest
         "DescribeThingType"
         "GET"
-        "/thing-types/{thingTypeName}"
+        ("/thing-types/" ++ thingTypeName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1128,7 +1128,7 @@ detachPrincipalPolicy policyName principal =
     AWS.Http.unsignedRequest
         "DetachPrincipalPolicy"
         "DELETE"
-        "/principal-policies/{policyName}"
+        ("/principal-policies/" ++ policyName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1153,7 +1153,7 @@ detachThingPrincipal thingName principal =
     AWS.Http.unsignedRequest
         "DetachThingPrincipal"
         "DELETE"
-        "/things/{thingName}/principals"
+        ("/things/" ++ thingName ++ "/principals")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1176,7 +1176,7 @@ disableTopicRule ruleName =
     AWS.Http.unsignedRequest
         "DisableTopicRule"
         "POST"
-        "/rules/{ruleName}/disable"
+        ("/rules/" ++ ruleName ++ "/disable")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1199,7 +1199,7 @@ enableTopicRule ruleName =
     AWS.Http.unsignedRequest
         "EnableTopicRule"
         "POST"
-        "/rules/{ruleName}/enable"
+        ("/rules/" ++ ruleName ++ "/enable")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1244,7 +1244,7 @@ getPolicy policyName =
     AWS.Http.unsignedRequest
         "GetPolicy"
         "GET"
-        "/policies/{policyName}"
+        ("/policies/" ++ policyName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1270,7 +1270,7 @@ getPolicyVersion policyName policyVersionId =
     AWS.Http.unsignedRequest
         "GetPolicyVersion"
         "GET"
-        "/policies/{policyName}/version/{policyVersionId}"
+        ("/policies/" ++ policyName ++ "/version/" ++ policyVersionId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1316,7 +1316,7 @@ getTopicRule ruleName =
     AWS.Http.unsignedRequest
         "GetTopicRule"
         "GET"
-        "/rules/{ruleName}"
+        ("/rules/" ++ ruleName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1414,7 +1414,7 @@ listCertificatesByCA caCertificateId setOptions =
     AWS.Http.unsignedRequest
         "ListCertificatesByCA"
         "GET"
-        "/certificates-by-ca/{caCertificateId}"
+        ("/certificates-by-ca/" ++ caCertificateId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1554,7 +1554,7 @@ listPolicyVersions policyName =
     AWS.Http.unsignedRequest
         "ListPolicyVersions"
         "GET"
-        "/policies/{policyName}/version"
+        ("/policies/" ++ policyName ++ "/version")
         (AWS.Http.QueryParams
             [
             ]
@@ -1651,7 +1651,7 @@ listThingPrincipals thingName =
     AWS.Http.unsignedRequest
         "ListThingPrincipals"
         "GET"
-        "/things/{thingName}/principals"
+        ("/things/" ++ thingName ++ "/principals")
         (AWS.Http.QueryParams
             [
             ]
@@ -1860,7 +1860,7 @@ rejectCertificateTransfer certificateId setOptions =
     AWS.Http.unsignedRequest
         "RejectCertificateTransfer"
         "PATCH"
-        "/reject-certificate-transfer/{certificateId}"
+        ("/reject-certificate-transfer/" ++ certificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1892,7 +1892,7 @@ replaceTopicRule ruleName topicRulePayload =
     AWS.Http.unsignedRequest
         "ReplaceTopicRule"
         "PATCH"
-        "/rules/{ruleName}"
+        ("/rules/" ++ ruleName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1917,7 +1917,7 @@ setDefaultPolicyVersion policyName policyVersionId =
     AWS.Http.unsignedRequest
         "SetDefaultPolicyVersion"
         "PATCH"
-        "/policies/{policyName}/version/{policyVersionId}"
+        ("/policies/" ++ policyName ++ "/version/" ++ policyVersionId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1969,7 +1969,7 @@ transferCertificate certificateId targetAwsAccount setOptions =
     AWS.Http.unsignedRequest
         "TransferCertificate"
         "PATCH"
-        "/transfer-certificate/{certificateId}"
+        ("/transfer-certificate/" ++ certificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2003,7 +2003,7 @@ updateCACertificate certificateId setOptions =
     AWS.Http.unsignedRequest
         "UpdateCACertificate"
         "PUT"
-        "/cacertificate/{caCertificateId}"
+        ("/cacertificate/" ++ certificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2036,7 +2036,7 @@ updateCertificate certificateId newStatus =
     AWS.Http.unsignedRequest
         "UpdateCertificate"
         "PUT"
-        "/certificates/{certificateId}"
+        ("/certificates/" ++ certificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2063,7 +2063,7 @@ updateThing thingName setOptions =
     AWS.Http.unsignedRequest
         "UpdateThing"
         "PATCH"
-        "/things/{thingName}"
+        ("/things/" ++ thingName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )

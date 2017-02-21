@@ -251,7 +251,7 @@ createTags fileSystemId tags =
     AWS.Http.unsignedRequest
         "CreateTags"
         "POST"
-        "/2015-02-01/create-tags/{FileSystemId}"
+        ("/2015-02-01/create-tags/" ++ fileSystemId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -274,7 +274,7 @@ deleteFileSystem fileSystemId =
     AWS.Http.unsignedRequest
         "DeleteFileSystem"
         "DELETE"
-        "/2015-02-01/file-systems/{FileSystemId}"
+        ("/2015-02-01/file-systems/" ++ fileSystemId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -297,7 +297,7 @@ deleteMountTarget mountTargetId =
     AWS.Http.unsignedRequest
         "DeleteMountTarget"
         "DELETE"
-        "/2015-02-01/mount-targets/{MountTargetId}"
+        ("/2015-02-01/mount-targets/" ++ mountTargetId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -322,7 +322,7 @@ deleteTags fileSystemId tagKeys =
     AWS.Http.unsignedRequest
         "DeleteTags"
         "POST"
-        "/2015-02-01/delete-tags/{FileSystemId}"
+        ("/2015-02-01/delete-tags/" ++ fileSystemId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -381,7 +381,7 @@ describeMountTargetSecurityGroups mountTargetId =
     AWS.Http.unsignedRequest
         "DescribeMountTargetSecurityGroups"
         "GET"
-        "/2015-02-01/mount-targets/{MountTargetId}/security-groups"
+        ("/2015-02-01/mount-targets/" ++ mountTargetId ++ "/security-groups")
         (AWS.Http.QueryParams
             [
             ]
@@ -445,7 +445,7 @@ describeTags fileSystemId setOptions =
     AWS.Http.unsignedRequest
         "DescribeTags"
         "GET"
-        "/2015-02-01/tags/{FileSystemId}/"
+        ("/2015-02-01/tags/" ++ fileSystemId ++ "/")
         (AWS.Http.QueryParams
             [
             ]
@@ -481,7 +481,7 @@ modifyMountTargetSecurityGroups mountTargetId setOptions =
     AWS.Http.unsignedRequest
         "ModifyMountTargetSecurityGroups"
         "PUT"
-        "/2015-02-01/mount-targets/{MountTargetId}/security-groups"
+        ("/2015-02-01/mount-targets/" ++ mountTargetId ++ "/security-groups")
         (AWS.Http.JsonBody
             JE.null
         )

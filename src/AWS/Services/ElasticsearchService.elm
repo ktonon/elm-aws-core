@@ -243,7 +243,7 @@ deleteElasticsearchDomain domainName =
     AWS.Http.unsignedRequest
         "DeleteElasticsearchDomain"
         "DELETE"
-        "/2015-01-01/es/domain/{DomainName}"
+        ("/2015-01-01/es/domain/" ++ domainName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -266,7 +266,7 @@ describeElasticsearchDomain domainName =
     AWS.Http.unsignedRequest
         "DescribeElasticsearchDomain"
         "GET"
-        "/2015-01-01/es/domain/{DomainName}"
+        ("/2015-01-01/es/domain/" ++ domainName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -290,7 +290,7 @@ describeElasticsearchDomainConfig domainName =
     AWS.Http.unsignedRequest
         "DescribeElasticsearchDomainConfig"
         "GET"
-        "/2015-01-01/es/domain/{DomainName}/config"
+        ("/2015-01-01/es/domain/" ++ domainName ++ "/config")
         (AWS.Http.QueryParams
             [
             ]
@@ -412,7 +412,7 @@ updateElasticsearchDomainConfig domainName setOptions =
     AWS.Http.unsignedRequest
         "UpdateElasticsearchDomainConfig"
         "POST"
-        "/2015-01-01/es/domain/{DomainName}/config"
+        ("/2015-01-01/es/domain/" ++ domainName ++ "/config")
         (AWS.Http.JsonBody
             JE.null
         )

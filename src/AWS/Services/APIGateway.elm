@@ -599,7 +599,7 @@ createAuthorizer restApiId name type_ identitySource setOptions =
     AWS.Http.unsignedRequest
         "CreateAuthorizer"
         "POST"
-        "/restapis/{restapi_id}/authorizers"
+        ("/restapis/" ++ restApiId ++ "/authorizers")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -640,7 +640,7 @@ createBasePathMapping domainName restApiId setOptions =
     AWS.Http.unsignedRequest
         "CreateBasePathMapping"
         "POST"
-        "/domainnames/{domain_name}/basepathmappings"
+        ("/domainnames/" ++ domainName ++ "/basepathmappings")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -675,7 +675,7 @@ createDeployment restApiId setOptions =
     AWS.Http.unsignedRequest
         "CreateDeployment"
         "POST"
-        "/restapis/{restapi_id}/deployments"
+        ("/restapis/" ++ restApiId ++ "/deployments")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -714,7 +714,7 @@ createDocumentationPart restApiId location properties =
     AWS.Http.unsignedRequest
         "CreateDocumentationPart"
         "POST"
-        "/restapis/{restapi_id}/documentation/parts"
+        ("/restapis/" ++ restApiId ++ "/documentation/parts")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -743,7 +743,7 @@ createDocumentationVersion restApiId documentationVersion setOptions =
     AWS.Http.unsignedRequest
         "CreateDocumentationVersion"
         "POST"
-        "/restapis/{restapi_id}/documentation/versions"
+        ("/restapis/" ++ restApiId ++ "/documentation/versions")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -813,7 +813,7 @@ createModel restApiId name contentType setOptions =
     AWS.Http.unsignedRequest
         "CreateModel"
         "POST"
-        "/restapis/{restapi_id}/models"
+        ("/restapis/" ++ restApiId ++ "/models")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -848,7 +848,7 @@ createResource restApiId parentId pathPart =
     AWS.Http.unsignedRequest
         "CreateResource"
         "POST"
-        "/restapis/{restapi_id}/resources/{parent_id}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ parentId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -916,7 +916,7 @@ createStage restApiId stageName deploymentId setOptions =
     AWS.Http.unsignedRequest
         "CreateStage"
         "POST"
-        "/restapis/{restapi_id}/stages"
+        ("/restapis/" ++ restApiId ++ "/stages")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -991,7 +991,7 @@ createUsagePlanKey usagePlanId keyId keyType =
     AWS.Http.unsignedRequest
         "CreateUsagePlanKey"
         "POST"
-        "/usageplans/{usageplanId}/keys"
+        ("/usageplans/" ++ usagePlanId ++ "/keys")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1014,7 +1014,7 @@ deleteApiKey apiKey =
     AWS.Http.unsignedRequest
         "DeleteApiKey"
         "DELETE"
-        "/apikeys/{api_Key}"
+        ("/apikeys/" ++ apiKey ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1039,7 +1039,7 @@ deleteAuthorizer restApiId authorizerId =
     AWS.Http.unsignedRequest
         "DeleteAuthorizer"
         "DELETE"
-        "/restapis/{restapi_id}/authorizers/{authorizer_id}"
+        ("/restapis/" ++ restApiId ++ "/authorizers/" ++ authorizerId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1064,7 +1064,7 @@ deleteBasePathMapping domainName basePath =
     AWS.Http.unsignedRequest
         "DeleteBasePathMapping"
         "DELETE"
-        "/domainnames/{domain_name}/basepathmappings/{base_path}"
+        ("/domainnames/" ++ domainName ++ "/basepathmappings/" ++ basePath ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1087,7 +1087,7 @@ deleteClientCertificate clientCertificateId =
     AWS.Http.unsignedRequest
         "DeleteClientCertificate"
         "DELETE"
-        "/clientcertificates/{clientcertificate_id}"
+        ("/clientcertificates/" ++ clientCertificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1112,7 +1112,7 @@ deleteDeployment restApiId deploymentId =
     AWS.Http.unsignedRequest
         "DeleteDeployment"
         "DELETE"
-        "/restapis/{restapi_id}/deployments/{deployment_id}"
+        ("/restapis/" ++ restApiId ++ "/deployments/" ++ deploymentId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1137,7 +1137,7 @@ deleteDocumentationPart restApiId documentationPartId =
     AWS.Http.unsignedRequest
         "DeleteDocumentationPart"
         "DELETE"
-        "/restapis/{restapi_id}/documentation/parts/{part_id}"
+        ("/restapis/" ++ restApiId ++ "/documentation/parts/" ++ documentationPartId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1162,7 +1162,7 @@ deleteDocumentationVersion restApiId documentationVersion =
     AWS.Http.unsignedRequest
         "DeleteDocumentationVersion"
         "DELETE"
-        "/restapis/{restapi_id}/documentation/versions/{doc_version}"
+        ("/restapis/" ++ restApiId ++ "/documentation/versions/" ++ documentationVersion ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1185,7 +1185,7 @@ deleteDomainName domainName =
     AWS.Http.unsignedRequest
         "DeleteDomainName"
         "DELETE"
-        "/domainnames/{domain_name}"
+        ("/domainnames/" ++ domainName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1212,7 +1212,7 @@ deleteIntegration restApiId resourceId httpMethod =
     AWS.Http.unsignedRequest
         "DeleteIntegration"
         "DELETE"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/integration"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/integration")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1241,7 +1241,7 @@ deleteIntegrationResponse restApiId resourceId httpMethod statusCode =
     AWS.Http.unsignedRequest
         "DeleteIntegrationResponse"
         "DELETE"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/integration/responses/{status_code}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/integration/responses/" ++ statusCode ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1268,7 +1268,7 @@ deleteMethod restApiId resourceId httpMethod =
     AWS.Http.unsignedRequest
         "DeleteMethod"
         "DELETE"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1297,7 +1297,7 @@ deleteMethodResponse restApiId resourceId httpMethod statusCode =
     AWS.Http.unsignedRequest
         "DeleteMethodResponse"
         "DELETE"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/responses/{status_code}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/responses/" ++ statusCode ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1322,7 +1322,7 @@ deleteModel restApiId modelName =
     AWS.Http.unsignedRequest
         "DeleteModel"
         "DELETE"
-        "/restapis/{restapi_id}/models/{model_name}"
+        ("/restapis/" ++ restApiId ++ "/models/" ++ modelName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1347,7 +1347,7 @@ deleteResource restApiId resourceId =
     AWS.Http.unsignedRequest
         "DeleteResource"
         "DELETE"
-        "/restapis/{restapi_id}/resources/{resource_id}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1370,7 +1370,7 @@ deleteRestApi restApiId =
     AWS.Http.unsignedRequest
         "DeleteRestApi"
         "DELETE"
-        "/restapis/{restapi_id}"
+        ("/restapis/" ++ restApiId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1395,7 +1395,7 @@ deleteStage restApiId stageName =
     AWS.Http.unsignedRequest
         "DeleteStage"
         "DELETE"
-        "/restapis/{restapi_id}/stages/{stage_name}"
+        ("/restapis/" ++ restApiId ++ "/stages/" ++ stageName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1418,7 +1418,7 @@ deleteUsagePlan usagePlanId =
     AWS.Http.unsignedRequest
         "DeleteUsagePlan"
         "DELETE"
-        "/usageplans/{usageplanId}"
+        ("/usageplans/" ++ usagePlanId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1443,7 +1443,7 @@ deleteUsagePlanKey usagePlanId keyId =
     AWS.Http.unsignedRequest
         "DeleteUsagePlanKey"
         "DELETE"
-        "/usageplans/{usageplanId}/keys/{keyId}"
+        ("/usageplans/" ++ usagePlanId ++ "/keys/" ++ keyId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1468,7 +1468,7 @@ flushStageAuthorizersCache restApiId stageName =
     AWS.Http.unsignedRequest
         "FlushStageAuthorizersCache"
         "DELETE"
-        "/restapis/{restapi_id}/stages/{stage_name}/cache/authorizers"
+        ("/restapis/" ++ restApiId ++ "/stages/" ++ stageName ++ "/cache/authorizers")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1493,7 +1493,7 @@ flushStageCache restApiId stageName =
     AWS.Http.unsignedRequest
         "FlushStageCache"
         "DELETE"
-        "/restapis/{restapi_id}/stages/{stage_name}/cache/data"
+        ("/restapis/" ++ restApiId ++ "/stages/" ++ stageName ++ "/cache/data")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -1574,7 +1574,7 @@ getApiKey apiKey setOptions =
     AWS.Http.unsignedRequest
         "GetApiKey"
         "GET"
-        "/apikeys/{api_Key}"
+        ("/apikeys/" ++ apiKey ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1644,7 +1644,7 @@ getAuthorizer restApiId authorizerId =
     AWS.Http.unsignedRequest
         "GetAuthorizer"
         "GET"
-        "/restapis/{restapi_id}/authorizers/{authorizer_id}"
+        ("/restapis/" ++ restApiId ++ "/authorizers/" ++ authorizerId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1672,7 +1672,7 @@ getAuthorizers restApiId setOptions =
     AWS.Http.unsignedRequest
         "GetAuthorizers"
         "GET"
-        "/restapis/{restapi_id}/authorizers"
+        ("/restapis/" ++ restApiId ++ "/authorizers")
         (AWS.Http.QueryParams
             [
             ]
@@ -1706,7 +1706,7 @@ getBasePathMapping domainName basePath =
     AWS.Http.unsignedRequest
         "GetBasePathMapping"
         "GET"
-        "/domainnames/{domain_name}/basepathmappings/{base_path}"
+        ("/domainnames/" ++ domainName ++ "/basepathmappings/" ++ basePath ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1734,7 +1734,7 @@ getBasePathMappings domainName setOptions =
     AWS.Http.unsignedRequest
         "GetBasePathMappings"
         "GET"
-        "/domainnames/{domain_name}/basepathmappings"
+        ("/domainnames/" ++ domainName ++ "/basepathmappings")
         (AWS.Http.QueryParams
             [
             ]
@@ -1766,7 +1766,7 @@ getClientCertificate clientCertificateId =
     AWS.Http.unsignedRequest
         "GetClientCertificate"
         "GET"
-        "/clientcertificates/{clientcertificate_id}"
+        ("/clientcertificates/" ++ clientCertificateId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1826,7 +1826,7 @@ getDeployment restApiId deploymentId =
     AWS.Http.unsignedRequest
         "GetDeployment"
         "GET"
-        "/restapis/{restapi_id}/deployments/{deployment_id}"
+        ("/restapis/" ++ restApiId ++ "/deployments/" ++ deploymentId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1854,7 +1854,7 @@ getDeployments restApiId setOptions =
     AWS.Http.unsignedRequest
         "GetDeployments"
         "GET"
-        "/restapis/{restapi_id}/deployments"
+        ("/restapis/" ++ restApiId ++ "/deployments")
         (AWS.Http.QueryParams
             [
             ]
@@ -1888,7 +1888,7 @@ getDocumentationPart restApiId documentationPartId =
     AWS.Http.unsignedRequest
         "GetDocumentationPart"
         "GET"
-        "/restapis/{restapi_id}/documentation/parts/{part_id}"
+        ("/restapis/" ++ restApiId ++ "/documentation/parts/" ++ documentationPartId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1916,7 +1916,7 @@ getDocumentationParts restApiId setOptions =
     AWS.Http.unsignedRequest
         "GetDocumentationParts"
         "GET"
-        "/restapis/{restapi_id}/documentation/parts"
+        ("/restapis/" ++ restApiId ++ "/documentation/parts")
         (AWS.Http.QueryParams
             [
             ]
@@ -1953,7 +1953,7 @@ getDocumentationVersion restApiId documentationVersion =
     AWS.Http.unsignedRequest
         "GetDocumentationVersion"
         "GET"
-        "/restapis/{restapi_id}/documentation/versions/{doc_version}"
+        ("/restapis/" ++ restApiId ++ "/documentation/versions/" ++ documentationVersion ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -1981,7 +1981,7 @@ getDocumentationVersions restApiId setOptions =
     AWS.Http.unsignedRequest
         "GetDocumentationVersions"
         "GET"
-        "/restapis/{restapi_id}/documentation/versions"
+        ("/restapis/" ++ restApiId ++ "/documentation/versions")
         (AWS.Http.QueryParams
             [
             ]
@@ -2013,7 +2013,7 @@ getDomainName domainName =
     AWS.Http.unsignedRequest
         "GetDomainName"
         "GET"
-        "/domainnames/{domain_name}"
+        ("/domainnames/" ++ domainName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2079,7 +2079,7 @@ getExport restApiId stageName exportType setOptions =
     AWS.Http.unsignedRequest
         "GetExport"
         "GET"
-        "/restapis/{restapi_id}/stages/{stage_name}/exports/{export_type}"
+        ("/restapis/" ++ restApiId ++ "/stages/" ++ stageName ++ "/exports/" ++ exportType ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2115,7 +2115,7 @@ getIntegration restApiId resourceId httpMethod =
     AWS.Http.unsignedRequest
         "GetIntegration"
         "GET"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/integration"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/integration")
         (AWS.Http.QueryParams
             [
             ]
@@ -2145,7 +2145,7 @@ getIntegrationResponse restApiId resourceId httpMethod statusCode =
     AWS.Http.unsignedRequest
         "GetIntegrationResponse"
         "GET"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/integration/responses/{status_code}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/integration/responses/" ++ statusCode ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2173,7 +2173,7 @@ getMethod restApiId resourceId httpMethod =
     AWS.Http.unsignedRequest
         "GetMethod"
         "GET"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2203,7 +2203,7 @@ getMethodResponse restApiId resourceId httpMethod statusCode =
     AWS.Http.unsignedRequest
         "GetMethodResponse"
         "GET"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/responses/{status_code}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/responses/" ++ statusCode ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2233,7 +2233,7 @@ getModel restApiId modelName setOptions =
     AWS.Http.unsignedRequest
         "GetModel"
         "GET"
-        "/restapis/{restapi_id}/models/{model_name}"
+        ("/restapis/" ++ restApiId ++ "/models/" ++ modelName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2266,7 +2266,7 @@ getModelTemplate restApiId modelName =
     AWS.Http.unsignedRequest
         "GetModelTemplate"
         "GET"
-        "/restapis/{restapi_id}/models/{model_name}/default_template"
+        ("/restapis/" ++ restApiId ++ "/models/" ++ modelName ++ "/default_template")
         (AWS.Http.QueryParams
             [
             ]
@@ -2294,7 +2294,7 @@ getModels restApiId setOptions =
     AWS.Http.unsignedRequest
         "GetModels"
         "GET"
-        "/restapis/{restapi_id}/models"
+        ("/restapis/" ++ restApiId ++ "/models")
         (AWS.Http.QueryParams
             [
             ]
@@ -2328,7 +2328,7 @@ getResource restApiId resourceId =
     AWS.Http.unsignedRequest
         "GetResource"
         "GET"
-        "/restapis/{restapi_id}/resources/{resource_id}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2356,7 +2356,7 @@ getResources restApiId setOptions =
     AWS.Http.unsignedRequest
         "GetResources"
         "GET"
-        "/restapis/{restapi_id}/resources"
+        ("/restapis/" ++ restApiId ++ "/resources")
         (AWS.Http.QueryParams
             [
             ]
@@ -2388,7 +2388,7 @@ getRestApi restApiId =
     AWS.Http.unsignedRequest
         "GetRestApi"
         "GET"
-        "/restapis/{restapi_id}"
+        ("/restapis/" ++ restApiId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2454,7 +2454,7 @@ getSdk restApiId stageName sdkType setOptions =
     AWS.Http.unsignedRequest
         "GetSdk"
         "GET"
-        "/restapis/{restapi_id}/stages/{stage_name}/sdks/{sdk_type}"
+        ("/restapis/" ++ restApiId ++ "/stages/" ++ stageName ++ "/sdks/" ++ sdkType ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2485,7 +2485,7 @@ getSdkType id =
     AWS.Http.unsignedRequest
         "GetSdkType"
         "GET"
-        "/sdktypes/{sdktype_id}"
+        ("/sdktypes/" ++ id ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2545,7 +2545,7 @@ getStage restApiId stageName =
     AWS.Http.unsignedRequest
         "GetStage"
         "GET"
-        "/restapis/{restapi_id}/stages/{stage_name}"
+        ("/restapis/" ++ restApiId ++ "/stages/" ++ stageName ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2573,7 +2573,7 @@ getStages restApiId setOptions =
     AWS.Http.unsignedRequest
         "GetStages"
         "GET"
-        "/restapis/{restapi_id}/stages"
+        ("/restapis/" ++ restApiId ++ "/stages")
         (AWS.Http.QueryParams
             [
             ]
@@ -2612,7 +2612,7 @@ getUsage usagePlanId startDate endDate setOptions =
     AWS.Http.unsignedRequest
         "GetUsage"
         "GET"
-        "/usageplans/{usageplanId}/usage"
+        ("/usageplans/" ++ usagePlanId ++ "/usage")
         (AWS.Http.QueryParams
             [
             ]
@@ -2645,7 +2645,7 @@ getUsagePlan usagePlanId =
     AWS.Http.unsignedRequest
         "GetUsagePlan"
         "GET"
-        "/usageplans/{usageplanId}"
+        ("/usageplans/" ++ usagePlanId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2671,7 +2671,7 @@ getUsagePlanKey usagePlanId keyId =
     AWS.Http.unsignedRequest
         "GetUsagePlanKey"
         "GET"
-        "/usageplans/{usageplanId}/keys/{keyId}"
+        ("/usageplans/" ++ usagePlanId ++ "/keys/" ++ keyId ++ "")
         (AWS.Http.QueryParams
             [
             ]
@@ -2699,7 +2699,7 @@ getUsagePlanKeys usagePlanId setOptions =
     AWS.Http.unsignedRequest
         "GetUsagePlanKeys"
         "GET"
-        "/usageplans/{usageplanId}/keys"
+        ("/usageplans/" ++ usagePlanId ++ "/keys")
         (AWS.Http.QueryParams
             [
             ]
@@ -2809,7 +2809,7 @@ importDocumentationParts restApiId body setOptions =
     AWS.Http.unsignedRequest
         "ImportDocumentationParts"
         "PUT"
-        "/restapis/{restapi_id}/documentation/parts"
+        ("/restapis/" ++ restApiId ++ "/documentation/parts")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2885,7 +2885,7 @@ putIntegration restApiId resourceId httpMethod type_ setOptions =
     AWS.Http.unsignedRequest
         "PutIntegration"
         "PUT"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/integration"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/integration")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2933,7 +2933,7 @@ putIntegrationResponse restApiId resourceId httpMethod statusCode setOptions =
     AWS.Http.unsignedRequest
         "PutIntegrationResponse"
         "PUT"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/integration/responses/{status_code}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/integration/responses/" ++ statusCode ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -2976,7 +2976,7 @@ putMethod restApiId resourceId httpMethod authorizationType setOptions =
     AWS.Http.unsignedRequest
         "PutMethod"
         "PUT"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3020,7 +3020,7 @@ putMethodResponse restApiId resourceId httpMethod statusCode setOptions =
     AWS.Http.unsignedRequest
         "PutMethodResponse"
         "PUT"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/responses/{status_code}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/responses/" ++ statusCode ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3057,7 +3057,7 @@ putRestApi restApiId body setOptions =
     AWS.Http.unsignedRequest
         "PutRestApi"
         "PUT"
-        "/restapis/{restapi_id}"
+        ("/restapis/" ++ restApiId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3095,7 +3095,7 @@ testInvokeAuthorizer restApiId authorizerId setOptions =
     AWS.Http.unsignedRequest
         "TestInvokeAuthorizer"
         "POST"
-        "/restapis/{restapi_id}/authorizers/{authorizer_id}"
+        ("/restapis/" ++ restApiId ++ "/authorizers/" ++ authorizerId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3137,7 +3137,7 @@ testInvokeMethod restApiId resourceId httpMethod setOptions =
     AWS.Http.unsignedRequest
         "TestInvokeMethod"
         "POST"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3207,7 +3207,7 @@ updateApiKey apiKey setOptions =
     AWS.Http.unsignedRequest
         "UpdateApiKey"
         "PATCH"
-        "/apikeys/{api_Key}"
+        ("/apikeys/" ++ apiKey ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3243,7 +3243,7 @@ updateAuthorizer restApiId authorizerId setOptions =
     AWS.Http.unsignedRequest
         "UpdateAuthorizer"
         "PATCH"
-        "/restapis/{restapi_id}/authorizers/{authorizer_id}"
+        ("/restapis/" ++ restApiId ++ "/authorizers/" ++ authorizerId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3279,7 +3279,7 @@ updateBasePathMapping domainName basePath setOptions =
     AWS.Http.unsignedRequest
         "UpdateBasePathMapping"
         "PATCH"
-        "/domainnames/{domain_name}/basepathmappings/{base_path}"
+        ("/domainnames/" ++ domainName ++ "/basepathmappings/" ++ basePath ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3313,7 +3313,7 @@ updateClientCertificate clientCertificateId setOptions =
     AWS.Http.unsignedRequest
         "UpdateClientCertificate"
         "PATCH"
-        "/clientcertificates/{clientcertificate_id}"
+        ("/clientcertificates/" ++ clientCertificateId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3349,7 +3349,7 @@ updateDeployment restApiId deploymentId setOptions =
     AWS.Http.unsignedRequest
         "UpdateDeployment"
         "PATCH"
-        "/restapis/{restapi_id}/deployments/{deployment_id}"
+        ("/restapis/" ++ restApiId ++ "/deployments/" ++ deploymentId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3385,7 +3385,7 @@ updateDocumentationPart restApiId documentationPartId setOptions =
     AWS.Http.unsignedRequest
         "UpdateDocumentationPart"
         "PATCH"
-        "/restapis/{restapi_id}/documentation/parts/{part_id}"
+        ("/restapis/" ++ restApiId ++ "/documentation/parts/" ++ documentationPartId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3421,7 +3421,7 @@ updateDocumentationVersion restApiId documentationVersion setOptions =
     AWS.Http.unsignedRequest
         "UpdateDocumentationVersion"
         "PATCH"
-        "/restapis/{restapi_id}/documentation/versions/{doc_version}"
+        ("/restapis/" ++ restApiId ++ "/documentation/versions/" ++ documentationVersion ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3455,7 +3455,7 @@ updateDomainName domainName setOptions =
     AWS.Http.unsignedRequest
         "UpdateDomainName"
         "PATCH"
-        "/domainnames/{domain_name}"
+        ("/domainnames/" ++ domainName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3493,7 +3493,7 @@ updateIntegration restApiId resourceId httpMethod setOptions =
     AWS.Http.unsignedRequest
         "UpdateIntegration"
         "PATCH"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/integration"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/integration")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3533,7 +3533,7 @@ updateIntegrationResponse restApiId resourceId httpMethod statusCode setOptions 
     AWS.Http.unsignedRequest
         "UpdateIntegrationResponse"
         "PATCH"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/integration/responses/{status_code}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/integration/responses/" ++ statusCode ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3571,7 +3571,7 @@ updateMethod restApiId resourceId httpMethod setOptions =
     AWS.Http.unsignedRequest
         "UpdateMethod"
         "PATCH"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3611,7 +3611,7 @@ updateMethodResponse restApiId resourceId httpMethod statusCode setOptions =
     AWS.Http.unsignedRequest
         "UpdateMethodResponse"
         "PATCH"
-        "/restapis/{restapi_id}/resources/{resource_id}/methods/{http_method}/responses/{status_code}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "/methods/" ++ httpMethod ++ "/responses/" ++ statusCode ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3647,7 +3647,7 @@ updateModel restApiId modelName setOptions =
     AWS.Http.unsignedRequest
         "UpdateModel"
         "PATCH"
-        "/restapis/{restapi_id}/models/{model_name}"
+        ("/restapis/" ++ restApiId ++ "/models/" ++ modelName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3683,7 +3683,7 @@ updateResource restApiId resourceId setOptions =
     AWS.Http.unsignedRequest
         "UpdateResource"
         "PATCH"
-        "/restapis/{restapi_id}/resources/{resource_id}"
+        ("/restapis/" ++ restApiId ++ "/resources/" ++ resourceId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3717,7 +3717,7 @@ updateRestApi restApiId setOptions =
     AWS.Http.unsignedRequest
         "UpdateRestApi"
         "PATCH"
-        "/restapis/{restapi_id}"
+        ("/restapis/" ++ restApiId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3753,7 +3753,7 @@ updateStage restApiId stageName setOptions =
     AWS.Http.unsignedRequest
         "UpdateStage"
         "PATCH"
-        "/restapis/{restapi_id}/stages/{stage_name}"
+        ("/restapis/" ++ restApiId ++ "/stages/" ++ stageName ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3789,7 +3789,7 @@ updateUsage usagePlanId keyId setOptions =
     AWS.Http.unsignedRequest
         "UpdateUsage"
         "PATCH"
-        "/usageplans/{usageplanId}/keys/{keyId}/usage"
+        ("/usageplans/" ++ usagePlanId ++ "/keys/" ++ keyId ++ "/usage")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -3823,7 +3823,7 @@ updateUsagePlan usagePlanId setOptions =
     AWS.Http.unsignedRequest
         "UpdateUsagePlan"
         "PATCH"
-        "/usageplans/{usageplanId}"
+        ("/usageplans/" ++ usagePlanId ++ "")
         (AWS.Http.JsonBody
             JE.null
         )

@@ -108,7 +108,7 @@ deleteThingShadow thingName =
     AWS.Http.unsignedRequest
         "DeleteThingShadow"
         "DELETE"
-        "/things/{thingName}/shadow"
+        ("/things/" ++ thingName ++ "/shadow")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -131,7 +131,7 @@ getThingShadow thingName =
     AWS.Http.unsignedRequest
         "GetThingShadow"
         "GET"
-        "/things/{thingName}/shadow"
+        ("/things/" ++ thingName ++ "/shadow")
         (AWS.Http.QueryParams
             [
             ]
@@ -159,7 +159,7 @@ publish topic setOptions =
     AWS.Http.unsignedRequest
         "Publish"
         "POST"
-        "/topics/{topic}"
+        ("/topics/" ++ topic ++ "")
         (AWS.Http.JsonBody
             JE.null
         )
@@ -192,7 +192,7 @@ updateThingShadow thingName payload =
     AWS.Http.unsignedRequest
         "UpdateThingShadow"
         "POST"
-        "/things/{thingName}/shadow"
+        ("/things/" ++ thingName ++ "/shadow")
         (AWS.Http.JsonBody
             JE.null
         )
