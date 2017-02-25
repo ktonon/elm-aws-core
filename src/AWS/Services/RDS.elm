@@ -772,7 +772,9 @@ module AWS.Services.RDS
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -783,15 +785,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "rds"
         "2014-10-31"
         "undefined"
         "AWSRDS_20141031."
         "rds.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -809,7 +812,7 @@ __Required Parameters__
 addRoleToDBCluster :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addRoleToDBCluster dBClusterIdentifier roleArn =
     AWS.Http.unsignedRequest
         "AddRoleToDBCluster"
@@ -819,6 +822,7 @@ addRoleToDBCluster dBClusterIdentifier roleArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -834,7 +838,7 @@ __Required Parameters__
 addSourceIdentifierToSubscription :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AddSourceIdentifierToSubscriptionResult
+    -> AWS.Request AddSourceIdentifierToSubscriptionResult
 addSourceIdentifierToSubscription subscriptionName sourceIdentifier =
     AWS.Http.unsignedRequest
         "AddSourceIdentifierToSubscription"
@@ -844,6 +848,7 @@ addSourceIdentifierToSubscription subscriptionName sourceIdentifier =
             JE.null
         )
         addSourceIdentifierToSubscriptionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -859,7 +864,7 @@ __Required Parameters__
 addTagsToResource :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addTagsToResource resourceName tags =
     AWS.Http.unsignedRequest
         "AddTagsToResource"
@@ -869,6 +874,7 @@ addTagsToResource resourceName tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -886,7 +892,7 @@ applyPendingMaintenanceAction :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ApplyPendingMaintenanceActionResult
+    -> AWS.Request ApplyPendingMaintenanceActionResult
 applyPendingMaintenanceAction resourceIdentifier applyAction optInType =
     AWS.Http.unsignedRequest
         "ApplyPendingMaintenanceAction"
@@ -896,6 +902,7 @@ applyPendingMaintenanceAction resourceIdentifier applyAction optInType =
             JE.null
         )
         applyPendingMaintenanceActionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -910,7 +917,7 @@ __Required Parameters__
 authorizeDBSecurityGroupIngress :
     String
     -> (AuthorizeDBSecurityGroupIngressOptions -> AuthorizeDBSecurityGroupIngressOptions)
-    -> AWS.Http.UnsignedRequest AuthorizeDBSecurityGroupIngressResult
+    -> AWS.Request AuthorizeDBSecurityGroupIngressResult
 authorizeDBSecurityGroupIngress dBSecurityGroupName setOptions =
   let
     options = setOptions (AuthorizeDBSecurityGroupIngressOptions Nothing Nothing Nothing Nothing)
@@ -923,6 +930,7 @@ authorizeDBSecurityGroupIngress dBSecurityGroupName setOptions =
             JE.null
         )
         authorizeDBSecurityGroupIngressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a authorizeDBSecurityGroupIngress request
@@ -951,7 +959,7 @@ copyDBClusterParameterGroup :
     -> String
     -> String
     -> (CopyDBClusterParameterGroupOptions -> CopyDBClusterParameterGroupOptions)
-    -> AWS.Http.UnsignedRequest CopyDBClusterParameterGroupResult
+    -> AWS.Request CopyDBClusterParameterGroupResult
 copyDBClusterParameterGroup sourceDBClusterParameterGroupIdentifier targetDBClusterParameterGroupIdentifier targetDBClusterParameterGroupDescription setOptions =
   let
     options = setOptions (CopyDBClusterParameterGroupOptions Nothing)
@@ -964,6 +972,7 @@ copyDBClusterParameterGroup sourceDBClusterParameterGroupIdentifier targetDBClus
             JE.null
         )
         copyDBClusterParameterGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copyDBClusterParameterGroup request
@@ -987,7 +996,7 @@ copyDBClusterSnapshot :
     String
     -> String
     -> (CopyDBClusterSnapshotOptions -> CopyDBClusterSnapshotOptions)
-    -> AWS.Http.UnsignedRequest CopyDBClusterSnapshotResult
+    -> AWS.Request CopyDBClusterSnapshotResult
 copyDBClusterSnapshot sourceDBClusterSnapshotIdentifier targetDBClusterSnapshotIdentifier setOptions =
   let
     options = setOptions (CopyDBClusterSnapshotOptions Nothing)
@@ -1000,6 +1009,7 @@ copyDBClusterSnapshot sourceDBClusterSnapshotIdentifier targetDBClusterSnapshotI
             JE.null
         )
         copyDBClusterSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copyDBClusterSnapshot request
@@ -1025,7 +1035,7 @@ copyDBParameterGroup :
     -> String
     -> String
     -> (CopyDBParameterGroupOptions -> CopyDBParameterGroupOptions)
-    -> AWS.Http.UnsignedRequest CopyDBParameterGroupResult
+    -> AWS.Request CopyDBParameterGroupResult
 copyDBParameterGroup sourceDBParameterGroupIdentifier targetDBParameterGroupIdentifier targetDBParameterGroupDescription setOptions =
   let
     options = setOptions (CopyDBParameterGroupOptions Nothing)
@@ -1038,6 +1048,7 @@ copyDBParameterGroup sourceDBParameterGroupIdentifier targetDBParameterGroupIden
             JE.null
         )
         copyDBParameterGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copyDBParameterGroup request
@@ -1061,7 +1072,7 @@ copyDBSnapshot :
     String
     -> String
     -> (CopyDBSnapshotOptions -> CopyDBSnapshotOptions)
-    -> AWS.Http.UnsignedRequest CopyDBSnapshotResult
+    -> AWS.Request CopyDBSnapshotResult
 copyDBSnapshot sourceDBSnapshotIdentifier targetDBSnapshotIdentifier setOptions =
   let
     options = setOptions (CopyDBSnapshotOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1074,6 +1085,7 @@ copyDBSnapshot sourceDBSnapshotIdentifier targetDBSnapshotIdentifier setOptions 
             JE.null
         )
         copyDBSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copyDBSnapshot request
@@ -1103,7 +1115,7 @@ copyOptionGroup :
     -> String
     -> String
     -> (CopyOptionGroupOptions -> CopyOptionGroupOptions)
-    -> AWS.Http.UnsignedRequest CopyOptionGroupResult
+    -> AWS.Request CopyOptionGroupResult
 copyOptionGroup sourceOptionGroupIdentifier targetOptionGroupIdentifier targetOptionGroupDescription setOptions =
   let
     options = setOptions (CopyOptionGroupOptions Nothing)
@@ -1116,6 +1128,7 @@ copyOptionGroup sourceOptionGroupIdentifier targetOptionGroupIdentifier targetOp
             JE.null
         )
         copyOptionGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copyOptionGroup request
@@ -1139,7 +1152,7 @@ createDBCluster :
     String
     -> String
     -> (CreateDBClusterOptions -> CreateDBClusterOptions)
-    -> AWS.Http.UnsignedRequest CreateDBClusterResult
+    -> AWS.Request CreateDBClusterResult
 createDBCluster dBClusterIdentifier engine setOptions =
   let
     options = setOptions (CreateDBClusterOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1152,6 +1165,7 @@ createDBCluster dBClusterIdentifier engine setOptions =
             JE.null
         )
         createDBClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDBCluster request
@@ -1194,7 +1208,7 @@ createDBClusterParameterGroup :
     -> String
     -> String
     -> (CreateDBClusterParameterGroupOptions -> CreateDBClusterParameterGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateDBClusterParameterGroupResult
+    -> AWS.Request CreateDBClusterParameterGroupResult
 createDBClusterParameterGroup dBClusterParameterGroupName dBParameterGroupFamily description setOptions =
   let
     options = setOptions (CreateDBClusterParameterGroupOptions Nothing)
@@ -1207,6 +1221,7 @@ createDBClusterParameterGroup dBClusterParameterGroupName dBParameterGroupFamily
             JE.null
         )
         createDBClusterParameterGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDBClusterParameterGroup request
@@ -1230,7 +1245,7 @@ createDBClusterSnapshot :
     String
     -> String
     -> (CreateDBClusterSnapshotOptions -> CreateDBClusterSnapshotOptions)
-    -> AWS.Http.UnsignedRequest CreateDBClusterSnapshotResult
+    -> AWS.Request CreateDBClusterSnapshotResult
 createDBClusterSnapshot dBClusterSnapshotIdentifier dBClusterIdentifier setOptions =
   let
     options = setOptions (CreateDBClusterSnapshotOptions Nothing)
@@ -1243,6 +1258,7 @@ createDBClusterSnapshot dBClusterSnapshotIdentifier dBClusterIdentifier setOptio
             JE.null
         )
         createDBClusterSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDBClusterSnapshot request
@@ -1268,7 +1284,7 @@ createDBInstance :
     -> String
     -> String
     -> (CreateDBInstanceOptions -> CreateDBInstanceOptions)
-    -> AWS.Http.UnsignedRequest CreateDBInstanceResult
+    -> AWS.Request CreateDBInstanceResult
 createDBInstance dBInstanceIdentifier dBInstanceClass engine setOptions =
   let
     options = setOptions (CreateDBInstanceOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1281,6 +1297,7 @@ createDBInstance dBInstanceIdentifier dBInstanceClass engine setOptions =
             JE.null
         )
         createDBInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDBInstance request
@@ -1338,7 +1355,7 @@ createDBInstanceReadReplica :
     String
     -> String
     -> (CreateDBInstanceReadReplicaOptions -> CreateDBInstanceReadReplicaOptions)
-    -> AWS.Http.UnsignedRequest CreateDBInstanceReadReplicaResult
+    -> AWS.Request CreateDBInstanceReadReplicaResult
 createDBInstanceReadReplica dBInstanceIdentifier sourceDBInstanceIdentifier setOptions =
   let
     options = setOptions (CreateDBInstanceReadReplicaOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1351,6 +1368,7 @@ createDBInstanceReadReplica dBInstanceIdentifier sourceDBInstanceIdentifier setO
             JE.null
         )
         createDBInstanceReadReplicaResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDBInstanceReadReplica request
@@ -1390,7 +1408,7 @@ createDBParameterGroup :
     -> String
     -> String
     -> (CreateDBParameterGroupOptions -> CreateDBParameterGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateDBParameterGroupResult
+    -> AWS.Request CreateDBParameterGroupResult
 createDBParameterGroup dBParameterGroupName dBParameterGroupFamily description setOptions =
   let
     options = setOptions (CreateDBParameterGroupOptions Nothing)
@@ -1403,6 +1421,7 @@ createDBParameterGroup dBParameterGroupName dBParameterGroupFamily description s
             JE.null
         )
         createDBParameterGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDBParameterGroup request
@@ -1426,7 +1445,7 @@ createDBSecurityGroup :
     String
     -> String
     -> (CreateDBSecurityGroupOptions -> CreateDBSecurityGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateDBSecurityGroupResult
+    -> AWS.Request CreateDBSecurityGroupResult
 createDBSecurityGroup dBSecurityGroupName dBSecurityGroupDescription setOptions =
   let
     options = setOptions (CreateDBSecurityGroupOptions Nothing)
@@ -1439,6 +1458,7 @@ createDBSecurityGroup dBSecurityGroupName dBSecurityGroupDescription setOptions 
             JE.null
         )
         createDBSecurityGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDBSecurityGroup request
@@ -1462,7 +1482,7 @@ createDBSnapshot :
     String
     -> String
     -> (CreateDBSnapshotOptions -> CreateDBSnapshotOptions)
-    -> AWS.Http.UnsignedRequest CreateDBSnapshotResult
+    -> AWS.Request CreateDBSnapshotResult
 createDBSnapshot dBSnapshotIdentifier dBInstanceIdentifier setOptions =
   let
     options = setOptions (CreateDBSnapshotOptions Nothing)
@@ -1475,6 +1495,7 @@ createDBSnapshot dBSnapshotIdentifier dBInstanceIdentifier setOptions =
             JE.null
         )
         createDBSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDBSnapshot request
@@ -1500,7 +1521,7 @@ createDBSubnetGroup :
     -> String
     -> (List String)
     -> (CreateDBSubnetGroupOptions -> CreateDBSubnetGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateDBSubnetGroupResult
+    -> AWS.Request CreateDBSubnetGroupResult
 createDBSubnetGroup dBSubnetGroupName dBSubnetGroupDescription subnetIds setOptions =
   let
     options = setOptions (CreateDBSubnetGroupOptions Nothing)
@@ -1513,6 +1534,7 @@ createDBSubnetGroup dBSubnetGroupName dBSubnetGroupDescription subnetIds setOpti
             JE.null
         )
         createDBSubnetGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDBSubnetGroup request
@@ -1536,7 +1558,7 @@ createEventSubscription :
     String
     -> String
     -> (CreateEventSubscriptionOptions -> CreateEventSubscriptionOptions)
-    -> AWS.Http.UnsignedRequest CreateEventSubscriptionResult
+    -> AWS.Request CreateEventSubscriptionResult
 createEventSubscription subscriptionName snsTopicArn setOptions =
   let
     options = setOptions (CreateEventSubscriptionOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1549,6 +1571,7 @@ createEventSubscription subscriptionName snsTopicArn setOptions =
             JE.null
         )
         createEventSubscriptionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createEventSubscription request
@@ -1580,7 +1603,7 @@ createOptionGroup :
     -> String
     -> String
     -> (CreateOptionGroupOptions -> CreateOptionGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateOptionGroupResult
+    -> AWS.Request CreateOptionGroupResult
 createOptionGroup optionGroupName engineName majorEngineVersion optionGroupDescription setOptions =
   let
     options = setOptions (CreateOptionGroupOptions Nothing)
@@ -1593,6 +1616,7 @@ createOptionGroup optionGroupName engineName majorEngineVersion optionGroupDescr
             JE.null
         )
         createOptionGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createOptionGroup request
@@ -1614,7 +1638,7 @@ __Required Parameters__
 deleteDBCluster :
     String
     -> (DeleteDBClusterOptions -> DeleteDBClusterOptions)
-    -> AWS.Http.UnsignedRequest DeleteDBClusterResult
+    -> AWS.Request DeleteDBClusterResult
 deleteDBCluster dBClusterIdentifier setOptions =
   let
     options = setOptions (DeleteDBClusterOptions Nothing Nothing)
@@ -1627,6 +1651,7 @@ deleteDBCluster dBClusterIdentifier setOptions =
             JE.null
         )
         deleteDBClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteDBCluster request
@@ -1648,7 +1673,7 @@ __Required Parameters__
 -}
 deleteDBClusterParameterGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDBClusterParameterGroup dBClusterParameterGroupName =
     AWS.Http.unsignedRequest
         "DeleteDBClusterParameterGroup"
@@ -1658,6 +1683,7 @@ deleteDBClusterParameterGroup dBClusterParameterGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1671,7 +1697,7 @@ __Required Parameters__
 -}
 deleteDBClusterSnapshot :
     String
-    -> AWS.Http.UnsignedRequest DeleteDBClusterSnapshotResult
+    -> AWS.Request DeleteDBClusterSnapshotResult
 deleteDBClusterSnapshot dBClusterSnapshotIdentifier =
     AWS.Http.unsignedRequest
         "DeleteDBClusterSnapshot"
@@ -1681,6 +1707,7 @@ deleteDBClusterSnapshot dBClusterSnapshotIdentifier =
             JE.null
         )
         deleteDBClusterSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1695,7 +1722,7 @@ __Required Parameters__
 deleteDBInstance :
     String
     -> (DeleteDBInstanceOptions -> DeleteDBInstanceOptions)
-    -> AWS.Http.UnsignedRequest DeleteDBInstanceResult
+    -> AWS.Request DeleteDBInstanceResult
 deleteDBInstance dBInstanceIdentifier setOptions =
   let
     options = setOptions (DeleteDBInstanceOptions Nothing Nothing)
@@ -1708,6 +1735,7 @@ deleteDBInstance dBInstanceIdentifier setOptions =
             JE.null
         )
         deleteDBInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteDBInstance request
@@ -1729,7 +1757,7 @@ __Required Parameters__
 -}
 deleteDBParameterGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDBParameterGroup dBParameterGroupName =
     AWS.Http.unsignedRequest
         "DeleteDBParameterGroup"
@@ -1739,6 +1767,7 @@ deleteDBParameterGroup dBParameterGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1752,7 +1781,7 @@ __Required Parameters__
 -}
 deleteDBSecurityGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDBSecurityGroup dBSecurityGroupName =
     AWS.Http.unsignedRequest
         "DeleteDBSecurityGroup"
@@ -1762,6 +1791,7 @@ deleteDBSecurityGroup dBSecurityGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1775,7 +1805,7 @@ __Required Parameters__
 -}
 deleteDBSnapshot :
     String
-    -> AWS.Http.UnsignedRequest DeleteDBSnapshotResult
+    -> AWS.Request DeleteDBSnapshotResult
 deleteDBSnapshot dBSnapshotIdentifier =
     AWS.Http.unsignedRequest
         "DeleteDBSnapshot"
@@ -1785,6 +1815,7 @@ deleteDBSnapshot dBSnapshotIdentifier =
             JE.null
         )
         deleteDBSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1798,7 +1829,7 @@ __Required Parameters__
 -}
 deleteDBSubnetGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDBSubnetGroup dBSubnetGroupName =
     AWS.Http.unsignedRequest
         "DeleteDBSubnetGroup"
@@ -1808,6 +1839,7 @@ deleteDBSubnetGroup dBSubnetGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1821,7 +1853,7 @@ __Required Parameters__
 -}
 deleteEventSubscription :
     String
-    -> AWS.Http.UnsignedRequest DeleteEventSubscriptionResult
+    -> AWS.Request DeleteEventSubscriptionResult
 deleteEventSubscription subscriptionName =
     AWS.Http.unsignedRequest
         "DeleteEventSubscription"
@@ -1831,6 +1863,7 @@ deleteEventSubscription subscriptionName =
             JE.null
         )
         deleteEventSubscriptionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1844,7 +1877,7 @@ __Required Parameters__
 -}
 deleteOptionGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteOptionGroup optionGroupName =
     AWS.Http.unsignedRequest
         "DeleteOptionGroup"
@@ -1854,6 +1887,7 @@ deleteOptionGroup optionGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1865,7 +1899,7 @@ __Required Parameters__
 
 -}
 describeAccountAttributes :
-    AWS.Http.UnsignedRequest AccountAttributesMessage
+    AWS.Request AccountAttributesMessage
 describeAccountAttributes =
     AWS.Http.unsignedRequest
         "DescribeAccountAttributes"
@@ -1875,6 +1909,7 @@ describeAccountAttributes =
             JE.null
         )
         accountAttributesMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1887,7 +1922,7 @@ __Required Parameters__
 -}
 describeCertificates :
     (DescribeCertificatesOptions -> DescribeCertificatesOptions)
-    -> AWS.Http.UnsignedRequest CertificateMessage
+    -> AWS.Request CertificateMessage
 describeCertificates setOptions =
   let
     options = setOptions (DescribeCertificatesOptions Nothing Nothing Nothing Nothing)
@@ -1900,6 +1935,7 @@ describeCertificates setOptions =
             JE.null
         )
         certificateMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCertificates request
@@ -1922,7 +1958,7 @@ __Required Parameters__
 -}
 describeDBClusterParameterGroups :
     (DescribeDBClusterParameterGroupsOptions -> DescribeDBClusterParameterGroupsOptions)
-    -> AWS.Http.UnsignedRequest DBClusterParameterGroupsMessage
+    -> AWS.Request DBClusterParameterGroupsMessage
 describeDBClusterParameterGroups setOptions =
   let
     options = setOptions (DescribeDBClusterParameterGroupsOptions Nothing Nothing Nothing Nothing)
@@ -1935,6 +1971,7 @@ describeDBClusterParameterGroups setOptions =
             JE.null
         )
         dBClusterParameterGroupsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBClusterParameterGroups request
@@ -1959,7 +1996,7 @@ __Required Parameters__
 describeDBClusterParameters :
     String
     -> (DescribeDBClusterParametersOptions -> DescribeDBClusterParametersOptions)
-    -> AWS.Http.UnsignedRequest DBClusterParameterGroupDetails
+    -> AWS.Request DBClusterParameterGroupDetails
 describeDBClusterParameters dBClusterParameterGroupName setOptions =
   let
     options = setOptions (DescribeDBClusterParametersOptions Nothing Nothing Nothing Nothing)
@@ -1972,6 +2009,7 @@ describeDBClusterParameters dBClusterParameterGroupName setOptions =
             JE.null
         )
         dBClusterParameterGroupDetailsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBClusterParameters request
@@ -1995,7 +2033,7 @@ __Required Parameters__
 -}
 describeDBClusterSnapshotAttributes :
     String
-    -> AWS.Http.UnsignedRequest DescribeDBClusterSnapshotAttributesResult
+    -> AWS.Request DescribeDBClusterSnapshotAttributesResult
 describeDBClusterSnapshotAttributes dBClusterSnapshotIdentifier =
     AWS.Http.unsignedRequest
         "DescribeDBClusterSnapshotAttributes"
@@ -2005,6 +2043,7 @@ describeDBClusterSnapshotAttributes dBClusterSnapshotIdentifier =
             JE.null
         )
         describeDBClusterSnapshotAttributesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2017,7 +2056,7 @@ __Required Parameters__
 -}
 describeDBClusterSnapshots :
     (DescribeDBClusterSnapshotsOptions -> DescribeDBClusterSnapshotsOptions)
-    -> AWS.Http.UnsignedRequest DBClusterSnapshotMessage
+    -> AWS.Request DBClusterSnapshotMessage
 describeDBClusterSnapshots setOptions =
   let
     options = setOptions (DescribeDBClusterSnapshotsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2030,6 +2069,7 @@ describeDBClusterSnapshots setOptions =
             JE.null
         )
         dBClusterSnapshotMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBClusterSnapshots request
@@ -2056,7 +2096,7 @@ __Required Parameters__
 -}
 describeDBClusters :
     (DescribeDBClustersOptions -> DescribeDBClustersOptions)
-    -> AWS.Http.UnsignedRequest DBClusterMessage
+    -> AWS.Request DBClusterMessage
 describeDBClusters setOptions =
   let
     options = setOptions (DescribeDBClustersOptions Nothing Nothing Nothing Nothing)
@@ -2069,6 +2109,7 @@ describeDBClusters setOptions =
             JE.null
         )
         dBClusterMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBClusters request
@@ -2091,7 +2132,7 @@ __Required Parameters__
 -}
 describeDBEngineVersions :
     (DescribeDBEngineVersionsOptions -> DescribeDBEngineVersionsOptions)
-    -> AWS.Http.UnsignedRequest DBEngineVersionMessage
+    -> AWS.Request DBEngineVersionMessage
 describeDBEngineVersions setOptions =
   let
     options = setOptions (DescribeDBEngineVersionsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2104,6 +2145,7 @@ describeDBEngineVersions setOptions =
             JE.null
         )
         dBEngineVersionMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBEngineVersions request
@@ -2131,7 +2173,7 @@ __Required Parameters__
 -}
 describeDBInstances :
     (DescribeDBInstancesOptions -> DescribeDBInstancesOptions)
-    -> AWS.Http.UnsignedRequest DBInstanceMessage
+    -> AWS.Request DBInstanceMessage
 describeDBInstances setOptions =
   let
     options = setOptions (DescribeDBInstancesOptions Nothing Nothing Nothing Nothing)
@@ -2144,6 +2186,7 @@ describeDBInstances setOptions =
             JE.null
         )
         dBInstanceMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBInstances request
@@ -2168,7 +2211,7 @@ __Required Parameters__
 describeDBLogFiles :
     String
     -> (DescribeDBLogFilesOptions -> DescribeDBLogFilesOptions)
-    -> AWS.Http.UnsignedRequest DescribeDBLogFilesResponse
+    -> AWS.Request DescribeDBLogFilesResponse
 describeDBLogFiles dBInstanceIdentifier setOptions =
   let
     options = setOptions (DescribeDBLogFilesOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2181,6 +2224,7 @@ describeDBLogFiles dBInstanceIdentifier setOptions =
             JE.null
         )
         describeDBLogFilesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBLogFiles request
@@ -2205,7 +2249,7 @@ __Required Parameters__
 -}
 describeDBParameterGroups :
     (DescribeDBParameterGroupsOptions -> DescribeDBParameterGroupsOptions)
-    -> AWS.Http.UnsignedRequest DBParameterGroupsMessage
+    -> AWS.Request DBParameterGroupsMessage
 describeDBParameterGroups setOptions =
   let
     options = setOptions (DescribeDBParameterGroupsOptions Nothing Nothing Nothing Nothing)
@@ -2218,6 +2262,7 @@ describeDBParameterGroups setOptions =
             JE.null
         )
         dBParameterGroupsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBParameterGroups request
@@ -2242,7 +2287,7 @@ __Required Parameters__
 describeDBParameters :
     String
     -> (DescribeDBParametersOptions -> DescribeDBParametersOptions)
-    -> AWS.Http.UnsignedRequest DBParameterGroupDetails
+    -> AWS.Request DBParameterGroupDetails
 describeDBParameters dBParameterGroupName setOptions =
   let
     options = setOptions (DescribeDBParametersOptions Nothing Nothing Nothing Nothing)
@@ -2255,6 +2300,7 @@ describeDBParameters dBParameterGroupName setOptions =
             JE.null
         )
         dBParameterGroupDetailsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBParameters request
@@ -2277,7 +2323,7 @@ __Required Parameters__
 -}
 describeDBSecurityGroups :
     (DescribeDBSecurityGroupsOptions -> DescribeDBSecurityGroupsOptions)
-    -> AWS.Http.UnsignedRequest DBSecurityGroupMessage
+    -> AWS.Request DBSecurityGroupMessage
 describeDBSecurityGroups setOptions =
   let
     options = setOptions (DescribeDBSecurityGroupsOptions Nothing Nothing Nothing Nothing)
@@ -2290,6 +2336,7 @@ describeDBSecurityGroups setOptions =
             JE.null
         )
         dBSecurityGroupMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBSecurityGroups request
@@ -2313,7 +2360,7 @@ __Required Parameters__
 -}
 describeDBSnapshotAttributes :
     String
-    -> AWS.Http.UnsignedRequest DescribeDBSnapshotAttributesResult
+    -> AWS.Request DescribeDBSnapshotAttributesResult
 describeDBSnapshotAttributes dBSnapshotIdentifier =
     AWS.Http.unsignedRequest
         "DescribeDBSnapshotAttributes"
@@ -2323,6 +2370,7 @@ describeDBSnapshotAttributes dBSnapshotIdentifier =
             JE.null
         )
         describeDBSnapshotAttributesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2335,7 +2383,7 @@ __Required Parameters__
 -}
 describeDBSnapshots :
     (DescribeDBSnapshotsOptions -> DescribeDBSnapshotsOptions)
-    -> AWS.Http.UnsignedRequest DBSnapshotMessage
+    -> AWS.Request DBSnapshotMessage
 describeDBSnapshots setOptions =
   let
     options = setOptions (DescribeDBSnapshotsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2348,6 +2396,7 @@ describeDBSnapshots setOptions =
             JE.null
         )
         dBSnapshotMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBSnapshots request
@@ -2374,7 +2423,7 @@ __Required Parameters__
 -}
 describeDBSubnetGroups :
     (DescribeDBSubnetGroupsOptions -> DescribeDBSubnetGroupsOptions)
-    -> AWS.Http.UnsignedRequest DBSubnetGroupMessage
+    -> AWS.Request DBSubnetGroupMessage
 describeDBSubnetGroups setOptions =
   let
     options = setOptions (DescribeDBSubnetGroupsOptions Nothing Nothing Nothing Nothing)
@@ -2387,6 +2436,7 @@ describeDBSubnetGroups setOptions =
             JE.null
         )
         dBSubnetGroupMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDBSubnetGroups request
@@ -2411,7 +2461,7 @@ __Required Parameters__
 describeEngineDefaultClusterParameters :
     String
     -> (DescribeEngineDefaultClusterParametersOptions -> DescribeEngineDefaultClusterParametersOptions)
-    -> AWS.Http.UnsignedRequest DescribeEngineDefaultClusterParametersResult
+    -> AWS.Request DescribeEngineDefaultClusterParametersResult
 describeEngineDefaultClusterParameters dBParameterGroupFamily setOptions =
   let
     options = setOptions (DescribeEngineDefaultClusterParametersOptions Nothing Nothing Nothing)
@@ -2424,6 +2474,7 @@ describeEngineDefaultClusterParameters dBParameterGroupFamily setOptions =
             JE.null
         )
         describeEngineDefaultClusterParametersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEngineDefaultClusterParameters request
@@ -2447,7 +2498,7 @@ __Required Parameters__
 describeEngineDefaultParameters :
     String
     -> (DescribeEngineDefaultParametersOptions -> DescribeEngineDefaultParametersOptions)
-    -> AWS.Http.UnsignedRequest DescribeEngineDefaultParametersResult
+    -> AWS.Request DescribeEngineDefaultParametersResult
 describeEngineDefaultParameters dBParameterGroupFamily setOptions =
   let
     options = setOptions (DescribeEngineDefaultParametersOptions Nothing Nothing Nothing)
@@ -2460,6 +2511,7 @@ describeEngineDefaultParameters dBParameterGroupFamily setOptions =
             JE.null
         )
         describeEngineDefaultParametersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEngineDefaultParameters request
@@ -2481,7 +2533,7 @@ __Required Parameters__
 -}
 describeEventCategories :
     (DescribeEventCategoriesOptions -> DescribeEventCategoriesOptions)
-    -> AWS.Http.UnsignedRequest EventCategoriesMessage
+    -> AWS.Request EventCategoriesMessage
 describeEventCategories setOptions =
   let
     options = setOptions (DescribeEventCategoriesOptions Nothing Nothing)
@@ -2494,6 +2546,7 @@ describeEventCategories setOptions =
             JE.null
         )
         eventCategoriesMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEventCategories request
@@ -2514,7 +2567,7 @@ __Required Parameters__
 -}
 describeEventSubscriptions :
     (DescribeEventSubscriptionsOptions -> DescribeEventSubscriptionsOptions)
-    -> AWS.Http.UnsignedRequest EventSubscriptionsMessage
+    -> AWS.Request EventSubscriptionsMessage
 describeEventSubscriptions setOptions =
   let
     options = setOptions (DescribeEventSubscriptionsOptions Nothing Nothing Nothing Nothing)
@@ -2527,6 +2580,7 @@ describeEventSubscriptions setOptions =
             JE.null
         )
         eventSubscriptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEventSubscriptions request
@@ -2549,7 +2603,7 @@ __Required Parameters__
 -}
 describeEvents :
     (DescribeEventsOptions -> DescribeEventsOptions)
-    -> AWS.Http.UnsignedRequest EventsMessage
+    -> AWS.Request EventsMessage
 describeEvents setOptions =
   let
     options = setOptions (DescribeEventsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2562,6 +2616,7 @@ describeEvents setOptions =
             JE.null
         )
         eventsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEvents request
@@ -2591,7 +2646,7 @@ __Required Parameters__
 describeOptionGroupOptions :
     String
     -> (DescribeOptionGroupOptionsOptions -> DescribeOptionGroupOptionsOptions)
-    -> AWS.Http.UnsignedRequest OptionGroupOptionsMessage
+    -> AWS.Request OptionGroupOptionsMessage
 describeOptionGroupOptions engineName setOptions =
   let
     options = setOptions (DescribeOptionGroupOptionsOptions Nothing Nothing Nothing Nothing)
@@ -2604,6 +2659,7 @@ describeOptionGroupOptions engineName setOptions =
             JE.null
         )
         optionGroupOptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeOptionGroupOptions request
@@ -2626,7 +2682,7 @@ __Required Parameters__
 -}
 describeOptionGroups :
     (DescribeOptionGroupsOptions -> DescribeOptionGroupsOptions)
-    -> AWS.Http.UnsignedRequest OptionGroups
+    -> AWS.Request OptionGroups
 describeOptionGroups setOptions =
   let
     options = setOptions (DescribeOptionGroupsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2639,6 +2695,7 @@ describeOptionGroups setOptions =
             JE.null
         )
         optionGroupsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeOptionGroups request
@@ -2665,7 +2722,7 @@ __Required Parameters__
 describeOrderableDBInstanceOptions :
     String
     -> (DescribeOrderableDBInstanceOptionsOptions -> DescribeOrderableDBInstanceOptionsOptions)
-    -> AWS.Http.UnsignedRequest OrderableDBInstanceOptionsMessage
+    -> AWS.Request OrderableDBInstanceOptionsMessage
 describeOrderableDBInstanceOptions engine setOptions =
   let
     options = setOptions (DescribeOrderableDBInstanceOptionsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2678,6 +2735,7 @@ describeOrderableDBInstanceOptions engine setOptions =
             JE.null
         )
         orderableDBInstanceOptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeOrderableDBInstanceOptions request
@@ -2703,7 +2761,7 @@ __Required Parameters__
 -}
 describePendingMaintenanceActions :
     (DescribePendingMaintenanceActionsOptions -> DescribePendingMaintenanceActionsOptions)
-    -> AWS.Http.UnsignedRequest PendingMaintenanceActionsMessage
+    -> AWS.Request PendingMaintenanceActionsMessage
 describePendingMaintenanceActions setOptions =
   let
     options = setOptions (DescribePendingMaintenanceActionsOptions Nothing Nothing Nothing Nothing)
@@ -2716,6 +2774,7 @@ describePendingMaintenanceActions setOptions =
             JE.null
         )
         pendingMaintenanceActionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describePendingMaintenanceActions request
@@ -2738,7 +2797,7 @@ __Required Parameters__
 -}
 describeReservedDBInstances :
     (DescribeReservedDBInstancesOptions -> DescribeReservedDBInstancesOptions)
-    -> AWS.Http.UnsignedRequest ReservedDBInstanceMessage
+    -> AWS.Request ReservedDBInstanceMessage
 describeReservedDBInstances setOptions =
   let
     options = setOptions (DescribeReservedDBInstancesOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2751,6 +2810,7 @@ describeReservedDBInstances setOptions =
             JE.null
         )
         reservedDBInstanceMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedDBInstances request
@@ -2779,7 +2839,7 @@ __Required Parameters__
 -}
 describeReservedDBInstancesOfferings :
     (DescribeReservedDBInstancesOfferingsOptions -> DescribeReservedDBInstancesOfferingsOptions)
-    -> AWS.Http.UnsignedRequest ReservedDBInstancesOfferingMessage
+    -> AWS.Request ReservedDBInstancesOfferingMessage
 describeReservedDBInstancesOfferings setOptions =
   let
     options = setOptions (DescribeReservedDBInstancesOfferingsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2792,6 +2852,7 @@ describeReservedDBInstancesOfferings setOptions =
             JE.null
         )
         reservedDBInstancesOfferingMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedDBInstancesOfferings request
@@ -2819,7 +2880,7 @@ __Required Parameters__
 -}
 describeSourceRegions :
     (DescribeSourceRegionsOptions -> DescribeSourceRegionsOptions)
-    -> AWS.Http.UnsignedRequest SourceRegionMessage
+    -> AWS.Request SourceRegionMessage
 describeSourceRegions setOptions =
   let
     options = setOptions (DescribeSourceRegionsOptions Nothing Nothing Nothing Nothing)
@@ -2832,6 +2893,7 @@ describeSourceRegions setOptions =
             JE.null
         )
         sourceRegionMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSourceRegions request
@@ -2858,7 +2920,7 @@ downloadDBLogFilePortion :
     String
     -> String
     -> (DownloadDBLogFilePortionOptions -> DownloadDBLogFilePortionOptions)
-    -> AWS.Http.UnsignedRequest DownloadDBLogFilePortionDetails
+    -> AWS.Request DownloadDBLogFilePortionDetails
 downloadDBLogFilePortion dBInstanceIdentifier logFileName setOptions =
   let
     options = setOptions (DownloadDBLogFilePortionOptions Nothing Nothing)
@@ -2871,6 +2933,7 @@ downloadDBLogFilePortion dBInstanceIdentifier logFileName setOptions =
             JE.null
         )
         downloadDBLogFilePortionDetailsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a downloadDBLogFilePortion request
@@ -2891,7 +2954,7 @@ __Required Parameters__
 -}
 failoverDBCluster :
     (FailoverDBClusterOptions -> FailoverDBClusterOptions)
-    -> AWS.Http.UnsignedRequest FailoverDBClusterResult
+    -> AWS.Request FailoverDBClusterResult
 failoverDBCluster setOptions =
   let
     options = setOptions (FailoverDBClusterOptions Nothing Nothing)
@@ -2904,6 +2967,7 @@ failoverDBCluster setOptions =
             JE.null
         )
         failoverDBClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a failoverDBCluster request
@@ -2926,7 +2990,7 @@ __Required Parameters__
 listTagsForResource :
     String
     -> (ListTagsForResourceOptions -> ListTagsForResourceOptions)
-    -> AWS.Http.UnsignedRequest TagListMessage
+    -> AWS.Request TagListMessage
 listTagsForResource resourceName setOptions =
   let
     options = setOptions (ListTagsForResourceOptions Nothing)
@@ -2939,6 +3003,7 @@ listTagsForResource resourceName setOptions =
             JE.null
         )
         tagListMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTagsForResource request
@@ -2960,7 +3025,7 @@ __Required Parameters__
 modifyDBCluster :
     String
     -> (ModifyDBClusterOptions -> ModifyDBClusterOptions)
-    -> AWS.Http.UnsignedRequest ModifyDBClusterResult
+    -> AWS.Request ModifyDBClusterResult
 modifyDBCluster dBClusterIdentifier setOptions =
   let
     options = setOptions (ModifyDBClusterOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2973,6 +3038,7 @@ modifyDBCluster dBClusterIdentifier setOptions =
             JE.null
         )
         modifyDBClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyDBCluster request
@@ -3004,7 +3070,7 @@ __Required Parameters__
 modifyDBClusterParameterGroup :
     String
     -> (List Parameter)
-    -> AWS.Http.UnsignedRequest DBClusterParameterGroupNameMessage
+    -> AWS.Request DBClusterParameterGroupNameMessage
 modifyDBClusterParameterGroup dBClusterParameterGroupName parameters =
     AWS.Http.unsignedRequest
         "ModifyDBClusterParameterGroup"
@@ -3014,6 +3080,7 @@ modifyDBClusterParameterGroup dBClusterParameterGroupName parameters =
             JE.null
         )
         dBClusterParameterGroupNameMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3030,7 +3097,7 @@ modifyDBClusterSnapshotAttribute :
     String
     -> String
     -> (ModifyDBClusterSnapshotAttributeOptions -> ModifyDBClusterSnapshotAttributeOptions)
-    -> AWS.Http.UnsignedRequest ModifyDBClusterSnapshotAttributeResult
+    -> AWS.Request ModifyDBClusterSnapshotAttributeResult
 modifyDBClusterSnapshotAttribute dBClusterSnapshotIdentifier attributeName setOptions =
   let
     options = setOptions (ModifyDBClusterSnapshotAttributeOptions Nothing Nothing)
@@ -3043,6 +3110,7 @@ modifyDBClusterSnapshotAttribute dBClusterSnapshotIdentifier attributeName setOp
             JE.null
         )
         modifyDBClusterSnapshotAttributeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyDBClusterSnapshotAttribute request
@@ -3065,7 +3133,7 @@ __Required Parameters__
 modifyDBInstance :
     String
     -> (ModifyDBInstanceOptions -> ModifyDBInstanceOptions)
-    -> AWS.Http.UnsignedRequest ModifyDBInstanceResult
+    -> AWS.Request ModifyDBInstanceResult
 modifyDBInstance dBInstanceIdentifier setOptions =
   let
     options = setOptions (ModifyDBInstanceOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3078,6 +3146,7 @@ modifyDBInstance dBInstanceIdentifier setOptions =
             JE.null
         )
         modifyDBInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyDBInstance request
@@ -3130,7 +3199,7 @@ __Required Parameters__
 modifyDBParameterGroup :
     String
     -> (List Parameter)
-    -> AWS.Http.UnsignedRequest DBParameterGroupNameMessage
+    -> AWS.Request DBParameterGroupNameMessage
 modifyDBParameterGroup dBParameterGroupName parameters =
     AWS.Http.unsignedRequest
         "ModifyDBParameterGroup"
@@ -3140,6 +3209,7 @@ modifyDBParameterGroup dBParameterGroupName parameters =
             JE.null
         )
         dBParameterGroupNameMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3154,7 +3224,7 @@ __Required Parameters__
 modifyDBSnapshot :
     String
     -> (ModifyDBSnapshotOptions -> ModifyDBSnapshotOptions)
-    -> AWS.Http.UnsignedRequest ModifyDBSnapshotResult
+    -> AWS.Request ModifyDBSnapshotResult
 modifyDBSnapshot dBSnapshotIdentifier setOptions =
   let
     options = setOptions (ModifyDBSnapshotOptions Nothing)
@@ -3167,6 +3237,7 @@ modifyDBSnapshot dBSnapshotIdentifier setOptions =
             JE.null
         )
         modifyDBSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyDBSnapshot request
@@ -3190,7 +3261,7 @@ modifyDBSnapshotAttribute :
     String
     -> String
     -> (ModifyDBSnapshotAttributeOptions -> ModifyDBSnapshotAttributeOptions)
-    -> AWS.Http.UnsignedRequest ModifyDBSnapshotAttributeResult
+    -> AWS.Request ModifyDBSnapshotAttributeResult
 modifyDBSnapshotAttribute dBSnapshotIdentifier attributeName setOptions =
   let
     options = setOptions (ModifyDBSnapshotAttributeOptions Nothing Nothing)
@@ -3203,6 +3274,7 @@ modifyDBSnapshotAttribute dBSnapshotIdentifier attributeName setOptions =
             JE.null
         )
         modifyDBSnapshotAttributeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyDBSnapshotAttribute request
@@ -3227,7 +3299,7 @@ modifyDBSubnetGroup :
     String
     -> (List String)
     -> (ModifyDBSubnetGroupOptions -> ModifyDBSubnetGroupOptions)
-    -> AWS.Http.UnsignedRequest ModifyDBSubnetGroupResult
+    -> AWS.Request ModifyDBSubnetGroupResult
 modifyDBSubnetGroup dBSubnetGroupName subnetIds setOptions =
   let
     options = setOptions (ModifyDBSubnetGroupOptions Nothing)
@@ -3240,6 +3312,7 @@ modifyDBSubnetGroup dBSubnetGroupName subnetIds setOptions =
             JE.null
         )
         modifyDBSubnetGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyDBSubnetGroup request
@@ -3261,7 +3334,7 @@ __Required Parameters__
 modifyEventSubscription :
     String
     -> (ModifyEventSubscriptionOptions -> ModifyEventSubscriptionOptions)
-    -> AWS.Http.UnsignedRequest ModifyEventSubscriptionResult
+    -> AWS.Request ModifyEventSubscriptionResult
 modifyEventSubscription subscriptionName setOptions =
   let
     options = setOptions (ModifyEventSubscriptionOptions Nothing Nothing Nothing Nothing)
@@ -3274,6 +3347,7 @@ modifyEventSubscription subscriptionName setOptions =
             JE.null
         )
         modifyEventSubscriptionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyEventSubscription request
@@ -3298,7 +3372,7 @@ __Required Parameters__
 modifyOptionGroup :
     String
     -> (ModifyOptionGroupOptions -> ModifyOptionGroupOptions)
-    -> AWS.Http.UnsignedRequest ModifyOptionGroupResult
+    -> AWS.Request ModifyOptionGroupResult
 modifyOptionGroup optionGroupName setOptions =
   let
     options = setOptions (ModifyOptionGroupOptions Nothing Nothing Nothing)
@@ -3311,6 +3385,7 @@ modifyOptionGroup optionGroupName setOptions =
             JE.null
         )
         modifyOptionGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyOptionGroup request
@@ -3334,7 +3409,7 @@ __Required Parameters__
 promoteReadReplica :
     String
     -> (PromoteReadReplicaOptions -> PromoteReadReplicaOptions)
-    -> AWS.Http.UnsignedRequest PromoteReadReplicaResult
+    -> AWS.Request PromoteReadReplicaResult
 promoteReadReplica dBInstanceIdentifier setOptions =
   let
     options = setOptions (PromoteReadReplicaOptions Nothing Nothing)
@@ -3347,6 +3422,7 @@ promoteReadReplica dBInstanceIdentifier setOptions =
             JE.null
         )
         promoteReadReplicaResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a promoteReadReplica request
@@ -3368,7 +3444,7 @@ __Required Parameters__
 -}
 promoteReadReplicaDBCluster :
     String
-    -> AWS.Http.UnsignedRequest PromoteReadReplicaDBClusterResult
+    -> AWS.Request PromoteReadReplicaDBClusterResult
 promoteReadReplicaDBCluster dBClusterIdentifier =
     AWS.Http.unsignedRequest
         "PromoteReadReplicaDBCluster"
@@ -3378,6 +3454,7 @@ promoteReadReplicaDBCluster dBClusterIdentifier =
             JE.null
         )
         promoteReadReplicaDBClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3392,7 +3469,7 @@ __Required Parameters__
 purchaseReservedDBInstancesOffering :
     String
     -> (PurchaseReservedDBInstancesOfferingOptions -> PurchaseReservedDBInstancesOfferingOptions)
-    -> AWS.Http.UnsignedRequest PurchaseReservedDBInstancesOfferingResult
+    -> AWS.Request PurchaseReservedDBInstancesOfferingResult
 purchaseReservedDBInstancesOffering reservedDBInstancesOfferingId setOptions =
   let
     options = setOptions (PurchaseReservedDBInstancesOfferingOptions Nothing Nothing Nothing)
@@ -3405,6 +3482,7 @@ purchaseReservedDBInstancesOffering reservedDBInstancesOfferingId setOptions =
             JE.null
         )
         purchaseReservedDBInstancesOfferingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a purchaseReservedDBInstancesOffering request
@@ -3428,7 +3506,7 @@ __Required Parameters__
 rebootDBInstance :
     String
     -> (RebootDBInstanceOptions -> RebootDBInstanceOptions)
-    -> AWS.Http.UnsignedRequest RebootDBInstanceResult
+    -> AWS.Request RebootDBInstanceResult
 rebootDBInstance dBInstanceIdentifier setOptions =
   let
     options = setOptions (RebootDBInstanceOptions Nothing)
@@ -3441,6 +3519,7 @@ rebootDBInstance dBInstanceIdentifier setOptions =
             JE.null
         )
         rebootDBInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a rebootDBInstance request
@@ -3463,7 +3542,7 @@ __Required Parameters__
 removeRoleFromDBCluster :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeRoleFromDBCluster dBClusterIdentifier roleArn =
     AWS.Http.unsignedRequest
         "RemoveRoleFromDBCluster"
@@ -3473,6 +3552,7 @@ removeRoleFromDBCluster dBClusterIdentifier roleArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3488,7 +3568,7 @@ __Required Parameters__
 removeSourceIdentifierFromSubscription :
     String
     -> String
-    -> AWS.Http.UnsignedRequest RemoveSourceIdentifierFromSubscriptionResult
+    -> AWS.Request RemoveSourceIdentifierFromSubscriptionResult
 removeSourceIdentifierFromSubscription subscriptionName sourceIdentifier =
     AWS.Http.unsignedRequest
         "RemoveSourceIdentifierFromSubscription"
@@ -3498,6 +3578,7 @@ removeSourceIdentifierFromSubscription subscriptionName sourceIdentifier =
             JE.null
         )
         removeSourceIdentifierFromSubscriptionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3513,7 +3594,7 @@ __Required Parameters__
 removeTagsFromResource :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeTagsFromResource resourceName tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTagsFromResource"
@@ -3523,6 +3604,7 @@ removeTagsFromResource resourceName tagKeys =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3537,7 +3619,7 @@ __Required Parameters__
 resetDBClusterParameterGroup :
     String
     -> (ResetDBClusterParameterGroupOptions -> ResetDBClusterParameterGroupOptions)
-    -> AWS.Http.UnsignedRequest DBClusterParameterGroupNameMessage
+    -> AWS.Request DBClusterParameterGroupNameMessage
 resetDBClusterParameterGroup dBClusterParameterGroupName setOptions =
   let
     options = setOptions (ResetDBClusterParameterGroupOptions Nothing Nothing)
@@ -3550,6 +3632,7 @@ resetDBClusterParameterGroup dBClusterParameterGroupName setOptions =
             JE.null
         )
         dBClusterParameterGroupNameMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resetDBClusterParameterGroup request
@@ -3572,7 +3655,7 @@ __Required Parameters__
 resetDBParameterGroup :
     String
     -> (ResetDBParameterGroupOptions -> ResetDBParameterGroupOptions)
-    -> AWS.Http.UnsignedRequest DBParameterGroupNameMessage
+    -> AWS.Request DBParameterGroupNameMessage
 resetDBParameterGroup dBParameterGroupName setOptions =
   let
     options = setOptions (ResetDBParameterGroupOptions Nothing Nothing)
@@ -3585,6 +3668,7 @@ resetDBParameterGroup dBParameterGroupName setOptions =
             JE.null
         )
         dBParameterGroupNameMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resetDBParameterGroup request
@@ -3621,7 +3705,7 @@ restoreDBClusterFromS3 :
     -> String
     -> String
     -> (RestoreDBClusterFromS3Options -> RestoreDBClusterFromS3Options)
-    -> AWS.Http.UnsignedRequest RestoreDBClusterFromS3Result
+    -> AWS.Request RestoreDBClusterFromS3Result
 restoreDBClusterFromS3 dBClusterIdentifier engine masterUsername masterUserPassword sourceEngine sourceEngineVersion s3BucketName s3IngestionRoleArn setOptions =
   let
     options = setOptions (RestoreDBClusterFromS3Options Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3634,6 +3718,7 @@ restoreDBClusterFromS3 dBClusterIdentifier engine masterUsername masterUserPassw
             JE.null
         )
         restoreDBClusterFromS3ResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreDBClusterFromS3 request
@@ -3674,7 +3759,7 @@ restoreDBClusterFromSnapshot :
     -> String
     -> String
     -> (RestoreDBClusterFromSnapshotOptions -> RestoreDBClusterFromSnapshotOptions)
-    -> AWS.Http.UnsignedRequest RestoreDBClusterFromSnapshotResult
+    -> AWS.Request RestoreDBClusterFromSnapshotResult
 restoreDBClusterFromSnapshot dBClusterIdentifier snapshotIdentifier engine setOptions =
   let
     options = setOptions (RestoreDBClusterFromSnapshotOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3687,6 +3772,7 @@ restoreDBClusterFromSnapshot dBClusterIdentifier snapshotIdentifier engine setOp
             JE.null
         )
         restoreDBClusterFromSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreDBClusterFromSnapshot request
@@ -3718,7 +3804,7 @@ restoreDBClusterToPointInTime :
     String
     -> String
     -> (RestoreDBClusterToPointInTimeOptions -> RestoreDBClusterToPointInTimeOptions)
-    -> AWS.Http.UnsignedRequest RestoreDBClusterToPointInTimeResult
+    -> AWS.Request RestoreDBClusterToPointInTimeResult
 restoreDBClusterToPointInTime dBClusterIdentifier sourceDBClusterIdentifier setOptions =
   let
     options = setOptions (RestoreDBClusterToPointInTimeOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3731,6 +3817,7 @@ restoreDBClusterToPointInTime dBClusterIdentifier sourceDBClusterIdentifier setO
             JE.null
         )
         restoreDBClusterToPointInTimeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreDBClusterToPointInTime request
@@ -3761,7 +3848,7 @@ restoreDBInstanceFromDBSnapshot :
     String
     -> String
     -> (RestoreDBInstanceFromDBSnapshotOptions -> RestoreDBInstanceFromDBSnapshotOptions)
-    -> AWS.Http.UnsignedRequest RestoreDBInstanceFromDBSnapshotResult
+    -> AWS.Request RestoreDBInstanceFromDBSnapshotResult
 restoreDBInstanceFromDBSnapshot dBInstanceIdentifier dBSnapshotIdentifier setOptions =
   let
     options = setOptions (RestoreDBInstanceFromDBSnapshotOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3774,6 +3861,7 @@ restoreDBInstanceFromDBSnapshot dBInstanceIdentifier dBSnapshotIdentifier setOpt
             JE.null
         )
         restoreDBInstanceFromDBSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreDBInstanceFromDBSnapshot request
@@ -3815,7 +3903,7 @@ restoreDBInstanceToPointInTime :
     String
     -> String
     -> (RestoreDBInstanceToPointInTimeOptions -> RestoreDBInstanceToPointInTimeOptions)
-    -> AWS.Http.UnsignedRequest RestoreDBInstanceToPointInTimeResult
+    -> AWS.Request RestoreDBInstanceToPointInTimeResult
 restoreDBInstanceToPointInTime sourceDBInstanceIdentifier targetDBInstanceIdentifier setOptions =
   let
     options = setOptions (RestoreDBInstanceToPointInTimeOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3828,6 +3916,7 @@ restoreDBInstanceToPointInTime sourceDBInstanceIdentifier targetDBInstanceIdenti
             JE.null
         )
         restoreDBInstanceToPointInTimeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreDBInstanceToPointInTime request
@@ -3869,7 +3958,7 @@ __Required Parameters__
 revokeDBSecurityGroupIngress :
     String
     -> (RevokeDBSecurityGroupIngressOptions -> RevokeDBSecurityGroupIngressOptions)
-    -> AWS.Http.UnsignedRequest RevokeDBSecurityGroupIngressResult
+    -> AWS.Request RevokeDBSecurityGroupIngressResult
 revokeDBSecurityGroupIngress dBSecurityGroupName setOptions =
   let
     options = setOptions (RevokeDBSecurityGroupIngressOptions Nothing Nothing Nothing Nothing)
@@ -3882,6 +3971,7 @@ revokeDBSecurityGroupIngress dBSecurityGroupName setOptions =
             JE.null
         )
         revokeDBSecurityGroupIngressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a revokeDBSecurityGroupIngress request

@@ -310,7 +310,9 @@ module AWS.Services.ElasticLoadBalancingv2
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -321,15 +323,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "elasticloadbalancing"
         "2015-12-01"
         "undefined"
         "AWSELASTICLOADBALANCING_20151201."
         "elasticloadbalancing.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -347,7 +350,7 @@ __Required Parameters__
 addTags :
     (List String)
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest AddTagsOutput
+    -> AWS.Request AddTagsOutput
 addTags resourceArns tags =
     AWS.Http.unsignedRequest
         "AddTags"
@@ -357,6 +360,7 @@ addTags resourceArns tags =
             JE.null
         )
         addTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -377,7 +381,7 @@ createListener :
     -> Int
     -> (List Action)
     -> (CreateListenerOptions -> CreateListenerOptions)
-    -> AWS.Http.UnsignedRequest CreateListenerOutput
+    -> AWS.Request CreateListenerOutput
 createListener loadBalancerArn protocol port_ defaultActions setOptions =
   let
     options = setOptions (CreateListenerOptions Nothing Nothing)
@@ -390,6 +394,7 @@ createListener loadBalancerArn protocol port_ defaultActions setOptions =
             JE.null
         )
         createListenerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createListener request
@@ -414,7 +419,7 @@ createLoadBalancer :
     String
     -> (List String)
     -> (CreateLoadBalancerOptions -> CreateLoadBalancerOptions)
-    -> AWS.Http.UnsignedRequest CreateLoadBalancerOutput
+    -> AWS.Request CreateLoadBalancerOutput
 createLoadBalancer name subnets setOptions =
   let
     options = setOptions (CreateLoadBalancerOptions Nothing Nothing Nothing Nothing)
@@ -427,6 +432,7 @@ createLoadBalancer name subnets setOptions =
             JE.null
         )
         createLoadBalancerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createLoadBalancer request
@@ -456,7 +462,7 @@ createRule :
     -> (List RuleCondition)
     -> Int
     -> (List Action)
-    -> AWS.Http.UnsignedRequest CreateRuleOutput
+    -> AWS.Request CreateRuleOutput
 createRule listenerArn conditions priority actions =
     AWS.Http.unsignedRequest
         "CreateRule"
@@ -466,6 +472,7 @@ createRule listenerArn conditions priority actions =
             JE.null
         )
         createRuleOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -486,7 +493,7 @@ createTargetGroup :
     -> Int
     -> String
     -> (CreateTargetGroupOptions -> CreateTargetGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateTargetGroupOutput
+    -> AWS.Request CreateTargetGroupOutput
 createTargetGroup name protocol port_ vpcId setOptions =
   let
     options = setOptions (CreateTargetGroupOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -499,6 +506,7 @@ createTargetGroup name protocol port_ vpcId setOptions =
             JE.null
         )
         createTargetGroupOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createTargetGroup request
@@ -526,7 +534,7 @@ __Required Parameters__
 -}
 deleteListener :
     String
-    -> AWS.Http.UnsignedRequest DeleteListenerOutput
+    -> AWS.Request DeleteListenerOutput
 deleteListener listenerArn =
     AWS.Http.unsignedRequest
         "DeleteListener"
@@ -536,6 +544,7 @@ deleteListener listenerArn =
             JE.null
         )
         deleteListenerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -549,7 +558,7 @@ __Required Parameters__
 -}
 deleteLoadBalancer :
     String
-    -> AWS.Http.UnsignedRequest DeleteLoadBalancerOutput
+    -> AWS.Request DeleteLoadBalancerOutput
 deleteLoadBalancer loadBalancerArn =
     AWS.Http.unsignedRequest
         "DeleteLoadBalancer"
@@ -559,6 +568,7 @@ deleteLoadBalancer loadBalancerArn =
             JE.null
         )
         deleteLoadBalancerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -572,7 +582,7 @@ __Required Parameters__
 -}
 deleteRule :
     String
-    -> AWS.Http.UnsignedRequest DeleteRuleOutput
+    -> AWS.Request DeleteRuleOutput
 deleteRule ruleArn =
     AWS.Http.unsignedRequest
         "DeleteRule"
@@ -582,6 +592,7 @@ deleteRule ruleArn =
             JE.null
         )
         deleteRuleOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -595,7 +606,7 @@ __Required Parameters__
 -}
 deleteTargetGroup :
     String
-    -> AWS.Http.UnsignedRequest DeleteTargetGroupOutput
+    -> AWS.Request DeleteTargetGroupOutput
 deleteTargetGroup targetGroupArn =
     AWS.Http.unsignedRequest
         "DeleteTargetGroup"
@@ -605,6 +616,7 @@ deleteTargetGroup targetGroupArn =
             JE.null
         )
         deleteTargetGroupOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -620,7 +632,7 @@ __Required Parameters__
 deregisterTargets :
     String
     -> (List TargetDescription)
-    -> AWS.Http.UnsignedRequest DeregisterTargetsOutput
+    -> AWS.Request DeregisterTargetsOutput
 deregisterTargets targetGroupArn targets =
     AWS.Http.unsignedRequest
         "DeregisterTargets"
@@ -630,6 +642,7 @@ deregisterTargets targetGroupArn targets =
             JE.null
         )
         deregisterTargetsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -642,7 +655,7 @@ __Required Parameters__
 -}
 describeListeners :
     (DescribeListenersOptions -> DescribeListenersOptions)
-    -> AWS.Http.UnsignedRequest DescribeListenersOutput
+    -> AWS.Request DescribeListenersOutput
 describeListeners setOptions =
   let
     options = setOptions (DescribeListenersOptions Nothing Nothing Nothing Nothing)
@@ -655,6 +668,7 @@ describeListeners setOptions =
             JE.null
         )
         describeListenersOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeListeners request
@@ -678,7 +692,7 @@ __Required Parameters__
 -}
 describeLoadBalancerAttributes :
     String
-    -> AWS.Http.UnsignedRequest DescribeLoadBalancerAttributesOutput
+    -> AWS.Request DescribeLoadBalancerAttributesOutput
 describeLoadBalancerAttributes loadBalancerArn =
     AWS.Http.unsignedRequest
         "DescribeLoadBalancerAttributes"
@@ -688,6 +702,7 @@ describeLoadBalancerAttributes loadBalancerArn =
             JE.null
         )
         describeLoadBalancerAttributesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -700,7 +715,7 @@ __Required Parameters__
 -}
 describeLoadBalancers :
     (DescribeLoadBalancersOptions -> DescribeLoadBalancersOptions)
-    -> AWS.Http.UnsignedRequest DescribeLoadBalancersOutput
+    -> AWS.Request DescribeLoadBalancersOutput
 describeLoadBalancers setOptions =
   let
     options = setOptions (DescribeLoadBalancersOptions Nothing Nothing Nothing Nothing)
@@ -713,6 +728,7 @@ describeLoadBalancers setOptions =
             JE.null
         )
         describeLoadBalancersOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLoadBalancers request
@@ -735,7 +751,7 @@ __Required Parameters__
 -}
 describeRules :
     (DescribeRulesOptions -> DescribeRulesOptions)
-    -> AWS.Http.UnsignedRequest DescribeRulesOutput
+    -> AWS.Request DescribeRulesOutput
 describeRules setOptions =
   let
     options = setOptions (DescribeRulesOptions Nothing Nothing)
@@ -748,6 +764,7 @@ describeRules setOptions =
             JE.null
         )
         describeRulesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeRules request
@@ -768,7 +785,7 @@ __Required Parameters__
 -}
 describeSSLPolicies :
     (DescribeSSLPoliciesOptions -> DescribeSSLPoliciesOptions)
-    -> AWS.Http.UnsignedRequest DescribeSSLPoliciesOutput
+    -> AWS.Request DescribeSSLPoliciesOutput
 describeSSLPolicies setOptions =
   let
     options = setOptions (DescribeSSLPoliciesOptions Nothing Nothing Nothing)
@@ -781,6 +798,7 @@ describeSSLPolicies setOptions =
             JE.null
         )
         describeSSLPoliciesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSSLPolicies request
@@ -803,7 +821,7 @@ __Required Parameters__
 -}
 describeTags :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeTagsOutput
+    -> AWS.Request DescribeTagsOutput
 describeTags resourceArns =
     AWS.Http.unsignedRequest
         "DescribeTags"
@@ -813,6 +831,7 @@ describeTags resourceArns =
             JE.null
         )
         describeTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -826,7 +845,7 @@ __Required Parameters__
 -}
 describeTargetGroupAttributes :
     String
-    -> AWS.Http.UnsignedRequest DescribeTargetGroupAttributesOutput
+    -> AWS.Request DescribeTargetGroupAttributesOutput
 describeTargetGroupAttributes targetGroupArn =
     AWS.Http.unsignedRequest
         "DescribeTargetGroupAttributes"
@@ -836,6 +855,7 @@ describeTargetGroupAttributes targetGroupArn =
             JE.null
         )
         describeTargetGroupAttributesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -848,7 +868,7 @@ __Required Parameters__
 -}
 describeTargetGroups :
     (DescribeTargetGroupsOptions -> DescribeTargetGroupsOptions)
-    -> AWS.Http.UnsignedRequest DescribeTargetGroupsOutput
+    -> AWS.Request DescribeTargetGroupsOutput
 describeTargetGroups setOptions =
   let
     options = setOptions (DescribeTargetGroupsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -861,6 +881,7 @@ describeTargetGroups setOptions =
             JE.null
         )
         describeTargetGroupsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTargetGroups request
@@ -886,7 +907,7 @@ __Required Parameters__
 describeTargetHealth :
     String
     -> (DescribeTargetHealthOptions -> DescribeTargetHealthOptions)
-    -> AWS.Http.UnsignedRequest DescribeTargetHealthOutput
+    -> AWS.Request DescribeTargetHealthOutput
 describeTargetHealth targetGroupArn setOptions =
   let
     options = setOptions (DescribeTargetHealthOptions Nothing)
@@ -899,6 +920,7 @@ describeTargetHealth targetGroupArn setOptions =
             JE.null
         )
         describeTargetHealthOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTargetHealth request
@@ -920,7 +942,7 @@ __Required Parameters__
 modifyListener :
     String
     -> (ModifyListenerOptions -> ModifyListenerOptions)
-    -> AWS.Http.UnsignedRequest ModifyListenerOutput
+    -> AWS.Request ModifyListenerOutput
 modifyListener listenerArn setOptions =
   let
     options = setOptions (ModifyListenerOptions Nothing Nothing Nothing Nothing Nothing)
@@ -933,6 +955,7 @@ modifyListener listenerArn setOptions =
             JE.null
         )
         modifyListenerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyListener request
@@ -959,7 +982,7 @@ __Required Parameters__
 modifyLoadBalancerAttributes :
     String
     -> (List LoadBalancerAttribute)
-    -> AWS.Http.UnsignedRequest ModifyLoadBalancerAttributesOutput
+    -> AWS.Request ModifyLoadBalancerAttributesOutput
 modifyLoadBalancerAttributes loadBalancerArn attributes =
     AWS.Http.unsignedRequest
         "ModifyLoadBalancerAttributes"
@@ -969,6 +992,7 @@ modifyLoadBalancerAttributes loadBalancerArn attributes =
             JE.null
         )
         modifyLoadBalancerAttributesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -983,7 +1007,7 @@ __Required Parameters__
 modifyRule :
     String
     -> (ModifyRuleOptions -> ModifyRuleOptions)
-    -> AWS.Http.UnsignedRequest ModifyRuleOutput
+    -> AWS.Request ModifyRuleOutput
 modifyRule ruleArn setOptions =
   let
     options = setOptions (ModifyRuleOptions Nothing Nothing)
@@ -996,6 +1020,7 @@ modifyRule ruleArn setOptions =
             JE.null
         )
         modifyRuleOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyRule request
@@ -1018,7 +1043,7 @@ __Required Parameters__
 modifyTargetGroup :
     String
     -> (ModifyTargetGroupOptions -> ModifyTargetGroupOptions)
-    -> AWS.Http.UnsignedRequest ModifyTargetGroupOutput
+    -> AWS.Request ModifyTargetGroupOutput
 modifyTargetGroup targetGroupArn setOptions =
   let
     options = setOptions (ModifyTargetGroupOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1031,6 +1056,7 @@ modifyTargetGroup targetGroupArn setOptions =
             JE.null
         )
         modifyTargetGroupOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyTargetGroup request
@@ -1060,7 +1086,7 @@ __Required Parameters__
 modifyTargetGroupAttributes :
     String
     -> (List TargetGroupAttribute)
-    -> AWS.Http.UnsignedRequest ModifyTargetGroupAttributesOutput
+    -> AWS.Request ModifyTargetGroupAttributesOutput
 modifyTargetGroupAttributes targetGroupArn attributes =
     AWS.Http.unsignedRequest
         "ModifyTargetGroupAttributes"
@@ -1070,6 +1096,7 @@ modifyTargetGroupAttributes targetGroupArn attributes =
             JE.null
         )
         modifyTargetGroupAttributesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1085,7 +1112,7 @@ __Required Parameters__
 registerTargets :
     String
     -> (List TargetDescription)
-    -> AWS.Http.UnsignedRequest RegisterTargetsOutput
+    -> AWS.Request RegisterTargetsOutput
 registerTargets targetGroupArn targets =
     AWS.Http.unsignedRequest
         "RegisterTargets"
@@ -1095,6 +1122,7 @@ registerTargets targetGroupArn targets =
             JE.null
         )
         registerTargetsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1110,7 +1138,7 @@ __Required Parameters__
 removeTags :
     (List String)
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveTagsOutput
+    -> AWS.Request RemoveTagsOutput
 removeTags resourceArns tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTags"
@@ -1120,6 +1148,7 @@ removeTags resourceArns tagKeys =
             JE.null
         )
         removeTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1135,7 +1164,7 @@ __Required Parameters__
 setIpAddressType :
     String
     -> IpAddressType
-    -> AWS.Http.UnsignedRequest SetIpAddressTypeOutput
+    -> AWS.Request SetIpAddressTypeOutput
 setIpAddressType loadBalancerArn ipAddressType =
     AWS.Http.unsignedRequest
         "SetIpAddressType"
@@ -1145,6 +1174,7 @@ setIpAddressType loadBalancerArn ipAddressType =
             JE.null
         )
         setIpAddressTypeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1158,7 +1188,7 @@ __Required Parameters__
 -}
 setRulePriorities :
     (List RulePriorityPair)
-    -> AWS.Http.UnsignedRequest SetRulePrioritiesOutput
+    -> AWS.Request SetRulePrioritiesOutput
 setRulePriorities rulePriorities =
     AWS.Http.unsignedRequest
         "SetRulePriorities"
@@ -1168,6 +1198,7 @@ setRulePriorities rulePriorities =
             JE.null
         )
         setRulePrioritiesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1183,7 +1214,7 @@ __Required Parameters__
 setSecurityGroups :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest SetSecurityGroupsOutput
+    -> AWS.Request SetSecurityGroupsOutput
 setSecurityGroups loadBalancerArn securityGroups =
     AWS.Http.unsignedRequest
         "SetSecurityGroups"
@@ -1193,6 +1224,7 @@ setSecurityGroups loadBalancerArn securityGroups =
             JE.null
         )
         setSecurityGroupsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1208,7 +1240,7 @@ __Required Parameters__
 setSubnets :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest SetSubnetsOutput
+    -> AWS.Request SetSubnetsOutput
 setSubnets loadBalancerArn subnets =
     AWS.Http.unsignedRequest
         "SetSubnets"
@@ -1218,6 +1250,7 @@ setSubnets loadBalancerArn subnets =
             JE.null
         )
         setSubnetsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 

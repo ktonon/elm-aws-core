@@ -604,7 +604,9 @@ module AWS.Services.S3
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -616,15 +618,16 @@ import Dict exposing (Dict)
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "s3"
         "2006-03-01"
         "undefined"
         "AWSS3_20060301."
         "s3.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -645,7 +648,7 @@ abortMultipartUpload :
     -> String
     -> String
     -> (AbortMultipartUploadOptions -> AbortMultipartUploadOptions)
-    -> AWS.Http.UnsignedRequest AbortMultipartUploadOutput
+    -> AWS.Request AbortMultipartUploadOutput
 abortMultipartUpload bucket key uploadId setOptions =
   let
     options = setOptions (AbortMultipartUploadOptions Nothing)
@@ -658,6 +661,7 @@ abortMultipartUpload bucket key uploadId setOptions =
             JE.null
         )
         abortMultipartUploadOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a abortMultipartUpload request
@@ -683,7 +687,7 @@ completeMultipartUpload :
     -> String
     -> String
     -> (CompleteMultipartUploadOptions -> CompleteMultipartUploadOptions)
-    -> AWS.Http.UnsignedRequest CompleteMultipartUploadOutput
+    -> AWS.Request CompleteMultipartUploadOutput
 completeMultipartUpload bucket key uploadId setOptions =
   let
     options = setOptions (CompleteMultipartUploadOptions Nothing Nothing)
@@ -696,6 +700,7 @@ completeMultipartUpload bucket key uploadId setOptions =
             JE.null
         )
         completeMultipartUploadOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a completeMultipartUpload request
@@ -722,7 +727,7 @@ copyObject :
     -> String
     -> String
     -> (CopyObjectOptions -> CopyObjectOptions)
-    -> AWS.Http.UnsignedRequest CopyObjectOutput
+    -> AWS.Request CopyObjectOutput
 copyObject bucket copySource key setOptions =
   let
     options = setOptions (CopyObjectOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -735,6 +740,7 @@ copyObject bucket copySource key setOptions =
             JE.null
         )
         copyObjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copyObject request
@@ -785,7 +791,7 @@ __Required Parameters__
 createBucket :
     String
     -> (CreateBucketOptions -> CreateBucketOptions)
-    -> AWS.Http.UnsignedRequest CreateBucketOutput
+    -> AWS.Request CreateBucketOutput
 createBucket bucket setOptions =
   let
     options = setOptions (CreateBucketOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -798,6 +804,7 @@ createBucket bucket setOptions =
             JE.null
         )
         createBucketOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createBucket request
@@ -827,7 +834,7 @@ createMultipartUpload :
     String
     -> String
     -> (CreateMultipartUploadOptions -> CreateMultipartUploadOptions)
-    -> AWS.Http.UnsignedRequest CreateMultipartUploadOutput
+    -> AWS.Request CreateMultipartUploadOutput
 createMultipartUpload bucket key setOptions =
   let
     options = setOptions (CreateMultipartUploadOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -840,6 +847,7 @@ createMultipartUpload bucket key setOptions =
             JE.null
         )
         createMultipartUploadOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createMultipartUpload request
@@ -879,7 +887,7 @@ __Required Parameters__
 -}
 deleteBucket :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucket bucket =
     AWS.Http.unsignedRequest
         "DeleteBucket"
@@ -889,6 +897,7 @@ deleteBucket bucket =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -904,7 +913,7 @@ __Required Parameters__
 deleteBucketAnalyticsConfiguration :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucketAnalyticsConfiguration bucket id =
     AWS.Http.unsignedRequest
         "DeleteBucketAnalyticsConfiguration"
@@ -914,6 +923,7 @@ deleteBucketAnalyticsConfiguration bucket id =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -927,7 +937,7 @@ __Required Parameters__
 -}
 deleteBucketCors :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucketCors bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketCors"
@@ -937,6 +947,7 @@ deleteBucketCors bucket =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -952,7 +963,7 @@ __Required Parameters__
 deleteBucketInventoryConfiguration :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucketInventoryConfiguration bucket id =
     AWS.Http.unsignedRequest
         "DeleteBucketInventoryConfiguration"
@@ -962,6 +973,7 @@ deleteBucketInventoryConfiguration bucket id =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -975,7 +987,7 @@ __Required Parameters__
 -}
 deleteBucketLifecycle :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucketLifecycle bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketLifecycle"
@@ -985,6 +997,7 @@ deleteBucketLifecycle bucket =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1000,7 +1013,7 @@ __Required Parameters__
 deleteBucketMetricsConfiguration :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucketMetricsConfiguration bucket id =
     AWS.Http.unsignedRequest
         "DeleteBucketMetricsConfiguration"
@@ -1010,6 +1023,7 @@ deleteBucketMetricsConfiguration bucket id =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1023,7 +1037,7 @@ __Required Parameters__
 -}
 deleteBucketPolicy :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucketPolicy bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketPolicy"
@@ -1033,6 +1047,7 @@ deleteBucketPolicy bucket =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1046,7 +1061,7 @@ __Required Parameters__
 -}
 deleteBucketReplication :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucketReplication bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketReplication"
@@ -1056,6 +1071,7 @@ deleteBucketReplication bucket =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1069,7 +1085,7 @@ __Required Parameters__
 -}
 deleteBucketTagging :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucketTagging bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketTagging"
@@ -1079,6 +1095,7 @@ deleteBucketTagging bucket =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1092,7 +1109,7 @@ __Required Parameters__
 -}
 deleteBucketWebsite :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBucketWebsite bucket =
     AWS.Http.unsignedRequest
         "DeleteBucketWebsite"
@@ -1102,6 +1119,7 @@ deleteBucketWebsite bucket =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1118,7 +1136,7 @@ deleteObject :
     String
     -> String
     -> (DeleteObjectOptions -> DeleteObjectOptions)
-    -> AWS.Http.UnsignedRequest DeleteObjectOutput
+    -> AWS.Request DeleteObjectOutput
 deleteObject bucket key setOptions =
   let
     options = setOptions (DeleteObjectOptions Nothing Nothing Nothing)
@@ -1131,6 +1149,7 @@ deleteObject bucket key setOptions =
             JE.null
         )
         deleteObjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteObject request
@@ -1156,7 +1175,7 @@ deleteObjectTagging :
     String
     -> String
     -> (DeleteObjectTaggingOptions -> DeleteObjectTaggingOptions)
-    -> AWS.Http.UnsignedRequest DeleteObjectTaggingOutput
+    -> AWS.Request DeleteObjectTaggingOutput
 deleteObjectTagging bucket key setOptions =
   let
     options = setOptions (DeleteObjectTaggingOptions Nothing)
@@ -1169,6 +1188,7 @@ deleteObjectTagging bucket key setOptions =
             JE.null
         )
         deleteObjectTaggingOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteObjectTagging request
@@ -1192,7 +1212,7 @@ deleteObjects :
     String
     -> Delete
     -> (DeleteObjectsOptions -> DeleteObjectsOptions)
-    -> AWS.Http.UnsignedRequest DeleteObjectsOutput
+    -> AWS.Request DeleteObjectsOutput
 deleteObjects bucket delete setOptions =
   let
     options = setOptions (DeleteObjectsOptions Nothing Nothing)
@@ -1205,6 +1225,7 @@ deleteObjects bucket delete setOptions =
             JE.null
         )
         deleteObjectsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteObjects request
@@ -1226,7 +1247,7 @@ __Required Parameters__
 -}
 getBucketAccelerateConfiguration :
     String
-    -> AWS.Http.UnsignedRequest GetBucketAccelerateConfigurationOutput
+    -> AWS.Request GetBucketAccelerateConfigurationOutput
 getBucketAccelerateConfiguration bucket =
     AWS.Http.unsignedRequest
         "GetBucketAccelerateConfiguration"
@@ -1237,6 +1258,7 @@ getBucketAccelerateConfiguration bucket =
             ]
         )
         getBucketAccelerateConfigurationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1250,7 +1272,7 @@ __Required Parameters__
 -}
 getBucketAcl :
     String
-    -> AWS.Http.UnsignedRequest GetBucketAclOutput
+    -> AWS.Request GetBucketAclOutput
 getBucketAcl bucket =
     AWS.Http.unsignedRequest
         "GetBucketAcl"
@@ -1261,6 +1283,7 @@ getBucketAcl bucket =
             ]
         )
         getBucketAclOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1276,7 +1299,7 @@ __Required Parameters__
 getBucketAnalyticsConfiguration :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetBucketAnalyticsConfigurationOutput
+    -> AWS.Request GetBucketAnalyticsConfigurationOutput
 getBucketAnalyticsConfiguration bucket id =
     AWS.Http.unsignedRequest
         "GetBucketAnalyticsConfiguration"
@@ -1287,6 +1310,7 @@ getBucketAnalyticsConfiguration bucket id =
             ]
         )
         getBucketAnalyticsConfigurationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1300,7 +1324,7 @@ __Required Parameters__
 -}
 getBucketCors :
     String
-    -> AWS.Http.UnsignedRequest GetBucketCorsOutput
+    -> AWS.Request GetBucketCorsOutput
 getBucketCors bucket =
     AWS.Http.unsignedRequest
         "GetBucketCors"
@@ -1311,6 +1335,7 @@ getBucketCors bucket =
             ]
         )
         getBucketCorsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1326,7 +1351,7 @@ __Required Parameters__
 getBucketInventoryConfiguration :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetBucketInventoryConfigurationOutput
+    -> AWS.Request GetBucketInventoryConfigurationOutput
 getBucketInventoryConfiguration bucket id =
     AWS.Http.unsignedRequest
         "GetBucketInventoryConfiguration"
@@ -1337,6 +1362,7 @@ getBucketInventoryConfiguration bucket id =
             ]
         )
         getBucketInventoryConfigurationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1350,7 +1376,7 @@ __Required Parameters__
 -}
 getBucketLifecycle :
     String
-    -> AWS.Http.UnsignedRequest GetBucketLifecycleOutput
+    -> AWS.Request GetBucketLifecycleOutput
 getBucketLifecycle bucket =
     AWS.Http.unsignedRequest
         "GetBucketLifecycle"
@@ -1361,6 +1387,7 @@ getBucketLifecycle bucket =
             ]
         )
         getBucketLifecycleOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1374,7 +1401,7 @@ __Required Parameters__
 -}
 getBucketLifecycleConfiguration :
     String
-    -> AWS.Http.UnsignedRequest GetBucketLifecycleConfigurationOutput
+    -> AWS.Request GetBucketLifecycleConfigurationOutput
 getBucketLifecycleConfiguration bucket =
     AWS.Http.unsignedRequest
         "GetBucketLifecycleConfiguration"
@@ -1385,6 +1412,7 @@ getBucketLifecycleConfiguration bucket =
             ]
         )
         getBucketLifecycleConfigurationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1398,7 +1426,7 @@ __Required Parameters__
 -}
 getBucketLocation :
     String
-    -> AWS.Http.UnsignedRequest GetBucketLocationOutput
+    -> AWS.Request GetBucketLocationOutput
 getBucketLocation bucket =
     AWS.Http.unsignedRequest
         "GetBucketLocation"
@@ -1409,6 +1437,7 @@ getBucketLocation bucket =
             ]
         )
         getBucketLocationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1422,7 +1451,7 @@ __Required Parameters__
 -}
 getBucketLogging :
     String
-    -> AWS.Http.UnsignedRequest GetBucketLoggingOutput
+    -> AWS.Request GetBucketLoggingOutput
 getBucketLogging bucket =
     AWS.Http.unsignedRequest
         "GetBucketLogging"
@@ -1433,6 +1462,7 @@ getBucketLogging bucket =
             ]
         )
         getBucketLoggingOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1448,7 +1478,7 @@ __Required Parameters__
 getBucketMetricsConfiguration :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetBucketMetricsConfigurationOutput
+    -> AWS.Request GetBucketMetricsConfigurationOutput
 getBucketMetricsConfiguration bucket id =
     AWS.Http.unsignedRequest
         "GetBucketMetricsConfiguration"
@@ -1459,6 +1489,7 @@ getBucketMetricsConfiguration bucket id =
             ]
         )
         getBucketMetricsConfigurationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1472,7 +1503,7 @@ __Required Parameters__
 -}
 getBucketNotification :
     String
-    -> AWS.Http.UnsignedRequest NotificationConfigurationDeprecated
+    -> AWS.Request NotificationConfigurationDeprecated
 getBucketNotification bucket =
     AWS.Http.unsignedRequest
         "GetBucketNotification"
@@ -1483,6 +1514,7 @@ getBucketNotification bucket =
             ]
         )
         notificationConfigurationDeprecatedDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1496,7 +1528,7 @@ __Required Parameters__
 -}
 getBucketNotificationConfiguration :
     String
-    -> AWS.Http.UnsignedRequest NotificationConfiguration
+    -> AWS.Request NotificationConfiguration
 getBucketNotificationConfiguration bucket =
     AWS.Http.unsignedRequest
         "GetBucketNotificationConfiguration"
@@ -1507,6 +1539,7 @@ getBucketNotificationConfiguration bucket =
             ]
         )
         notificationConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1520,7 +1553,7 @@ __Required Parameters__
 -}
 getBucketPolicy :
     String
-    -> AWS.Http.UnsignedRequest GetBucketPolicyOutput
+    -> AWS.Request GetBucketPolicyOutput
 getBucketPolicy bucket =
     AWS.Http.unsignedRequest
         "GetBucketPolicy"
@@ -1531,6 +1564,7 @@ getBucketPolicy bucket =
             ]
         )
         getBucketPolicyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1544,7 +1578,7 @@ __Required Parameters__
 -}
 getBucketReplication :
     String
-    -> AWS.Http.UnsignedRequest GetBucketReplicationOutput
+    -> AWS.Request GetBucketReplicationOutput
 getBucketReplication bucket =
     AWS.Http.unsignedRequest
         "GetBucketReplication"
@@ -1555,6 +1589,7 @@ getBucketReplication bucket =
             ]
         )
         getBucketReplicationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1568,7 +1603,7 @@ __Required Parameters__
 -}
 getBucketRequestPayment :
     String
-    -> AWS.Http.UnsignedRequest GetBucketRequestPaymentOutput
+    -> AWS.Request GetBucketRequestPaymentOutput
 getBucketRequestPayment bucket =
     AWS.Http.unsignedRequest
         "GetBucketRequestPayment"
@@ -1579,6 +1614,7 @@ getBucketRequestPayment bucket =
             ]
         )
         getBucketRequestPaymentOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1592,7 +1628,7 @@ __Required Parameters__
 -}
 getBucketTagging :
     String
-    -> AWS.Http.UnsignedRequest GetBucketTaggingOutput
+    -> AWS.Request GetBucketTaggingOutput
 getBucketTagging bucket =
     AWS.Http.unsignedRequest
         "GetBucketTagging"
@@ -1603,6 +1639,7 @@ getBucketTagging bucket =
             ]
         )
         getBucketTaggingOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1616,7 +1653,7 @@ __Required Parameters__
 -}
 getBucketVersioning :
     String
-    -> AWS.Http.UnsignedRequest GetBucketVersioningOutput
+    -> AWS.Request GetBucketVersioningOutput
 getBucketVersioning bucket =
     AWS.Http.unsignedRequest
         "GetBucketVersioning"
@@ -1627,6 +1664,7 @@ getBucketVersioning bucket =
             ]
         )
         getBucketVersioningOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1640,7 +1678,7 @@ __Required Parameters__
 -}
 getBucketWebsite :
     String
-    -> AWS.Http.UnsignedRequest GetBucketWebsiteOutput
+    -> AWS.Request GetBucketWebsiteOutput
 getBucketWebsite bucket =
     AWS.Http.unsignedRequest
         "GetBucketWebsite"
@@ -1651,6 +1689,7 @@ getBucketWebsite bucket =
             ]
         )
         getBucketWebsiteOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1667,7 +1706,7 @@ getObject :
     String
     -> String
     -> (GetObjectOptions -> GetObjectOptions)
-    -> AWS.Http.UnsignedRequest GetObjectOutput
+    -> AWS.Request GetObjectOutput
 getObject bucket key setOptions =
   let
     options = setOptions (GetObjectOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1681,6 +1720,7 @@ getObject bucket key setOptions =
             ]
         )
         getObjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getObject request
@@ -1720,7 +1760,7 @@ getObjectAcl :
     String
     -> String
     -> (GetObjectAclOptions -> GetObjectAclOptions)
-    -> AWS.Http.UnsignedRequest GetObjectAclOutput
+    -> AWS.Request GetObjectAclOutput
 getObjectAcl bucket key setOptions =
   let
     options = setOptions (GetObjectAclOptions Nothing Nothing)
@@ -1734,6 +1774,7 @@ getObjectAcl bucket key setOptions =
             ]
         )
         getObjectAclOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getObjectAcl request
@@ -1758,7 +1799,7 @@ getObjectTagging :
     String
     -> String
     -> (GetObjectTaggingOptions -> GetObjectTaggingOptions)
-    -> AWS.Http.UnsignedRequest GetObjectTaggingOutput
+    -> AWS.Request GetObjectTaggingOutput
 getObjectTagging bucket key setOptions =
   let
     options = setOptions (GetObjectTaggingOptions Nothing)
@@ -1772,6 +1813,7 @@ getObjectTagging bucket key setOptions =
             ]
         )
         getObjectTaggingOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getObjectTagging request
@@ -1795,7 +1837,7 @@ getObjectTorrent :
     String
     -> String
     -> (GetObjectTorrentOptions -> GetObjectTorrentOptions)
-    -> AWS.Http.UnsignedRequest GetObjectTorrentOutput
+    -> AWS.Request GetObjectTorrentOutput
 getObjectTorrent bucket key setOptions =
   let
     options = setOptions (GetObjectTorrentOptions Nothing)
@@ -1809,6 +1851,7 @@ getObjectTorrent bucket key setOptions =
             ]
         )
         getObjectTorrentOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getObjectTorrent request
@@ -1829,7 +1872,7 @@ __Required Parameters__
 -}
 headBucket :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 headBucket bucket =
     AWS.Http.unsignedRequest
         "HeadBucket"
@@ -1839,6 +1882,7 @@ headBucket bucket =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1855,7 +1899,7 @@ headObject :
     String
     -> String
     -> (HeadObjectOptions -> HeadObjectOptions)
-    -> AWS.Http.UnsignedRequest HeadObjectOutput
+    -> AWS.Request HeadObjectOutput
 headObject bucket key setOptions =
   let
     options = setOptions (HeadObjectOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1868,6 +1912,7 @@ headObject bucket key setOptions =
             JE.null
         )
         headObjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a headObject request
@@ -1899,7 +1944,7 @@ __Required Parameters__
 listBucketAnalyticsConfigurations :
     String
     -> (ListBucketAnalyticsConfigurationsOptions -> ListBucketAnalyticsConfigurationsOptions)
-    -> AWS.Http.UnsignedRequest ListBucketAnalyticsConfigurationsOutput
+    -> AWS.Request ListBucketAnalyticsConfigurationsOutput
 listBucketAnalyticsConfigurations bucket setOptions =
   let
     options = setOptions (ListBucketAnalyticsConfigurationsOptions Nothing)
@@ -1913,6 +1958,7 @@ listBucketAnalyticsConfigurations bucket setOptions =
             ]
         )
         listBucketAnalyticsConfigurationsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listBucketAnalyticsConfigurations request
@@ -1934,7 +1980,7 @@ __Required Parameters__
 listBucketInventoryConfigurations :
     String
     -> (ListBucketInventoryConfigurationsOptions -> ListBucketInventoryConfigurationsOptions)
-    -> AWS.Http.UnsignedRequest ListBucketInventoryConfigurationsOutput
+    -> AWS.Request ListBucketInventoryConfigurationsOutput
 listBucketInventoryConfigurations bucket setOptions =
   let
     options = setOptions (ListBucketInventoryConfigurationsOptions Nothing)
@@ -1948,6 +1994,7 @@ listBucketInventoryConfigurations bucket setOptions =
             ]
         )
         listBucketInventoryConfigurationsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listBucketInventoryConfigurations request
@@ -1969,7 +2016,7 @@ __Required Parameters__
 listBucketMetricsConfigurations :
     String
     -> (ListBucketMetricsConfigurationsOptions -> ListBucketMetricsConfigurationsOptions)
-    -> AWS.Http.UnsignedRequest ListBucketMetricsConfigurationsOutput
+    -> AWS.Request ListBucketMetricsConfigurationsOutput
 listBucketMetricsConfigurations bucket setOptions =
   let
     options = setOptions (ListBucketMetricsConfigurationsOptions Nothing)
@@ -1983,6 +2030,7 @@ listBucketMetricsConfigurations bucket setOptions =
             ]
         )
         listBucketMetricsConfigurationsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listBucketMetricsConfigurations request
@@ -2001,7 +2049,7 @@ __Required Parameters__
 
 -}
 listBuckets :
-    AWS.Http.UnsignedRequest ListBucketsOutput
+    AWS.Request ListBucketsOutput
 listBuckets =
     AWS.Http.unsignedRequest
         "ListBuckets"
@@ -2012,6 +2060,7 @@ listBuckets =
             ]
         )
         listBucketsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2026,7 +2075,7 @@ __Required Parameters__
 listMultipartUploads :
     String
     -> (ListMultipartUploadsOptions -> ListMultipartUploadsOptions)
-    -> AWS.Http.UnsignedRequest ListMultipartUploadsOutput
+    -> AWS.Request ListMultipartUploadsOutput
 listMultipartUploads bucket setOptions =
   let
     options = setOptions (ListMultipartUploadsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2040,6 +2089,7 @@ listMultipartUploads bucket setOptions =
             ]
         )
         listMultipartUploadsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listMultipartUploads request
@@ -2066,7 +2116,7 @@ __Required Parameters__
 listObjectVersions :
     String
     -> (ListObjectVersionsOptions -> ListObjectVersionsOptions)
-    -> AWS.Http.UnsignedRequest ListObjectVersionsOutput
+    -> AWS.Request ListObjectVersionsOutput
 listObjectVersions bucket setOptions =
   let
     options = setOptions (ListObjectVersionsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2080,6 +2130,7 @@ listObjectVersions bucket setOptions =
             ]
         )
         listObjectVersionsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listObjectVersions request
@@ -2106,7 +2157,7 @@ __Required Parameters__
 listObjects :
     String
     -> (ListObjectsOptions -> ListObjectsOptions)
-    -> AWS.Http.UnsignedRequest ListObjectsOutput
+    -> AWS.Request ListObjectsOutput
 listObjects bucket setOptions =
   let
     options = setOptions (ListObjectsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2120,6 +2171,7 @@ listObjects bucket setOptions =
             ]
         )
         listObjectsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listObjects request
@@ -2146,7 +2198,7 @@ __Required Parameters__
 listObjectsV2 :
     String
     -> (ListObjectsV2Options -> ListObjectsV2Options)
-    -> AWS.Http.UnsignedRequest ListObjectsV2Output
+    -> AWS.Request ListObjectsV2Output
 listObjectsV2 bucket setOptions =
   let
     options = setOptions (ListObjectsV2Options Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2160,6 +2212,7 @@ listObjectsV2 bucket setOptions =
             ]
         )
         listObjectsV2OutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listObjectsV2 request
@@ -2192,7 +2245,7 @@ listParts :
     -> String
     -> String
     -> (ListPartsOptions -> ListPartsOptions)
-    -> AWS.Http.UnsignedRequest ListPartsOutput
+    -> AWS.Request ListPartsOutput
 listParts bucket key uploadId setOptions =
   let
     options = setOptions (ListPartsOptions Nothing Nothing Nothing)
@@ -2206,6 +2259,7 @@ listParts bucket key uploadId setOptions =
             ]
         )
         listPartsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listParts request
@@ -2230,7 +2284,7 @@ __Required Parameters__
 putBucketAccelerateConfiguration :
     String
     -> AccelerateConfiguration
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketAccelerateConfiguration bucket accelerateConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketAccelerateConfiguration"
@@ -2240,6 +2294,7 @@ putBucketAccelerateConfiguration bucket accelerateConfiguration =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2254,7 +2309,7 @@ __Required Parameters__
 putBucketAcl :
     String
     -> (PutBucketAclOptions -> PutBucketAclOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketAcl bucket setOptions =
   let
     options = setOptions (PutBucketAclOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2267,6 +2322,7 @@ putBucketAcl bucket setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketAcl request
@@ -2298,7 +2354,7 @@ putBucketAnalyticsConfiguration :
     String
     -> String
     -> AnalyticsConfiguration
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketAnalyticsConfiguration bucket id analyticsConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketAnalyticsConfiguration"
@@ -2308,6 +2364,7 @@ putBucketAnalyticsConfiguration bucket id analyticsConfiguration =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2324,7 +2381,7 @@ putBucketCors :
     String
     -> CORSConfiguration
     -> (PutBucketCorsOptions -> PutBucketCorsOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketCors bucket cORSConfiguration setOptions =
   let
     options = setOptions (PutBucketCorsOptions Nothing)
@@ -2337,6 +2394,7 @@ putBucketCors bucket cORSConfiguration setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketCors request
@@ -2361,7 +2419,7 @@ putBucketInventoryConfiguration :
     String
     -> String
     -> InventoryConfiguration
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketInventoryConfiguration bucket id inventoryConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketInventoryConfiguration"
@@ -2371,6 +2429,7 @@ putBucketInventoryConfiguration bucket id inventoryConfiguration =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2385,7 +2444,7 @@ __Required Parameters__
 putBucketLifecycle :
     String
     -> (PutBucketLifecycleOptions -> PutBucketLifecycleOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketLifecycle bucket setOptions =
   let
     options = setOptions (PutBucketLifecycleOptions Nothing Nothing)
@@ -2398,6 +2457,7 @@ putBucketLifecycle bucket setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketLifecycle request
@@ -2420,7 +2480,7 @@ __Required Parameters__
 putBucketLifecycleConfiguration :
     String
     -> (PutBucketLifecycleConfigurationOptions -> PutBucketLifecycleConfigurationOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketLifecycleConfiguration bucket setOptions =
   let
     options = setOptions (PutBucketLifecycleConfigurationOptions Nothing)
@@ -2433,6 +2493,7 @@ putBucketLifecycleConfiguration bucket setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketLifecycleConfiguration request
@@ -2456,7 +2517,7 @@ putBucketLogging :
     String
     -> BucketLoggingStatus
     -> (PutBucketLoggingOptions -> PutBucketLoggingOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketLogging bucket bucketLoggingStatus setOptions =
   let
     options = setOptions (PutBucketLoggingOptions Nothing)
@@ -2469,6 +2530,7 @@ putBucketLogging bucket bucketLoggingStatus setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketLogging request
@@ -2493,7 +2555,7 @@ putBucketMetricsConfiguration :
     String
     -> String
     -> MetricsConfiguration
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketMetricsConfiguration bucket id metricsConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketMetricsConfiguration"
@@ -2503,6 +2565,7 @@ putBucketMetricsConfiguration bucket id metricsConfiguration =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2519,7 +2582,7 @@ putBucketNotification :
     String
     -> NotificationConfigurationDeprecated
     -> (PutBucketNotificationOptions -> PutBucketNotificationOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketNotification bucket notificationConfiguration setOptions =
   let
     options = setOptions (PutBucketNotificationOptions Nothing)
@@ -2532,6 +2595,7 @@ putBucketNotification bucket notificationConfiguration setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketNotification request
@@ -2554,7 +2618,7 @@ __Required Parameters__
 putBucketNotificationConfiguration :
     String
     -> NotificationConfiguration
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketNotificationConfiguration bucket notificationConfiguration =
     AWS.Http.unsignedRequest
         "PutBucketNotificationConfiguration"
@@ -2564,6 +2628,7 @@ putBucketNotificationConfiguration bucket notificationConfiguration =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2580,7 +2645,7 @@ putBucketPolicy :
     String
     -> String
     -> (PutBucketPolicyOptions -> PutBucketPolicyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketPolicy bucket policy setOptions =
   let
     options = setOptions (PutBucketPolicyOptions Nothing)
@@ -2593,6 +2658,7 @@ putBucketPolicy bucket policy setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketPolicy request
@@ -2616,7 +2682,7 @@ putBucketReplication :
     String
     -> ReplicationConfiguration
     -> (PutBucketReplicationOptions -> PutBucketReplicationOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketReplication bucket replicationConfiguration setOptions =
   let
     options = setOptions (PutBucketReplicationOptions Nothing)
@@ -2629,6 +2695,7 @@ putBucketReplication bucket replicationConfiguration setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketReplication request
@@ -2652,7 +2719,7 @@ putBucketRequestPayment :
     String
     -> RequestPaymentConfiguration
     -> (PutBucketRequestPaymentOptions -> PutBucketRequestPaymentOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketRequestPayment bucket requestPaymentConfiguration setOptions =
   let
     options = setOptions (PutBucketRequestPaymentOptions Nothing)
@@ -2665,6 +2732,7 @@ putBucketRequestPayment bucket requestPaymentConfiguration setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketRequestPayment request
@@ -2688,7 +2756,7 @@ putBucketTagging :
     String
     -> Tagging
     -> (PutBucketTaggingOptions -> PutBucketTaggingOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketTagging bucket tagging setOptions =
   let
     options = setOptions (PutBucketTaggingOptions Nothing)
@@ -2701,6 +2769,7 @@ putBucketTagging bucket tagging setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketTagging request
@@ -2724,7 +2793,7 @@ putBucketVersioning :
     String
     -> VersioningConfiguration
     -> (PutBucketVersioningOptions -> PutBucketVersioningOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketVersioning bucket versioningConfiguration setOptions =
   let
     options = setOptions (PutBucketVersioningOptions Nothing Nothing)
@@ -2737,6 +2806,7 @@ putBucketVersioning bucket versioningConfiguration setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketVersioning request
@@ -2761,7 +2831,7 @@ putBucketWebsite :
     String
     -> WebsiteConfiguration
     -> (PutBucketWebsiteOptions -> PutBucketWebsiteOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putBucketWebsite bucket websiteConfiguration setOptions =
   let
     options = setOptions (PutBucketWebsiteOptions Nothing)
@@ -2774,6 +2844,7 @@ putBucketWebsite bucket websiteConfiguration setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putBucketWebsite request
@@ -2797,7 +2868,7 @@ putObject :
     String
     -> String
     -> (PutObjectOptions -> PutObjectOptions)
-    -> AWS.Http.UnsignedRequest PutObjectOutput
+    -> AWS.Request PutObjectOutput
 putObject bucket key setOptions =
   let
     options = setOptions (PutObjectOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2810,6 +2881,7 @@ putObject bucket key setOptions =
             JE.null
         )
         putObjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putObject request
@@ -2856,7 +2928,7 @@ putObjectAcl :
     String
     -> String
     -> (PutObjectAclOptions -> PutObjectAclOptions)
-    -> AWS.Http.UnsignedRequest PutObjectAclOutput
+    -> AWS.Request PutObjectAclOutput
 putObjectAcl bucket key setOptions =
   let
     options = setOptions (PutObjectAclOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2869,6 +2941,7 @@ putObjectAcl bucket key setOptions =
             JE.null
         )
         putObjectAclOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putObjectAcl request
@@ -2903,7 +2976,7 @@ putObjectTagging :
     -> String
     -> Tagging
     -> (PutObjectTaggingOptions -> PutObjectTaggingOptions)
-    -> AWS.Http.UnsignedRequest PutObjectTaggingOutput
+    -> AWS.Request PutObjectTaggingOutput
 putObjectTagging bucket key tagging setOptions =
   let
     options = setOptions (PutObjectTaggingOptions Nothing Nothing)
@@ -2916,6 +2989,7 @@ putObjectTagging bucket key tagging setOptions =
             JE.null
         )
         putObjectTaggingOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putObjectTagging request
@@ -2940,7 +3014,7 @@ restoreObject :
     String
     -> String
     -> (RestoreObjectOptions -> RestoreObjectOptions)
-    -> AWS.Http.UnsignedRequest RestoreObjectOutput
+    -> AWS.Request RestoreObjectOutput
 restoreObject bucket key setOptions =
   let
     options = setOptions (RestoreObjectOptions Nothing Nothing Nothing)
@@ -2953,6 +3027,7 @@ restoreObject bucket key setOptions =
             JE.null
         )
         restoreObjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreObject request
@@ -2982,7 +3057,7 @@ uploadPart :
     -> Int
     -> String
     -> (UploadPartOptions -> UploadPartOptions)
-    -> AWS.Http.UnsignedRequest UploadPartOutput
+    -> AWS.Request UploadPartOutput
 uploadPart bucket key partNumber uploadId setOptions =
   let
     options = setOptions (UploadPartOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2995,6 +3070,7 @@ uploadPart bucket key partNumber uploadId setOptions =
             JE.null
         )
         uploadPartOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a uploadPart request
@@ -3030,7 +3106,7 @@ uploadPartCopy :
     -> Int
     -> String
     -> (UploadPartCopyOptions -> UploadPartCopyOptions)
-    -> AWS.Http.UnsignedRequest UploadPartCopyOutput
+    -> AWS.Request UploadPartCopyOutput
 uploadPartCopy bucket copySource key partNumber uploadId setOptions =
   let
     options = setOptions (UploadPartCopyOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3043,6 +3119,7 @@ uploadPartCopy bucket copySource key partNumber uploadId setOptions =
             JE.null
         )
         uploadPartCopyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a uploadPartCopy request

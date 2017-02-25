@@ -410,7 +410,9 @@ module AWS.Services.IoT
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -422,15 +424,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "iot"
         "2015-05-28"
         "undefined"
         "AWSIOT_20150528."
         "iot.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -447,7 +450,7 @@ __Required Parameters__
 acceptCertificateTransfer :
     String
     -> (AcceptCertificateTransferOptions -> AcceptCertificateTransferOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 acceptCertificateTransfer certificateId setOptions =
   let
     options = setOptions (AcceptCertificateTransferOptions Nothing)
@@ -460,6 +463,7 @@ acceptCertificateTransfer certificateId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a acceptCertificateTransfer request
@@ -482,7 +486,7 @@ __Required Parameters__
 attachPrincipalPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 attachPrincipalPolicy policyName principal =
     AWS.Http.unsignedRequest
         "AttachPrincipalPolicy"
@@ -492,6 +496,7 @@ attachPrincipalPolicy policyName principal =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -507,7 +512,7 @@ __Required Parameters__
 attachThingPrincipal :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AttachThingPrincipalResponse
+    -> AWS.Request AttachThingPrincipalResponse
 attachThingPrincipal thingName principal =
     AWS.Http.unsignedRequest
         "AttachThingPrincipal"
@@ -517,6 +522,7 @@ attachThingPrincipal thingName principal =
             JE.null
         )
         attachThingPrincipalResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -530,7 +536,7 @@ __Required Parameters__
 -}
 cancelCertificateTransfer :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 cancelCertificateTransfer certificateId =
     AWS.Http.unsignedRequest
         "CancelCertificateTransfer"
@@ -540,6 +546,7 @@ cancelCertificateTransfer certificateId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -554,7 +561,7 @@ __Required Parameters__
 createCertificateFromCsr :
     String
     -> (CreateCertificateFromCsrOptions -> CreateCertificateFromCsrOptions)
-    -> AWS.Http.UnsignedRequest CreateCertificateFromCsrResponse
+    -> AWS.Request CreateCertificateFromCsrResponse
 createCertificateFromCsr certificateSigningRequest setOptions =
   let
     options = setOptions (CreateCertificateFromCsrOptions Nothing)
@@ -567,6 +574,7 @@ createCertificateFromCsr certificateSigningRequest setOptions =
             JE.null
         )
         createCertificateFromCsrResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createCertificateFromCsr request
@@ -586,7 +594,7 @@ __Required Parameters__
 -}
 createKeysAndCertificate :
     (CreateKeysAndCertificateOptions -> CreateKeysAndCertificateOptions)
-    -> AWS.Http.UnsignedRequest CreateKeysAndCertificateResponse
+    -> AWS.Request CreateKeysAndCertificateResponse
 createKeysAndCertificate setOptions =
   let
     options = setOptions (CreateKeysAndCertificateOptions Nothing)
@@ -599,6 +607,7 @@ createKeysAndCertificate setOptions =
             JE.null
         )
         createKeysAndCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createKeysAndCertificate request
@@ -621,7 +630,7 @@ __Required Parameters__
 createPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreatePolicyResponse
+    -> AWS.Request CreatePolicyResponse
 createPolicy policyName policyDocument =
     AWS.Http.unsignedRequest
         "CreatePolicy"
@@ -631,6 +640,7 @@ createPolicy policyName policyDocument =
             JE.null
         )
         createPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -647,7 +657,7 @@ createPolicyVersion :
     String
     -> String
     -> (CreatePolicyVersionOptions -> CreatePolicyVersionOptions)
-    -> AWS.Http.UnsignedRequest CreatePolicyVersionResponse
+    -> AWS.Request CreatePolicyVersionResponse
 createPolicyVersion policyName policyDocument setOptions =
   let
     options = setOptions (CreatePolicyVersionOptions Nothing)
@@ -660,6 +670,7 @@ createPolicyVersion policyName policyDocument setOptions =
             JE.null
         )
         createPolicyVersionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPolicyVersion request
@@ -681,7 +692,7 @@ __Required Parameters__
 createThing :
     String
     -> (CreateThingOptions -> CreateThingOptions)
-    -> AWS.Http.UnsignedRequest CreateThingResponse
+    -> AWS.Request CreateThingResponse
 createThing thingName setOptions =
   let
     options = setOptions (CreateThingOptions Nothing Nothing)
@@ -694,6 +705,7 @@ createThing thingName setOptions =
             JE.null
         )
         createThingResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createThing request
@@ -716,7 +728,7 @@ __Required Parameters__
 createThingType :
     String
     -> (CreateThingTypeOptions -> CreateThingTypeOptions)
-    -> AWS.Http.UnsignedRequest CreateThingTypeResponse
+    -> AWS.Request CreateThingTypeResponse
 createThingType thingTypeName setOptions =
   let
     options = setOptions (CreateThingTypeOptions Nothing)
@@ -729,6 +741,7 @@ createThingType thingTypeName setOptions =
             JE.null
         )
         createThingTypeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createThingType request
@@ -751,7 +764,7 @@ __Required Parameters__
 createTopicRule :
     String
     -> TopicRulePayload
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createTopicRule ruleName topicRulePayload =
     AWS.Http.unsignedRequest
         "CreateTopicRule"
@@ -761,6 +774,7 @@ createTopicRule ruleName topicRulePayload =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -774,7 +788,7 @@ __Required Parameters__
 -}
 deleteCACertificate :
     String
-    -> AWS.Http.UnsignedRequest DeleteCACertificateResponse
+    -> AWS.Request DeleteCACertificateResponse
 deleteCACertificate certificateId =
     AWS.Http.unsignedRequest
         "DeleteCACertificate"
@@ -784,6 +798,7 @@ deleteCACertificate certificateId =
             JE.null
         )
         deleteCACertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -797,7 +812,7 @@ __Required Parameters__
 -}
 deleteCertificate :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteCertificate certificateId =
     AWS.Http.unsignedRequest
         "DeleteCertificate"
@@ -807,6 +822,7 @@ deleteCertificate certificateId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -820,7 +836,7 @@ __Required Parameters__
 -}
 deletePolicy :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deletePolicy policyName =
     AWS.Http.unsignedRequest
         "DeletePolicy"
@@ -830,6 +846,7 @@ deletePolicy policyName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -845,7 +862,7 @@ __Required Parameters__
 deletePolicyVersion :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deletePolicyVersion policyName policyVersionId =
     AWS.Http.unsignedRequest
         "DeletePolicyVersion"
@@ -855,6 +872,7 @@ deletePolicyVersion policyName policyVersionId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -866,7 +884,7 @@ __Required Parameters__
 
 -}
 deleteRegistrationCode :
-    AWS.Http.UnsignedRequest DeleteRegistrationCodeResponse
+    AWS.Request DeleteRegistrationCodeResponse
 deleteRegistrationCode =
     AWS.Http.unsignedRequest
         "DeleteRegistrationCode"
@@ -876,6 +894,7 @@ deleteRegistrationCode =
             JE.null
         )
         deleteRegistrationCodeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -890,7 +909,7 @@ __Required Parameters__
 deleteThing :
     String
     -> (DeleteThingOptions -> DeleteThingOptions)
-    -> AWS.Http.UnsignedRequest DeleteThingResponse
+    -> AWS.Request DeleteThingResponse
 deleteThing thingName setOptions =
   let
     options = setOptions (DeleteThingOptions Nothing)
@@ -903,6 +922,7 @@ deleteThing thingName setOptions =
             JE.null
         )
         deleteThingResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteThing request
@@ -923,7 +943,7 @@ __Required Parameters__
 -}
 deleteThingType :
     String
-    -> AWS.Http.UnsignedRequest DeleteThingTypeResponse
+    -> AWS.Request DeleteThingTypeResponse
 deleteThingType thingTypeName =
     AWS.Http.unsignedRequest
         "DeleteThingType"
@@ -933,6 +953,7 @@ deleteThingType thingTypeName =
             JE.null
         )
         deleteThingTypeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -946,7 +967,7 @@ __Required Parameters__
 -}
 deleteTopicRule :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteTopicRule ruleName =
     AWS.Http.unsignedRequest
         "DeleteTopicRule"
@@ -956,6 +977,7 @@ deleteTopicRule ruleName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -970,7 +992,7 @@ __Required Parameters__
 deprecateThingType :
     String
     -> (DeprecateThingTypeOptions -> DeprecateThingTypeOptions)
-    -> AWS.Http.UnsignedRequest DeprecateThingTypeResponse
+    -> AWS.Request DeprecateThingTypeResponse
 deprecateThingType thingTypeName setOptions =
   let
     options = setOptions (DeprecateThingTypeOptions Nothing)
@@ -983,6 +1005,7 @@ deprecateThingType thingTypeName setOptions =
             JE.null
         )
         deprecateThingTypeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deprecateThingType request
@@ -1003,7 +1026,7 @@ __Required Parameters__
 -}
 describeCACertificate :
     String
-    -> AWS.Http.UnsignedRequest DescribeCACertificateResponse
+    -> AWS.Request DescribeCACertificateResponse
 describeCACertificate certificateId =
     AWS.Http.unsignedRequest
         "DescribeCACertificate"
@@ -1014,6 +1037,7 @@ describeCACertificate certificateId =
             ]
         )
         describeCACertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1027,7 +1051,7 @@ __Required Parameters__
 -}
 describeCertificate :
     String
-    -> AWS.Http.UnsignedRequest DescribeCertificateResponse
+    -> AWS.Request DescribeCertificateResponse
 describeCertificate certificateId =
     AWS.Http.unsignedRequest
         "DescribeCertificate"
@@ -1038,6 +1062,7 @@ describeCertificate certificateId =
             ]
         )
         describeCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1049,7 +1074,7 @@ __Required Parameters__
 
 -}
 describeEndpoint :
-    AWS.Http.UnsignedRequest DescribeEndpointResponse
+    AWS.Request DescribeEndpointResponse
 describeEndpoint =
     AWS.Http.unsignedRequest
         "DescribeEndpoint"
@@ -1060,6 +1085,7 @@ describeEndpoint =
             ]
         )
         describeEndpointResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1073,7 +1099,7 @@ __Required Parameters__
 -}
 describeThing :
     String
-    -> AWS.Http.UnsignedRequest DescribeThingResponse
+    -> AWS.Request DescribeThingResponse
 describeThing thingName =
     AWS.Http.unsignedRequest
         "DescribeThing"
@@ -1084,6 +1110,7 @@ describeThing thingName =
             ]
         )
         describeThingResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1097,7 +1124,7 @@ __Required Parameters__
 -}
 describeThingType :
     String
-    -> AWS.Http.UnsignedRequest DescribeThingTypeResponse
+    -> AWS.Request DescribeThingTypeResponse
 describeThingType thingTypeName =
     AWS.Http.unsignedRequest
         "DescribeThingType"
@@ -1108,6 +1135,7 @@ describeThingType thingTypeName =
             ]
         )
         describeThingTypeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1123,7 +1151,7 @@ __Required Parameters__
 detachPrincipalPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 detachPrincipalPolicy policyName principal =
     AWS.Http.unsignedRequest
         "DetachPrincipalPolicy"
@@ -1133,6 +1161,7 @@ detachPrincipalPolicy policyName principal =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1148,7 +1177,7 @@ __Required Parameters__
 detachThingPrincipal :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DetachThingPrincipalResponse
+    -> AWS.Request DetachThingPrincipalResponse
 detachThingPrincipal thingName principal =
     AWS.Http.unsignedRequest
         "DetachThingPrincipal"
@@ -1158,6 +1187,7 @@ detachThingPrincipal thingName principal =
             JE.null
         )
         detachThingPrincipalResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1171,7 +1201,7 @@ __Required Parameters__
 -}
 disableTopicRule :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disableTopicRule ruleName =
     AWS.Http.unsignedRequest
         "DisableTopicRule"
@@ -1181,6 +1211,7 @@ disableTopicRule ruleName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1194,7 +1225,7 @@ __Required Parameters__
 -}
 enableTopicRule :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableTopicRule ruleName =
     AWS.Http.unsignedRequest
         "EnableTopicRule"
@@ -1204,6 +1235,7 @@ enableTopicRule ruleName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1215,7 +1247,7 @@ __Required Parameters__
 
 -}
 getLoggingOptions :
-    AWS.Http.UnsignedRequest GetLoggingOptionsResponse
+    AWS.Request GetLoggingOptionsResponse
 getLoggingOptions =
     AWS.Http.unsignedRequest
         "GetLoggingOptions"
@@ -1226,6 +1258,7 @@ getLoggingOptions =
             ]
         )
         getLoggingOptionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1239,7 +1272,7 @@ __Required Parameters__
 -}
 getPolicy :
     String
-    -> AWS.Http.UnsignedRequest GetPolicyResponse
+    -> AWS.Request GetPolicyResponse
 getPolicy policyName =
     AWS.Http.unsignedRequest
         "GetPolicy"
@@ -1250,6 +1283,7 @@ getPolicy policyName =
             ]
         )
         getPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1265,7 +1299,7 @@ __Required Parameters__
 getPolicyVersion :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetPolicyVersionResponse
+    -> AWS.Request GetPolicyVersionResponse
 getPolicyVersion policyName policyVersionId =
     AWS.Http.unsignedRequest
         "GetPolicyVersion"
@@ -1276,6 +1310,7 @@ getPolicyVersion policyName policyVersionId =
             ]
         )
         getPolicyVersionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1287,7 +1322,7 @@ __Required Parameters__
 
 -}
 getRegistrationCode :
-    AWS.Http.UnsignedRequest GetRegistrationCodeResponse
+    AWS.Request GetRegistrationCodeResponse
 getRegistrationCode =
     AWS.Http.unsignedRequest
         "GetRegistrationCode"
@@ -1298,6 +1333,7 @@ getRegistrationCode =
             ]
         )
         getRegistrationCodeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1311,7 +1347,7 @@ __Required Parameters__
 -}
 getTopicRule :
     String
-    -> AWS.Http.UnsignedRequest GetTopicRuleResponse
+    -> AWS.Request GetTopicRuleResponse
 getTopicRule ruleName =
     AWS.Http.unsignedRequest
         "GetTopicRule"
@@ -1322,6 +1358,7 @@ getTopicRule ruleName =
             ]
         )
         getTopicRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1334,7 +1371,7 @@ __Required Parameters__
 -}
 listCACertificates :
     (ListCACertificatesOptions -> ListCACertificatesOptions)
-    -> AWS.Http.UnsignedRequest ListCACertificatesResponse
+    -> AWS.Request ListCACertificatesResponse
 listCACertificates setOptions =
   let
     options = setOptions (ListCACertificatesOptions Nothing Nothing Nothing)
@@ -1348,6 +1385,7 @@ listCACertificates setOptions =
             ]
         )
         listCACertificatesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listCACertificates request
@@ -1369,7 +1407,7 @@ __Required Parameters__
 -}
 listCertificates :
     (ListCertificatesOptions -> ListCertificatesOptions)
-    -> AWS.Http.UnsignedRequest ListCertificatesResponse
+    -> AWS.Request ListCertificatesResponse
 listCertificates setOptions =
   let
     options = setOptions (ListCertificatesOptions Nothing Nothing Nothing)
@@ -1383,6 +1421,7 @@ listCertificates setOptions =
             ]
         )
         listCertificatesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listCertificates request
@@ -1406,7 +1445,7 @@ __Required Parameters__
 listCertificatesByCA :
     String
     -> (ListCertificatesByCAOptions -> ListCertificatesByCAOptions)
-    -> AWS.Http.UnsignedRequest ListCertificatesByCAResponse
+    -> AWS.Request ListCertificatesByCAResponse
 listCertificatesByCA caCertificateId setOptions =
   let
     options = setOptions (ListCertificatesByCAOptions Nothing Nothing Nothing)
@@ -1420,6 +1459,7 @@ listCertificatesByCA caCertificateId setOptions =
             ]
         )
         listCertificatesByCAResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listCertificatesByCA request
@@ -1441,7 +1481,7 @@ __Required Parameters__
 -}
 listOutgoingCertificates :
     (ListOutgoingCertificatesOptions -> ListOutgoingCertificatesOptions)
-    -> AWS.Http.UnsignedRequest ListOutgoingCertificatesResponse
+    -> AWS.Request ListOutgoingCertificatesResponse
 listOutgoingCertificates setOptions =
   let
     options = setOptions (ListOutgoingCertificatesOptions Nothing Nothing Nothing)
@@ -1455,6 +1495,7 @@ listOutgoingCertificates setOptions =
             ]
         )
         listOutgoingCertificatesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listOutgoingCertificates request
@@ -1476,7 +1517,7 @@ __Required Parameters__
 -}
 listPolicies :
     (ListPoliciesOptions -> ListPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListPoliciesResponse
+    -> AWS.Request ListPoliciesResponse
 listPolicies setOptions =
   let
     options = setOptions (ListPoliciesOptions Nothing Nothing Nothing)
@@ -1490,6 +1531,7 @@ listPolicies setOptions =
             ]
         )
         listPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPolicies request
@@ -1513,7 +1555,7 @@ __Required Parameters__
 listPolicyPrincipals :
     String
     -> (ListPolicyPrincipalsOptions -> ListPolicyPrincipalsOptions)
-    -> AWS.Http.UnsignedRequest ListPolicyPrincipalsResponse
+    -> AWS.Request ListPolicyPrincipalsResponse
 listPolicyPrincipals policyName setOptions =
   let
     options = setOptions (ListPolicyPrincipalsOptions Nothing Nothing Nothing)
@@ -1527,6 +1569,7 @@ listPolicyPrincipals policyName setOptions =
             ]
         )
         listPolicyPrincipalsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPolicyPrincipals request
@@ -1549,7 +1592,7 @@ __Required Parameters__
 -}
 listPolicyVersions :
     String
-    -> AWS.Http.UnsignedRequest ListPolicyVersionsResponse
+    -> AWS.Request ListPolicyVersionsResponse
 listPolicyVersions policyName =
     AWS.Http.unsignedRequest
         "ListPolicyVersions"
@@ -1560,6 +1603,7 @@ listPolicyVersions policyName =
             ]
         )
         listPolicyVersionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1574,7 +1618,7 @@ __Required Parameters__
 listPrincipalPolicies :
     String
     -> (ListPrincipalPoliciesOptions -> ListPrincipalPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListPrincipalPoliciesResponse
+    -> AWS.Request ListPrincipalPoliciesResponse
 listPrincipalPolicies principal setOptions =
   let
     options = setOptions (ListPrincipalPoliciesOptions Nothing Nothing Nothing)
@@ -1588,6 +1632,7 @@ listPrincipalPolicies principal setOptions =
             ]
         )
         listPrincipalPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPrincipalPolicies request
@@ -1611,7 +1656,7 @@ __Required Parameters__
 listPrincipalThings :
     String
     -> (ListPrincipalThingsOptions -> ListPrincipalThingsOptions)
-    -> AWS.Http.UnsignedRequest ListPrincipalThingsResponse
+    -> AWS.Request ListPrincipalThingsResponse
 listPrincipalThings principal setOptions =
   let
     options = setOptions (ListPrincipalThingsOptions Nothing Nothing)
@@ -1625,6 +1670,7 @@ listPrincipalThings principal setOptions =
             ]
         )
         listPrincipalThingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPrincipalThings request
@@ -1646,7 +1692,7 @@ __Required Parameters__
 -}
 listThingPrincipals :
     String
-    -> AWS.Http.UnsignedRequest ListThingPrincipalsResponse
+    -> AWS.Request ListThingPrincipalsResponse
 listThingPrincipals thingName =
     AWS.Http.unsignedRequest
         "ListThingPrincipals"
@@ -1657,6 +1703,7 @@ listThingPrincipals thingName =
             ]
         )
         listThingPrincipalsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1669,7 +1716,7 @@ __Required Parameters__
 -}
 listThingTypes :
     (ListThingTypesOptions -> ListThingTypesOptions)
-    -> AWS.Http.UnsignedRequest ListThingTypesResponse
+    -> AWS.Request ListThingTypesResponse
 listThingTypes setOptions =
   let
     options = setOptions (ListThingTypesOptions Nothing Nothing Nothing)
@@ -1683,6 +1730,7 @@ listThingTypes setOptions =
             ]
         )
         listThingTypesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listThingTypes request
@@ -1704,7 +1752,7 @@ __Required Parameters__
 -}
 listThings :
     (ListThingsOptions -> ListThingsOptions)
-    -> AWS.Http.UnsignedRequest ListThingsResponse
+    -> AWS.Request ListThingsResponse
 listThings setOptions =
   let
     options = setOptions (ListThingsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1718,6 +1766,7 @@ listThings setOptions =
             ]
         )
         listThingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listThings request
@@ -1741,7 +1790,7 @@ __Required Parameters__
 -}
 listTopicRules :
     (ListTopicRulesOptions -> ListTopicRulesOptions)
-    -> AWS.Http.UnsignedRequest ListTopicRulesResponse
+    -> AWS.Request ListTopicRulesResponse
 listTopicRules setOptions =
   let
     options = setOptions (ListTopicRulesOptions Nothing Nothing Nothing Nothing)
@@ -1755,6 +1804,7 @@ listTopicRules setOptions =
             ]
         )
         listTopicRulesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTopicRules request
@@ -1781,7 +1831,7 @@ registerCACertificate :
     String
     -> String
     -> (RegisterCACertificateOptions -> RegisterCACertificateOptions)
-    -> AWS.Http.UnsignedRequest RegisterCACertificateResponse
+    -> AWS.Request RegisterCACertificateResponse
 registerCACertificate caCertificate verificationCertificate setOptions =
   let
     options = setOptions (RegisterCACertificateOptions Nothing Nothing)
@@ -1794,6 +1844,7 @@ registerCACertificate caCertificate verificationCertificate setOptions =
             JE.null
         )
         registerCACertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerCACertificate request
@@ -1816,7 +1867,7 @@ __Required Parameters__
 registerCertificate :
     String
     -> (RegisterCertificateOptions -> RegisterCertificateOptions)
-    -> AWS.Http.UnsignedRequest RegisterCertificateResponse
+    -> AWS.Request RegisterCertificateResponse
 registerCertificate certificatePem setOptions =
   let
     options = setOptions (RegisterCertificateOptions Nothing Nothing Nothing)
@@ -1829,6 +1880,7 @@ registerCertificate certificatePem setOptions =
             JE.null
         )
         registerCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerCertificate request
@@ -1852,7 +1904,7 @@ __Required Parameters__
 rejectCertificateTransfer :
     String
     -> (RejectCertificateTransferOptions -> RejectCertificateTransferOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 rejectCertificateTransfer certificateId setOptions =
   let
     options = setOptions (RejectCertificateTransferOptions Nothing)
@@ -1865,6 +1917,7 @@ rejectCertificateTransfer certificateId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a rejectCertificateTransfer request
@@ -1887,7 +1940,7 @@ __Required Parameters__
 replaceTopicRule :
     String
     -> TopicRulePayload
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 replaceTopicRule ruleName topicRulePayload =
     AWS.Http.unsignedRequest
         "ReplaceTopicRule"
@@ -1897,6 +1950,7 @@ replaceTopicRule ruleName topicRulePayload =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1912,7 +1966,7 @@ __Required Parameters__
 setDefaultPolicyVersion :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setDefaultPolicyVersion policyName policyVersionId =
     AWS.Http.unsignedRequest
         "SetDefaultPolicyVersion"
@@ -1922,6 +1976,7 @@ setDefaultPolicyVersion policyName policyVersionId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1935,7 +1990,7 @@ __Required Parameters__
 -}
 setLoggingOptions :
     LoggingOptionsPayload
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setLoggingOptions loggingOptionsPayload =
     AWS.Http.unsignedRequest
         "SetLoggingOptions"
@@ -1945,6 +2000,7 @@ setLoggingOptions loggingOptionsPayload =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1961,7 +2017,7 @@ transferCertificate :
     String
     -> String
     -> (TransferCertificateOptions -> TransferCertificateOptions)
-    -> AWS.Http.UnsignedRequest TransferCertificateResponse
+    -> AWS.Request TransferCertificateResponse
 transferCertificate certificateId targetAwsAccount setOptions =
   let
     options = setOptions (TransferCertificateOptions Nothing)
@@ -1974,6 +2030,7 @@ transferCertificate certificateId targetAwsAccount setOptions =
             JE.null
         )
         transferCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a transferCertificate request
@@ -1995,7 +2052,7 @@ __Required Parameters__
 updateCACertificate :
     String
     -> (UpdateCACertificateOptions -> UpdateCACertificateOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateCACertificate certificateId setOptions =
   let
     options = setOptions (UpdateCACertificateOptions Nothing Nothing)
@@ -2008,6 +2065,7 @@ updateCACertificate certificateId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateCACertificate request
@@ -2031,7 +2089,7 @@ __Required Parameters__
 updateCertificate :
     String
     -> CertificateStatus
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateCertificate certificateId newStatus =
     AWS.Http.unsignedRequest
         "UpdateCertificate"
@@ -2041,6 +2099,7 @@ updateCertificate certificateId newStatus =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2055,7 +2114,7 @@ __Required Parameters__
 updateThing :
     String
     -> (UpdateThingOptions -> UpdateThingOptions)
-    -> AWS.Http.UnsignedRequest UpdateThingResponse
+    -> AWS.Request UpdateThingResponse
 updateThing thingName setOptions =
   let
     options = setOptions (UpdateThingOptions Nothing Nothing Nothing Nothing)
@@ -2068,6 +2127,7 @@ updateThing thingName setOptions =
             JE.null
         )
         updateThingResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateThing request

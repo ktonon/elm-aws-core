@@ -454,7 +454,9 @@ module AWS.Services.Route53
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -466,15 +468,16 @@ import AWS.Enum
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "route53"
         "2013-04-01"
         "undefined"
         "AWSROUTE53_20130401."
         "route53.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -493,7 +496,7 @@ associateVPCWithHostedZone :
     String
     -> VPC
     -> (AssociateVPCWithHostedZoneOptions -> AssociateVPCWithHostedZoneOptions)
-    -> AWS.Http.UnsignedRequest AssociateVPCWithHostedZoneResponse
+    -> AWS.Request AssociateVPCWithHostedZoneResponse
 associateVPCWithHostedZone hostedZoneId vPC setOptions =
   let
     options = setOptions (AssociateVPCWithHostedZoneOptions Nothing)
@@ -506,6 +509,7 @@ associateVPCWithHostedZone hostedZoneId vPC setOptions =
             JE.null
         )
         associateVPCWithHostedZoneResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a associateVPCWithHostedZone request
@@ -528,7 +532,7 @@ __Required Parameters__
 changeResourceRecordSets :
     String
     -> ChangeBatch
-    -> AWS.Http.UnsignedRequest ChangeResourceRecordSetsResponse
+    -> AWS.Request ChangeResourceRecordSetsResponse
 changeResourceRecordSets hostedZoneId changeBatch =
     AWS.Http.unsignedRequest
         "ChangeResourceRecordSets"
@@ -538,6 +542,7 @@ changeResourceRecordSets hostedZoneId changeBatch =
             JE.null
         )
         changeResourceRecordSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -554,7 +559,7 @@ changeTagsForResource :
     TagResourceType
     -> String
     -> (ChangeTagsForResourceOptions -> ChangeTagsForResourceOptions)
-    -> AWS.Http.UnsignedRequest ChangeTagsForResourceResponse
+    -> AWS.Request ChangeTagsForResourceResponse
 changeTagsForResource resourceType resourceId setOptions =
   let
     options = setOptions (ChangeTagsForResourceOptions Nothing Nothing)
@@ -567,6 +572,7 @@ changeTagsForResource resourceType resourceId setOptions =
             JE.null
         )
         changeTagsForResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a changeTagsForResource request
@@ -590,7 +596,7 @@ __Required Parameters__
 createHealthCheck :
     String
     -> HealthCheckConfig
-    -> AWS.Http.UnsignedRequest CreateHealthCheckResponse
+    -> AWS.Request CreateHealthCheckResponse
 createHealthCheck callerReference healthCheckConfig =
     AWS.Http.unsignedRequest
         "CreateHealthCheck"
@@ -600,6 +606,7 @@ createHealthCheck callerReference healthCheckConfig =
             JE.null
         )
         createHealthCheckResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -616,7 +623,7 @@ createHostedZone :
     String
     -> String
     -> (CreateHostedZoneOptions -> CreateHostedZoneOptions)
-    -> AWS.Http.UnsignedRequest CreateHostedZoneResponse
+    -> AWS.Request CreateHostedZoneResponse
 createHostedZone name callerReference setOptions =
   let
     options = setOptions (CreateHostedZoneOptions Nothing Nothing Nothing)
@@ -629,6 +636,7 @@ createHostedZone name callerReference setOptions =
             JE.null
         )
         createHostedZoneResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createHostedZone request
@@ -652,7 +660,7 @@ __Required Parameters__
 createReusableDelegationSet :
     String
     -> (CreateReusableDelegationSetOptions -> CreateReusableDelegationSetOptions)
-    -> AWS.Http.UnsignedRequest CreateReusableDelegationSetResponse
+    -> AWS.Request CreateReusableDelegationSetResponse
 createReusableDelegationSet callerReference setOptions =
   let
     options = setOptions (CreateReusableDelegationSetOptions Nothing)
@@ -665,6 +673,7 @@ createReusableDelegationSet callerReference setOptions =
             JE.null
         )
         createReusableDelegationSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createReusableDelegationSet request
@@ -688,7 +697,7 @@ createTrafficPolicy :
     String
     -> String
     -> (CreateTrafficPolicyOptions -> CreateTrafficPolicyOptions)
-    -> AWS.Http.UnsignedRequest CreateTrafficPolicyResponse
+    -> AWS.Request CreateTrafficPolicyResponse
 createTrafficPolicy name document setOptions =
   let
     options = setOptions (CreateTrafficPolicyOptions Nothing)
@@ -701,6 +710,7 @@ createTrafficPolicy name document setOptions =
             JE.null
         )
         createTrafficPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createTrafficPolicy request
@@ -729,7 +739,7 @@ createTrafficPolicyInstance :
     -> Int
     -> String
     -> Int
-    -> AWS.Http.UnsignedRequest CreateTrafficPolicyInstanceResponse
+    -> AWS.Request CreateTrafficPolicyInstanceResponse
 createTrafficPolicyInstance hostedZoneId name tTL trafficPolicyId trafficPolicyVersion =
     AWS.Http.unsignedRequest
         "CreateTrafficPolicyInstance"
@@ -739,6 +749,7 @@ createTrafficPolicyInstance hostedZoneId name tTL trafficPolicyId trafficPolicyV
             JE.null
         )
         createTrafficPolicyInstanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -755,7 +766,7 @@ createTrafficPolicyVersion :
     String
     -> String
     -> (CreateTrafficPolicyVersionOptions -> CreateTrafficPolicyVersionOptions)
-    -> AWS.Http.UnsignedRequest CreateTrafficPolicyVersionResponse
+    -> AWS.Request CreateTrafficPolicyVersionResponse
 createTrafficPolicyVersion id document setOptions =
   let
     options = setOptions (CreateTrafficPolicyVersionOptions Nothing)
@@ -768,6 +779,7 @@ createTrafficPolicyVersion id document setOptions =
             JE.null
         )
         createTrafficPolicyVersionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createTrafficPolicyVersion request
@@ -790,7 +802,7 @@ __Required Parameters__
 createVPCAssociationAuthorization :
     String
     -> VPC
-    -> AWS.Http.UnsignedRequest CreateVPCAssociationAuthorizationResponse
+    -> AWS.Request CreateVPCAssociationAuthorizationResponse
 createVPCAssociationAuthorization hostedZoneId vPC =
     AWS.Http.unsignedRequest
         "CreateVPCAssociationAuthorization"
@@ -800,6 +812,7 @@ createVPCAssociationAuthorization hostedZoneId vPC =
             JE.null
         )
         createVPCAssociationAuthorizationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -813,7 +826,7 @@ __Required Parameters__
 -}
 deleteHealthCheck :
     String
-    -> AWS.Http.UnsignedRequest DeleteHealthCheckResponse
+    -> AWS.Request DeleteHealthCheckResponse
 deleteHealthCheck healthCheckId =
     AWS.Http.unsignedRequest
         "DeleteHealthCheck"
@@ -823,6 +836,7 @@ deleteHealthCheck healthCheckId =
             JE.null
         )
         deleteHealthCheckResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -836,7 +850,7 @@ __Required Parameters__
 -}
 deleteHostedZone :
     String
-    -> AWS.Http.UnsignedRequest DeleteHostedZoneResponse
+    -> AWS.Request DeleteHostedZoneResponse
 deleteHostedZone id =
     AWS.Http.unsignedRequest
         "DeleteHostedZone"
@@ -846,6 +860,7 @@ deleteHostedZone id =
             JE.null
         )
         deleteHostedZoneResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -859,7 +874,7 @@ __Required Parameters__
 -}
 deleteReusableDelegationSet :
     String
-    -> AWS.Http.UnsignedRequest DeleteReusableDelegationSetResponse
+    -> AWS.Request DeleteReusableDelegationSetResponse
 deleteReusableDelegationSet id =
     AWS.Http.unsignedRequest
         "DeleteReusableDelegationSet"
@@ -869,6 +884,7 @@ deleteReusableDelegationSet id =
             JE.null
         )
         deleteReusableDelegationSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -884,7 +900,7 @@ __Required Parameters__
 deleteTrafficPolicy :
     String
     -> Int
-    -> AWS.Http.UnsignedRequest DeleteTrafficPolicyResponse
+    -> AWS.Request DeleteTrafficPolicyResponse
 deleteTrafficPolicy id version =
     AWS.Http.unsignedRequest
         "DeleteTrafficPolicy"
@@ -894,6 +910,7 @@ deleteTrafficPolicy id version =
             JE.null
         )
         deleteTrafficPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -907,7 +924,7 @@ __Required Parameters__
 -}
 deleteTrafficPolicyInstance :
     String
-    -> AWS.Http.UnsignedRequest DeleteTrafficPolicyInstanceResponse
+    -> AWS.Request DeleteTrafficPolicyInstanceResponse
 deleteTrafficPolicyInstance id =
     AWS.Http.unsignedRequest
         "DeleteTrafficPolicyInstance"
@@ -917,6 +934,7 @@ deleteTrafficPolicyInstance id =
             JE.null
         )
         deleteTrafficPolicyInstanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -932,7 +950,7 @@ __Required Parameters__
 deleteVPCAssociationAuthorization :
     String
     -> VPC
-    -> AWS.Http.UnsignedRequest DeleteVPCAssociationAuthorizationResponse
+    -> AWS.Request DeleteVPCAssociationAuthorizationResponse
 deleteVPCAssociationAuthorization hostedZoneId vPC =
     AWS.Http.unsignedRequest
         "DeleteVPCAssociationAuthorization"
@@ -942,6 +960,7 @@ deleteVPCAssociationAuthorization hostedZoneId vPC =
             JE.null
         )
         deleteVPCAssociationAuthorizationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -958,7 +977,7 @@ disassociateVPCFromHostedZone :
     String
     -> VPC
     -> (DisassociateVPCFromHostedZoneOptions -> DisassociateVPCFromHostedZoneOptions)
-    -> AWS.Http.UnsignedRequest DisassociateVPCFromHostedZoneResponse
+    -> AWS.Request DisassociateVPCFromHostedZoneResponse
 disassociateVPCFromHostedZone hostedZoneId vPC setOptions =
   let
     options = setOptions (DisassociateVPCFromHostedZoneOptions Nothing)
@@ -971,6 +990,7 @@ disassociateVPCFromHostedZone hostedZoneId vPC setOptions =
             JE.null
         )
         disassociateVPCFromHostedZoneResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disassociateVPCFromHostedZone request
@@ -991,7 +1011,7 @@ __Required Parameters__
 -}
 getChange :
     String
-    -> AWS.Http.UnsignedRequest GetChangeResponse
+    -> AWS.Request GetChangeResponse
 getChange id =
     AWS.Http.unsignedRequest
         "GetChange"
@@ -1002,6 +1022,7 @@ getChange id =
             ]
         )
         getChangeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1013,7 +1034,7 @@ __Required Parameters__
 
 -}
 getCheckerIpRanges :
-    AWS.Http.UnsignedRequest GetCheckerIpRangesResponse
+    AWS.Request GetCheckerIpRangesResponse
 getCheckerIpRanges =
     AWS.Http.unsignedRequest
         "GetCheckerIpRanges"
@@ -1024,6 +1045,7 @@ getCheckerIpRanges =
             ]
         )
         getCheckerIpRangesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1036,7 +1058,7 @@ __Required Parameters__
 -}
 getGeoLocation :
     (GetGeoLocationOptions -> GetGeoLocationOptions)
-    -> AWS.Http.UnsignedRequest GetGeoLocationResponse
+    -> AWS.Request GetGeoLocationResponse
 getGeoLocation setOptions =
   let
     options = setOptions (GetGeoLocationOptions Nothing Nothing Nothing)
@@ -1050,6 +1072,7 @@ getGeoLocation setOptions =
             ]
         )
         getGeoLocationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getGeoLocation request
@@ -1072,7 +1095,7 @@ __Required Parameters__
 -}
 getHealthCheck :
     String
-    -> AWS.Http.UnsignedRequest GetHealthCheckResponse
+    -> AWS.Request GetHealthCheckResponse
 getHealthCheck healthCheckId =
     AWS.Http.unsignedRequest
         "GetHealthCheck"
@@ -1083,6 +1106,7 @@ getHealthCheck healthCheckId =
             ]
         )
         getHealthCheckResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1094,7 +1118,7 @@ __Required Parameters__
 
 -}
 getHealthCheckCount :
-    AWS.Http.UnsignedRequest GetHealthCheckCountResponse
+    AWS.Request GetHealthCheckCountResponse
 getHealthCheckCount =
     AWS.Http.unsignedRequest
         "GetHealthCheckCount"
@@ -1105,6 +1129,7 @@ getHealthCheckCount =
             ]
         )
         getHealthCheckCountResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1118,7 +1143,7 @@ __Required Parameters__
 -}
 getHealthCheckLastFailureReason :
     String
-    -> AWS.Http.UnsignedRequest GetHealthCheckLastFailureReasonResponse
+    -> AWS.Request GetHealthCheckLastFailureReasonResponse
 getHealthCheckLastFailureReason healthCheckId =
     AWS.Http.unsignedRequest
         "GetHealthCheckLastFailureReason"
@@ -1129,6 +1154,7 @@ getHealthCheckLastFailureReason healthCheckId =
             ]
         )
         getHealthCheckLastFailureReasonResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1142,7 +1168,7 @@ __Required Parameters__
 -}
 getHealthCheckStatus :
     String
-    -> AWS.Http.UnsignedRequest GetHealthCheckStatusResponse
+    -> AWS.Request GetHealthCheckStatusResponse
 getHealthCheckStatus healthCheckId =
     AWS.Http.unsignedRequest
         "GetHealthCheckStatus"
@@ -1153,6 +1179,7 @@ getHealthCheckStatus healthCheckId =
             ]
         )
         getHealthCheckStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1166,7 +1193,7 @@ __Required Parameters__
 -}
 getHostedZone :
     String
-    -> AWS.Http.UnsignedRequest GetHostedZoneResponse
+    -> AWS.Request GetHostedZoneResponse
 getHostedZone id =
     AWS.Http.unsignedRequest
         "GetHostedZone"
@@ -1177,6 +1204,7 @@ getHostedZone id =
             ]
         )
         getHostedZoneResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1188,7 +1216,7 @@ __Required Parameters__
 
 -}
 getHostedZoneCount :
-    AWS.Http.UnsignedRequest GetHostedZoneCountResponse
+    AWS.Request GetHostedZoneCountResponse
 getHostedZoneCount =
     AWS.Http.unsignedRequest
         "GetHostedZoneCount"
@@ -1199,6 +1227,7 @@ getHostedZoneCount =
             ]
         )
         getHostedZoneCountResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1212,7 +1241,7 @@ __Required Parameters__
 -}
 getReusableDelegationSet :
     String
-    -> AWS.Http.UnsignedRequest GetReusableDelegationSetResponse
+    -> AWS.Request GetReusableDelegationSetResponse
 getReusableDelegationSet id =
     AWS.Http.unsignedRequest
         "GetReusableDelegationSet"
@@ -1223,6 +1252,7 @@ getReusableDelegationSet id =
             ]
         )
         getReusableDelegationSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1238,7 +1268,7 @@ __Required Parameters__
 getTrafficPolicy :
     String
     -> Int
-    -> AWS.Http.UnsignedRequest GetTrafficPolicyResponse
+    -> AWS.Request GetTrafficPolicyResponse
 getTrafficPolicy id version =
     AWS.Http.unsignedRequest
         "GetTrafficPolicy"
@@ -1249,6 +1279,7 @@ getTrafficPolicy id version =
             ]
         )
         getTrafficPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1262,7 +1293,7 @@ __Required Parameters__
 -}
 getTrafficPolicyInstance :
     String
-    -> AWS.Http.UnsignedRequest GetTrafficPolicyInstanceResponse
+    -> AWS.Request GetTrafficPolicyInstanceResponse
 getTrafficPolicyInstance id =
     AWS.Http.unsignedRequest
         "GetTrafficPolicyInstance"
@@ -1273,6 +1304,7 @@ getTrafficPolicyInstance id =
             ]
         )
         getTrafficPolicyInstanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1284,7 +1316,7 @@ __Required Parameters__
 
 -}
 getTrafficPolicyInstanceCount :
-    AWS.Http.UnsignedRequest GetTrafficPolicyInstanceCountResponse
+    AWS.Request GetTrafficPolicyInstanceCountResponse
 getTrafficPolicyInstanceCount =
     AWS.Http.unsignedRequest
         "GetTrafficPolicyInstanceCount"
@@ -1295,6 +1327,7 @@ getTrafficPolicyInstanceCount =
             ]
         )
         getTrafficPolicyInstanceCountResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1307,7 +1340,7 @@ __Required Parameters__
 -}
 listGeoLocations :
     (ListGeoLocationsOptions -> ListGeoLocationsOptions)
-    -> AWS.Http.UnsignedRequest ListGeoLocationsResponse
+    -> AWS.Request ListGeoLocationsResponse
 listGeoLocations setOptions =
   let
     options = setOptions (ListGeoLocationsOptions Nothing Nothing Nothing Nothing)
@@ -1321,6 +1354,7 @@ listGeoLocations setOptions =
             ]
         )
         listGeoLocationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listGeoLocations request
@@ -1343,7 +1377,7 @@ __Required Parameters__
 -}
 listHealthChecks :
     (ListHealthChecksOptions -> ListHealthChecksOptions)
-    -> AWS.Http.UnsignedRequest ListHealthChecksResponse
+    -> AWS.Request ListHealthChecksResponse
 listHealthChecks setOptions =
   let
     options = setOptions (ListHealthChecksOptions Nothing Nothing)
@@ -1357,6 +1391,7 @@ listHealthChecks setOptions =
             ]
         )
         listHealthChecksResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listHealthChecks request
@@ -1377,7 +1412,7 @@ __Required Parameters__
 -}
 listHostedZones :
     (ListHostedZonesOptions -> ListHostedZonesOptions)
-    -> AWS.Http.UnsignedRequest ListHostedZonesResponse
+    -> AWS.Request ListHostedZonesResponse
 listHostedZones setOptions =
   let
     options = setOptions (ListHostedZonesOptions Nothing Nothing Nothing)
@@ -1391,6 +1426,7 @@ listHostedZones setOptions =
             ]
         )
         listHostedZonesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listHostedZones request
@@ -1412,7 +1448,7 @@ __Required Parameters__
 -}
 listHostedZonesByName :
     (ListHostedZonesByNameOptions -> ListHostedZonesByNameOptions)
-    -> AWS.Http.UnsignedRequest ListHostedZonesByNameResponse
+    -> AWS.Request ListHostedZonesByNameResponse
 listHostedZonesByName setOptions =
   let
     options = setOptions (ListHostedZonesByNameOptions Nothing Nothing Nothing)
@@ -1426,6 +1462,7 @@ listHostedZonesByName setOptions =
             ]
         )
         listHostedZonesByNameResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listHostedZonesByName request
@@ -1449,7 +1486,7 @@ __Required Parameters__
 listResourceRecordSets :
     String
     -> (ListResourceRecordSetsOptions -> ListResourceRecordSetsOptions)
-    -> AWS.Http.UnsignedRequest ListResourceRecordSetsResponse
+    -> AWS.Request ListResourceRecordSetsResponse
 listResourceRecordSets hostedZoneId setOptions =
   let
     options = setOptions (ListResourceRecordSetsOptions Nothing Nothing Nothing Nothing)
@@ -1463,6 +1500,7 @@ listResourceRecordSets hostedZoneId setOptions =
             ]
         )
         listResourceRecordSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listResourceRecordSets request
@@ -1485,7 +1523,7 @@ __Required Parameters__
 -}
 listReusableDelegationSets :
     (ListReusableDelegationSetsOptions -> ListReusableDelegationSetsOptions)
-    -> AWS.Http.UnsignedRequest ListReusableDelegationSetsResponse
+    -> AWS.Request ListReusableDelegationSetsResponse
 listReusableDelegationSets setOptions =
   let
     options = setOptions (ListReusableDelegationSetsOptions Nothing Nothing)
@@ -1499,6 +1537,7 @@ listReusableDelegationSets setOptions =
             ]
         )
         listReusableDelegationSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listReusableDelegationSets request
@@ -1522,7 +1561,7 @@ __Required Parameters__
 listTagsForResource :
     TagResourceType
     -> String
-    -> AWS.Http.UnsignedRequest ListTagsForResourceResponse
+    -> AWS.Request ListTagsForResourceResponse
 listTagsForResource resourceType resourceId =
     AWS.Http.unsignedRequest
         "ListTagsForResource"
@@ -1533,6 +1572,7 @@ listTagsForResource resourceType resourceId =
             ]
         )
         listTagsForResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1548,7 +1588,7 @@ __Required Parameters__
 listTagsForResources :
     TagResourceType
     -> (List String)
-    -> AWS.Http.UnsignedRequest ListTagsForResourcesResponse
+    -> AWS.Request ListTagsForResourcesResponse
 listTagsForResources resourceType resourceIds =
     AWS.Http.unsignedRequest
         "ListTagsForResources"
@@ -1558,6 +1598,7 @@ listTagsForResources resourceType resourceIds =
             JE.null
         )
         listTagsForResourcesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1570,7 +1611,7 @@ __Required Parameters__
 -}
 listTrafficPolicies :
     (ListTrafficPoliciesOptions -> ListTrafficPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListTrafficPoliciesResponse
+    -> AWS.Request ListTrafficPoliciesResponse
 listTrafficPolicies setOptions =
   let
     options = setOptions (ListTrafficPoliciesOptions Nothing Nothing)
@@ -1584,6 +1625,7 @@ listTrafficPolicies setOptions =
             ]
         )
         listTrafficPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTrafficPolicies request
@@ -1604,7 +1646,7 @@ __Required Parameters__
 -}
 listTrafficPolicyInstances :
     (ListTrafficPolicyInstancesOptions -> ListTrafficPolicyInstancesOptions)
-    -> AWS.Http.UnsignedRequest ListTrafficPolicyInstancesResponse
+    -> AWS.Request ListTrafficPolicyInstancesResponse
 listTrafficPolicyInstances setOptions =
   let
     options = setOptions (ListTrafficPolicyInstancesOptions Nothing Nothing Nothing Nothing)
@@ -1618,6 +1660,7 @@ listTrafficPolicyInstances setOptions =
             ]
         )
         listTrafficPolicyInstancesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTrafficPolicyInstances request
@@ -1642,7 +1685,7 @@ __Required Parameters__
 listTrafficPolicyInstancesByHostedZone :
     String
     -> (ListTrafficPolicyInstancesByHostedZoneOptions -> ListTrafficPolicyInstancesByHostedZoneOptions)
-    -> AWS.Http.UnsignedRequest ListTrafficPolicyInstancesByHostedZoneResponse
+    -> AWS.Request ListTrafficPolicyInstancesByHostedZoneResponse
 listTrafficPolicyInstancesByHostedZone hostedZoneId setOptions =
   let
     options = setOptions (ListTrafficPolicyInstancesByHostedZoneOptions Nothing Nothing Nothing)
@@ -1656,6 +1699,7 @@ listTrafficPolicyInstancesByHostedZone hostedZoneId setOptions =
             ]
         )
         listTrafficPolicyInstancesByHostedZoneResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTrafficPolicyInstancesByHostedZone request
@@ -1681,7 +1725,7 @@ listTrafficPolicyInstancesByPolicy :
     String
     -> Int
     -> (ListTrafficPolicyInstancesByPolicyOptions -> ListTrafficPolicyInstancesByPolicyOptions)
-    -> AWS.Http.UnsignedRequest ListTrafficPolicyInstancesByPolicyResponse
+    -> AWS.Request ListTrafficPolicyInstancesByPolicyResponse
 listTrafficPolicyInstancesByPolicy trafficPolicyId trafficPolicyVersion setOptions =
   let
     options = setOptions (ListTrafficPolicyInstancesByPolicyOptions Nothing Nothing Nothing Nothing)
@@ -1695,6 +1739,7 @@ listTrafficPolicyInstancesByPolicy trafficPolicyId trafficPolicyVersion setOptio
             ]
         )
         listTrafficPolicyInstancesByPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTrafficPolicyInstancesByPolicy request
@@ -1719,7 +1764,7 @@ __Required Parameters__
 listTrafficPolicyVersions :
     String
     -> (ListTrafficPolicyVersionsOptions -> ListTrafficPolicyVersionsOptions)
-    -> AWS.Http.UnsignedRequest ListTrafficPolicyVersionsResponse
+    -> AWS.Request ListTrafficPolicyVersionsResponse
 listTrafficPolicyVersions id setOptions =
   let
     options = setOptions (ListTrafficPolicyVersionsOptions Nothing Nothing)
@@ -1733,6 +1778,7 @@ listTrafficPolicyVersions id setOptions =
             ]
         )
         listTrafficPolicyVersionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTrafficPolicyVersions request
@@ -1755,7 +1801,7 @@ __Required Parameters__
 listVPCAssociationAuthorizations :
     String
     -> (ListVPCAssociationAuthorizationsOptions -> ListVPCAssociationAuthorizationsOptions)
-    -> AWS.Http.UnsignedRequest ListVPCAssociationAuthorizationsResponse
+    -> AWS.Request ListVPCAssociationAuthorizationsResponse
 listVPCAssociationAuthorizations hostedZoneId setOptions =
   let
     options = setOptions (ListVPCAssociationAuthorizationsOptions Nothing Nothing)
@@ -1769,6 +1815,7 @@ listVPCAssociationAuthorizations hostedZoneId setOptions =
             ]
         )
         listVPCAssociationAuthorizationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listVPCAssociationAuthorizations request
@@ -1795,7 +1842,7 @@ testDNSAnswer :
     -> String
     -> RRType
     -> (TestDNSAnswerOptions -> TestDNSAnswerOptions)
-    -> AWS.Http.UnsignedRequest TestDNSAnswerResponse
+    -> AWS.Request TestDNSAnswerResponse
 testDNSAnswer hostedZoneId recordName recordType setOptions =
   let
     options = setOptions (TestDNSAnswerOptions Nothing Nothing Nothing)
@@ -1809,6 +1856,7 @@ testDNSAnswer hostedZoneId recordName recordType setOptions =
             ]
         )
         testDNSAnswerResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a testDNSAnswer request
@@ -1832,7 +1880,7 @@ __Required Parameters__
 updateHealthCheck :
     String
     -> (UpdateHealthCheckOptions -> UpdateHealthCheckOptions)
-    -> AWS.Http.UnsignedRequest UpdateHealthCheckResponse
+    -> AWS.Request UpdateHealthCheckResponse
 updateHealthCheck healthCheckId setOptions =
   let
     options = setOptions (UpdateHealthCheckOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1845,6 +1893,7 @@ updateHealthCheck healthCheckId setOptions =
             JE.null
         )
         updateHealthCheckResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateHealthCheck request
@@ -1879,7 +1928,7 @@ __Required Parameters__
 updateHostedZoneComment :
     String
     -> (UpdateHostedZoneCommentOptions -> UpdateHostedZoneCommentOptions)
-    -> AWS.Http.UnsignedRequest UpdateHostedZoneCommentResponse
+    -> AWS.Request UpdateHostedZoneCommentResponse
 updateHostedZoneComment id setOptions =
   let
     options = setOptions (UpdateHostedZoneCommentOptions Nothing)
@@ -1892,6 +1941,7 @@ updateHostedZoneComment id setOptions =
             JE.null
         )
         updateHostedZoneCommentResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateHostedZoneComment request
@@ -1916,7 +1966,7 @@ updateTrafficPolicyComment :
     String
     -> Int
     -> String
-    -> AWS.Http.UnsignedRequest UpdateTrafficPolicyCommentResponse
+    -> AWS.Request UpdateTrafficPolicyCommentResponse
 updateTrafficPolicyComment id version comment =
     AWS.Http.unsignedRequest
         "UpdateTrafficPolicyComment"
@@ -1926,6 +1976,7 @@ updateTrafficPolicyComment id version comment =
             JE.null
         )
         updateTrafficPolicyCommentResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1945,7 +1996,7 @@ updateTrafficPolicyInstance :
     -> Int
     -> String
     -> Int
-    -> AWS.Http.UnsignedRequest UpdateTrafficPolicyInstanceResponse
+    -> AWS.Request UpdateTrafficPolicyInstanceResponse
 updateTrafficPolicyInstance id tTL trafficPolicyId trafficPolicyVersion =
     AWS.Http.unsignedRequest
         "UpdateTrafficPolicyInstance"
@@ -1955,6 +2006,7 @@ updateTrafficPolicyInstance id tTL trafficPolicyId trafficPolicyVersion =
             JE.null
         )
         updateTrafficPolicyInstanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

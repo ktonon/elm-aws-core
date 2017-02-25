@@ -384,7 +384,9 @@ module AWS.Services.ServiceCatalog
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -396,15 +398,16 @@ import Dict exposing (Dict)
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "servicecatalog"
         "2015-12-10"
         "1.1"
         "AWSSERVICECATALOG_20151210."
         "servicecatalog.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -421,7 +424,7 @@ __Required Parameters__
 acceptPortfolioShare :
     String
     -> (AcceptPortfolioShareOptions -> AcceptPortfolioShareOptions)
-    -> AWS.Http.UnsignedRequest AcceptPortfolioShareOutput
+    -> AWS.Request AcceptPortfolioShareOutput
 acceptPortfolioShare portfolioId setOptions =
   let
     options = setOptions (AcceptPortfolioShareOptions Nothing)
@@ -434,6 +437,7 @@ acceptPortfolioShare portfolioId setOptions =
             JE.null
         )
         acceptPortfolioShareOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a acceptPortfolioShare request
@@ -459,7 +463,7 @@ associatePrincipalWithPortfolio :
     -> String
     -> PrincipalType
     -> (AssociatePrincipalWithPortfolioOptions -> AssociatePrincipalWithPortfolioOptions)
-    -> AWS.Http.UnsignedRequest AssociatePrincipalWithPortfolioOutput
+    -> AWS.Request AssociatePrincipalWithPortfolioOutput
 associatePrincipalWithPortfolio portfolioId principalARN principalType setOptions =
   let
     options = setOptions (AssociatePrincipalWithPortfolioOptions Nothing)
@@ -472,6 +476,7 @@ associatePrincipalWithPortfolio portfolioId principalARN principalType setOption
             JE.null
         )
         associatePrincipalWithPortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a associatePrincipalWithPortfolio request
@@ -495,7 +500,7 @@ associateProductWithPortfolio :
     String
     -> String
     -> (AssociateProductWithPortfolioOptions -> AssociateProductWithPortfolioOptions)
-    -> AWS.Http.UnsignedRequest AssociateProductWithPortfolioOutput
+    -> AWS.Request AssociateProductWithPortfolioOutput
 associateProductWithPortfolio productId portfolioId setOptions =
   let
     options = setOptions (AssociateProductWithPortfolioOptions Nothing Nothing)
@@ -508,6 +513,7 @@ associateProductWithPortfolio productId portfolioId setOptions =
             JE.null
         )
         associateProductWithPortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a associateProductWithPortfolio request
@@ -538,7 +544,7 @@ createConstraint :
     -> String
     -> String
     -> (CreateConstraintOptions -> CreateConstraintOptions)
-    -> AWS.Http.UnsignedRequest CreateConstraintOutput
+    -> AWS.Request CreateConstraintOutput
 createConstraint portfolioId productId parameters type_ idempotencyToken setOptions =
   let
     options = setOptions (CreateConstraintOptions Nothing Nothing)
@@ -551,6 +557,7 @@ createConstraint portfolioId productId parameters type_ idempotencyToken setOpti
             JE.null
         )
         createConstraintOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createConstraint request
@@ -577,7 +584,7 @@ createPortfolio :
     -> String
     -> String
     -> (CreatePortfolioOptions -> CreatePortfolioOptions)
-    -> AWS.Http.UnsignedRequest CreatePortfolioOutput
+    -> AWS.Request CreatePortfolioOutput
 createPortfolio displayName providerName idempotencyToken setOptions =
   let
     options = setOptions (CreatePortfolioOptions Nothing Nothing Nothing)
@@ -590,6 +597,7 @@ createPortfolio displayName providerName idempotencyToken setOptions =
             JE.null
         )
         createPortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPortfolio request
@@ -615,7 +623,7 @@ createPortfolioShare :
     String
     -> String
     -> (CreatePortfolioShareOptions -> CreatePortfolioShareOptions)
-    -> AWS.Http.UnsignedRequest CreatePortfolioShareOutput
+    -> AWS.Request CreatePortfolioShareOutput
 createPortfolioShare portfolioId accountId setOptions =
   let
     options = setOptions (CreatePortfolioShareOptions Nothing)
@@ -628,6 +636,7 @@ createPortfolioShare portfolioId accountId setOptions =
             JE.null
         )
         createPortfolioShareOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPortfolioShare request
@@ -657,7 +666,7 @@ createProduct :
     -> ProvisioningArtifactProperties
     -> String
     -> (CreateProductOptions -> CreateProductOptions)
-    -> AWS.Http.UnsignedRequest CreateProductOutput
+    -> AWS.Request CreateProductOutput
 createProduct name owner productType provisioningArtifactParameters idempotencyToken setOptions =
   let
     options = setOptions (CreateProductOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -670,6 +679,7 @@ createProduct name owner productType provisioningArtifactParameters idempotencyT
             JE.null
         )
         createProductOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createProduct request
@@ -701,7 +711,7 @@ createProvisioningArtifact :
     -> ProvisioningArtifactProperties
     -> String
     -> (CreateProvisioningArtifactOptions -> CreateProvisioningArtifactOptions)
-    -> AWS.Http.UnsignedRequest CreateProvisioningArtifactOutput
+    -> AWS.Request CreateProvisioningArtifactOutput
 createProvisioningArtifact productId parameters idempotencyToken setOptions =
   let
     options = setOptions (CreateProvisioningArtifactOptions Nothing)
@@ -714,6 +724,7 @@ createProvisioningArtifact productId parameters idempotencyToken setOptions =
             JE.null
         )
         createProvisioningArtifactOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createProvisioningArtifact request
@@ -735,7 +746,7 @@ __Required Parameters__
 deleteConstraint :
     String
     -> (DeleteConstraintOptions -> DeleteConstraintOptions)
-    -> AWS.Http.UnsignedRequest DeleteConstraintOutput
+    -> AWS.Request DeleteConstraintOutput
 deleteConstraint id setOptions =
   let
     options = setOptions (DeleteConstraintOptions Nothing)
@@ -748,6 +759,7 @@ deleteConstraint id setOptions =
             JE.null
         )
         deleteConstraintOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteConstraint request
@@ -769,7 +781,7 @@ __Required Parameters__
 deletePortfolio :
     String
     -> (DeletePortfolioOptions -> DeletePortfolioOptions)
-    -> AWS.Http.UnsignedRequest DeletePortfolioOutput
+    -> AWS.Request DeletePortfolioOutput
 deletePortfolio id setOptions =
   let
     options = setOptions (DeletePortfolioOptions Nothing)
@@ -782,6 +794,7 @@ deletePortfolio id setOptions =
             JE.null
         )
         deletePortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deletePortfolio request
@@ -805,7 +818,7 @@ deletePortfolioShare :
     String
     -> String
     -> (DeletePortfolioShareOptions -> DeletePortfolioShareOptions)
-    -> AWS.Http.UnsignedRequest DeletePortfolioShareOutput
+    -> AWS.Request DeletePortfolioShareOutput
 deletePortfolioShare portfolioId accountId setOptions =
   let
     options = setOptions (DeletePortfolioShareOptions Nothing)
@@ -818,6 +831,7 @@ deletePortfolioShare portfolioId accountId setOptions =
             JE.null
         )
         deletePortfolioShareOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deletePortfolioShare request
@@ -839,7 +853,7 @@ __Required Parameters__
 deleteProduct :
     String
     -> (DeleteProductOptions -> DeleteProductOptions)
-    -> AWS.Http.UnsignedRequest DeleteProductOutput
+    -> AWS.Request DeleteProductOutput
 deleteProduct id setOptions =
   let
     options = setOptions (DeleteProductOptions Nothing)
@@ -852,6 +866,7 @@ deleteProduct id setOptions =
             JE.null
         )
         deleteProductOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteProduct request
@@ -875,7 +890,7 @@ deleteProvisioningArtifact :
     String
     -> String
     -> (DeleteProvisioningArtifactOptions -> DeleteProvisioningArtifactOptions)
-    -> AWS.Http.UnsignedRequest DeleteProvisioningArtifactOutput
+    -> AWS.Request DeleteProvisioningArtifactOutput
 deleteProvisioningArtifact productId provisioningArtifactId setOptions =
   let
     options = setOptions (DeleteProvisioningArtifactOptions Nothing)
@@ -888,6 +903,7 @@ deleteProvisioningArtifact productId provisioningArtifactId setOptions =
             JE.null
         )
         deleteProvisioningArtifactOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteProvisioningArtifact request
@@ -909,7 +925,7 @@ __Required Parameters__
 describeConstraint :
     String
     -> (DescribeConstraintOptions -> DescribeConstraintOptions)
-    -> AWS.Http.UnsignedRequest DescribeConstraintOutput
+    -> AWS.Request DescribeConstraintOutput
 describeConstraint id setOptions =
   let
     options = setOptions (DescribeConstraintOptions Nothing)
@@ -922,6 +938,7 @@ describeConstraint id setOptions =
             JE.null
         )
         describeConstraintOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConstraint request
@@ -943,7 +960,7 @@ __Required Parameters__
 describePortfolio :
     String
     -> (DescribePortfolioOptions -> DescribePortfolioOptions)
-    -> AWS.Http.UnsignedRequest DescribePortfolioOutput
+    -> AWS.Request DescribePortfolioOutput
 describePortfolio id setOptions =
   let
     options = setOptions (DescribePortfolioOptions Nothing)
@@ -956,6 +973,7 @@ describePortfolio id setOptions =
             JE.null
         )
         describePortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describePortfolio request
@@ -977,7 +995,7 @@ __Required Parameters__
 describeProduct :
     String
     -> (DescribeProductOptions -> DescribeProductOptions)
-    -> AWS.Http.UnsignedRequest DescribeProductOutput
+    -> AWS.Request DescribeProductOutput
 describeProduct id setOptions =
   let
     options = setOptions (DescribeProductOptions Nothing)
@@ -990,6 +1008,7 @@ describeProduct id setOptions =
             JE.null
         )
         describeProductOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeProduct request
@@ -1011,7 +1030,7 @@ __Required Parameters__
 describeProductAsAdmin :
     String
     -> (DescribeProductAsAdminOptions -> DescribeProductAsAdminOptions)
-    -> AWS.Http.UnsignedRequest DescribeProductAsAdminOutput
+    -> AWS.Request DescribeProductAsAdminOutput
 describeProductAsAdmin id setOptions =
   let
     options = setOptions (DescribeProductAsAdminOptions Nothing)
@@ -1024,6 +1043,7 @@ describeProductAsAdmin id setOptions =
             JE.null
         )
         describeProductAsAdminOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeProductAsAdmin request
@@ -1045,7 +1065,7 @@ __Required Parameters__
 describeProductView :
     String
     -> (DescribeProductViewOptions -> DescribeProductViewOptions)
-    -> AWS.Http.UnsignedRequest DescribeProductViewOutput
+    -> AWS.Request DescribeProductViewOutput
 describeProductView id setOptions =
   let
     options = setOptions (DescribeProductViewOptions Nothing)
@@ -1058,6 +1078,7 @@ describeProductView id setOptions =
             JE.null
         )
         describeProductViewOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeProductView request
@@ -1081,7 +1102,7 @@ describeProvisioningArtifact :
     String
     -> String
     -> (DescribeProvisioningArtifactOptions -> DescribeProvisioningArtifactOptions)
-    -> AWS.Http.UnsignedRequest DescribeProvisioningArtifactOutput
+    -> AWS.Request DescribeProvisioningArtifactOutput
 describeProvisioningArtifact provisioningArtifactId productId setOptions =
   let
     options = setOptions (DescribeProvisioningArtifactOptions Nothing)
@@ -1094,6 +1115,7 @@ describeProvisioningArtifact provisioningArtifactId productId setOptions =
             JE.null
         )
         describeProvisioningArtifactOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeProvisioningArtifact request
@@ -1117,7 +1139,7 @@ describeProvisioningParameters :
     String
     -> String
     -> (DescribeProvisioningParametersOptions -> DescribeProvisioningParametersOptions)
-    -> AWS.Http.UnsignedRequest DescribeProvisioningParametersOutput
+    -> AWS.Request DescribeProvisioningParametersOutput
 describeProvisioningParameters productId provisioningArtifactId setOptions =
   let
     options = setOptions (DescribeProvisioningParametersOptions Nothing Nothing)
@@ -1130,6 +1152,7 @@ describeProvisioningParameters productId provisioningArtifactId setOptions =
             JE.null
         )
         describeProvisioningParametersOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeProvisioningParameters request
@@ -1152,7 +1175,7 @@ __Required Parameters__
 describeRecord :
     String
     -> (DescribeRecordOptions -> DescribeRecordOptions)
-    -> AWS.Http.UnsignedRequest DescribeRecordOutput
+    -> AWS.Request DescribeRecordOutput
 describeRecord id setOptions =
   let
     options = setOptions (DescribeRecordOptions Nothing Nothing Nothing)
@@ -1165,6 +1188,7 @@ describeRecord id setOptions =
             JE.null
         )
         describeRecordOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeRecord request
@@ -1190,7 +1214,7 @@ disassociatePrincipalFromPortfolio :
     String
     -> String
     -> (DisassociatePrincipalFromPortfolioOptions -> DisassociatePrincipalFromPortfolioOptions)
-    -> AWS.Http.UnsignedRequest DisassociatePrincipalFromPortfolioOutput
+    -> AWS.Request DisassociatePrincipalFromPortfolioOutput
 disassociatePrincipalFromPortfolio portfolioId principalARN setOptions =
   let
     options = setOptions (DisassociatePrincipalFromPortfolioOptions Nothing)
@@ -1203,6 +1227,7 @@ disassociatePrincipalFromPortfolio portfolioId principalARN setOptions =
             JE.null
         )
         disassociatePrincipalFromPortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disassociatePrincipalFromPortfolio request
@@ -1226,7 +1251,7 @@ disassociateProductFromPortfolio :
     String
     -> String
     -> (DisassociateProductFromPortfolioOptions -> DisassociateProductFromPortfolioOptions)
-    -> AWS.Http.UnsignedRequest DisassociateProductFromPortfolioOutput
+    -> AWS.Request DisassociateProductFromPortfolioOutput
 disassociateProductFromPortfolio productId portfolioId setOptions =
   let
     options = setOptions (DisassociateProductFromPortfolioOptions Nothing)
@@ -1239,6 +1264,7 @@ disassociateProductFromPortfolio productId portfolioId setOptions =
             JE.null
         )
         disassociateProductFromPortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disassociateProductFromPortfolio request
@@ -1258,7 +1284,7 @@ __Required Parameters__
 -}
 listAcceptedPortfolioShares :
     (ListAcceptedPortfolioSharesOptions -> ListAcceptedPortfolioSharesOptions)
-    -> AWS.Http.UnsignedRequest ListAcceptedPortfolioSharesOutput
+    -> AWS.Request ListAcceptedPortfolioSharesOutput
 listAcceptedPortfolioShares setOptions =
   let
     options = setOptions (ListAcceptedPortfolioSharesOptions Nothing Nothing Nothing)
@@ -1271,6 +1297,7 @@ listAcceptedPortfolioShares setOptions =
             JE.null
         )
         listAcceptedPortfolioSharesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAcceptedPortfolioShares request
@@ -1294,7 +1321,7 @@ __Required Parameters__
 listConstraintsForPortfolio :
     String
     -> (ListConstraintsForPortfolioOptions -> ListConstraintsForPortfolioOptions)
-    -> AWS.Http.UnsignedRequest ListConstraintsForPortfolioOutput
+    -> AWS.Request ListConstraintsForPortfolioOutput
 listConstraintsForPortfolio portfolioId setOptions =
   let
     options = setOptions (ListConstraintsForPortfolioOptions Nothing Nothing Nothing Nothing)
@@ -1307,6 +1334,7 @@ listConstraintsForPortfolio portfolioId setOptions =
             JE.null
         )
         listConstraintsForPortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listConstraintsForPortfolio request
@@ -1331,7 +1359,7 @@ __Required Parameters__
 listLaunchPaths :
     String
     -> (ListLaunchPathsOptions -> ListLaunchPathsOptions)
-    -> AWS.Http.UnsignedRequest ListLaunchPathsOutput
+    -> AWS.Request ListLaunchPathsOutput
 listLaunchPaths productId setOptions =
   let
     options = setOptions (ListLaunchPathsOptions Nothing Nothing Nothing)
@@ -1344,6 +1372,7 @@ listLaunchPaths productId setOptions =
             JE.null
         )
         listLaunchPathsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listLaunchPaths request
@@ -1367,7 +1396,7 @@ __Required Parameters__
 listPortfolioAccess :
     String
     -> (ListPortfolioAccessOptions -> ListPortfolioAccessOptions)
-    -> AWS.Http.UnsignedRequest ListPortfolioAccessOutput
+    -> AWS.Request ListPortfolioAccessOutput
 listPortfolioAccess portfolioId setOptions =
   let
     options = setOptions (ListPortfolioAccessOptions Nothing)
@@ -1380,6 +1409,7 @@ listPortfolioAccess portfolioId setOptions =
             JE.null
         )
         listPortfolioAccessOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPortfolioAccess request
@@ -1399,7 +1429,7 @@ __Required Parameters__
 -}
 listPortfolios :
     (ListPortfoliosOptions -> ListPortfoliosOptions)
-    -> AWS.Http.UnsignedRequest ListPortfoliosOutput
+    -> AWS.Request ListPortfoliosOutput
 listPortfolios setOptions =
   let
     options = setOptions (ListPortfoliosOptions Nothing Nothing Nothing)
@@ -1412,6 +1442,7 @@ listPortfolios setOptions =
             JE.null
         )
         listPortfoliosOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPortfolios request
@@ -1435,7 +1466,7 @@ __Required Parameters__
 listPortfoliosForProduct :
     String
     -> (ListPortfoliosForProductOptions -> ListPortfoliosForProductOptions)
-    -> AWS.Http.UnsignedRequest ListPortfoliosForProductOutput
+    -> AWS.Request ListPortfoliosForProductOutput
 listPortfoliosForProduct productId setOptions =
   let
     options = setOptions (ListPortfoliosForProductOptions Nothing Nothing Nothing)
@@ -1448,6 +1479,7 @@ listPortfoliosForProduct productId setOptions =
             JE.null
         )
         listPortfoliosForProductOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPortfoliosForProduct request
@@ -1471,7 +1503,7 @@ __Required Parameters__
 listPrincipalsForPortfolio :
     String
     -> (ListPrincipalsForPortfolioOptions -> ListPrincipalsForPortfolioOptions)
-    -> AWS.Http.UnsignedRequest ListPrincipalsForPortfolioOutput
+    -> AWS.Request ListPrincipalsForPortfolioOutput
 listPrincipalsForPortfolio portfolioId setOptions =
   let
     options = setOptions (ListPrincipalsForPortfolioOptions Nothing Nothing Nothing)
@@ -1484,6 +1516,7 @@ listPrincipalsForPortfolio portfolioId setOptions =
             JE.null
         )
         listPrincipalsForPortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPrincipalsForPortfolio request
@@ -1507,7 +1540,7 @@ __Required Parameters__
 listProvisioningArtifacts :
     String
     -> (ListProvisioningArtifactsOptions -> ListProvisioningArtifactsOptions)
-    -> AWS.Http.UnsignedRequest ListProvisioningArtifactsOutput
+    -> AWS.Request ListProvisioningArtifactsOutput
 listProvisioningArtifacts productId setOptions =
   let
     options = setOptions (ListProvisioningArtifactsOptions Nothing)
@@ -1520,6 +1553,7 @@ listProvisioningArtifacts productId setOptions =
             JE.null
         )
         listProvisioningArtifactsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listProvisioningArtifacts request
@@ -1539,7 +1573,7 @@ __Required Parameters__
 -}
 listRecordHistory :
     (ListRecordHistoryOptions -> ListRecordHistoryOptions)
-    -> AWS.Http.UnsignedRequest ListRecordHistoryOutput
+    -> AWS.Request ListRecordHistoryOutput
 listRecordHistory setOptions =
   let
     options = setOptions (ListRecordHistoryOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1552,6 +1586,7 @@ listRecordHistory setOptions =
             JE.null
         )
         listRecordHistoryOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRecordHistory request
@@ -1583,7 +1618,7 @@ provisionProduct :
     -> String
     -> String
     -> (ProvisionProductOptions -> ProvisionProductOptions)
-    -> AWS.Http.UnsignedRequest ProvisionProductOutput
+    -> AWS.Request ProvisionProductOutput
 provisionProduct productId provisioningArtifactId provisionedProductName provisionToken setOptions =
   let
     options = setOptions (ProvisionProductOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1596,6 +1631,7 @@ provisionProduct productId provisioningArtifactId provisionedProductName provisi
             JE.null
         )
         provisionProductOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a provisionProduct request
@@ -1621,7 +1657,7 @@ __Required Parameters__
 rejectPortfolioShare :
     String
     -> (RejectPortfolioShareOptions -> RejectPortfolioShareOptions)
-    -> AWS.Http.UnsignedRequest RejectPortfolioShareOutput
+    -> AWS.Request RejectPortfolioShareOutput
 rejectPortfolioShare portfolioId setOptions =
   let
     options = setOptions (RejectPortfolioShareOptions Nothing)
@@ -1634,6 +1670,7 @@ rejectPortfolioShare portfolioId setOptions =
             JE.null
         )
         rejectPortfolioShareOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a rejectPortfolioShare request
@@ -1653,7 +1690,7 @@ __Required Parameters__
 -}
 scanProvisionedProducts :
     (ScanProvisionedProductsOptions -> ScanProvisionedProductsOptions)
-    -> AWS.Http.UnsignedRequest ScanProvisionedProductsOutput
+    -> AWS.Request ScanProvisionedProductsOutput
 scanProvisionedProducts setOptions =
   let
     options = setOptions (ScanProvisionedProductsOptions Nothing Nothing Nothing Nothing)
@@ -1666,6 +1703,7 @@ scanProvisionedProducts setOptions =
             JE.null
         )
         scanProvisionedProductsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a scanProvisionedProducts request
@@ -1688,7 +1726,7 @@ __Required Parameters__
 -}
 searchProducts :
     (SearchProductsOptions -> SearchProductsOptions)
-    -> AWS.Http.UnsignedRequest SearchProductsOutput
+    -> AWS.Request SearchProductsOutput
 searchProducts setOptions =
   let
     options = setOptions (SearchProductsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1701,6 +1739,7 @@ searchProducts setOptions =
             JE.null
         )
         searchProductsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a searchProducts request
@@ -1725,7 +1764,7 @@ __Required Parameters__
 -}
 searchProductsAsAdmin :
     (SearchProductsAsAdminOptions -> SearchProductsAsAdminOptions)
-    -> AWS.Http.UnsignedRequest SearchProductsAsAdminOutput
+    -> AWS.Request SearchProductsAsAdminOutput
 searchProductsAsAdmin setOptions =
   let
     options = setOptions (SearchProductsAsAdminOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1738,6 +1777,7 @@ searchProductsAsAdmin setOptions =
             JE.null
         )
         searchProductsAsAdminOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a searchProductsAsAdmin request
@@ -1766,7 +1806,7 @@ __Required Parameters__
 terminateProvisionedProduct :
     String
     -> (TerminateProvisionedProductOptions -> TerminateProvisionedProductOptions)
-    -> AWS.Http.UnsignedRequest TerminateProvisionedProductOutput
+    -> AWS.Request TerminateProvisionedProductOutput
 terminateProvisionedProduct terminateToken setOptions =
   let
     options = setOptions (TerminateProvisionedProductOptions Nothing Nothing Nothing Nothing)
@@ -1779,6 +1819,7 @@ terminateProvisionedProduct terminateToken setOptions =
             JE.null
         )
         terminateProvisionedProductOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a terminateProvisionedProduct request
@@ -1803,7 +1844,7 @@ __Required Parameters__
 updateConstraint :
     String
     -> (UpdateConstraintOptions -> UpdateConstraintOptions)
-    -> AWS.Http.UnsignedRequest UpdateConstraintOutput
+    -> AWS.Request UpdateConstraintOutput
 updateConstraint id setOptions =
   let
     options = setOptions (UpdateConstraintOptions Nothing Nothing)
@@ -1816,6 +1857,7 @@ updateConstraint id setOptions =
             JE.null
         )
         updateConstraintOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateConstraint request
@@ -1838,7 +1880,7 @@ __Required Parameters__
 updatePortfolio :
     String
     -> (UpdatePortfolioOptions -> UpdatePortfolioOptions)
-    -> AWS.Http.UnsignedRequest UpdatePortfolioOutput
+    -> AWS.Request UpdatePortfolioOutput
 updatePortfolio id setOptions =
   let
     options = setOptions (UpdatePortfolioOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1851,6 +1893,7 @@ updatePortfolio id setOptions =
             JE.null
         )
         updatePortfolioOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updatePortfolio request
@@ -1877,7 +1920,7 @@ __Required Parameters__
 updateProduct :
     String
     -> (UpdateProductOptions -> UpdateProductOptions)
-    -> AWS.Http.UnsignedRequest UpdateProductOutput
+    -> AWS.Request UpdateProductOutput
 updateProduct id setOptions =
   let
     options = setOptions (UpdateProductOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1890,6 +1933,7 @@ updateProduct id setOptions =
             JE.null
         )
         updateProductOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateProduct request
@@ -1920,7 +1964,7 @@ __Required Parameters__
 updateProvisionedProduct :
     String
     -> (UpdateProvisionedProductOptions -> UpdateProvisionedProductOptions)
-    -> AWS.Http.UnsignedRequest UpdateProvisionedProductOutput
+    -> AWS.Request UpdateProvisionedProductOutput
 updateProvisionedProduct updateToken setOptions =
   let
     options = setOptions (UpdateProvisionedProductOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1933,6 +1977,7 @@ updateProvisionedProduct updateToken setOptions =
             JE.null
         )
         updateProvisionedProductOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateProvisionedProduct request
@@ -1962,7 +2007,7 @@ updateProvisioningArtifact :
     String
     -> String
     -> (UpdateProvisioningArtifactOptions -> UpdateProvisioningArtifactOptions)
-    -> AWS.Http.UnsignedRequest UpdateProvisioningArtifactOutput
+    -> AWS.Request UpdateProvisioningArtifactOutput
 updateProvisioningArtifact productId provisioningArtifactId setOptions =
   let
     options = setOptions (UpdateProvisioningArtifactOptions Nothing Nothing Nothing)
@@ -1975,6 +2020,7 @@ updateProvisioningArtifact productId provisioningArtifactId setOptions =
             JE.null
         )
         updateProvisioningArtifactOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateProvisioningArtifact request

@@ -1,11 +1,6 @@
 module AWS.Signers.V4 exposing (sign)
 
-{-| Version V4 AWS Request Signer
-
-@docs sign
--}
-
-import AWS exposing (ServiceConfig)
+import AWS.Config exposing (Credentials)
 import AWS.Signers.Canonical exposing (canonical, signedHeaders)
 import AWS.Http exposing (UnsignedRequest, RequestParams)
 import Date exposing (Date)
@@ -17,17 +12,19 @@ import Regex exposing (HowMany(All), regex)
 -- http://docs.aws.amazon.com/waf/latest/developerguide/authenticating-requests.html
 
 
-{-| Sign an unsigned request, given the current time
--}
 sign :
     UnsignedRequest a
     -> Date
-    -> ServiceConfig
+    -> AWS.Config.Service
     -> Http.Request a
 sign req date config =
     Http.request
         { method = req.method
-        , headers = headers date config
+        , headers =
+            headers config
+                |> addAuthorization date config
+                |> addSessionToken config
+                |> List.map (\( key, val ) -> Http.header key val)
         , url = AWS.Http.url config.host req.path req.params
         , body = AWS.Http.body req.params
         , expect = Http.expectJson req.decoder
@@ -36,12 +33,16 @@ sign req date config =
         }
 
 
-headers : Date -> ServiceConfig -> List Http.Header
-headers date config =
-    []
-        |> addAuthorization date config
-        |> addSessionToken config
-        |> List.map (\( key, val ) -> Http.header key val)
+algorithm : String
+algorithm =
+    "AWS4-HMAC-SHA256"
+
+
+headers : AWS.Config.Service -> List ( String, String )
+headers config =
+    [ ( "Host", config.host ++ ":443" )
+    , ( "Content-Type", jsonContentType config )
+    ]
 
 
 formatDate : Date -> String
@@ -53,7 +54,7 @@ formatDate date =
             (\_ -> "")
 
 
-addSessionToken : ServiceConfig -> List ( String, String ) -> List ( String, String )
+addSessionToken : AWS.Config.Service -> List ( String, String ) -> List ( String, String )
 addSessionToken config headers =
     config.credentials
         |> Maybe.andThen .sessionToken
@@ -64,7 +65,7 @@ addSessionToken config headers =
         |> Maybe.withDefault headers
 
 
-addAuthorization : Date -> ServiceConfig -> List ( String, String ) -> List ( String, String )
+addAuthorization : Date -> AWS.Config.Service -> List ( String, String ) -> List ( String, String )
 addAuthorization date config headers =
     config.credentials
         |> Maybe.map
@@ -77,7 +78,7 @@ addAuthorization date config headers =
         |> Maybe.withDefault headers
 
 
-authorization : AWS.Credentials -> Date -> ServiceConfig -> List ( String, String ) -> String
+authorization : Credentials -> Date -> AWS.Config.Service -> List ( String, String ) -> String
 authorization creds date config headers =
     [ "AWS4-HMAC-SHA256 Credentials="
         ++ creds.accessKeyId
@@ -91,7 +92,7 @@ authorization creds date config headers =
         |> String.join ", "
 
 
-credentialsString : Date -> ServiceConfig -> String
+credentialsString : Date -> AWS.Config.Service -> String
 credentialsString date config =
     [ date |> formatDate |> String.slice 0 8
     , config.region
@@ -101,11 +102,11 @@ credentialsString date config =
         |> String.join "/"
 
 
-signature : AWS.Credentials -> String
+signature : Credentials -> String
 signature creds =
     ""
 
 
-jsonContentType : ServiceConfig -> String
+jsonContentType : AWS.Config.Service -> String
 jsonContentType config =
     "application/x-amz-json-" ++ config.xAmzJsonVersion ++ "; charset=utf-8"

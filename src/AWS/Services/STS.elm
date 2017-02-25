@@ -101,7 +101,9 @@ module AWS.Services.STS
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -112,15 +114,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "sts"
         "2011-06-15"
         "undefined"
         "AWSSTS_20110615."
         "sts.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -139,7 +142,7 @@ assumeRole :
     String
     -> String
     -> (AssumeRoleOptions -> AssumeRoleOptions)
-    -> AWS.Http.UnsignedRequest AssumeRoleResponse
+    -> AWS.Request AssumeRoleResponse
 assumeRole roleArn roleSessionName setOptions =
   let
     options = setOptions (AssumeRoleOptions Nothing Nothing Nothing Nothing Nothing)
@@ -152,6 +155,7 @@ assumeRole roleArn roleSessionName setOptions =
             JE.null
         )
         assumeRoleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a assumeRole request
@@ -181,7 +185,7 @@ assumeRoleWithSAML :
     -> String
     -> String
     -> (AssumeRoleWithSAMLOptions -> AssumeRoleWithSAMLOptions)
-    -> AWS.Http.UnsignedRequest AssumeRoleWithSAMLResponse
+    -> AWS.Request AssumeRoleWithSAMLResponse
 assumeRoleWithSAML roleArn principalArn sAMLAssertion setOptions =
   let
     options = setOptions (AssumeRoleWithSAMLOptions Nothing Nothing)
@@ -194,6 +198,7 @@ assumeRoleWithSAML roleArn principalArn sAMLAssertion setOptions =
             JE.null
         )
         assumeRoleWithSAMLResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a assumeRoleWithSAML request
@@ -220,7 +225,7 @@ assumeRoleWithWebIdentity :
     -> String
     -> String
     -> (AssumeRoleWithWebIdentityOptions -> AssumeRoleWithWebIdentityOptions)
-    -> AWS.Http.UnsignedRequest AssumeRoleWithWebIdentityResponse
+    -> AWS.Request AssumeRoleWithWebIdentityResponse
 assumeRoleWithWebIdentity roleArn roleSessionName webIdentityToken setOptions =
   let
     options = setOptions (AssumeRoleWithWebIdentityOptions Nothing Nothing Nothing)
@@ -233,6 +238,7 @@ assumeRoleWithWebIdentity roleArn roleSessionName webIdentityToken setOptions =
             JE.null
         )
         assumeRoleWithWebIdentityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a assumeRoleWithWebIdentity request
@@ -255,7 +261,7 @@ __Required Parameters__
 -}
 decodeAuthorizationMessage :
     String
-    -> AWS.Http.UnsignedRequest DecodeAuthorizationMessageResponse
+    -> AWS.Request DecodeAuthorizationMessageResponse
 decodeAuthorizationMessage encodedMessage =
     AWS.Http.unsignedRequest
         "DecodeAuthorizationMessage"
@@ -265,6 +271,7 @@ decodeAuthorizationMessage encodedMessage =
             JE.null
         )
         decodeAuthorizationMessageResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -276,7 +283,7 @@ __Required Parameters__
 
 -}
 getCallerIdentity :
-    AWS.Http.UnsignedRequest GetCallerIdentityResponse
+    AWS.Request GetCallerIdentityResponse
 getCallerIdentity =
     AWS.Http.unsignedRequest
         "GetCallerIdentity"
@@ -286,6 +293,7 @@ getCallerIdentity =
             JE.null
         )
         getCallerIdentityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -300,7 +308,7 @@ __Required Parameters__
 getFederationToken :
     String
     -> (GetFederationTokenOptions -> GetFederationTokenOptions)
-    -> AWS.Http.UnsignedRequest GetFederationTokenResponse
+    -> AWS.Request GetFederationTokenResponse
 getFederationToken name setOptions =
   let
     options = setOptions (GetFederationTokenOptions Nothing Nothing)
@@ -313,6 +321,7 @@ getFederationToken name setOptions =
             JE.null
         )
         getFederationTokenResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getFederationToken request
@@ -333,7 +342,7 @@ __Required Parameters__
 -}
 getSessionToken :
     (GetSessionTokenOptions -> GetSessionTokenOptions)
-    -> AWS.Http.UnsignedRequest GetSessionTokenResponse
+    -> AWS.Request GetSessionTokenResponse
 getSessionToken setOptions =
   let
     options = setOptions (GetSessionTokenOptions Nothing Nothing Nothing)
@@ -346,6 +355,7 @@ getSessionToken setOptions =
             JE.null
         )
         getSessionTokenResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getSessionToken request

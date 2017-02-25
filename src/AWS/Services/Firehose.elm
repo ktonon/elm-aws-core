@@ -168,7 +168,9 @@ module AWS.Services.Firehose
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -179,15 +181,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "firehose"
         "2015-08-04"
         "1.1"
         "AWSFIREHOSE_20150804."
         "firehose.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -204,7 +207,7 @@ __Required Parameters__
 createDeliveryStream :
     String
     -> (CreateDeliveryStreamOptions -> CreateDeliveryStreamOptions)
-    -> AWS.Http.UnsignedRequest CreateDeliveryStreamOutput
+    -> AWS.Request CreateDeliveryStreamOutput
 createDeliveryStream deliveryStreamName setOptions =
   let
     options = setOptions (CreateDeliveryStreamOptions Nothing Nothing Nothing Nothing)
@@ -217,6 +220,7 @@ createDeliveryStream deliveryStreamName setOptions =
             JE.null
         )
         createDeliveryStreamOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDeliveryStream request
@@ -240,7 +244,7 @@ __Required Parameters__
 -}
 deleteDeliveryStream :
     String
-    -> AWS.Http.UnsignedRequest DeleteDeliveryStreamOutput
+    -> AWS.Request DeleteDeliveryStreamOutput
 deleteDeliveryStream deliveryStreamName =
     AWS.Http.unsignedRequest
         "DeleteDeliveryStream"
@@ -250,6 +254,7 @@ deleteDeliveryStream deliveryStreamName =
             JE.null
         )
         deleteDeliveryStreamOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -264,7 +269,7 @@ __Required Parameters__
 describeDeliveryStream :
     String
     -> (DescribeDeliveryStreamOptions -> DescribeDeliveryStreamOptions)
-    -> AWS.Http.UnsignedRequest DescribeDeliveryStreamOutput
+    -> AWS.Request DescribeDeliveryStreamOutput
 describeDeliveryStream deliveryStreamName setOptions =
   let
     options = setOptions (DescribeDeliveryStreamOptions Nothing Nothing)
@@ -277,6 +282,7 @@ describeDeliveryStream deliveryStreamName setOptions =
             JE.null
         )
         describeDeliveryStreamOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDeliveryStream request
@@ -297,7 +303,7 @@ __Required Parameters__
 -}
 listDeliveryStreams :
     (ListDeliveryStreamsOptions -> ListDeliveryStreamsOptions)
-    -> AWS.Http.UnsignedRequest ListDeliveryStreamsOutput
+    -> AWS.Request ListDeliveryStreamsOutput
 listDeliveryStreams setOptions =
   let
     options = setOptions (ListDeliveryStreamsOptions Nothing Nothing)
@@ -310,6 +316,7 @@ listDeliveryStreams setOptions =
             JE.null
         )
         listDeliveryStreamsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDeliveryStreams request
@@ -333,7 +340,7 @@ __Required Parameters__
 putRecord :
     String
     -> Record
-    -> AWS.Http.UnsignedRequest PutRecordOutput
+    -> AWS.Request PutRecordOutput
 putRecord deliveryStreamName record =
     AWS.Http.unsignedRequest
         "PutRecord"
@@ -343,6 +350,7 @@ putRecord deliveryStreamName record =
             JE.null
         )
         putRecordOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -358,7 +366,7 @@ __Required Parameters__
 putRecordBatch :
     String
     -> (List Record)
-    -> AWS.Http.UnsignedRequest PutRecordBatchOutput
+    -> AWS.Request PutRecordBatchOutput
 putRecordBatch deliveryStreamName records =
     AWS.Http.unsignedRequest
         "PutRecordBatch"
@@ -368,6 +376,7 @@ putRecordBatch deliveryStreamName records =
             JE.null
         )
         putRecordBatchOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -386,7 +395,7 @@ updateDestination :
     -> String
     -> String
     -> (UpdateDestinationOptions -> UpdateDestinationOptions)
-    -> AWS.Http.UnsignedRequest UpdateDestinationOutput
+    -> AWS.Request UpdateDestinationOutput
 updateDestination deliveryStreamName currentDeliveryStreamVersionId destinationId setOptions =
   let
     options = setOptions (UpdateDestinationOptions Nothing Nothing Nothing Nothing)
@@ -399,6 +408,7 @@ updateDestination deliveryStreamName currentDeliveryStreamVersionId destinationI
             JE.null
         )
         updateDestinationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDestination request

@@ -220,7 +220,9 @@ module AWS.Services.SFN
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -231,15 +233,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "states"
         "2016-11-23"
         "1.0"
         "AWSSTATES_20161123."
         "states.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -255,7 +258,7 @@ __Required Parameters__
 -}
 createActivity :
     String
-    -> AWS.Http.UnsignedRequest CreateActivityOutput
+    -> AWS.Request CreateActivityOutput
 createActivity name =
     AWS.Http.unsignedRequest
         "CreateActivity"
@@ -265,6 +268,7 @@ createActivity name =
             JE.null
         )
         createActivityOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -282,7 +286,7 @@ createStateMachine :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest CreateStateMachineOutput
+    -> AWS.Request CreateStateMachineOutput
 createStateMachine name definition roleArn =
     AWS.Http.unsignedRequest
         "CreateStateMachine"
@@ -292,6 +296,7 @@ createStateMachine name definition roleArn =
             JE.null
         )
         createStateMachineOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -305,7 +310,7 @@ __Required Parameters__
 -}
 deleteActivity :
     String
-    -> AWS.Http.UnsignedRequest DeleteActivityOutput
+    -> AWS.Request DeleteActivityOutput
 deleteActivity activityArn =
     AWS.Http.unsignedRequest
         "DeleteActivity"
@@ -315,6 +320,7 @@ deleteActivity activityArn =
             JE.null
         )
         deleteActivityOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -328,7 +334,7 @@ __Required Parameters__
 -}
 deleteStateMachine :
     String
-    -> AWS.Http.UnsignedRequest DeleteStateMachineOutput
+    -> AWS.Request DeleteStateMachineOutput
 deleteStateMachine stateMachineArn =
     AWS.Http.unsignedRequest
         "DeleteStateMachine"
@@ -338,6 +344,7 @@ deleteStateMachine stateMachineArn =
             JE.null
         )
         deleteStateMachineOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -351,7 +358,7 @@ __Required Parameters__
 -}
 describeActivity :
     String
-    -> AWS.Http.UnsignedRequest DescribeActivityOutput
+    -> AWS.Request DescribeActivityOutput
 describeActivity activityArn =
     AWS.Http.unsignedRequest
         "DescribeActivity"
@@ -361,6 +368,7 @@ describeActivity activityArn =
             JE.null
         )
         describeActivityOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -374,7 +382,7 @@ __Required Parameters__
 -}
 describeExecution :
     String
-    -> AWS.Http.UnsignedRequest DescribeExecutionOutput
+    -> AWS.Request DescribeExecutionOutput
 describeExecution executionArn =
     AWS.Http.unsignedRequest
         "DescribeExecution"
@@ -384,6 +392,7 @@ describeExecution executionArn =
             JE.null
         )
         describeExecutionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -397,7 +406,7 @@ __Required Parameters__
 -}
 describeStateMachine :
     String
-    -> AWS.Http.UnsignedRequest DescribeStateMachineOutput
+    -> AWS.Request DescribeStateMachineOutput
 describeStateMachine stateMachineArn =
     AWS.Http.unsignedRequest
         "DescribeStateMachine"
@@ -407,6 +416,7 @@ describeStateMachine stateMachineArn =
             JE.null
         )
         describeStateMachineOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -421,7 +431,7 @@ __Required Parameters__
 getActivityTask :
     String
     -> (GetActivityTaskOptions -> GetActivityTaskOptions)
-    -> AWS.Http.UnsignedRequest GetActivityTaskOutput
+    -> AWS.Request GetActivityTaskOutput
 getActivityTask activityArn setOptions =
   let
     options = setOptions (GetActivityTaskOptions Nothing)
@@ -434,6 +444,7 @@ getActivityTask activityArn setOptions =
             JE.null
         )
         getActivityTaskOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getActivityTask request
@@ -455,7 +466,7 @@ __Required Parameters__
 getExecutionHistory :
     String
     -> (GetExecutionHistoryOptions -> GetExecutionHistoryOptions)
-    -> AWS.Http.UnsignedRequest GetExecutionHistoryOutput
+    -> AWS.Request GetExecutionHistoryOutput
 getExecutionHistory executionArn setOptions =
   let
     options = setOptions (GetExecutionHistoryOptions Nothing Nothing Nothing)
@@ -468,6 +479,7 @@ getExecutionHistory executionArn setOptions =
             JE.null
         )
         getExecutionHistoryOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getExecutionHistory request
@@ -489,7 +501,7 @@ __Required Parameters__
 -}
 listActivities :
     (ListActivitiesOptions -> ListActivitiesOptions)
-    -> AWS.Http.UnsignedRequest ListActivitiesOutput
+    -> AWS.Request ListActivitiesOutput
 listActivities setOptions =
   let
     options = setOptions (ListActivitiesOptions Nothing Nothing)
@@ -502,6 +514,7 @@ listActivities setOptions =
             JE.null
         )
         listActivitiesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listActivities request
@@ -524,7 +537,7 @@ __Required Parameters__
 listExecutions :
     String
     -> (ListExecutionsOptions -> ListExecutionsOptions)
-    -> AWS.Http.UnsignedRequest ListExecutionsOutput
+    -> AWS.Request ListExecutionsOutput
 listExecutions stateMachineArn setOptions =
   let
     options = setOptions (ListExecutionsOptions Nothing Nothing Nothing)
@@ -537,6 +550,7 @@ listExecutions stateMachineArn setOptions =
             JE.null
         )
         listExecutionsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listExecutions request
@@ -558,7 +572,7 @@ __Required Parameters__
 -}
 listStateMachines :
     (ListStateMachinesOptions -> ListStateMachinesOptions)
-    -> AWS.Http.UnsignedRequest ListStateMachinesOutput
+    -> AWS.Request ListStateMachinesOutput
 listStateMachines setOptions =
   let
     options = setOptions (ListStateMachinesOptions Nothing Nothing)
@@ -571,6 +585,7 @@ listStateMachines setOptions =
             JE.null
         )
         listStateMachinesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listStateMachines request
@@ -593,7 +608,7 @@ __Required Parameters__
 sendTaskFailure :
     String
     -> (SendTaskFailureOptions -> SendTaskFailureOptions)
-    -> AWS.Http.UnsignedRequest SendTaskFailureOutput
+    -> AWS.Request SendTaskFailureOutput
 sendTaskFailure taskToken setOptions =
   let
     options = setOptions (SendTaskFailureOptions Nothing Nothing)
@@ -606,6 +621,7 @@ sendTaskFailure taskToken setOptions =
             JE.null
         )
         sendTaskFailureOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a sendTaskFailure request
@@ -627,7 +643,7 @@ __Required Parameters__
 -}
 sendTaskHeartbeat :
     String
-    -> AWS.Http.UnsignedRequest SendTaskHeartbeatOutput
+    -> AWS.Request SendTaskHeartbeatOutput
 sendTaskHeartbeat taskToken =
     AWS.Http.unsignedRequest
         "SendTaskHeartbeat"
@@ -637,6 +653,7 @@ sendTaskHeartbeat taskToken =
             JE.null
         )
         sendTaskHeartbeatOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -652,7 +669,7 @@ __Required Parameters__
 sendTaskSuccess :
     String
     -> String
-    -> AWS.Http.UnsignedRequest SendTaskSuccessOutput
+    -> AWS.Request SendTaskSuccessOutput
 sendTaskSuccess taskToken output =
     AWS.Http.unsignedRequest
         "SendTaskSuccess"
@@ -662,6 +679,7 @@ sendTaskSuccess taskToken output =
             JE.null
         )
         sendTaskSuccessOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -676,7 +694,7 @@ __Required Parameters__
 startExecution :
     String
     -> (StartExecutionOptions -> StartExecutionOptions)
-    -> AWS.Http.UnsignedRequest StartExecutionOutput
+    -> AWS.Request StartExecutionOutput
 startExecution stateMachineArn setOptions =
   let
     options = setOptions (StartExecutionOptions Nothing Nothing)
@@ -689,6 +707,7 @@ startExecution stateMachineArn setOptions =
             JE.null
         )
         startExecutionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startExecution request
@@ -711,7 +730,7 @@ __Required Parameters__
 stopExecution :
     String
     -> (StopExecutionOptions -> StopExecutionOptions)
-    -> AWS.Http.UnsignedRequest StopExecutionOutput
+    -> AWS.Request StopExecutionOutput
 stopExecution executionArn setOptions =
   let
     options = setOptions (StopExecutionOptions Nothing Nothing)
@@ -724,6 +743,7 @@ stopExecution executionArn setOptions =
             JE.null
         )
         stopExecutionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a stopExecution request

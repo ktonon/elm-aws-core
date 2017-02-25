@@ -342,7 +342,9 @@ module AWS.Services.ECS
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -354,15 +356,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "ecs"
         "2014-11-13"
         "1.1"
         "AWSECS_20141113."
         "ecs.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -377,7 +380,7 @@ __Required Parameters__
 -}
 createCluster :
     (CreateClusterOptions -> CreateClusterOptions)
-    -> AWS.Http.UnsignedRequest CreateClusterResponse
+    -> AWS.Request CreateClusterResponse
 createCluster setOptions =
   let
     options = setOptions (CreateClusterOptions Nothing)
@@ -390,6 +393,7 @@ createCluster setOptions =
             JE.null
         )
         createClusterResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createCluster request
@@ -415,7 +419,7 @@ createService :
     -> String
     -> Int
     -> (CreateServiceOptions -> CreateServiceOptions)
-    -> AWS.Http.UnsignedRequest CreateServiceResponse
+    -> AWS.Request CreateServiceResponse
 createService serviceName taskDefinition desiredCount setOptions =
   let
     options = setOptions (CreateServiceOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -428,6 +432,7 @@ createService serviceName taskDefinition desiredCount setOptions =
             JE.null
         )
         createServiceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createService request
@@ -455,7 +460,7 @@ __Required Parameters__
 deleteAttributes :
     (List Attribute)
     -> (DeleteAttributesOptions -> DeleteAttributesOptions)
-    -> AWS.Http.UnsignedRequest DeleteAttributesResponse
+    -> AWS.Request DeleteAttributesResponse
 deleteAttributes attributes setOptions =
   let
     options = setOptions (DeleteAttributesOptions Nothing)
@@ -468,6 +473,7 @@ deleteAttributes attributes setOptions =
             JE.null
         )
         deleteAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteAttributes request
@@ -488,7 +494,7 @@ __Required Parameters__
 -}
 deleteCluster :
     String
-    -> AWS.Http.UnsignedRequest DeleteClusterResponse
+    -> AWS.Request DeleteClusterResponse
 deleteCluster cluster =
     AWS.Http.unsignedRequest
         "DeleteCluster"
@@ -498,6 +504,7 @@ deleteCluster cluster =
             JE.null
         )
         deleteClusterResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -512,7 +519,7 @@ __Required Parameters__
 deleteService :
     String
     -> (DeleteServiceOptions -> DeleteServiceOptions)
-    -> AWS.Http.UnsignedRequest DeleteServiceResponse
+    -> AWS.Request DeleteServiceResponse
 deleteService service setOptions =
   let
     options = setOptions (DeleteServiceOptions Nothing)
@@ -525,6 +532,7 @@ deleteService service setOptions =
             JE.null
         )
         deleteServiceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteService request
@@ -546,7 +554,7 @@ __Required Parameters__
 deregisterContainerInstance :
     String
     -> (DeregisterContainerInstanceOptions -> DeregisterContainerInstanceOptions)
-    -> AWS.Http.UnsignedRequest DeregisterContainerInstanceResponse
+    -> AWS.Request DeregisterContainerInstanceResponse
 deregisterContainerInstance containerInstance setOptions =
   let
     options = setOptions (DeregisterContainerInstanceOptions Nothing Nothing)
@@ -559,6 +567,7 @@ deregisterContainerInstance containerInstance setOptions =
             JE.null
         )
         deregisterContainerInstanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deregisterContainerInstance request
@@ -580,7 +589,7 @@ __Required Parameters__
 -}
 deregisterTaskDefinition :
     String
-    -> AWS.Http.UnsignedRequest DeregisterTaskDefinitionResponse
+    -> AWS.Request DeregisterTaskDefinitionResponse
 deregisterTaskDefinition taskDefinition =
     AWS.Http.unsignedRequest
         "DeregisterTaskDefinition"
@@ -590,6 +599,7 @@ deregisterTaskDefinition taskDefinition =
             JE.null
         )
         deregisterTaskDefinitionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -602,7 +612,7 @@ __Required Parameters__
 -}
 describeClusters :
     (DescribeClustersOptions -> DescribeClustersOptions)
-    -> AWS.Http.UnsignedRequest DescribeClustersResponse
+    -> AWS.Request DescribeClustersResponse
 describeClusters setOptions =
   let
     options = setOptions (DescribeClustersOptions Nothing)
@@ -615,6 +625,7 @@ describeClusters setOptions =
             JE.null
         )
         describeClustersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeClusters request
@@ -636,7 +647,7 @@ __Required Parameters__
 describeContainerInstances :
     (List String)
     -> (DescribeContainerInstancesOptions -> DescribeContainerInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeContainerInstancesResponse
+    -> AWS.Request DescribeContainerInstancesResponse
 describeContainerInstances containerInstances setOptions =
   let
     options = setOptions (DescribeContainerInstancesOptions Nothing)
@@ -649,6 +660,7 @@ describeContainerInstances containerInstances setOptions =
             JE.null
         )
         describeContainerInstancesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeContainerInstances request
@@ -670,7 +682,7 @@ __Required Parameters__
 describeServices :
     (List String)
     -> (DescribeServicesOptions -> DescribeServicesOptions)
-    -> AWS.Http.UnsignedRequest DescribeServicesResponse
+    -> AWS.Request DescribeServicesResponse
 describeServices services setOptions =
   let
     options = setOptions (DescribeServicesOptions Nothing)
@@ -683,6 +695,7 @@ describeServices services setOptions =
             JE.null
         )
         describeServicesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeServices request
@@ -703,7 +716,7 @@ __Required Parameters__
 -}
 describeTaskDefinition :
     String
-    -> AWS.Http.UnsignedRequest DescribeTaskDefinitionResponse
+    -> AWS.Request DescribeTaskDefinitionResponse
 describeTaskDefinition taskDefinition =
     AWS.Http.unsignedRequest
         "DescribeTaskDefinition"
@@ -713,6 +726,7 @@ describeTaskDefinition taskDefinition =
             JE.null
         )
         describeTaskDefinitionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -727,7 +741,7 @@ __Required Parameters__
 describeTasks :
     (List String)
     -> (DescribeTasksOptions -> DescribeTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeTasksResponse
+    -> AWS.Request DescribeTasksResponse
 describeTasks tasks setOptions =
   let
     options = setOptions (DescribeTasksOptions Nothing)
@@ -740,6 +754,7 @@ describeTasks tasks setOptions =
             JE.null
         )
         describeTasksResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTasks request
@@ -759,7 +774,7 @@ __Required Parameters__
 -}
 discoverPollEndpoint :
     (DiscoverPollEndpointOptions -> DiscoverPollEndpointOptions)
-    -> AWS.Http.UnsignedRequest DiscoverPollEndpointResponse
+    -> AWS.Request DiscoverPollEndpointResponse
 discoverPollEndpoint setOptions =
   let
     options = setOptions (DiscoverPollEndpointOptions Nothing Nothing)
@@ -772,6 +787,7 @@ discoverPollEndpoint setOptions =
             JE.null
         )
         discoverPollEndpointResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a discoverPollEndpoint request
@@ -794,7 +810,7 @@ __Required Parameters__
 listAttributes :
     TargetType
     -> (ListAttributesOptions -> ListAttributesOptions)
-    -> AWS.Http.UnsignedRequest ListAttributesResponse
+    -> AWS.Request ListAttributesResponse
 listAttributes targetType setOptions =
   let
     options = setOptions (ListAttributesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -807,6 +823,7 @@ listAttributes targetType setOptions =
             JE.null
         )
         listAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAttributes request
@@ -830,7 +847,7 @@ __Required Parameters__
 -}
 listClusters :
     (ListClustersOptions -> ListClustersOptions)
-    -> AWS.Http.UnsignedRequest ListClustersResponse
+    -> AWS.Request ListClustersResponse
 listClusters setOptions =
   let
     options = setOptions (ListClustersOptions Nothing Nothing)
@@ -843,6 +860,7 @@ listClusters setOptions =
             JE.null
         )
         listClustersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listClusters request
@@ -863,7 +881,7 @@ __Required Parameters__
 -}
 listContainerInstances :
     (ListContainerInstancesOptions -> ListContainerInstancesOptions)
-    -> AWS.Http.UnsignedRequest ListContainerInstancesResponse
+    -> AWS.Request ListContainerInstancesResponse
 listContainerInstances setOptions =
   let
     options = setOptions (ListContainerInstancesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -876,6 +894,7 @@ listContainerInstances setOptions =
             JE.null
         )
         listContainerInstancesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listContainerInstances request
@@ -899,7 +918,7 @@ __Required Parameters__
 -}
 listServices :
     (ListServicesOptions -> ListServicesOptions)
-    -> AWS.Http.UnsignedRequest ListServicesResponse
+    -> AWS.Request ListServicesResponse
 listServices setOptions =
   let
     options = setOptions (ListServicesOptions Nothing Nothing Nothing)
@@ -912,6 +931,7 @@ listServices setOptions =
             JE.null
         )
         listServicesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listServices request
@@ -933,7 +953,7 @@ __Required Parameters__
 -}
 listTaskDefinitionFamilies :
     (ListTaskDefinitionFamiliesOptions -> ListTaskDefinitionFamiliesOptions)
-    -> AWS.Http.UnsignedRequest ListTaskDefinitionFamiliesResponse
+    -> AWS.Request ListTaskDefinitionFamiliesResponse
 listTaskDefinitionFamilies setOptions =
   let
     options = setOptions (ListTaskDefinitionFamiliesOptions Nothing Nothing Nothing Nothing)
@@ -946,6 +966,7 @@ listTaskDefinitionFamilies setOptions =
             JE.null
         )
         listTaskDefinitionFamiliesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTaskDefinitionFamilies request
@@ -968,7 +989,7 @@ __Required Parameters__
 -}
 listTaskDefinitions :
     (ListTaskDefinitionsOptions -> ListTaskDefinitionsOptions)
-    -> AWS.Http.UnsignedRequest ListTaskDefinitionsResponse
+    -> AWS.Request ListTaskDefinitionsResponse
 listTaskDefinitions setOptions =
   let
     options = setOptions (ListTaskDefinitionsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -981,6 +1002,7 @@ listTaskDefinitions setOptions =
             JE.null
         )
         listTaskDefinitionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTaskDefinitions request
@@ -1004,7 +1026,7 @@ __Required Parameters__
 -}
 listTasks :
     (ListTasksOptions -> ListTasksOptions)
-    -> AWS.Http.UnsignedRequest ListTasksResponse
+    -> AWS.Request ListTasksResponse
 listTasks setOptions =
   let
     options = setOptions (ListTasksOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1017,6 +1039,7 @@ listTasks setOptions =
             JE.null
         )
         listTasksResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTasks request
@@ -1045,7 +1068,7 @@ __Required Parameters__
 putAttributes :
     (List Attribute)
     -> (PutAttributesOptions -> PutAttributesOptions)
-    -> AWS.Http.UnsignedRequest PutAttributesResponse
+    -> AWS.Request PutAttributesResponse
 putAttributes attributes setOptions =
   let
     options = setOptions (PutAttributesOptions Nothing)
@@ -1058,6 +1081,7 @@ putAttributes attributes setOptions =
             JE.null
         )
         putAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putAttributes request
@@ -1077,7 +1101,7 @@ __Required Parameters__
 -}
 registerContainerInstance :
     (RegisterContainerInstanceOptions -> RegisterContainerInstanceOptions)
-    -> AWS.Http.UnsignedRequest RegisterContainerInstanceResponse
+    -> AWS.Request RegisterContainerInstanceResponse
 registerContainerInstance setOptions =
   let
     options = setOptions (RegisterContainerInstanceOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1090,6 +1114,7 @@ registerContainerInstance setOptions =
             JE.null
         )
         registerContainerInstanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerContainerInstance request
@@ -1119,7 +1144,7 @@ registerTaskDefinition :
     String
     -> (List ContainerDefinition)
     -> (RegisterTaskDefinitionOptions -> RegisterTaskDefinitionOptions)
-    -> AWS.Http.UnsignedRequest RegisterTaskDefinitionResponse
+    -> AWS.Request RegisterTaskDefinitionResponse
 registerTaskDefinition family containerDefinitions setOptions =
   let
     options = setOptions (RegisterTaskDefinitionOptions Nothing Nothing Nothing Nothing)
@@ -1132,6 +1157,7 @@ registerTaskDefinition family containerDefinitions setOptions =
             JE.null
         )
         registerTaskDefinitionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerTaskDefinition request
@@ -1156,7 +1182,7 @@ __Required Parameters__
 runTask :
     String
     -> (RunTaskOptions -> RunTaskOptions)
-    -> AWS.Http.UnsignedRequest RunTaskResponse
+    -> AWS.Request RunTaskResponse
 runTask taskDefinition setOptions =
   let
     options = setOptions (RunTaskOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1169,6 +1195,7 @@ runTask taskDefinition setOptions =
             JE.null
         )
         runTaskResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a runTask request
@@ -1198,7 +1225,7 @@ startTask :
     String
     -> (List String)
     -> (StartTaskOptions -> StartTaskOptions)
-    -> AWS.Http.UnsignedRequest StartTaskResponse
+    -> AWS.Request StartTaskResponse
 startTask taskDefinition containerInstances setOptions =
   let
     options = setOptions (StartTaskOptions Nothing Nothing Nothing Nothing)
@@ -1211,6 +1238,7 @@ startTask taskDefinition containerInstances setOptions =
             JE.null
         )
         startTaskResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startTask request
@@ -1235,7 +1263,7 @@ __Required Parameters__
 stopTask :
     String
     -> (StopTaskOptions -> StopTaskOptions)
-    -> AWS.Http.UnsignedRequest StopTaskResponse
+    -> AWS.Request StopTaskResponse
 stopTask task setOptions =
   let
     options = setOptions (StopTaskOptions Nothing Nothing)
@@ -1248,6 +1276,7 @@ stopTask task setOptions =
             JE.null
         )
         stopTaskResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a stopTask request
@@ -1268,7 +1297,7 @@ __Required Parameters__
 -}
 submitContainerStateChange :
     (SubmitContainerStateChangeOptions -> SubmitContainerStateChangeOptions)
-    -> AWS.Http.UnsignedRequest SubmitContainerStateChangeResponse
+    -> AWS.Request SubmitContainerStateChangeResponse
 submitContainerStateChange setOptions =
   let
     options = setOptions (SubmitContainerStateChangeOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1281,6 +1310,7 @@ submitContainerStateChange setOptions =
             JE.null
         )
         submitContainerStateChangeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a submitContainerStateChange request
@@ -1306,7 +1336,7 @@ __Required Parameters__
 -}
 submitTaskStateChange :
     (SubmitTaskStateChangeOptions -> SubmitTaskStateChangeOptions)
-    -> AWS.Http.UnsignedRequest SubmitTaskStateChangeResponse
+    -> AWS.Request SubmitTaskStateChangeResponse
 submitTaskStateChange setOptions =
   let
     options = setOptions (SubmitTaskStateChangeOptions Nothing Nothing Nothing Nothing)
@@ -1319,6 +1349,7 @@ submitTaskStateChange setOptions =
             JE.null
         )
         submitTaskStateChangeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a submitTaskStateChange request
@@ -1343,7 +1374,7 @@ __Required Parameters__
 updateContainerAgent :
     String
     -> (UpdateContainerAgentOptions -> UpdateContainerAgentOptions)
-    -> AWS.Http.UnsignedRequest UpdateContainerAgentResponse
+    -> AWS.Request UpdateContainerAgentResponse
 updateContainerAgent containerInstance setOptions =
   let
     options = setOptions (UpdateContainerAgentOptions Nothing)
@@ -1356,6 +1387,7 @@ updateContainerAgent containerInstance setOptions =
             JE.null
         )
         updateContainerAgentResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateContainerAgent request
@@ -1379,7 +1411,7 @@ updateContainerInstancesState :
     (List String)
     -> ContainerInstanceStatus
     -> (UpdateContainerInstancesStateOptions -> UpdateContainerInstancesStateOptions)
-    -> AWS.Http.UnsignedRequest UpdateContainerInstancesStateResponse
+    -> AWS.Request UpdateContainerInstancesStateResponse
 updateContainerInstancesState containerInstances status setOptions =
   let
     options = setOptions (UpdateContainerInstancesStateOptions Nothing)
@@ -1392,6 +1424,7 @@ updateContainerInstancesState containerInstances status setOptions =
             JE.null
         )
         updateContainerInstancesStateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateContainerInstancesState request
@@ -1413,7 +1446,7 @@ __Required Parameters__
 updateService :
     String
     -> (UpdateServiceOptions -> UpdateServiceOptions)
-    -> AWS.Http.UnsignedRequest UpdateServiceResponse
+    -> AWS.Request UpdateServiceResponse
 updateService service setOptions =
   let
     options = setOptions (UpdateServiceOptions Nothing Nothing Nothing Nothing)
@@ -1426,6 +1459,7 @@ updateService service setOptions =
             JE.null
         )
         updateServiceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateService request

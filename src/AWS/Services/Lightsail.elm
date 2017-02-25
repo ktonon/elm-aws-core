@@ -348,7 +348,9 @@ module AWS.Services.Lightsail
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -360,15 +362,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "lightsail"
         "2016-11-28"
         "1.1"
         "AWSLIGHTSAIL_20161128."
         "lightsail.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -384,7 +387,7 @@ __Required Parameters__
 -}
 allocateStaticIp :
     String
-    -> AWS.Http.UnsignedRequest AllocateStaticIpResult
+    -> AWS.Request AllocateStaticIpResult
 allocateStaticIp staticIpName =
     AWS.Http.unsignedRequest
         "AllocateStaticIp"
@@ -394,6 +397,7 @@ allocateStaticIp staticIpName =
             JE.null
         )
         allocateStaticIpResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -409,7 +413,7 @@ __Required Parameters__
 attachStaticIp :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AttachStaticIpResult
+    -> AWS.Request AttachStaticIpResult
 attachStaticIp staticIpName instanceName =
     AWS.Http.unsignedRequest
         "AttachStaticIp"
@@ -419,6 +423,7 @@ attachStaticIp staticIpName instanceName =
             JE.null
         )
         attachStaticIpResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -434,7 +439,7 @@ __Required Parameters__
 closeInstancePublicPorts :
     PortInfo
     -> String
-    -> AWS.Http.UnsignedRequest CloseInstancePublicPortsResult
+    -> AWS.Request CloseInstancePublicPortsResult
 closeInstancePublicPorts portInfo instanceName =
     AWS.Http.unsignedRequest
         "CloseInstancePublicPorts"
@@ -444,6 +449,7 @@ closeInstancePublicPorts portInfo instanceName =
             JE.null
         )
         closeInstancePublicPortsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -457,7 +463,7 @@ __Required Parameters__
 -}
 createDomain :
     String
-    -> AWS.Http.UnsignedRequest CreateDomainResult
+    -> AWS.Request CreateDomainResult
 createDomain domainName =
     AWS.Http.unsignedRequest
         "CreateDomain"
@@ -467,6 +473,7 @@ createDomain domainName =
             JE.null
         )
         createDomainResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -482,7 +489,7 @@ __Required Parameters__
 createDomainEntry :
     String
     -> DomainEntry
-    -> AWS.Http.UnsignedRequest CreateDomainEntryResult
+    -> AWS.Request CreateDomainEntryResult
 createDomainEntry domainName domainEntry =
     AWS.Http.unsignedRequest
         "CreateDomainEntry"
@@ -492,6 +499,7 @@ createDomainEntry domainName domainEntry =
             JE.null
         )
         createDomainEntryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -507,7 +515,7 @@ __Required Parameters__
 createInstanceSnapshot :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateInstanceSnapshotResult
+    -> AWS.Request CreateInstanceSnapshotResult
 createInstanceSnapshot instanceSnapshotName instanceName =
     AWS.Http.unsignedRequest
         "CreateInstanceSnapshot"
@@ -517,6 +525,7 @@ createInstanceSnapshot instanceSnapshotName instanceName =
             JE.null
         )
         createInstanceSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -537,7 +546,7 @@ createInstances :
     -> String
     -> String
     -> (CreateInstancesOptions -> CreateInstancesOptions)
-    -> AWS.Http.UnsignedRequest CreateInstancesResult
+    -> AWS.Request CreateInstancesResult
 createInstances instanceNames availabilityZone blueprintId bundleId setOptions =
   let
     options = setOptions (CreateInstancesOptions Nothing Nothing Nothing)
@@ -550,6 +559,7 @@ createInstances instanceNames availabilityZone blueprintId bundleId setOptions =
             JE.null
         )
         createInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createInstances request
@@ -579,7 +589,7 @@ createInstancesFromSnapshot :
     -> String
     -> String
     -> (CreateInstancesFromSnapshotOptions -> CreateInstancesFromSnapshotOptions)
-    -> AWS.Http.UnsignedRequest CreateInstancesFromSnapshotResult
+    -> AWS.Request CreateInstancesFromSnapshotResult
 createInstancesFromSnapshot instanceNames availabilityZone instanceSnapshotName bundleId setOptions =
   let
     options = setOptions (CreateInstancesFromSnapshotOptions Nothing Nothing)
@@ -592,6 +602,7 @@ createInstancesFromSnapshot instanceNames availabilityZone instanceSnapshotName 
             JE.null
         )
         createInstancesFromSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createInstancesFromSnapshot request
@@ -613,7 +624,7 @@ __Required Parameters__
 -}
 createKeyPair :
     String
-    -> AWS.Http.UnsignedRequest CreateKeyPairResult
+    -> AWS.Request CreateKeyPairResult
 createKeyPair keyPairName =
     AWS.Http.unsignedRequest
         "CreateKeyPair"
@@ -623,6 +634,7 @@ createKeyPair keyPairName =
             JE.null
         )
         createKeyPairResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -636,7 +648,7 @@ __Required Parameters__
 -}
 deleteDomain :
     String
-    -> AWS.Http.UnsignedRequest DeleteDomainResult
+    -> AWS.Request DeleteDomainResult
 deleteDomain domainName =
     AWS.Http.unsignedRequest
         "DeleteDomain"
@@ -646,6 +658,7 @@ deleteDomain domainName =
             JE.null
         )
         deleteDomainResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -661,7 +674,7 @@ __Required Parameters__
 deleteDomainEntry :
     String
     -> DomainEntry
-    -> AWS.Http.UnsignedRequest DeleteDomainEntryResult
+    -> AWS.Request DeleteDomainEntryResult
 deleteDomainEntry domainName domainEntry =
     AWS.Http.unsignedRequest
         "DeleteDomainEntry"
@@ -671,6 +684,7 @@ deleteDomainEntry domainName domainEntry =
             JE.null
         )
         deleteDomainEntryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -684,7 +698,7 @@ __Required Parameters__
 -}
 deleteInstance :
     String
-    -> AWS.Http.UnsignedRequest DeleteInstanceResult
+    -> AWS.Request DeleteInstanceResult
 deleteInstance instanceName =
     AWS.Http.unsignedRequest
         "DeleteInstance"
@@ -694,6 +708,7 @@ deleteInstance instanceName =
             JE.null
         )
         deleteInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -707,7 +722,7 @@ __Required Parameters__
 -}
 deleteInstanceSnapshot :
     String
-    -> AWS.Http.UnsignedRequest DeleteInstanceSnapshotResult
+    -> AWS.Request DeleteInstanceSnapshotResult
 deleteInstanceSnapshot instanceSnapshotName =
     AWS.Http.unsignedRequest
         "DeleteInstanceSnapshot"
@@ -717,6 +732,7 @@ deleteInstanceSnapshot instanceSnapshotName =
             JE.null
         )
         deleteInstanceSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -730,7 +746,7 @@ __Required Parameters__
 -}
 deleteKeyPair :
     String
-    -> AWS.Http.UnsignedRequest DeleteKeyPairResult
+    -> AWS.Request DeleteKeyPairResult
 deleteKeyPair keyPairName =
     AWS.Http.unsignedRequest
         "DeleteKeyPair"
@@ -740,6 +756,7 @@ deleteKeyPair keyPairName =
             JE.null
         )
         deleteKeyPairResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -753,7 +770,7 @@ __Required Parameters__
 -}
 detachStaticIp :
     String
-    -> AWS.Http.UnsignedRequest DetachStaticIpResult
+    -> AWS.Request DetachStaticIpResult
 detachStaticIp staticIpName =
     AWS.Http.unsignedRequest
         "DetachStaticIp"
@@ -763,6 +780,7 @@ detachStaticIp staticIpName =
             JE.null
         )
         detachStaticIpResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -774,7 +792,7 @@ __Required Parameters__
 
 -}
 downloadDefaultKeyPair :
-    AWS.Http.UnsignedRequest DownloadDefaultKeyPairResult
+    AWS.Request DownloadDefaultKeyPairResult
 downloadDefaultKeyPair =
     AWS.Http.unsignedRequest
         "DownloadDefaultKeyPair"
@@ -784,6 +802,7 @@ downloadDefaultKeyPair =
             JE.null
         )
         downloadDefaultKeyPairResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -796,7 +815,7 @@ __Required Parameters__
 -}
 getActiveNames :
     (GetActiveNamesOptions -> GetActiveNamesOptions)
-    -> AWS.Http.UnsignedRequest GetActiveNamesResult
+    -> AWS.Request GetActiveNamesResult
 getActiveNames setOptions =
   let
     options = setOptions (GetActiveNamesOptions Nothing)
@@ -809,6 +828,7 @@ getActiveNames setOptions =
             JE.null
         )
         getActiveNamesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getActiveNames request
@@ -828,7 +848,7 @@ __Required Parameters__
 -}
 getBlueprints :
     (GetBlueprintsOptions -> GetBlueprintsOptions)
-    -> AWS.Http.UnsignedRequest GetBlueprintsResult
+    -> AWS.Request GetBlueprintsResult
 getBlueprints setOptions =
   let
     options = setOptions (GetBlueprintsOptions Nothing Nothing)
@@ -841,6 +861,7 @@ getBlueprints setOptions =
             JE.null
         )
         getBlueprintsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getBlueprints request
@@ -861,7 +882,7 @@ __Required Parameters__
 -}
 getBundles :
     (GetBundlesOptions -> GetBundlesOptions)
-    -> AWS.Http.UnsignedRequest GetBundlesResult
+    -> AWS.Request GetBundlesResult
 getBundles setOptions =
   let
     options = setOptions (GetBundlesOptions Nothing Nothing)
@@ -874,6 +895,7 @@ getBundles setOptions =
             JE.null
         )
         getBundlesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getBundles request
@@ -895,7 +917,7 @@ __Required Parameters__
 -}
 getDomain :
     String
-    -> AWS.Http.UnsignedRequest GetDomainResult
+    -> AWS.Request GetDomainResult
 getDomain domainName =
     AWS.Http.unsignedRequest
         "GetDomain"
@@ -905,6 +927,7 @@ getDomain domainName =
             JE.null
         )
         getDomainResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -917,7 +940,7 @@ __Required Parameters__
 -}
 getDomains :
     (GetDomainsOptions -> GetDomainsOptions)
-    -> AWS.Http.UnsignedRequest GetDomainsResult
+    -> AWS.Request GetDomainsResult
 getDomains setOptions =
   let
     options = setOptions (GetDomainsOptions Nothing)
@@ -930,6 +953,7 @@ getDomains setOptions =
             JE.null
         )
         getDomainsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDomains request
@@ -950,7 +974,7 @@ __Required Parameters__
 -}
 getInstance :
     String
-    -> AWS.Http.UnsignedRequest GetInstanceResult
+    -> AWS.Request GetInstanceResult
 getInstance instanceName =
     AWS.Http.unsignedRequest
         "GetInstance"
@@ -960,6 +984,7 @@ getInstance instanceName =
             JE.null
         )
         getInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -974,7 +999,7 @@ __Required Parameters__
 getInstanceAccessDetails :
     String
     -> (GetInstanceAccessDetailsOptions -> GetInstanceAccessDetailsOptions)
-    -> AWS.Http.UnsignedRequest GetInstanceAccessDetailsResult
+    -> AWS.Request GetInstanceAccessDetailsResult
 getInstanceAccessDetails instanceName setOptions =
   let
     options = setOptions (GetInstanceAccessDetailsOptions Nothing)
@@ -987,6 +1012,7 @@ getInstanceAccessDetails instanceName setOptions =
             JE.null
         )
         getInstanceAccessDetailsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getInstanceAccessDetails request
@@ -1019,7 +1045,7 @@ getInstanceMetricData :
     -> Date
     -> MetricUnit
     -> (List MetricStatistic)
-    -> AWS.Http.UnsignedRequest GetInstanceMetricDataResult
+    -> AWS.Request GetInstanceMetricDataResult
 getInstanceMetricData instanceName metricName period startTime endTime unit statistics =
     AWS.Http.unsignedRequest
         "GetInstanceMetricData"
@@ -1029,6 +1055,7 @@ getInstanceMetricData instanceName metricName period startTime endTime unit stat
             JE.null
         )
         getInstanceMetricDataResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1042,7 +1069,7 @@ __Required Parameters__
 -}
 getInstancePortStates :
     String
-    -> AWS.Http.UnsignedRequest GetInstancePortStatesResult
+    -> AWS.Request GetInstancePortStatesResult
 getInstancePortStates instanceName =
     AWS.Http.unsignedRequest
         "GetInstancePortStates"
@@ -1052,6 +1079,7 @@ getInstancePortStates instanceName =
             JE.null
         )
         getInstancePortStatesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1065,7 +1093,7 @@ __Required Parameters__
 -}
 getInstanceSnapshot :
     String
-    -> AWS.Http.UnsignedRequest GetInstanceSnapshotResult
+    -> AWS.Request GetInstanceSnapshotResult
 getInstanceSnapshot instanceSnapshotName =
     AWS.Http.unsignedRequest
         "GetInstanceSnapshot"
@@ -1075,6 +1103,7 @@ getInstanceSnapshot instanceSnapshotName =
             JE.null
         )
         getInstanceSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1087,7 +1116,7 @@ __Required Parameters__
 -}
 getInstanceSnapshots :
     (GetInstanceSnapshotsOptions -> GetInstanceSnapshotsOptions)
-    -> AWS.Http.UnsignedRequest GetInstanceSnapshotsResult
+    -> AWS.Request GetInstanceSnapshotsResult
 getInstanceSnapshots setOptions =
   let
     options = setOptions (GetInstanceSnapshotsOptions Nothing)
@@ -1100,6 +1129,7 @@ getInstanceSnapshots setOptions =
             JE.null
         )
         getInstanceSnapshotsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getInstanceSnapshots request
@@ -1120,7 +1150,7 @@ __Required Parameters__
 -}
 getInstanceState :
     String
-    -> AWS.Http.UnsignedRequest GetInstanceStateResult
+    -> AWS.Request GetInstanceStateResult
 getInstanceState instanceName =
     AWS.Http.unsignedRequest
         "GetInstanceState"
@@ -1130,6 +1160,7 @@ getInstanceState instanceName =
             JE.null
         )
         getInstanceStateResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1142,7 +1173,7 @@ __Required Parameters__
 -}
 getInstances :
     (GetInstancesOptions -> GetInstancesOptions)
-    -> AWS.Http.UnsignedRequest GetInstancesResult
+    -> AWS.Request GetInstancesResult
 getInstances setOptions =
   let
     options = setOptions (GetInstancesOptions Nothing)
@@ -1155,6 +1186,7 @@ getInstances setOptions =
             JE.null
         )
         getInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getInstances request
@@ -1175,7 +1207,7 @@ __Required Parameters__
 -}
 getKeyPair :
     String
-    -> AWS.Http.UnsignedRequest GetKeyPairResult
+    -> AWS.Request GetKeyPairResult
 getKeyPair keyPairName =
     AWS.Http.unsignedRequest
         "GetKeyPair"
@@ -1185,6 +1217,7 @@ getKeyPair keyPairName =
             JE.null
         )
         getKeyPairResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1197,7 +1230,7 @@ __Required Parameters__
 -}
 getKeyPairs :
     (GetKeyPairsOptions -> GetKeyPairsOptions)
-    -> AWS.Http.UnsignedRequest GetKeyPairsResult
+    -> AWS.Request GetKeyPairsResult
 getKeyPairs setOptions =
   let
     options = setOptions (GetKeyPairsOptions Nothing)
@@ -1210,6 +1243,7 @@ getKeyPairs setOptions =
             JE.null
         )
         getKeyPairsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getKeyPairs request
@@ -1230,7 +1264,7 @@ __Required Parameters__
 -}
 getOperation :
     String
-    -> AWS.Http.UnsignedRequest GetOperationResult
+    -> AWS.Request GetOperationResult
 getOperation operationId =
     AWS.Http.unsignedRequest
         "GetOperation"
@@ -1240,6 +1274,7 @@ getOperation operationId =
             JE.null
         )
         getOperationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1252,7 +1287,7 @@ __Required Parameters__
 -}
 getOperations :
     (GetOperationsOptions -> GetOperationsOptions)
-    -> AWS.Http.UnsignedRequest GetOperationsResult
+    -> AWS.Request GetOperationsResult
 getOperations setOptions =
   let
     options = setOptions (GetOperationsOptions Nothing)
@@ -1265,6 +1300,7 @@ getOperations setOptions =
             JE.null
         )
         getOperationsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getOperations request
@@ -1286,7 +1322,7 @@ __Required Parameters__
 getOperationsForResource :
     String
     -> (GetOperationsForResourceOptions -> GetOperationsForResourceOptions)
-    -> AWS.Http.UnsignedRequest GetOperationsForResourceResult
+    -> AWS.Request GetOperationsForResourceResult
 getOperationsForResource resourceName setOptions =
   let
     options = setOptions (GetOperationsForResourceOptions Nothing)
@@ -1299,6 +1335,7 @@ getOperationsForResource resourceName setOptions =
             JE.null
         )
         getOperationsForResourceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getOperationsForResource request
@@ -1318,7 +1355,7 @@ __Required Parameters__
 -}
 getRegions :
     (GetRegionsOptions -> GetRegionsOptions)
-    -> AWS.Http.UnsignedRequest GetRegionsResult
+    -> AWS.Request GetRegionsResult
 getRegions setOptions =
   let
     options = setOptions (GetRegionsOptions Nothing)
@@ -1331,6 +1368,7 @@ getRegions setOptions =
             JE.null
         )
         getRegionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getRegions request
@@ -1351,7 +1389,7 @@ __Required Parameters__
 -}
 getStaticIp :
     String
-    -> AWS.Http.UnsignedRequest GetStaticIpResult
+    -> AWS.Request GetStaticIpResult
 getStaticIp staticIpName =
     AWS.Http.unsignedRequest
         "GetStaticIp"
@@ -1361,6 +1399,7 @@ getStaticIp staticIpName =
             JE.null
         )
         getStaticIpResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1373,7 +1412,7 @@ __Required Parameters__
 -}
 getStaticIps :
     (GetStaticIpsOptions -> GetStaticIpsOptions)
-    -> AWS.Http.UnsignedRequest GetStaticIpsResult
+    -> AWS.Request GetStaticIpsResult
 getStaticIps setOptions =
   let
     options = setOptions (GetStaticIpsOptions Nothing)
@@ -1386,6 +1425,7 @@ getStaticIps setOptions =
             JE.null
         )
         getStaticIpsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getStaticIps request
@@ -1408,7 +1448,7 @@ __Required Parameters__
 importKeyPair :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ImportKeyPairResult
+    -> AWS.Request ImportKeyPairResult
 importKeyPair keyPairName publicKeyBase64 =
     AWS.Http.unsignedRequest
         "ImportKeyPair"
@@ -1418,6 +1458,7 @@ importKeyPair keyPairName publicKeyBase64 =
             JE.null
         )
         importKeyPairResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1429,7 +1470,7 @@ __Required Parameters__
 
 -}
 isVpcPeered :
-    AWS.Http.UnsignedRequest IsVpcPeeredResult
+    AWS.Request IsVpcPeeredResult
 isVpcPeered =
     AWS.Http.unsignedRequest
         "IsVpcPeered"
@@ -1439,6 +1480,7 @@ isVpcPeered =
             JE.null
         )
         isVpcPeeredResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1454,7 +1496,7 @@ __Required Parameters__
 openInstancePublicPorts :
     PortInfo
     -> String
-    -> AWS.Http.UnsignedRequest OpenInstancePublicPortsResult
+    -> AWS.Request OpenInstancePublicPortsResult
 openInstancePublicPorts portInfo instanceName =
     AWS.Http.unsignedRequest
         "OpenInstancePublicPorts"
@@ -1464,6 +1506,7 @@ openInstancePublicPorts portInfo instanceName =
             JE.null
         )
         openInstancePublicPortsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1475,7 +1518,7 @@ __Required Parameters__
 
 -}
 peerVpc :
-    AWS.Http.UnsignedRequest PeerVpcResult
+    AWS.Request PeerVpcResult
 peerVpc =
     AWS.Http.unsignedRequest
         "PeerVpc"
@@ -1485,6 +1528,7 @@ peerVpc =
             JE.null
         )
         peerVpcResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1498,7 +1542,7 @@ __Required Parameters__
 -}
 rebootInstance :
     String
-    -> AWS.Http.UnsignedRequest RebootInstanceResult
+    -> AWS.Request RebootInstanceResult
 rebootInstance instanceName =
     AWS.Http.unsignedRequest
         "RebootInstance"
@@ -1508,6 +1552,7 @@ rebootInstance instanceName =
             JE.null
         )
         rebootInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1521,7 +1566,7 @@ __Required Parameters__
 -}
 releaseStaticIp :
     String
-    -> AWS.Http.UnsignedRequest ReleaseStaticIpResult
+    -> AWS.Request ReleaseStaticIpResult
 releaseStaticIp staticIpName =
     AWS.Http.unsignedRequest
         "ReleaseStaticIp"
@@ -1531,6 +1576,7 @@ releaseStaticIp staticIpName =
             JE.null
         )
         releaseStaticIpResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1544,7 +1590,7 @@ __Required Parameters__
 -}
 startInstance :
     String
-    -> AWS.Http.UnsignedRequest StartInstanceResult
+    -> AWS.Request StartInstanceResult
 startInstance instanceName =
     AWS.Http.unsignedRequest
         "StartInstance"
@@ -1554,6 +1600,7 @@ startInstance instanceName =
             JE.null
         )
         startInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1567,7 +1614,7 @@ __Required Parameters__
 -}
 stopInstance :
     String
-    -> AWS.Http.UnsignedRequest StopInstanceResult
+    -> AWS.Request StopInstanceResult
 stopInstance instanceName =
     AWS.Http.unsignedRequest
         "StopInstance"
@@ -1577,6 +1624,7 @@ stopInstance instanceName =
             JE.null
         )
         stopInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1588,7 +1636,7 @@ __Required Parameters__
 
 -}
 unpeerVpc :
-    AWS.Http.UnsignedRequest UnpeerVpcResult
+    AWS.Request UnpeerVpcResult
 unpeerVpc =
     AWS.Http.unsignedRequest
         "UnpeerVpc"
@@ -1598,6 +1646,7 @@ unpeerVpc =
             JE.null
         )
         unpeerVpcResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1613,7 +1662,7 @@ __Required Parameters__
 updateDomainEntry :
     String
     -> DomainEntry
-    -> AWS.Http.UnsignedRequest UpdateDomainEntryResult
+    -> AWS.Request UpdateDomainEntryResult
 updateDomainEntry domainName domainEntry =
     AWS.Http.unsignedRequest
         "UpdateDomainEntry"
@@ -1623,6 +1672,7 @@ updateDomainEntry domainName domainEntry =
             JE.null
         )
         updateDomainEntryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 

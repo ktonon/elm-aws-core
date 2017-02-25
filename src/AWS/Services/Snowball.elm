@@ -188,7 +188,9 @@ module AWS.Services.Snowball
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -199,15 +201,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "snowball"
         "2016-06-30"
         "1.1"
         "AWSSNOWBALL_20160630."
         "snowball.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -223,7 +226,7 @@ __Required Parameters__
 -}
 cancelCluster :
     String
-    -> AWS.Http.UnsignedRequest CancelClusterResult
+    -> AWS.Request CancelClusterResult
 cancelCluster clusterId =
     AWS.Http.unsignedRequest
         "CancelCluster"
@@ -233,6 +236,7 @@ cancelCluster clusterId =
             JE.null
         )
         cancelClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -246,7 +250,7 @@ __Required Parameters__
 -}
 cancelJob :
     String
-    -> AWS.Http.UnsignedRequest CancelJobResult
+    -> AWS.Request CancelJobResult
 cancelJob jobId =
     AWS.Http.unsignedRequest
         "CancelJob"
@@ -256,6 +260,7 @@ cancelJob jobId =
             JE.null
         )
         cancelJobResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -269,7 +274,7 @@ __Required Parameters__
 -}
 createAddress :
     Address
-    -> AWS.Http.UnsignedRequest CreateAddressResult
+    -> AWS.Request CreateAddressResult
 createAddress address =
     AWS.Http.unsignedRequest
         "CreateAddress"
@@ -279,6 +284,7 @@ createAddress address =
             JE.null
         )
         createAddressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -301,7 +307,7 @@ createCluster :
     -> String
     -> ShippingOption
     -> (CreateClusterOptions -> CreateClusterOptions)
-    -> AWS.Http.UnsignedRequest CreateClusterResult
+    -> AWS.Request CreateClusterResult
 createCluster jobType resources addressId roleARN shippingOption setOptions =
   let
     options = setOptions (CreateClusterOptions Nothing Nothing Nothing Nothing)
@@ -314,6 +320,7 @@ createCluster jobType resources addressId roleARN shippingOption setOptions =
             JE.null
         )
         createClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createCluster request
@@ -336,7 +343,7 @@ __Required Parameters__
 -}
 createJob :
     (CreateJobOptions -> CreateJobOptions)
-    -> AWS.Http.UnsignedRequest CreateJobResult
+    -> AWS.Request CreateJobResult
 createJob setOptions =
   let
     options = setOptions (CreateJobOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -349,6 +356,7 @@ createJob setOptions =
             JE.null
         )
         createJobResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createJob request
@@ -379,7 +387,7 @@ __Required Parameters__
 -}
 describeAddress :
     String
-    -> AWS.Http.UnsignedRequest DescribeAddressResult
+    -> AWS.Request DescribeAddressResult
 describeAddress addressId =
     AWS.Http.unsignedRequest
         "DescribeAddress"
@@ -389,6 +397,7 @@ describeAddress addressId =
             JE.null
         )
         describeAddressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -401,7 +410,7 @@ __Required Parameters__
 -}
 describeAddresses :
     (DescribeAddressesOptions -> DescribeAddressesOptions)
-    -> AWS.Http.UnsignedRequest DescribeAddressesResult
+    -> AWS.Request DescribeAddressesResult
 describeAddresses setOptions =
   let
     options = setOptions (DescribeAddressesOptions Nothing Nothing)
@@ -414,6 +423,7 @@ describeAddresses setOptions =
             JE.null
         )
         describeAddressesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAddresses request
@@ -435,7 +445,7 @@ __Required Parameters__
 -}
 describeCluster :
     String
-    -> AWS.Http.UnsignedRequest DescribeClusterResult
+    -> AWS.Request DescribeClusterResult
 describeCluster clusterId =
     AWS.Http.unsignedRequest
         "DescribeCluster"
@@ -445,6 +455,7 @@ describeCluster clusterId =
             JE.null
         )
         describeClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -458,7 +469,7 @@ __Required Parameters__
 -}
 describeJob :
     String
-    -> AWS.Http.UnsignedRequest DescribeJobResult
+    -> AWS.Request DescribeJobResult
 describeJob jobId =
     AWS.Http.unsignedRequest
         "DescribeJob"
@@ -468,6 +479,7 @@ describeJob jobId =
             JE.null
         )
         describeJobResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -481,7 +493,7 @@ __Required Parameters__
 -}
 getJobManifest :
     String
-    -> AWS.Http.UnsignedRequest GetJobManifestResult
+    -> AWS.Request GetJobManifestResult
 getJobManifest jobId =
     AWS.Http.unsignedRequest
         "GetJobManifest"
@@ -491,6 +503,7 @@ getJobManifest jobId =
             JE.null
         )
         getJobManifestResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -504,7 +517,7 @@ __Required Parameters__
 -}
 getJobUnlockCode :
     String
-    -> AWS.Http.UnsignedRequest GetJobUnlockCodeResult
+    -> AWS.Request GetJobUnlockCodeResult
 getJobUnlockCode jobId =
     AWS.Http.unsignedRequest
         "GetJobUnlockCode"
@@ -514,6 +527,7 @@ getJobUnlockCode jobId =
             JE.null
         )
         getJobUnlockCodeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -525,7 +539,7 @@ __Required Parameters__
 
 -}
 getSnowballUsage :
-    AWS.Http.UnsignedRequest GetSnowballUsageResult
+    AWS.Request GetSnowballUsageResult
 getSnowballUsage =
     AWS.Http.unsignedRequest
         "GetSnowballUsage"
@@ -535,6 +549,7 @@ getSnowballUsage =
             JE.null
         )
         getSnowballUsageResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -549,7 +564,7 @@ __Required Parameters__
 listClusterJobs :
     String
     -> (ListClusterJobsOptions -> ListClusterJobsOptions)
-    -> AWS.Http.UnsignedRequest ListClusterJobsResult
+    -> AWS.Request ListClusterJobsResult
 listClusterJobs clusterId setOptions =
   let
     options = setOptions (ListClusterJobsOptions Nothing Nothing)
@@ -562,6 +577,7 @@ listClusterJobs clusterId setOptions =
             JE.null
         )
         listClusterJobsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listClusterJobs request
@@ -582,7 +598,7 @@ __Required Parameters__
 -}
 listClusters :
     (ListClustersOptions -> ListClustersOptions)
-    -> AWS.Http.UnsignedRequest ListClustersResult
+    -> AWS.Request ListClustersResult
 listClusters setOptions =
   let
     options = setOptions (ListClustersOptions Nothing Nothing)
@@ -595,6 +611,7 @@ listClusters setOptions =
             JE.null
         )
         listClustersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listClusters request
@@ -615,7 +632,7 @@ __Required Parameters__
 -}
 listJobs :
     (ListJobsOptions -> ListJobsOptions)
-    -> AWS.Http.UnsignedRequest ListJobsResult
+    -> AWS.Request ListJobsResult
 listJobs setOptions =
   let
     options = setOptions (ListJobsOptions Nothing Nothing)
@@ -628,6 +645,7 @@ listJobs setOptions =
             JE.null
         )
         listJobsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listJobs request
@@ -650,7 +668,7 @@ __Required Parameters__
 updateCluster :
     String
     -> (UpdateClusterOptions -> UpdateClusterOptions)
-    -> AWS.Http.UnsignedRequest UpdateClusterResult
+    -> AWS.Request UpdateClusterResult
 updateCluster clusterId setOptions =
   let
     options = setOptions (UpdateClusterOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -663,6 +681,7 @@ updateCluster clusterId setOptions =
             JE.null
         )
         updateClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateCluster request
@@ -689,7 +708,7 @@ __Required Parameters__
 updateJob :
     String
     -> (UpdateJobOptions -> UpdateJobOptions)
-    -> AWS.Http.UnsignedRequest UpdateJobResult
+    -> AWS.Request UpdateJobResult
 updateJob jobId setOptions =
   let
     options = setOptions (UpdateJobOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -702,6 +721,7 @@ updateJob jobId setOptions =
             JE.null
         )
         updateJobResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateJob request

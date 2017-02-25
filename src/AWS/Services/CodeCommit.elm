@@ -238,7 +238,9 @@ module AWS.Services.CodeCommit
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -249,15 +251,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "codecommit"
         "2015-04-13"
         "1.1"
         "AWSCODECOMMIT_20150413."
         "codecommit.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -273,7 +276,7 @@ __Required Parameters__
 -}
 batchGetRepositories :
     (List String)
-    -> AWS.Http.UnsignedRequest BatchGetRepositoriesOutput
+    -> AWS.Request BatchGetRepositoriesOutput
 batchGetRepositories repositoryNames =
     AWS.Http.unsignedRequest
         "BatchGetRepositories"
@@ -283,6 +286,7 @@ batchGetRepositories repositoryNames =
             JE.null
         )
         batchGetRepositoriesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -300,7 +304,7 @@ createBranch :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createBranch repositoryName branchName commitId =
     AWS.Http.unsignedRequest
         "CreateBranch"
@@ -310,6 +314,7 @@ createBranch repositoryName branchName commitId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -324,7 +329,7 @@ __Required Parameters__
 createRepository :
     String
     -> (CreateRepositoryOptions -> CreateRepositoryOptions)
-    -> AWS.Http.UnsignedRequest CreateRepositoryOutput
+    -> AWS.Request CreateRepositoryOutput
 createRepository repositoryName setOptions =
   let
     options = setOptions (CreateRepositoryOptions Nothing)
@@ -337,6 +342,7 @@ createRepository repositoryName setOptions =
             JE.null
         )
         createRepositoryOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createRepository request
@@ -357,7 +363,7 @@ __Required Parameters__
 -}
 deleteRepository :
     String
-    -> AWS.Http.UnsignedRequest DeleteRepositoryOutput
+    -> AWS.Request DeleteRepositoryOutput
 deleteRepository repositoryName =
     AWS.Http.unsignedRequest
         "DeleteRepository"
@@ -367,6 +373,7 @@ deleteRepository repositoryName =
             JE.null
         )
         deleteRepositoryOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -382,7 +389,7 @@ __Required Parameters__
 getBlob :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetBlobOutput
+    -> AWS.Request GetBlobOutput
 getBlob repositoryName blobId =
     AWS.Http.unsignedRequest
         "GetBlob"
@@ -392,6 +399,7 @@ getBlob repositoryName blobId =
             JE.null
         )
         getBlobOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -404,7 +412,7 @@ __Required Parameters__
 -}
 getBranch :
     (GetBranchOptions -> GetBranchOptions)
-    -> AWS.Http.UnsignedRequest GetBranchOutput
+    -> AWS.Request GetBranchOutput
 getBranch setOptions =
   let
     options = setOptions (GetBranchOptions Nothing Nothing)
@@ -417,6 +425,7 @@ getBranch setOptions =
             JE.null
         )
         getBranchOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getBranch request
@@ -440,7 +449,7 @@ __Required Parameters__
 getCommit :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetCommitOutput
+    -> AWS.Request GetCommitOutput
 getCommit repositoryName commitId =
     AWS.Http.unsignedRequest
         "GetCommit"
@@ -450,6 +459,7 @@ getCommit repositoryName commitId =
             JE.null
         )
         getCommitOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -466,7 +476,7 @@ getDifferences :
     String
     -> String
     -> (GetDifferencesOptions -> GetDifferencesOptions)
-    -> AWS.Http.UnsignedRequest GetDifferencesOutput
+    -> AWS.Request GetDifferencesOutput
 getDifferences repositoryName afterCommitSpecifier setOptions =
   let
     options = setOptions (GetDifferencesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -479,6 +489,7 @@ getDifferences repositoryName afterCommitSpecifier setOptions =
             JE.null
         )
         getDifferencesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDifferences request
@@ -503,7 +514,7 @@ __Required Parameters__
 -}
 getRepository :
     String
-    -> AWS.Http.UnsignedRequest GetRepositoryOutput
+    -> AWS.Request GetRepositoryOutput
 getRepository repositoryName =
     AWS.Http.unsignedRequest
         "GetRepository"
@@ -513,6 +524,7 @@ getRepository repositoryName =
             JE.null
         )
         getRepositoryOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -526,7 +538,7 @@ __Required Parameters__
 -}
 getRepositoryTriggers :
     String
-    -> AWS.Http.UnsignedRequest GetRepositoryTriggersOutput
+    -> AWS.Request GetRepositoryTriggersOutput
 getRepositoryTriggers repositoryName =
     AWS.Http.unsignedRequest
         "GetRepositoryTriggers"
@@ -536,6 +548,7 @@ getRepositoryTriggers repositoryName =
             JE.null
         )
         getRepositoryTriggersOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -550,7 +563,7 @@ __Required Parameters__
 listBranches :
     String
     -> (ListBranchesOptions -> ListBranchesOptions)
-    -> AWS.Http.UnsignedRequest ListBranchesOutput
+    -> AWS.Request ListBranchesOutput
 listBranches repositoryName setOptions =
   let
     options = setOptions (ListBranchesOptions Nothing)
@@ -563,6 +576,7 @@ listBranches repositoryName setOptions =
             JE.null
         )
         listBranchesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listBranches request
@@ -582,7 +596,7 @@ __Required Parameters__
 -}
 listRepositories :
     (ListRepositoriesOptions -> ListRepositoriesOptions)
-    -> AWS.Http.UnsignedRequest ListRepositoriesOutput
+    -> AWS.Request ListRepositoriesOutput
 listRepositories setOptions =
   let
     options = setOptions (ListRepositoriesOptions Nothing Nothing Nothing)
@@ -595,6 +609,7 @@ listRepositories setOptions =
             JE.null
         )
         listRepositoriesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRepositories request
@@ -619,7 +634,7 @@ __Required Parameters__
 putRepositoryTriggers :
     String
     -> (List RepositoryTrigger)
-    -> AWS.Http.UnsignedRequest PutRepositoryTriggersOutput
+    -> AWS.Request PutRepositoryTriggersOutput
 putRepositoryTriggers repositoryName triggers =
     AWS.Http.unsignedRequest
         "PutRepositoryTriggers"
@@ -629,6 +644,7 @@ putRepositoryTriggers repositoryName triggers =
             JE.null
         )
         putRepositoryTriggersOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -644,7 +660,7 @@ __Required Parameters__
 testRepositoryTriggers :
     String
     -> (List RepositoryTrigger)
-    -> AWS.Http.UnsignedRequest TestRepositoryTriggersOutput
+    -> AWS.Request TestRepositoryTriggersOutput
 testRepositoryTriggers repositoryName triggers =
     AWS.Http.unsignedRequest
         "TestRepositoryTriggers"
@@ -654,6 +670,7 @@ testRepositoryTriggers repositoryName triggers =
             JE.null
         )
         testRepositoryTriggersOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -669,7 +686,7 @@ __Required Parameters__
 updateDefaultBranch :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateDefaultBranch repositoryName defaultBranchName =
     AWS.Http.unsignedRequest
         "UpdateDefaultBranch"
@@ -679,6 +696,7 @@ updateDefaultBranch repositoryName defaultBranchName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -693,7 +711,7 @@ __Required Parameters__
 updateRepositoryDescription :
     String
     -> (UpdateRepositoryDescriptionOptions -> UpdateRepositoryDescriptionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateRepositoryDescription repositoryName setOptions =
   let
     options = setOptions (UpdateRepositoryDescriptionOptions Nothing)
@@ -706,6 +724,7 @@ updateRepositoryDescription repositoryName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateRepositoryDescription request
@@ -728,7 +747,7 @@ __Required Parameters__
 updateRepositoryName :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateRepositoryName oldName newName =
     AWS.Http.unsignedRequest
         "UpdateRepositoryName"
@@ -738,6 +757,7 @@ updateRepositoryName oldName newName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 

@@ -148,7 +148,9 @@ module AWS.Services.Budgets
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -160,15 +162,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "budgets"
         "2016-10-20"
         "1.1"
         "AWSBUDGETS_20161020."
         "budgets.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -187,7 +190,7 @@ createBudget :
     String
     -> Budget
     -> (CreateBudgetOptions -> CreateBudgetOptions)
-    -> AWS.Http.UnsignedRequest CreateBudgetResponse
+    -> AWS.Request CreateBudgetResponse
 createBudget accountId budget setOptions =
   let
     options = setOptions (CreateBudgetOptions Nothing)
@@ -200,6 +203,7 @@ createBudget accountId budget setOptions =
             JE.null
         )
         createBudgetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createBudget request
@@ -226,7 +230,7 @@ createNotification :
     -> String
     -> Notification
     -> (List Subscriber)
-    -> AWS.Http.UnsignedRequest CreateNotificationResponse
+    -> AWS.Request CreateNotificationResponse
 createNotification accountId budgetName notification subscribers =
     AWS.Http.unsignedRequest
         "CreateNotification"
@@ -236,6 +240,7 @@ createNotification accountId budgetName notification subscribers =
             JE.null
         )
         createNotificationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -255,7 +260,7 @@ createSubscriber :
     -> String
     -> Notification
     -> Subscriber
-    -> AWS.Http.UnsignedRequest CreateSubscriberResponse
+    -> AWS.Request CreateSubscriberResponse
 createSubscriber accountId budgetName notification subscriber =
     AWS.Http.unsignedRequest
         "CreateSubscriber"
@@ -265,6 +270,7 @@ createSubscriber accountId budgetName notification subscriber =
             JE.null
         )
         createSubscriberResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -280,7 +286,7 @@ __Required Parameters__
 deleteBudget :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteBudgetResponse
+    -> AWS.Request DeleteBudgetResponse
 deleteBudget accountId budgetName =
     AWS.Http.unsignedRequest
         "DeleteBudget"
@@ -290,6 +296,7 @@ deleteBudget accountId budgetName =
             JE.null
         )
         deleteBudgetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -307,7 +314,7 @@ deleteNotification :
     String
     -> String
     -> Notification
-    -> AWS.Http.UnsignedRequest DeleteNotificationResponse
+    -> AWS.Request DeleteNotificationResponse
 deleteNotification accountId budgetName notification =
     AWS.Http.unsignedRequest
         "DeleteNotification"
@@ -317,6 +324,7 @@ deleteNotification accountId budgetName notification =
             JE.null
         )
         deleteNotificationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -336,7 +344,7 @@ deleteSubscriber :
     -> String
     -> Notification
     -> Subscriber
-    -> AWS.Http.UnsignedRequest DeleteSubscriberResponse
+    -> AWS.Request DeleteSubscriberResponse
 deleteSubscriber accountId budgetName notification subscriber =
     AWS.Http.unsignedRequest
         "DeleteSubscriber"
@@ -346,6 +354,7 @@ deleteSubscriber accountId budgetName notification subscriber =
             JE.null
         )
         deleteSubscriberResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -361,7 +370,7 @@ __Required Parameters__
 describeBudget :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DescribeBudgetResponse
+    -> AWS.Request DescribeBudgetResponse
 describeBudget accountId budgetName =
     AWS.Http.unsignedRequest
         "DescribeBudget"
@@ -371,6 +380,7 @@ describeBudget accountId budgetName =
             JE.null
         )
         describeBudgetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -385,7 +395,7 @@ __Required Parameters__
 describeBudgets :
     String
     -> (DescribeBudgetsOptions -> DescribeBudgetsOptions)
-    -> AWS.Http.UnsignedRequest DescribeBudgetsResponse
+    -> AWS.Request DescribeBudgetsResponse
 describeBudgets accountId setOptions =
   let
     options = setOptions (DescribeBudgetsOptions Nothing Nothing)
@@ -398,6 +408,7 @@ describeBudgets accountId setOptions =
             JE.null
         )
         describeBudgetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeBudgets request
@@ -422,7 +433,7 @@ describeNotificationsForBudget :
     String
     -> String
     -> (DescribeNotificationsForBudgetOptions -> DescribeNotificationsForBudgetOptions)
-    -> AWS.Http.UnsignedRequest DescribeNotificationsForBudgetResponse
+    -> AWS.Request DescribeNotificationsForBudgetResponse
 describeNotificationsForBudget accountId budgetName setOptions =
   let
     options = setOptions (DescribeNotificationsForBudgetOptions Nothing Nothing)
@@ -435,6 +446,7 @@ describeNotificationsForBudget accountId budgetName setOptions =
             JE.null
         )
         describeNotificationsForBudgetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeNotificationsForBudget request
@@ -461,7 +473,7 @@ describeSubscribersForNotification :
     -> String
     -> Notification
     -> (DescribeSubscribersForNotificationOptions -> DescribeSubscribersForNotificationOptions)
-    -> AWS.Http.UnsignedRequest DescribeSubscribersForNotificationResponse
+    -> AWS.Request DescribeSubscribersForNotificationResponse
 describeSubscribersForNotification accountId budgetName notification setOptions =
   let
     options = setOptions (DescribeSubscribersForNotificationOptions Nothing Nothing)
@@ -474,6 +486,7 @@ describeSubscribersForNotification accountId budgetName notification setOptions 
             JE.null
         )
         describeSubscribersForNotificationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSubscribersForNotification request
@@ -497,7 +510,7 @@ __Required Parameters__
 updateBudget :
     String
     -> Budget
-    -> AWS.Http.UnsignedRequest UpdateBudgetResponse
+    -> AWS.Request UpdateBudgetResponse
 updateBudget accountId newBudget =
     AWS.Http.unsignedRequest
         "UpdateBudget"
@@ -507,6 +520,7 @@ updateBudget accountId newBudget =
             JE.null
         )
         updateBudgetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -526,7 +540,7 @@ updateNotification :
     -> String
     -> Notification
     -> Notification
-    -> AWS.Http.UnsignedRequest UpdateNotificationResponse
+    -> AWS.Request UpdateNotificationResponse
 updateNotification accountId budgetName oldNotification newNotification =
     AWS.Http.unsignedRequest
         "UpdateNotification"
@@ -536,6 +550,7 @@ updateNotification accountId budgetName oldNotification newNotification =
             JE.null
         )
         updateNotificationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -557,7 +572,7 @@ updateSubscriber :
     -> Notification
     -> Subscriber
     -> Subscriber
-    -> AWS.Http.UnsignedRequest UpdateSubscriberResponse
+    -> AWS.Request UpdateSubscriberResponse
 updateSubscriber accountId budgetName notification oldSubscriber newSubscriber =
     AWS.Http.unsignedRequest
         "UpdateSubscriber"
@@ -567,6 +582,7 @@ updateSubscriber accountId budgetName notification oldSubscriber newSubscriber =
             JE.null
         )
         updateSubscriberResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

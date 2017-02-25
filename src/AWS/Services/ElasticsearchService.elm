@@ -138,7 +138,9 @@ module AWS.Services.ElasticsearchService
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -150,15 +152,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "es"
         "2015-01-01"
         "undefined"
         "AWSES_20150101."
         "es.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -176,7 +179,7 @@ __Required Parameters__
 addTags :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addTags aRN tagList =
     AWS.Http.unsignedRequest
         "AddTags"
@@ -186,6 +189,7 @@ addTags aRN tagList =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -200,7 +204,7 @@ __Required Parameters__
 createElasticsearchDomain :
     String
     -> (CreateElasticsearchDomainOptions -> CreateElasticsearchDomainOptions)
-    -> AWS.Http.UnsignedRequest CreateElasticsearchDomainResponse
+    -> AWS.Request CreateElasticsearchDomainResponse
 createElasticsearchDomain domainName setOptions =
   let
     options = setOptions (CreateElasticsearchDomainOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -213,6 +217,7 @@ createElasticsearchDomain domainName setOptions =
             JE.null
         )
         createElasticsearchDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createElasticsearchDomain request
@@ -238,7 +243,7 @@ __Required Parameters__
 -}
 deleteElasticsearchDomain :
     String
-    -> AWS.Http.UnsignedRequest DeleteElasticsearchDomainResponse
+    -> AWS.Request DeleteElasticsearchDomainResponse
 deleteElasticsearchDomain domainName =
     AWS.Http.unsignedRequest
         "DeleteElasticsearchDomain"
@@ -248,6 +253,7 @@ deleteElasticsearchDomain domainName =
             JE.null
         )
         deleteElasticsearchDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -261,7 +267,7 @@ __Required Parameters__
 -}
 describeElasticsearchDomain :
     String
-    -> AWS.Http.UnsignedRequest DescribeElasticsearchDomainResponse
+    -> AWS.Request DescribeElasticsearchDomainResponse
 describeElasticsearchDomain domainName =
     AWS.Http.unsignedRequest
         "DescribeElasticsearchDomain"
@@ -272,6 +278,7 @@ describeElasticsearchDomain domainName =
             ]
         )
         describeElasticsearchDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -285,7 +292,7 @@ __Required Parameters__
 -}
 describeElasticsearchDomainConfig :
     String
-    -> AWS.Http.UnsignedRequest DescribeElasticsearchDomainConfigResponse
+    -> AWS.Request DescribeElasticsearchDomainConfigResponse
 describeElasticsearchDomainConfig domainName =
     AWS.Http.unsignedRequest
         "DescribeElasticsearchDomainConfig"
@@ -296,6 +303,7 @@ describeElasticsearchDomainConfig domainName =
             ]
         )
         describeElasticsearchDomainConfigResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -309,7 +317,7 @@ __Required Parameters__
 -}
 describeElasticsearchDomains :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeElasticsearchDomainsResponse
+    -> AWS.Request DescribeElasticsearchDomainsResponse
 describeElasticsearchDomains domainNames =
     AWS.Http.unsignedRequest
         "DescribeElasticsearchDomains"
@@ -319,6 +327,7 @@ describeElasticsearchDomains domainNames =
             JE.null
         )
         describeElasticsearchDomainsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -330,7 +339,7 @@ __Required Parameters__
 
 -}
 listDomainNames :
-    AWS.Http.UnsignedRequest ListDomainNamesResponse
+    AWS.Request ListDomainNamesResponse
 listDomainNames =
     AWS.Http.unsignedRequest
         "ListDomainNames"
@@ -341,6 +350,7 @@ listDomainNames =
             ]
         )
         listDomainNamesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -354,7 +364,7 @@ __Required Parameters__
 -}
 listTags :
     String
-    -> AWS.Http.UnsignedRequest ListTagsResponse
+    -> AWS.Request ListTagsResponse
 listTags aRN =
     AWS.Http.unsignedRequest
         "ListTags"
@@ -365,6 +375,7 @@ listTags aRN =
             ]
         )
         listTagsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -380,7 +391,7 @@ __Required Parameters__
 removeTags :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeTags aRN tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTags"
@@ -390,6 +401,7 @@ removeTags aRN tagKeys =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -404,7 +416,7 @@ __Required Parameters__
 updateElasticsearchDomainConfig :
     String
     -> (UpdateElasticsearchDomainConfigOptions -> UpdateElasticsearchDomainConfigOptions)
-    -> AWS.Http.UnsignedRequest UpdateElasticsearchDomainConfigResponse
+    -> AWS.Request UpdateElasticsearchDomainConfigResponse
 updateElasticsearchDomainConfig domainName setOptions =
   let
     options = setOptions (UpdateElasticsearchDomainConfigOptions Nothing Nothing Nothing Nothing Nothing)
@@ -417,6 +429,7 @@ updateElasticsearchDomainConfig domainName setOptions =
             JE.null
         )
         updateElasticsearchDomainConfigResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateElasticsearchDomainConfig request

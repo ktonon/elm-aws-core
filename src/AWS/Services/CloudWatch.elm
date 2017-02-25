@@ -136,7 +136,9 @@ module AWS.Services.CloudWatch
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -148,15 +150,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "monitoring"
         "2010-08-01"
         "undefined"
         "AWSMONITORING_20100801."
         "monitoring.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -172,7 +175,7 @@ __Required Parameters__
 -}
 deleteAlarms :
     (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAlarms alarmNames =
     AWS.Http.unsignedRequest
         "DeleteAlarms"
@@ -182,6 +185,7 @@ deleteAlarms alarmNames =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -194,7 +198,7 @@ __Required Parameters__
 -}
 describeAlarmHistory :
     (DescribeAlarmHistoryOptions -> DescribeAlarmHistoryOptions)
-    -> AWS.Http.UnsignedRequest DescribeAlarmHistoryOutput
+    -> AWS.Request DescribeAlarmHistoryOutput
 describeAlarmHistory setOptions =
   let
     options = setOptions (DescribeAlarmHistoryOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -207,6 +211,7 @@ describeAlarmHistory setOptions =
             JE.null
         )
         describeAlarmHistoryOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAlarmHistory request
@@ -231,7 +236,7 @@ __Required Parameters__
 -}
 describeAlarms :
     (DescribeAlarmsOptions -> DescribeAlarmsOptions)
-    -> AWS.Http.UnsignedRequest DescribeAlarmsOutput
+    -> AWS.Request DescribeAlarmsOutput
 describeAlarms setOptions =
   let
     options = setOptions (DescribeAlarmsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -244,6 +249,7 @@ describeAlarms setOptions =
             JE.null
         )
         describeAlarmsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAlarms request
@@ -272,7 +278,7 @@ describeAlarmsForMetric :
     String
     -> String
     -> (DescribeAlarmsForMetricOptions -> DescribeAlarmsForMetricOptions)
-    -> AWS.Http.UnsignedRequest DescribeAlarmsForMetricOutput
+    -> AWS.Request DescribeAlarmsForMetricOutput
 describeAlarmsForMetric metricName namespace setOptions =
   let
     options = setOptions (DescribeAlarmsForMetricOptions Nothing Nothing Nothing Nothing Nothing)
@@ -285,6 +291,7 @@ describeAlarmsForMetric metricName namespace setOptions =
             JE.null
         )
         describeAlarmsForMetricOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAlarmsForMetric request
@@ -309,7 +316,7 @@ __Required Parameters__
 -}
 disableAlarmActions :
     (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disableAlarmActions alarmNames =
     AWS.Http.unsignedRequest
         "DisableAlarmActions"
@@ -319,6 +326,7 @@ disableAlarmActions alarmNames =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -332,7 +340,7 @@ __Required Parameters__
 -}
 enableAlarmActions :
     (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableAlarmActions alarmNames =
     AWS.Http.unsignedRequest
         "EnableAlarmActions"
@@ -342,6 +350,7 @@ enableAlarmActions alarmNames =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -364,7 +373,7 @@ getMetricStatistics :
     -> Date
     -> Int
     -> (GetMetricStatisticsOptions -> GetMetricStatisticsOptions)
-    -> AWS.Http.UnsignedRequest GetMetricStatisticsOutput
+    -> AWS.Request GetMetricStatisticsOutput
 getMetricStatistics namespace metricName startTime endTime period setOptions =
   let
     options = setOptions (GetMetricStatisticsOptions Nothing Nothing Nothing Nothing)
@@ -377,6 +386,7 @@ getMetricStatistics namespace metricName startTime endTime period setOptions =
             JE.null
         )
         getMetricStatisticsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getMetricStatistics request
@@ -399,7 +409,7 @@ __Required Parameters__
 -}
 listMetrics :
     (ListMetricsOptions -> ListMetricsOptions)
-    -> AWS.Http.UnsignedRequest ListMetricsOutput
+    -> AWS.Request ListMetricsOutput
 listMetrics setOptions =
   let
     options = setOptions (ListMetricsOptions Nothing Nothing Nothing Nothing)
@@ -412,6 +422,7 @@ listMetrics setOptions =
             JE.null
         )
         listMetricsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listMetrics request
@@ -448,7 +459,7 @@ putMetricAlarm :
     -> Float
     -> ComparisonOperator
     -> (PutMetricAlarmOptions -> PutMetricAlarmOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putMetricAlarm alarmName metricName namespace period evaluationPeriods threshold comparisonOperator setOptions =
   let
     options = setOptions (PutMetricAlarmOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -461,6 +472,7 @@ putMetricAlarm alarmName metricName namespace period evaluationPeriods threshold
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putMetricAlarm request
@@ -491,7 +503,7 @@ __Required Parameters__
 putMetricData :
     String
     -> (List MetricDatum)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putMetricData namespace metricData =
     AWS.Http.unsignedRequest
         "PutMetricData"
@@ -501,6 +513,7 @@ putMetricData namespace metricData =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -519,7 +532,7 @@ setAlarmState :
     -> StateValue
     -> String
     -> (SetAlarmStateOptions -> SetAlarmStateOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setAlarmState alarmName stateValue stateReason setOptions =
   let
     options = setOptions (SetAlarmStateOptions Nothing)
@@ -532,6 +545,7 @@ setAlarmState alarmName stateValue stateReason setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setAlarmState request

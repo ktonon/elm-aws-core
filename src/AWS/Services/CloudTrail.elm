@@ -214,7 +214,9 @@ module AWS.Services.CloudTrail
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -225,15 +227,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "cloudtrail"
         "2013-11-01"
         "1.1"
         "AWSCLOUDTRAIL_20131101."
         "cloudtrail.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -250,7 +253,7 @@ __Required Parameters__
 addTags :
     String
     -> (AddTagsOptions -> AddTagsOptions)
-    -> AWS.Http.UnsignedRequest AddTagsResponse
+    -> AWS.Request AddTagsResponse
 addTags resourceId setOptions =
   let
     options = setOptions (AddTagsOptions Nothing)
@@ -263,6 +266,7 @@ addTags resourceId setOptions =
             JE.null
         )
         addTagsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a addTags request
@@ -286,7 +290,7 @@ createTrail :
     String
     -> String
     -> (CreateTrailOptions -> CreateTrailOptions)
-    -> AWS.Http.UnsignedRequest CreateTrailResponse
+    -> AWS.Request CreateTrailResponse
 createTrail name s3BucketName setOptions =
   let
     options = setOptions (CreateTrailOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -299,6 +303,7 @@ createTrail name s3BucketName setOptions =
             JE.null
         )
         createTrailResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createTrail request
@@ -326,7 +331,7 @@ __Required Parameters__
 -}
 deleteTrail :
     String
-    -> AWS.Http.UnsignedRequest DeleteTrailResponse
+    -> AWS.Request DeleteTrailResponse
 deleteTrail name =
     AWS.Http.unsignedRequest
         "DeleteTrail"
@@ -336,6 +341,7 @@ deleteTrail name =
             JE.null
         )
         deleteTrailResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -348,7 +354,7 @@ __Required Parameters__
 -}
 describeTrails :
     (DescribeTrailsOptions -> DescribeTrailsOptions)
-    -> AWS.Http.UnsignedRequest DescribeTrailsResponse
+    -> AWS.Request DescribeTrailsResponse
 describeTrails setOptions =
   let
     options = setOptions (DescribeTrailsOptions Nothing Nothing)
@@ -361,6 +367,7 @@ describeTrails setOptions =
             JE.null
         )
         describeTrailsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTrails request
@@ -381,7 +388,7 @@ __Required Parameters__
 -}
 getEventSelectors :
     (GetEventSelectorsOptions -> GetEventSelectorsOptions)
-    -> AWS.Http.UnsignedRequest GetEventSelectorsResponse
+    -> AWS.Request GetEventSelectorsResponse
 getEventSelectors setOptions =
   let
     options = setOptions (GetEventSelectorsOptions Nothing)
@@ -394,6 +401,7 @@ getEventSelectors setOptions =
             JE.null
         )
         getEventSelectorsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getEventSelectors request
@@ -414,7 +422,7 @@ __Required Parameters__
 -}
 getTrailStatus :
     String
-    -> AWS.Http.UnsignedRequest GetTrailStatusResponse
+    -> AWS.Request GetTrailStatusResponse
 getTrailStatus name =
     AWS.Http.unsignedRequest
         "GetTrailStatus"
@@ -424,6 +432,7 @@ getTrailStatus name =
             JE.null
         )
         getTrailStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -436,7 +445,7 @@ __Required Parameters__
 -}
 listPublicKeys :
     (ListPublicKeysOptions -> ListPublicKeysOptions)
-    -> AWS.Http.UnsignedRequest ListPublicKeysResponse
+    -> AWS.Request ListPublicKeysResponse
 listPublicKeys setOptions =
   let
     options = setOptions (ListPublicKeysOptions Nothing Nothing Nothing)
@@ -449,6 +458,7 @@ listPublicKeys setOptions =
             JE.null
         )
         listPublicKeysResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPublicKeys request
@@ -472,7 +482,7 @@ __Required Parameters__
 listTags :
     (List String)
     -> (ListTagsOptions -> ListTagsOptions)
-    -> AWS.Http.UnsignedRequest ListTagsResponse
+    -> AWS.Request ListTagsResponse
 listTags resourceIdList setOptions =
   let
     options = setOptions (ListTagsOptions Nothing)
@@ -485,6 +495,7 @@ listTags resourceIdList setOptions =
             JE.null
         )
         listTagsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTags request
@@ -504,7 +515,7 @@ __Required Parameters__
 -}
 lookupEvents :
     (LookupEventsOptions -> LookupEventsOptions)
-    -> AWS.Http.UnsignedRequest LookupEventsResponse
+    -> AWS.Request LookupEventsResponse
 lookupEvents setOptions =
   let
     options = setOptions (LookupEventsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -517,6 +528,7 @@ lookupEvents setOptions =
             JE.null
         )
         lookupEventsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a lookupEvents request
@@ -540,7 +552,7 @@ __Required Parameters__
 -}
 putEventSelectors :
     (PutEventSelectorsOptions -> PutEventSelectorsOptions)
-    -> AWS.Http.UnsignedRequest PutEventSelectorsResponse
+    -> AWS.Request PutEventSelectorsResponse
 putEventSelectors setOptions =
   let
     options = setOptions (PutEventSelectorsOptions Nothing Nothing)
@@ -553,6 +565,7 @@ putEventSelectors setOptions =
             JE.null
         )
         putEventSelectorsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putEventSelectors request
@@ -575,7 +588,7 @@ __Required Parameters__
 removeTags :
     String
     -> (RemoveTagsOptions -> RemoveTagsOptions)
-    -> AWS.Http.UnsignedRequest RemoveTagsResponse
+    -> AWS.Request RemoveTagsResponse
 removeTags resourceId setOptions =
   let
     options = setOptions (RemoveTagsOptions Nothing)
@@ -588,6 +601,7 @@ removeTags resourceId setOptions =
             JE.null
         )
         removeTagsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a removeTags request
@@ -608,7 +622,7 @@ __Required Parameters__
 -}
 startLogging :
     String
-    -> AWS.Http.UnsignedRequest StartLoggingResponse
+    -> AWS.Request StartLoggingResponse
 startLogging name =
     AWS.Http.unsignedRequest
         "StartLogging"
@@ -618,6 +632,7 @@ startLogging name =
             JE.null
         )
         startLoggingResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -631,7 +646,7 @@ __Required Parameters__
 -}
 stopLogging :
     String
-    -> AWS.Http.UnsignedRequest StopLoggingResponse
+    -> AWS.Request StopLoggingResponse
 stopLogging name =
     AWS.Http.unsignedRequest
         "StopLogging"
@@ -641,6 +656,7 @@ stopLogging name =
             JE.null
         )
         stopLoggingResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -655,7 +671,7 @@ __Required Parameters__
 updateTrail :
     String
     -> (UpdateTrailOptions -> UpdateTrailOptions)
-    -> AWS.Http.UnsignedRequest UpdateTrailResponse
+    -> AWS.Request UpdateTrailResponse
 updateTrail name setOptions =
   let
     options = setOptions (UpdateTrailOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -668,6 +684,7 @@ updateTrail name setOptions =
             JE.null
         )
         updateTrailResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateTrail request

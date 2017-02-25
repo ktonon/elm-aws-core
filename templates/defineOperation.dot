@@ -9,7 +9,7 @@ __Required Parameters__
 {{= it.name }} :
     {{~ it.requiredParams :p }}{{= p.value.type }}
     -> {{~}}{{? it.optionalParams.length }}({{= it.optionsName }} -> {{= it.optionsName }})
-    -> {{?}}AWS.Http.UnsignedRequest {{= it.output.type }}
+    -> {{?}}AWS.Request {{= it.output.type }}
 {{= it.name }} {{~ it.requiredParams :p }}{{= p.key }} {{~}}{{? it.optionalParams.length }}setOptions {{?}}={{? it.optionalParams.length }}
   let
     options = setOptions ({{= it.optionsName }} {{= it.optionalParams.map(() => 'Nothing').join(' ') }})
@@ -26,6 +26,7 @@ __Required Parameters__
             JE.null
         ){{?}}
         {{= it.output.decoder }}
+        |> AWS.UnsignedRequest
 {{? it.optionalParams.length }}
 
 {-| Options for a {{= it.name }} request

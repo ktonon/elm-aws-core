@@ -120,7 +120,9 @@ module AWS.Services.Polly
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -131,15 +133,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "polly"
         "2016-06-10"
         "undefined"
         "AWSPOLLY_20160610."
         "polly.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -155,7 +158,7 @@ __Required Parameters__
 -}
 deleteLexicon :
     String
-    -> AWS.Http.UnsignedRequest DeleteLexiconOutput
+    -> AWS.Request DeleteLexiconOutput
 deleteLexicon name =
     AWS.Http.unsignedRequest
         "DeleteLexicon"
@@ -165,6 +168,7 @@ deleteLexicon name =
             JE.null
         )
         deleteLexiconOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -177,7 +181,7 @@ __Required Parameters__
 -}
 describeVoices :
     (DescribeVoicesOptions -> DescribeVoicesOptions)
-    -> AWS.Http.UnsignedRequest DescribeVoicesOutput
+    -> AWS.Request DescribeVoicesOutput
 describeVoices setOptions =
   let
     options = setOptions (DescribeVoicesOptions Nothing Nothing)
@@ -191,6 +195,7 @@ describeVoices setOptions =
             ]
         )
         describeVoicesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVoices request
@@ -212,7 +217,7 @@ __Required Parameters__
 -}
 getLexicon :
     String
-    -> AWS.Http.UnsignedRequest GetLexiconOutput
+    -> AWS.Request GetLexiconOutput
 getLexicon name =
     AWS.Http.unsignedRequest
         "GetLexicon"
@@ -223,6 +228,7 @@ getLexicon name =
             ]
         )
         getLexiconOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -235,7 +241,7 @@ __Required Parameters__
 -}
 listLexicons :
     (ListLexiconsOptions -> ListLexiconsOptions)
-    -> AWS.Http.UnsignedRequest ListLexiconsOutput
+    -> AWS.Request ListLexiconsOutput
 listLexicons setOptions =
   let
     options = setOptions (ListLexiconsOptions Nothing)
@@ -249,6 +255,7 @@ listLexicons setOptions =
             ]
         )
         listLexiconsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listLexicons request
@@ -271,7 +278,7 @@ __Required Parameters__
 putLexicon :
     String
     -> String
-    -> AWS.Http.UnsignedRequest PutLexiconOutput
+    -> AWS.Request PutLexiconOutput
 putLexicon name content =
     AWS.Http.unsignedRequest
         "PutLexicon"
@@ -281,6 +288,7 @@ putLexicon name content =
             JE.null
         )
         putLexiconOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -299,7 +307,7 @@ synthesizeSpeech :
     -> String
     -> VoiceId
     -> (SynthesizeSpeechOptions -> SynthesizeSpeechOptions)
-    -> AWS.Http.UnsignedRequest SynthesizeSpeechOutput
+    -> AWS.Request SynthesizeSpeechOutput
 synthesizeSpeech outputFormat text voiceId setOptions =
   let
     options = setOptions (SynthesizeSpeechOptions Nothing Nothing Nothing)
@@ -312,6 +320,7 @@ synthesizeSpeech outputFormat text voiceId setOptions =
             JE.null
         )
         synthesizeSpeechOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a synthesizeSpeech request

@@ -394,7 +394,9 @@ module AWS.Services.SES
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -406,15 +408,16 @@ import Dict exposing (Dict)
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "email"
         "2010-12-01"
         "undefined"
         "AWSEMAIL_20101201."
         "email.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -432,7 +435,7 @@ __Required Parameters__
 cloneReceiptRuleSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CloneReceiptRuleSetResponse
+    -> AWS.Request CloneReceiptRuleSetResponse
 cloneReceiptRuleSet ruleSetName originalRuleSetName =
     AWS.Http.unsignedRequest
         "CloneReceiptRuleSet"
@@ -442,6 +445,7 @@ cloneReceiptRuleSet ruleSetName originalRuleSetName =
             JE.null
         )
         cloneReceiptRuleSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -455,7 +459,7 @@ __Required Parameters__
 -}
 createConfigurationSet :
     ConfigurationSet
-    -> AWS.Http.UnsignedRequest CreateConfigurationSetResponse
+    -> AWS.Request CreateConfigurationSetResponse
 createConfigurationSet configurationSet =
     AWS.Http.unsignedRequest
         "CreateConfigurationSet"
@@ -465,6 +469,7 @@ createConfigurationSet configurationSet =
             JE.null
         )
         createConfigurationSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -480,7 +485,7 @@ __Required Parameters__
 createConfigurationSetEventDestination :
     String
     -> EventDestination
-    -> AWS.Http.UnsignedRequest CreateConfigurationSetEventDestinationResponse
+    -> AWS.Request CreateConfigurationSetEventDestinationResponse
 createConfigurationSetEventDestination configurationSetName eventDestination =
     AWS.Http.unsignedRequest
         "CreateConfigurationSetEventDestination"
@@ -490,6 +495,7 @@ createConfigurationSetEventDestination configurationSetName eventDestination =
             JE.null
         )
         createConfigurationSetEventDestinationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -503,7 +509,7 @@ __Required Parameters__
 -}
 createReceiptFilter :
     ReceiptFilter
-    -> AWS.Http.UnsignedRequest CreateReceiptFilterResponse
+    -> AWS.Request CreateReceiptFilterResponse
 createReceiptFilter filter =
     AWS.Http.unsignedRequest
         "CreateReceiptFilter"
@@ -513,6 +519,7 @@ createReceiptFilter filter =
             JE.null
         )
         createReceiptFilterResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -529,7 +536,7 @@ createReceiptRule :
     String
     -> ReceiptRule
     -> (CreateReceiptRuleOptions -> CreateReceiptRuleOptions)
-    -> AWS.Http.UnsignedRequest CreateReceiptRuleResponse
+    -> AWS.Request CreateReceiptRuleResponse
 createReceiptRule ruleSetName rule setOptions =
   let
     options = setOptions (CreateReceiptRuleOptions Nothing)
@@ -542,6 +549,7 @@ createReceiptRule ruleSetName rule setOptions =
             JE.null
         )
         createReceiptRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createReceiptRule request
@@ -562,7 +570,7 @@ __Required Parameters__
 -}
 createReceiptRuleSet :
     String
-    -> AWS.Http.UnsignedRequest CreateReceiptRuleSetResponse
+    -> AWS.Request CreateReceiptRuleSetResponse
 createReceiptRuleSet ruleSetName =
     AWS.Http.unsignedRequest
         "CreateReceiptRuleSet"
@@ -572,6 +580,7 @@ createReceiptRuleSet ruleSetName =
             JE.null
         )
         createReceiptRuleSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -585,7 +594,7 @@ __Required Parameters__
 -}
 deleteConfigurationSet :
     String
-    -> AWS.Http.UnsignedRequest DeleteConfigurationSetResponse
+    -> AWS.Request DeleteConfigurationSetResponse
 deleteConfigurationSet configurationSetName =
     AWS.Http.unsignedRequest
         "DeleteConfigurationSet"
@@ -595,6 +604,7 @@ deleteConfigurationSet configurationSetName =
             JE.null
         )
         deleteConfigurationSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -610,7 +620,7 @@ __Required Parameters__
 deleteConfigurationSetEventDestination :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteConfigurationSetEventDestinationResponse
+    -> AWS.Request DeleteConfigurationSetEventDestinationResponse
 deleteConfigurationSetEventDestination configurationSetName eventDestinationName =
     AWS.Http.unsignedRequest
         "DeleteConfigurationSetEventDestination"
@@ -620,6 +630,7 @@ deleteConfigurationSetEventDestination configurationSetName eventDestinationName
             JE.null
         )
         deleteConfigurationSetEventDestinationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -633,7 +644,7 @@ __Required Parameters__
 -}
 deleteIdentity :
     String
-    -> AWS.Http.UnsignedRequest DeleteIdentityResponse
+    -> AWS.Request DeleteIdentityResponse
 deleteIdentity identity =
     AWS.Http.unsignedRequest
         "DeleteIdentity"
@@ -643,6 +654,7 @@ deleteIdentity identity =
             JE.null
         )
         deleteIdentityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -658,7 +670,7 @@ __Required Parameters__
 deleteIdentityPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteIdentityPolicyResponse
+    -> AWS.Request DeleteIdentityPolicyResponse
 deleteIdentityPolicy identity policyName =
     AWS.Http.unsignedRequest
         "DeleteIdentityPolicy"
@@ -668,6 +680,7 @@ deleteIdentityPolicy identity policyName =
             JE.null
         )
         deleteIdentityPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -681,7 +694,7 @@ __Required Parameters__
 -}
 deleteReceiptFilter :
     String
-    -> AWS.Http.UnsignedRequest DeleteReceiptFilterResponse
+    -> AWS.Request DeleteReceiptFilterResponse
 deleteReceiptFilter filterName =
     AWS.Http.unsignedRequest
         "DeleteReceiptFilter"
@@ -691,6 +704,7 @@ deleteReceiptFilter filterName =
             JE.null
         )
         deleteReceiptFilterResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -706,7 +720,7 @@ __Required Parameters__
 deleteReceiptRule :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteReceiptRuleResponse
+    -> AWS.Request DeleteReceiptRuleResponse
 deleteReceiptRule ruleSetName ruleName =
     AWS.Http.unsignedRequest
         "DeleteReceiptRule"
@@ -716,6 +730,7 @@ deleteReceiptRule ruleSetName ruleName =
             JE.null
         )
         deleteReceiptRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -729,7 +744,7 @@ __Required Parameters__
 -}
 deleteReceiptRuleSet :
     String
-    -> AWS.Http.UnsignedRequest DeleteReceiptRuleSetResponse
+    -> AWS.Request DeleteReceiptRuleSetResponse
 deleteReceiptRuleSet ruleSetName =
     AWS.Http.unsignedRequest
         "DeleteReceiptRuleSet"
@@ -739,6 +754,7 @@ deleteReceiptRuleSet ruleSetName =
             JE.null
         )
         deleteReceiptRuleSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -752,7 +768,7 @@ __Required Parameters__
 -}
 deleteVerifiedEmailAddress :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVerifiedEmailAddress emailAddress =
     AWS.Http.unsignedRequest
         "DeleteVerifiedEmailAddress"
@@ -762,6 +778,7 @@ deleteVerifiedEmailAddress emailAddress =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -773,7 +790,7 @@ __Required Parameters__
 
 -}
 describeActiveReceiptRuleSet :
-    AWS.Http.UnsignedRequest DescribeActiveReceiptRuleSetResponse
+    AWS.Request DescribeActiveReceiptRuleSetResponse
 describeActiveReceiptRuleSet =
     AWS.Http.unsignedRequest
         "DescribeActiveReceiptRuleSet"
@@ -783,6 +800,7 @@ describeActiveReceiptRuleSet =
             JE.null
         )
         describeActiveReceiptRuleSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -797,7 +815,7 @@ __Required Parameters__
 describeConfigurationSet :
     String
     -> (DescribeConfigurationSetOptions -> DescribeConfigurationSetOptions)
-    -> AWS.Http.UnsignedRequest DescribeConfigurationSetResponse
+    -> AWS.Request DescribeConfigurationSetResponse
 describeConfigurationSet configurationSetName setOptions =
   let
     options = setOptions (DescribeConfigurationSetOptions Nothing)
@@ -810,6 +828,7 @@ describeConfigurationSet configurationSetName setOptions =
             JE.null
         )
         describeConfigurationSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConfigurationSet request
@@ -832,7 +851,7 @@ __Required Parameters__
 describeReceiptRule :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DescribeReceiptRuleResponse
+    -> AWS.Request DescribeReceiptRuleResponse
 describeReceiptRule ruleSetName ruleName =
     AWS.Http.unsignedRequest
         "DescribeReceiptRule"
@@ -842,6 +861,7 @@ describeReceiptRule ruleSetName ruleName =
             JE.null
         )
         describeReceiptRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -855,7 +875,7 @@ __Required Parameters__
 -}
 describeReceiptRuleSet :
     String
-    -> AWS.Http.UnsignedRequest DescribeReceiptRuleSetResponse
+    -> AWS.Request DescribeReceiptRuleSetResponse
 describeReceiptRuleSet ruleSetName =
     AWS.Http.unsignedRequest
         "DescribeReceiptRuleSet"
@@ -865,6 +885,7 @@ describeReceiptRuleSet ruleSetName =
             JE.null
         )
         describeReceiptRuleSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -878,7 +899,7 @@ __Required Parameters__
 -}
 getIdentityDkimAttributes :
     (List String)
-    -> AWS.Http.UnsignedRequest GetIdentityDkimAttributesResponse
+    -> AWS.Request GetIdentityDkimAttributesResponse
 getIdentityDkimAttributes identities =
     AWS.Http.unsignedRequest
         "GetIdentityDkimAttributes"
@@ -888,6 +909,7 @@ getIdentityDkimAttributes identities =
             JE.null
         )
         getIdentityDkimAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -901,7 +923,7 @@ __Required Parameters__
 -}
 getIdentityMailFromDomainAttributes :
     (List String)
-    -> AWS.Http.UnsignedRequest GetIdentityMailFromDomainAttributesResponse
+    -> AWS.Request GetIdentityMailFromDomainAttributesResponse
 getIdentityMailFromDomainAttributes identities =
     AWS.Http.unsignedRequest
         "GetIdentityMailFromDomainAttributes"
@@ -911,6 +933,7 @@ getIdentityMailFromDomainAttributes identities =
             JE.null
         )
         getIdentityMailFromDomainAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -924,7 +947,7 @@ __Required Parameters__
 -}
 getIdentityNotificationAttributes :
     (List String)
-    -> AWS.Http.UnsignedRequest GetIdentityNotificationAttributesResponse
+    -> AWS.Request GetIdentityNotificationAttributesResponse
 getIdentityNotificationAttributes identities =
     AWS.Http.unsignedRequest
         "GetIdentityNotificationAttributes"
@@ -934,6 +957,7 @@ getIdentityNotificationAttributes identities =
             JE.null
         )
         getIdentityNotificationAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -949,7 +973,7 @@ __Required Parameters__
 getIdentityPolicies :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest GetIdentityPoliciesResponse
+    -> AWS.Request GetIdentityPoliciesResponse
 getIdentityPolicies identity policyNames =
     AWS.Http.unsignedRequest
         "GetIdentityPolicies"
@@ -959,6 +983,7 @@ getIdentityPolicies identity policyNames =
             JE.null
         )
         getIdentityPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -972,7 +997,7 @@ __Required Parameters__
 -}
 getIdentityVerificationAttributes :
     (List String)
-    -> AWS.Http.UnsignedRequest GetIdentityVerificationAttributesResponse
+    -> AWS.Request GetIdentityVerificationAttributesResponse
 getIdentityVerificationAttributes identities =
     AWS.Http.unsignedRequest
         "GetIdentityVerificationAttributes"
@@ -982,6 +1007,7 @@ getIdentityVerificationAttributes identities =
             JE.null
         )
         getIdentityVerificationAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -993,7 +1019,7 @@ __Required Parameters__
 
 -}
 getSendQuota :
-    AWS.Http.UnsignedRequest GetSendQuotaResponse
+    AWS.Request GetSendQuotaResponse
 getSendQuota =
     AWS.Http.unsignedRequest
         "GetSendQuota"
@@ -1003,6 +1029,7 @@ getSendQuota =
             JE.null
         )
         getSendQuotaResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1014,7 +1041,7 @@ __Required Parameters__
 
 -}
 getSendStatistics :
-    AWS.Http.UnsignedRequest GetSendStatisticsResponse
+    AWS.Request GetSendStatisticsResponse
 getSendStatistics =
     AWS.Http.unsignedRequest
         "GetSendStatistics"
@@ -1024,6 +1051,7 @@ getSendStatistics =
             JE.null
         )
         getSendStatisticsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1036,7 +1064,7 @@ __Required Parameters__
 -}
 listConfigurationSets :
     (ListConfigurationSetsOptions -> ListConfigurationSetsOptions)
-    -> AWS.Http.UnsignedRequest ListConfigurationSetsResponse
+    -> AWS.Request ListConfigurationSetsResponse
 listConfigurationSets setOptions =
   let
     options = setOptions (ListConfigurationSetsOptions Nothing Nothing)
@@ -1049,6 +1077,7 @@ listConfigurationSets setOptions =
             JE.null
         )
         listConfigurationSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listConfigurationSets request
@@ -1069,7 +1098,7 @@ __Required Parameters__
 -}
 listIdentities :
     (ListIdentitiesOptions -> ListIdentitiesOptions)
-    -> AWS.Http.UnsignedRequest ListIdentitiesResponse
+    -> AWS.Request ListIdentitiesResponse
 listIdentities setOptions =
   let
     options = setOptions (ListIdentitiesOptions Nothing Nothing Nothing)
@@ -1082,6 +1111,7 @@ listIdentities setOptions =
             JE.null
         )
         listIdentitiesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listIdentities request
@@ -1104,7 +1134,7 @@ __Required Parameters__
 -}
 listIdentityPolicies :
     String
-    -> AWS.Http.UnsignedRequest ListIdentityPoliciesResponse
+    -> AWS.Request ListIdentityPoliciesResponse
 listIdentityPolicies identity =
     AWS.Http.unsignedRequest
         "ListIdentityPolicies"
@@ -1114,6 +1144,7 @@ listIdentityPolicies identity =
             JE.null
         )
         listIdentityPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1125,7 +1156,7 @@ __Required Parameters__
 
 -}
 listReceiptFilters :
-    AWS.Http.UnsignedRequest ListReceiptFiltersResponse
+    AWS.Request ListReceiptFiltersResponse
 listReceiptFilters =
     AWS.Http.unsignedRequest
         "ListReceiptFilters"
@@ -1135,6 +1166,7 @@ listReceiptFilters =
             JE.null
         )
         listReceiptFiltersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1147,7 +1179,7 @@ __Required Parameters__
 -}
 listReceiptRuleSets :
     (ListReceiptRuleSetsOptions -> ListReceiptRuleSetsOptions)
-    -> AWS.Http.UnsignedRequest ListReceiptRuleSetsResponse
+    -> AWS.Request ListReceiptRuleSetsResponse
 listReceiptRuleSets setOptions =
   let
     options = setOptions (ListReceiptRuleSetsOptions Nothing)
@@ -1160,6 +1192,7 @@ listReceiptRuleSets setOptions =
             JE.null
         )
         listReceiptRuleSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listReceiptRuleSets request
@@ -1178,7 +1211,7 @@ __Required Parameters__
 
 -}
 listVerifiedEmailAddresses :
-    AWS.Http.UnsignedRequest ListVerifiedEmailAddressesResponse
+    AWS.Request ListVerifiedEmailAddressesResponse
 listVerifiedEmailAddresses =
     AWS.Http.unsignedRequest
         "ListVerifiedEmailAddresses"
@@ -1188,6 +1221,7 @@ listVerifiedEmailAddresses =
             JE.null
         )
         listVerifiedEmailAddressesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1205,7 +1239,7 @@ putIdentityPolicy :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest PutIdentityPolicyResponse
+    -> AWS.Request PutIdentityPolicyResponse
 putIdentityPolicy identity policyName policy =
     AWS.Http.unsignedRequest
         "PutIdentityPolicy"
@@ -1215,6 +1249,7 @@ putIdentityPolicy identity policyName policy =
             JE.null
         )
         putIdentityPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1230,7 +1265,7 @@ __Required Parameters__
 reorderReceiptRuleSet :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ReorderReceiptRuleSetResponse
+    -> AWS.Request ReorderReceiptRuleSetResponse
 reorderReceiptRuleSet ruleSetName ruleNames =
     AWS.Http.unsignedRequest
         "ReorderReceiptRuleSet"
@@ -1240,6 +1275,7 @@ reorderReceiptRuleSet ruleSetName ruleNames =
             JE.null
         )
         reorderReceiptRuleSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1258,7 +1294,7 @@ sendBounce :
     -> String
     -> (List BouncedRecipientInfo)
     -> (SendBounceOptions -> SendBounceOptions)
-    -> AWS.Http.UnsignedRequest SendBounceResponse
+    -> AWS.Request SendBounceResponse
 sendBounce originalMessageId bounceSender bouncedRecipientInfoList setOptions =
   let
     options = setOptions (SendBounceOptions Nothing Nothing Nothing)
@@ -1271,6 +1307,7 @@ sendBounce originalMessageId bounceSender bouncedRecipientInfoList setOptions =
             JE.null
         )
         sendBounceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a sendBounce request
@@ -1298,7 +1335,7 @@ sendEmail :
     -> Destination
     -> Message
     -> (SendEmailOptions -> SendEmailOptions)
-    -> AWS.Http.UnsignedRequest SendEmailResponse
+    -> AWS.Request SendEmailResponse
 sendEmail source destination message setOptions =
   let
     options = setOptions (SendEmailOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1311,6 +1348,7 @@ sendEmail source destination message setOptions =
             JE.null
         )
         sendEmailResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a sendEmail request
@@ -1337,7 +1375,7 @@ __Required Parameters__
 sendRawEmail :
     RawMessage
     -> (SendRawEmailOptions -> SendRawEmailOptions)
-    -> AWS.Http.UnsignedRequest SendRawEmailResponse
+    -> AWS.Request SendRawEmailResponse
 sendRawEmail rawMessage setOptions =
   let
     options = setOptions (SendRawEmailOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1350,6 +1388,7 @@ sendRawEmail rawMessage setOptions =
             JE.null
         )
         sendRawEmailResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a sendRawEmail request
@@ -1375,7 +1414,7 @@ __Required Parameters__
 -}
 setActiveReceiptRuleSet :
     (SetActiveReceiptRuleSetOptions -> SetActiveReceiptRuleSetOptions)
-    -> AWS.Http.UnsignedRequest SetActiveReceiptRuleSetResponse
+    -> AWS.Request SetActiveReceiptRuleSetResponse
 setActiveReceiptRuleSet setOptions =
   let
     options = setOptions (SetActiveReceiptRuleSetOptions Nothing)
@@ -1388,6 +1427,7 @@ setActiveReceiptRuleSet setOptions =
             JE.null
         )
         setActiveReceiptRuleSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setActiveReceiptRuleSet request
@@ -1410,7 +1450,7 @@ __Required Parameters__
 setIdentityDkimEnabled :
     String
     -> Bool
-    -> AWS.Http.UnsignedRequest SetIdentityDkimEnabledResponse
+    -> AWS.Request SetIdentityDkimEnabledResponse
 setIdentityDkimEnabled identity dkimEnabled =
     AWS.Http.unsignedRequest
         "SetIdentityDkimEnabled"
@@ -1420,6 +1460,7 @@ setIdentityDkimEnabled identity dkimEnabled =
             JE.null
         )
         setIdentityDkimEnabledResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1435,7 +1476,7 @@ __Required Parameters__
 setIdentityFeedbackForwardingEnabled :
     String
     -> Bool
-    -> AWS.Http.UnsignedRequest SetIdentityFeedbackForwardingEnabledResponse
+    -> AWS.Request SetIdentityFeedbackForwardingEnabledResponse
 setIdentityFeedbackForwardingEnabled identity forwardingEnabled =
     AWS.Http.unsignedRequest
         "SetIdentityFeedbackForwardingEnabled"
@@ -1445,6 +1486,7 @@ setIdentityFeedbackForwardingEnabled identity forwardingEnabled =
             JE.null
         )
         setIdentityFeedbackForwardingEnabledResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1462,7 +1504,7 @@ setIdentityHeadersInNotificationsEnabled :
     String
     -> NotificationType
     -> Bool
-    -> AWS.Http.UnsignedRequest SetIdentityHeadersInNotificationsEnabledResponse
+    -> AWS.Request SetIdentityHeadersInNotificationsEnabledResponse
 setIdentityHeadersInNotificationsEnabled identity notificationType enabled =
     AWS.Http.unsignedRequest
         "SetIdentityHeadersInNotificationsEnabled"
@@ -1472,6 +1514,7 @@ setIdentityHeadersInNotificationsEnabled identity notificationType enabled =
             JE.null
         )
         setIdentityHeadersInNotificationsEnabledResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1486,7 +1529,7 @@ __Required Parameters__
 setIdentityMailFromDomain :
     String
     -> (SetIdentityMailFromDomainOptions -> SetIdentityMailFromDomainOptions)
-    -> AWS.Http.UnsignedRequest SetIdentityMailFromDomainResponse
+    -> AWS.Request SetIdentityMailFromDomainResponse
 setIdentityMailFromDomain identity setOptions =
   let
     options = setOptions (SetIdentityMailFromDomainOptions Nothing Nothing)
@@ -1499,6 +1542,7 @@ setIdentityMailFromDomain identity setOptions =
             JE.null
         )
         setIdentityMailFromDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setIdentityMailFromDomain request
@@ -1523,7 +1567,7 @@ setIdentityNotificationTopic :
     String
     -> NotificationType
     -> (SetIdentityNotificationTopicOptions -> SetIdentityNotificationTopicOptions)
-    -> AWS.Http.UnsignedRequest SetIdentityNotificationTopicResponse
+    -> AWS.Request SetIdentityNotificationTopicResponse
 setIdentityNotificationTopic identity notificationType setOptions =
   let
     options = setOptions (SetIdentityNotificationTopicOptions Nothing)
@@ -1536,6 +1580,7 @@ setIdentityNotificationTopic identity notificationType setOptions =
             JE.null
         )
         setIdentityNotificationTopicResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setIdentityNotificationTopic request
@@ -1559,7 +1604,7 @@ setReceiptRulePosition :
     String
     -> String
     -> (SetReceiptRulePositionOptions -> SetReceiptRulePositionOptions)
-    -> AWS.Http.UnsignedRequest SetReceiptRulePositionResponse
+    -> AWS.Request SetReceiptRulePositionResponse
 setReceiptRulePosition ruleSetName ruleName setOptions =
   let
     options = setOptions (SetReceiptRulePositionOptions Nothing)
@@ -1572,6 +1617,7 @@ setReceiptRulePosition ruleSetName ruleName setOptions =
             JE.null
         )
         setReceiptRulePositionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setReceiptRulePosition request
@@ -1594,7 +1640,7 @@ __Required Parameters__
 updateConfigurationSetEventDestination :
     String
     -> EventDestination
-    -> AWS.Http.UnsignedRequest UpdateConfigurationSetEventDestinationResponse
+    -> AWS.Request UpdateConfigurationSetEventDestinationResponse
 updateConfigurationSetEventDestination configurationSetName eventDestination =
     AWS.Http.unsignedRequest
         "UpdateConfigurationSetEventDestination"
@@ -1604,6 +1650,7 @@ updateConfigurationSetEventDestination configurationSetName eventDestination =
             JE.null
         )
         updateConfigurationSetEventDestinationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1619,7 +1666,7 @@ __Required Parameters__
 updateReceiptRule :
     String
     -> ReceiptRule
-    -> AWS.Http.UnsignedRequest UpdateReceiptRuleResponse
+    -> AWS.Request UpdateReceiptRuleResponse
 updateReceiptRule ruleSetName rule =
     AWS.Http.unsignedRequest
         "UpdateReceiptRule"
@@ -1629,6 +1676,7 @@ updateReceiptRule ruleSetName rule =
             JE.null
         )
         updateReceiptRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1642,7 +1690,7 @@ __Required Parameters__
 -}
 verifyDomainDkim :
     String
-    -> AWS.Http.UnsignedRequest VerifyDomainDkimResponse
+    -> AWS.Request VerifyDomainDkimResponse
 verifyDomainDkim domain =
     AWS.Http.unsignedRequest
         "VerifyDomainDkim"
@@ -1652,6 +1700,7 @@ verifyDomainDkim domain =
             JE.null
         )
         verifyDomainDkimResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1665,7 +1714,7 @@ __Required Parameters__
 -}
 verifyDomainIdentity :
     String
-    -> AWS.Http.UnsignedRequest VerifyDomainIdentityResponse
+    -> AWS.Request VerifyDomainIdentityResponse
 verifyDomainIdentity domain =
     AWS.Http.unsignedRequest
         "VerifyDomainIdentity"
@@ -1675,6 +1724,7 @@ verifyDomainIdentity domain =
             JE.null
         )
         verifyDomainIdentityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1688,7 +1738,7 @@ __Required Parameters__
 -}
 verifyEmailAddress :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 verifyEmailAddress emailAddress =
     AWS.Http.unsignedRequest
         "VerifyEmailAddress"
@@ -1698,6 +1748,7 @@ verifyEmailAddress emailAddress =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1711,7 +1762,7 @@ __Required Parameters__
 -}
 verifyEmailIdentity :
     String
-    -> AWS.Http.UnsignedRequest VerifyEmailIdentityResponse
+    -> AWS.Request VerifyEmailIdentityResponse
 verifyEmailIdentity emailAddress =
     AWS.Http.unsignedRequest
         "VerifyEmailIdentity"
@@ -1721,6 +1772,7 @@ verifyEmailIdentity emailAddress =
             JE.null
         )
         verifyEmailIdentityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

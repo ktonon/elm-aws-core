@@ -310,7 +310,9 @@ module AWS.Services.CodePipeline
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -322,15 +324,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "codepipeline"
         "2015-07-09"
         "1.1"
         "AWSCODEPIPELINE_20150709."
         "codepipeline.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -348,7 +351,7 @@ __Required Parameters__
 acknowledgeJob :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AcknowledgeJobOutput
+    -> AWS.Request AcknowledgeJobOutput
 acknowledgeJob jobId nonce =
     AWS.Http.unsignedRequest
         "AcknowledgeJob"
@@ -358,6 +361,7 @@ acknowledgeJob jobId nonce =
             JE.null
         )
         acknowledgeJobOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -375,7 +379,7 @@ acknowledgeThirdPartyJob :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest AcknowledgeThirdPartyJobOutput
+    -> AWS.Request AcknowledgeThirdPartyJobOutput
 acknowledgeThirdPartyJob jobId nonce clientToken =
     AWS.Http.unsignedRequest
         "AcknowledgeThirdPartyJob"
@@ -385,6 +389,7 @@ acknowledgeThirdPartyJob jobId nonce clientToken =
             JE.null
         )
         acknowledgeThirdPartyJobOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -407,7 +412,7 @@ createCustomActionType :
     -> ArtifactDetails
     -> ArtifactDetails
     -> (CreateCustomActionTypeOptions -> CreateCustomActionTypeOptions)
-    -> AWS.Http.UnsignedRequest CreateCustomActionTypeOutput
+    -> AWS.Request CreateCustomActionTypeOutput
 createCustomActionType category provider version inputArtifactDetails outputArtifactDetails setOptions =
   let
     options = setOptions (CreateCustomActionTypeOptions Nothing Nothing)
@@ -420,6 +425,7 @@ createCustomActionType category provider version inputArtifactDetails outputArti
             JE.null
         )
         createCustomActionTypeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createCustomActionType request
@@ -441,7 +447,7 @@ __Required Parameters__
 -}
 createPipeline :
     PipelineDeclaration
-    -> AWS.Http.UnsignedRequest CreatePipelineOutput
+    -> AWS.Request CreatePipelineOutput
 createPipeline pipeline =
     AWS.Http.unsignedRequest
         "CreatePipeline"
@@ -451,6 +457,7 @@ createPipeline pipeline =
             JE.null
         )
         createPipelineOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -468,7 +475,7 @@ deleteCustomActionType :
     ActionCategory
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteCustomActionType category provider version =
     AWS.Http.unsignedRequest
         "DeleteCustomActionType"
@@ -478,6 +485,7 @@ deleteCustomActionType category provider version =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -491,7 +499,7 @@ __Required Parameters__
 -}
 deletePipeline :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deletePipeline name =
     AWS.Http.unsignedRequest
         "DeletePipeline"
@@ -501,6 +509,7 @@ deletePipeline name =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -520,7 +529,7 @@ disableStageTransition :
     -> String
     -> StageTransitionType
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disableStageTransition pipelineName stageName transitionType reason =
     AWS.Http.unsignedRequest
         "DisableStageTransition"
@@ -530,6 +539,7 @@ disableStageTransition pipelineName stageName transitionType reason =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -547,7 +557,7 @@ enableStageTransition :
     String
     -> String
     -> StageTransitionType
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableStageTransition pipelineName stageName transitionType =
     AWS.Http.unsignedRequest
         "EnableStageTransition"
@@ -557,6 +567,7 @@ enableStageTransition pipelineName stageName transitionType =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -570,7 +581,7 @@ __Required Parameters__
 -}
 getJobDetails :
     String
-    -> AWS.Http.UnsignedRequest GetJobDetailsOutput
+    -> AWS.Request GetJobDetailsOutput
 getJobDetails jobId =
     AWS.Http.unsignedRequest
         "GetJobDetails"
@@ -580,6 +591,7 @@ getJobDetails jobId =
             JE.null
         )
         getJobDetailsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -594,7 +606,7 @@ __Required Parameters__
 getPipeline :
     String
     -> (GetPipelineOptions -> GetPipelineOptions)
-    -> AWS.Http.UnsignedRequest GetPipelineOutput
+    -> AWS.Request GetPipelineOutput
 getPipeline name setOptions =
   let
     options = setOptions (GetPipelineOptions Nothing)
@@ -607,6 +619,7 @@ getPipeline name setOptions =
             JE.null
         )
         getPipelineOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getPipeline request
@@ -629,7 +642,7 @@ __Required Parameters__
 getPipelineExecution :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetPipelineExecutionOutput
+    -> AWS.Request GetPipelineExecutionOutput
 getPipelineExecution pipelineName pipelineExecutionId =
     AWS.Http.unsignedRequest
         "GetPipelineExecution"
@@ -639,6 +652,7 @@ getPipelineExecution pipelineName pipelineExecutionId =
             JE.null
         )
         getPipelineExecutionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -652,7 +666,7 @@ __Required Parameters__
 -}
 getPipelineState :
     String
-    -> AWS.Http.UnsignedRequest GetPipelineStateOutput
+    -> AWS.Request GetPipelineStateOutput
 getPipelineState name =
     AWS.Http.unsignedRequest
         "GetPipelineState"
@@ -662,6 +676,7 @@ getPipelineState name =
             JE.null
         )
         getPipelineStateOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -677,7 +692,7 @@ __Required Parameters__
 getThirdPartyJobDetails :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetThirdPartyJobDetailsOutput
+    -> AWS.Request GetThirdPartyJobDetailsOutput
 getThirdPartyJobDetails jobId clientToken =
     AWS.Http.unsignedRequest
         "GetThirdPartyJobDetails"
@@ -687,6 +702,7 @@ getThirdPartyJobDetails jobId clientToken =
             JE.null
         )
         getThirdPartyJobDetailsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -699,7 +715,7 @@ __Required Parameters__
 -}
 listActionTypes :
     (ListActionTypesOptions -> ListActionTypesOptions)
-    -> AWS.Http.UnsignedRequest ListActionTypesOutput
+    -> AWS.Request ListActionTypesOutput
 listActionTypes setOptions =
   let
     options = setOptions (ListActionTypesOptions Nothing Nothing)
@@ -712,6 +728,7 @@ listActionTypes setOptions =
             JE.null
         )
         listActionTypesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listActionTypes request
@@ -732,7 +749,7 @@ __Required Parameters__
 -}
 listPipelines :
     (ListPipelinesOptions -> ListPipelinesOptions)
-    -> AWS.Http.UnsignedRequest ListPipelinesOutput
+    -> AWS.Request ListPipelinesOutput
 listPipelines setOptions =
   let
     options = setOptions (ListPipelinesOptions Nothing)
@@ -745,6 +762,7 @@ listPipelines setOptions =
             JE.null
         )
         listPipelinesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPipelines request
@@ -766,7 +784,7 @@ __Required Parameters__
 pollForJobs :
     ActionTypeId
     -> (PollForJobsOptions -> PollForJobsOptions)
-    -> AWS.Http.UnsignedRequest PollForJobsOutput
+    -> AWS.Request PollForJobsOutput
 pollForJobs actionTypeId setOptions =
   let
     options = setOptions (PollForJobsOptions Nothing Nothing)
@@ -779,6 +797,7 @@ pollForJobs actionTypeId setOptions =
             JE.null
         )
         pollForJobsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a pollForJobs request
@@ -801,7 +820,7 @@ __Required Parameters__
 pollForThirdPartyJobs :
     ActionTypeId
     -> (PollForThirdPartyJobsOptions -> PollForThirdPartyJobsOptions)
-    -> AWS.Http.UnsignedRequest PollForThirdPartyJobsOutput
+    -> AWS.Request PollForThirdPartyJobsOutput
 pollForThirdPartyJobs actionTypeId setOptions =
   let
     options = setOptions (PollForThirdPartyJobsOptions Nothing)
@@ -814,6 +833,7 @@ pollForThirdPartyJobs actionTypeId setOptions =
             JE.null
         )
         pollForThirdPartyJobsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a pollForThirdPartyJobs request
@@ -840,7 +860,7 @@ putActionRevision :
     -> String
     -> String
     -> ActionRevision
-    -> AWS.Http.UnsignedRequest PutActionRevisionOutput
+    -> AWS.Request PutActionRevisionOutput
 putActionRevision pipelineName stageName actionName actionRevision =
     AWS.Http.unsignedRequest
         "PutActionRevision"
@@ -850,6 +870,7 @@ putActionRevision pipelineName stageName actionName actionRevision =
             JE.null
         )
         putActionRevisionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -871,7 +892,7 @@ putApprovalResult :
     -> String
     -> ApprovalResult
     -> String
-    -> AWS.Http.UnsignedRequest PutApprovalResultOutput
+    -> AWS.Request PutApprovalResultOutput
 putApprovalResult pipelineName stageName actionName result token =
     AWS.Http.unsignedRequest
         "PutApprovalResult"
@@ -881,6 +902,7 @@ putApprovalResult pipelineName stageName actionName result token =
             JE.null
         )
         putApprovalResultOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -896,7 +918,7 @@ __Required Parameters__
 putJobFailureResult :
     String
     -> FailureDetails
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putJobFailureResult jobId failureDetails =
     AWS.Http.unsignedRequest
         "PutJobFailureResult"
@@ -906,6 +928,7 @@ putJobFailureResult jobId failureDetails =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -920,7 +943,7 @@ __Required Parameters__
 putJobSuccessResult :
     String
     -> (PutJobSuccessResultOptions -> PutJobSuccessResultOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putJobSuccessResult jobId setOptions =
   let
     options = setOptions (PutJobSuccessResultOptions Nothing Nothing Nothing)
@@ -933,6 +956,7 @@ putJobSuccessResult jobId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putJobSuccessResult request
@@ -959,7 +983,7 @@ putThirdPartyJobFailureResult :
     String
     -> String
     -> FailureDetails
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putThirdPartyJobFailureResult jobId clientToken failureDetails =
     AWS.Http.unsignedRequest
         "PutThirdPartyJobFailureResult"
@@ -969,6 +993,7 @@ putThirdPartyJobFailureResult jobId clientToken failureDetails =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -985,7 +1010,7 @@ putThirdPartyJobSuccessResult :
     String
     -> String
     -> (PutThirdPartyJobSuccessResultOptions -> PutThirdPartyJobSuccessResultOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putThirdPartyJobSuccessResult jobId clientToken setOptions =
   let
     options = setOptions (PutThirdPartyJobSuccessResultOptions Nothing Nothing Nothing)
@@ -998,6 +1023,7 @@ putThirdPartyJobSuccessResult jobId clientToken setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putThirdPartyJobSuccessResult request
@@ -1026,7 +1052,7 @@ retryStageExecution :
     -> String
     -> String
     -> StageRetryMode
-    -> AWS.Http.UnsignedRequest RetryStageExecutionOutput
+    -> AWS.Request RetryStageExecutionOutput
 retryStageExecution pipelineName stageName pipelineExecutionId retryMode =
     AWS.Http.unsignedRequest
         "RetryStageExecution"
@@ -1036,6 +1062,7 @@ retryStageExecution pipelineName stageName pipelineExecutionId retryMode =
             JE.null
         )
         retryStageExecutionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1049,7 +1076,7 @@ __Required Parameters__
 -}
 startPipelineExecution :
     String
-    -> AWS.Http.UnsignedRequest StartPipelineExecutionOutput
+    -> AWS.Request StartPipelineExecutionOutput
 startPipelineExecution name =
     AWS.Http.unsignedRequest
         "StartPipelineExecution"
@@ -1059,6 +1086,7 @@ startPipelineExecution name =
             JE.null
         )
         startPipelineExecutionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1072,7 +1100,7 @@ __Required Parameters__
 -}
 updatePipeline :
     PipelineDeclaration
-    -> AWS.Http.UnsignedRequest UpdatePipelineOutput
+    -> AWS.Request UpdatePipelineOutput
 updatePipeline pipeline =
     AWS.Http.unsignedRequest
         "UpdatePipeline"
@@ -1082,6 +1110,7 @@ updatePipeline pipeline =
             JE.null
         )
         updatePipelineOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 

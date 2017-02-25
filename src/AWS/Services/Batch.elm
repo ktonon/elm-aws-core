@@ -186,7 +186,9 @@ module AWS.Services.Batch
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -196,15 +198,16 @@ import Dict exposing (Dict)
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "batch"
         "2016-08-10"
         "1.1"
         "AWSBATCH_20160810."
         "batch.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -222,7 +225,7 @@ __Required Parameters__
 cancelJob :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CancelJobResponse
+    -> AWS.Request CancelJobResponse
 cancelJob jobId reason =
     AWS.Http.unsignedRequest
         "CancelJob"
@@ -232,6 +235,7 @@ cancelJob jobId reason =
             JE.null
         )
         cancelJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -250,7 +254,7 @@ createComputeEnvironment :
     -> CEType
     -> String
     -> (CreateComputeEnvironmentOptions -> CreateComputeEnvironmentOptions)
-    -> AWS.Http.UnsignedRequest CreateComputeEnvironmentResponse
+    -> AWS.Request CreateComputeEnvironmentResponse
 createComputeEnvironment computeEnvironmentName type_ serviceRole setOptions =
   let
     options = setOptions (CreateComputeEnvironmentOptions Nothing Nothing)
@@ -263,6 +267,7 @@ createComputeEnvironment computeEnvironmentName type_ serviceRole setOptions =
             JE.null
         )
         createComputeEnvironmentResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createComputeEnvironment request
@@ -289,7 +294,7 @@ createJobQueue :
     -> Int
     -> (List ComputeEnvironmentOrder)
     -> (CreateJobQueueOptions -> CreateJobQueueOptions)
-    -> AWS.Http.UnsignedRequest CreateJobQueueResponse
+    -> AWS.Request CreateJobQueueResponse
 createJobQueue jobQueueName priority computeEnvironmentOrder setOptions =
   let
     options = setOptions (CreateJobQueueOptions Nothing)
@@ -302,6 +307,7 @@ createJobQueue jobQueueName priority computeEnvironmentOrder setOptions =
             JE.null
         )
         createJobQueueResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createJobQueue request
@@ -322,7 +328,7 @@ __Required Parameters__
 -}
 deleteComputeEnvironment :
     String
-    -> AWS.Http.UnsignedRequest DeleteComputeEnvironmentResponse
+    -> AWS.Request DeleteComputeEnvironmentResponse
 deleteComputeEnvironment computeEnvironment =
     AWS.Http.unsignedRequest
         "DeleteComputeEnvironment"
@@ -332,6 +338,7 @@ deleteComputeEnvironment computeEnvironment =
             JE.null
         )
         deleteComputeEnvironmentResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -345,7 +352,7 @@ __Required Parameters__
 -}
 deleteJobQueue :
     String
-    -> AWS.Http.UnsignedRequest DeleteJobQueueResponse
+    -> AWS.Request DeleteJobQueueResponse
 deleteJobQueue jobQueue =
     AWS.Http.unsignedRequest
         "DeleteJobQueue"
@@ -355,6 +362,7 @@ deleteJobQueue jobQueue =
             JE.null
         )
         deleteJobQueueResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -368,7 +376,7 @@ __Required Parameters__
 -}
 deregisterJobDefinition :
     String
-    -> AWS.Http.UnsignedRequest DeregisterJobDefinitionResponse
+    -> AWS.Request DeregisterJobDefinitionResponse
 deregisterJobDefinition jobDefinition =
     AWS.Http.unsignedRequest
         "DeregisterJobDefinition"
@@ -378,6 +386,7 @@ deregisterJobDefinition jobDefinition =
             JE.null
         )
         deregisterJobDefinitionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -390,7 +399,7 @@ __Required Parameters__
 -}
 describeComputeEnvironments :
     (DescribeComputeEnvironmentsOptions -> DescribeComputeEnvironmentsOptions)
-    -> AWS.Http.UnsignedRequest DescribeComputeEnvironmentsResponse
+    -> AWS.Request DescribeComputeEnvironmentsResponse
 describeComputeEnvironments setOptions =
   let
     options = setOptions (DescribeComputeEnvironmentsOptions Nothing Nothing Nothing)
@@ -403,6 +412,7 @@ describeComputeEnvironments setOptions =
             JE.null
         )
         describeComputeEnvironmentsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeComputeEnvironments request
@@ -424,7 +434,7 @@ __Required Parameters__
 -}
 describeJobDefinitions :
     (DescribeJobDefinitionsOptions -> DescribeJobDefinitionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeJobDefinitionsResponse
+    -> AWS.Request DescribeJobDefinitionsResponse
 describeJobDefinitions setOptions =
   let
     options = setOptions (DescribeJobDefinitionsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -437,6 +447,7 @@ describeJobDefinitions setOptions =
             JE.null
         )
         describeJobDefinitionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeJobDefinitions request
@@ -460,7 +471,7 @@ __Required Parameters__
 -}
 describeJobQueues :
     (DescribeJobQueuesOptions -> DescribeJobQueuesOptions)
-    -> AWS.Http.UnsignedRequest DescribeJobQueuesResponse
+    -> AWS.Request DescribeJobQueuesResponse
 describeJobQueues setOptions =
   let
     options = setOptions (DescribeJobQueuesOptions Nothing Nothing Nothing)
@@ -473,6 +484,7 @@ describeJobQueues setOptions =
             JE.null
         )
         describeJobQueuesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeJobQueues request
@@ -495,7 +507,7 @@ __Required Parameters__
 -}
 describeJobs :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeJobsResponse
+    -> AWS.Request DescribeJobsResponse
 describeJobs jobs =
     AWS.Http.unsignedRequest
         "DescribeJobs"
@@ -505,6 +517,7 @@ describeJobs jobs =
             JE.null
         )
         describeJobsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -519,7 +532,7 @@ __Required Parameters__
 listJobs :
     String
     -> (ListJobsOptions -> ListJobsOptions)
-    -> AWS.Http.UnsignedRequest ListJobsResponse
+    -> AWS.Request ListJobsResponse
 listJobs jobQueue setOptions =
   let
     options = setOptions (ListJobsOptions Nothing Nothing Nothing)
@@ -532,6 +545,7 @@ listJobs jobQueue setOptions =
             JE.null
         )
         listJobsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listJobs request
@@ -557,7 +571,7 @@ registerJobDefinition :
     String
     -> JobDefinitionType
     -> (RegisterJobDefinitionOptions -> RegisterJobDefinitionOptions)
-    -> AWS.Http.UnsignedRequest RegisterJobDefinitionResponse
+    -> AWS.Request RegisterJobDefinitionResponse
 registerJobDefinition jobDefinitionName type_ setOptions =
   let
     options = setOptions (RegisterJobDefinitionOptions Nothing Nothing)
@@ -570,6 +584,7 @@ registerJobDefinition jobDefinitionName type_ setOptions =
             JE.null
         )
         registerJobDefinitionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerJobDefinition request
@@ -596,7 +611,7 @@ submitJob :
     -> String
     -> String
     -> (SubmitJobOptions -> SubmitJobOptions)
-    -> AWS.Http.UnsignedRequest SubmitJobResponse
+    -> AWS.Request SubmitJobResponse
 submitJob jobName jobQueue jobDefinition setOptions =
   let
     options = setOptions (SubmitJobOptions Nothing Nothing Nothing)
@@ -609,6 +624,7 @@ submitJob jobName jobQueue jobDefinition setOptions =
             JE.null
         )
         submitJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a submitJob request
@@ -633,7 +649,7 @@ __Required Parameters__
 terminateJob :
     String
     -> String
-    -> AWS.Http.UnsignedRequest TerminateJobResponse
+    -> AWS.Request TerminateJobResponse
 terminateJob jobId reason =
     AWS.Http.unsignedRequest
         "TerminateJob"
@@ -643,6 +659,7 @@ terminateJob jobId reason =
             JE.null
         )
         terminateJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -657,7 +674,7 @@ __Required Parameters__
 updateComputeEnvironment :
     String
     -> (UpdateComputeEnvironmentOptions -> UpdateComputeEnvironmentOptions)
-    -> AWS.Http.UnsignedRequest UpdateComputeEnvironmentResponse
+    -> AWS.Request UpdateComputeEnvironmentResponse
 updateComputeEnvironment computeEnvironment setOptions =
   let
     options = setOptions (UpdateComputeEnvironmentOptions Nothing Nothing Nothing)
@@ -670,6 +687,7 @@ updateComputeEnvironment computeEnvironment setOptions =
             JE.null
         )
         updateComputeEnvironmentResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateComputeEnvironment request
@@ -693,7 +711,7 @@ __Required Parameters__
 updateJobQueue :
     String
     -> (UpdateJobQueueOptions -> UpdateJobQueueOptions)
-    -> AWS.Http.UnsignedRequest UpdateJobQueueResponse
+    -> AWS.Request UpdateJobQueueResponse
 updateJobQueue jobQueue setOptions =
   let
     options = setOptions (UpdateJobQueueOptions Nothing Nothing Nothing)
@@ -706,6 +724,7 @@ updateJobQueue jobQueue setOptions =
             JE.null
         )
         updateJobQueueResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateJobQueue request

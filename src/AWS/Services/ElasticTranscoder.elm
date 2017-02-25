@@ -201,7 +201,9 @@ module AWS.Services.ElasticTranscoder
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -211,15 +213,16 @@ import Dict exposing (Dict)
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "elastictranscoder"
         "2012-09-25"
         "undefined"
         "AWSELASTICTRANSCODER_20120925."
         "elastictranscoder.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -235,7 +238,7 @@ __Required Parameters__
 -}
 cancelJob :
     String
-    -> AWS.Http.UnsignedRequest CancelJobResponse
+    -> AWS.Request CancelJobResponse
 cancelJob id =
     AWS.Http.unsignedRequest
         "CancelJob"
@@ -245,6 +248,7 @@ cancelJob id =
             JE.null
         )
         cancelJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -259,7 +263,7 @@ __Required Parameters__
 createJob :
     String
     -> (CreateJobOptions -> CreateJobOptions)
-    -> AWS.Http.UnsignedRequest CreateJobResponse
+    -> AWS.Request CreateJobResponse
 createJob pipelineId setOptions =
   let
     options = setOptions (CreateJobOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -272,6 +276,7 @@ createJob pipelineId setOptions =
             JE.null
         )
         createJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createJob request
@@ -303,7 +308,7 @@ createPipeline :
     -> String
     -> String
     -> (CreatePipelineOptions -> CreatePipelineOptions)
-    -> AWS.Http.UnsignedRequest CreatePipelineResponse
+    -> AWS.Request CreatePipelineResponse
 createPipeline name inputBucket role setOptions =
   let
     options = setOptions (CreatePipelineOptions Nothing Nothing Nothing Nothing Nothing)
@@ -316,6 +321,7 @@ createPipeline name inputBucket role setOptions =
             JE.null
         )
         createPipelineResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPipeline request
@@ -343,7 +349,7 @@ createPreset :
     String
     -> String
     -> (CreatePresetOptions -> CreatePresetOptions)
-    -> AWS.Http.UnsignedRequest CreatePresetResponse
+    -> AWS.Request CreatePresetResponse
 createPreset name container setOptions =
   let
     options = setOptions (CreatePresetOptions Nothing Nothing Nothing Nothing)
@@ -356,6 +362,7 @@ createPreset name container setOptions =
             JE.null
         )
         createPresetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPreset request
@@ -379,7 +386,7 @@ __Required Parameters__
 -}
 deletePipeline :
     String
-    -> AWS.Http.UnsignedRequest DeletePipelineResponse
+    -> AWS.Request DeletePipelineResponse
 deletePipeline id =
     AWS.Http.unsignedRequest
         "DeletePipeline"
@@ -389,6 +396,7 @@ deletePipeline id =
             JE.null
         )
         deletePipelineResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -402,7 +410,7 @@ __Required Parameters__
 -}
 deletePreset :
     String
-    -> AWS.Http.UnsignedRequest DeletePresetResponse
+    -> AWS.Request DeletePresetResponse
 deletePreset id =
     AWS.Http.unsignedRequest
         "DeletePreset"
@@ -412,6 +420,7 @@ deletePreset id =
             JE.null
         )
         deletePresetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -426,7 +435,7 @@ __Required Parameters__
 listJobsByPipeline :
     String
     -> (ListJobsByPipelineOptions -> ListJobsByPipelineOptions)
-    -> AWS.Http.UnsignedRequest ListJobsByPipelineResponse
+    -> AWS.Request ListJobsByPipelineResponse
 listJobsByPipeline pipelineId setOptions =
   let
     options = setOptions (ListJobsByPipelineOptions Nothing Nothing)
@@ -440,6 +449,7 @@ listJobsByPipeline pipelineId setOptions =
             ]
         )
         listJobsByPipelineResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listJobsByPipeline request
@@ -462,7 +472,7 @@ __Required Parameters__
 listJobsByStatus :
     String
     -> (ListJobsByStatusOptions -> ListJobsByStatusOptions)
-    -> AWS.Http.UnsignedRequest ListJobsByStatusResponse
+    -> AWS.Request ListJobsByStatusResponse
 listJobsByStatus status setOptions =
   let
     options = setOptions (ListJobsByStatusOptions Nothing Nothing)
@@ -476,6 +486,7 @@ listJobsByStatus status setOptions =
             ]
         )
         listJobsByStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listJobsByStatus request
@@ -496,7 +507,7 @@ __Required Parameters__
 -}
 listPipelines :
     (ListPipelinesOptions -> ListPipelinesOptions)
-    -> AWS.Http.UnsignedRequest ListPipelinesResponse
+    -> AWS.Request ListPipelinesResponse
 listPipelines setOptions =
   let
     options = setOptions (ListPipelinesOptions Nothing Nothing)
@@ -510,6 +521,7 @@ listPipelines setOptions =
             ]
         )
         listPipelinesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPipelines request
@@ -530,7 +542,7 @@ __Required Parameters__
 -}
 listPresets :
     (ListPresetsOptions -> ListPresetsOptions)
-    -> AWS.Http.UnsignedRequest ListPresetsResponse
+    -> AWS.Request ListPresetsResponse
 listPresets setOptions =
   let
     options = setOptions (ListPresetsOptions Nothing Nothing)
@@ -544,6 +556,7 @@ listPresets setOptions =
             ]
         )
         listPresetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPresets request
@@ -565,7 +578,7 @@ __Required Parameters__
 -}
 readJob :
     String
-    -> AWS.Http.UnsignedRequest ReadJobResponse
+    -> AWS.Request ReadJobResponse
 readJob id =
     AWS.Http.unsignedRequest
         "ReadJob"
@@ -576,6 +589,7 @@ readJob id =
             ]
         )
         readJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -589,7 +603,7 @@ __Required Parameters__
 -}
 readPipeline :
     String
-    -> AWS.Http.UnsignedRequest ReadPipelineResponse
+    -> AWS.Request ReadPipelineResponse
 readPipeline id =
     AWS.Http.unsignedRequest
         "ReadPipeline"
@@ -600,6 +614,7 @@ readPipeline id =
             ]
         )
         readPipelineResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -613,7 +628,7 @@ __Required Parameters__
 -}
 readPreset :
     String
-    -> AWS.Http.UnsignedRequest ReadPresetResponse
+    -> AWS.Request ReadPresetResponse
 readPreset id =
     AWS.Http.unsignedRequest
         "ReadPreset"
@@ -624,6 +639,7 @@ readPreset id =
             ]
         )
         readPresetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -643,7 +659,7 @@ testRole :
     -> String
     -> String
     -> (List String)
-    -> AWS.Http.UnsignedRequest TestRoleResponse
+    -> AWS.Request TestRoleResponse
 testRole role inputBucket outputBucket topics =
     AWS.Http.unsignedRequest
         "TestRole"
@@ -653,6 +669,7 @@ testRole role inputBucket outputBucket topics =
             JE.null
         )
         testRoleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -667,7 +684,7 @@ __Required Parameters__
 updatePipeline :
     String
     -> (UpdatePipelineOptions -> UpdatePipelineOptions)
-    -> AWS.Http.UnsignedRequest UpdatePipelineResponse
+    -> AWS.Request UpdatePipelineResponse
 updatePipeline id setOptions =
   let
     options = setOptions (UpdatePipelineOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -680,6 +697,7 @@ updatePipeline id setOptions =
             JE.null
         )
         updatePipelineResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updatePipeline request
@@ -708,7 +726,7 @@ __Required Parameters__
 updatePipelineNotifications :
     String
     -> Notifications
-    -> AWS.Http.UnsignedRequest UpdatePipelineNotificationsResponse
+    -> AWS.Request UpdatePipelineNotificationsResponse
 updatePipelineNotifications id notifications =
     AWS.Http.unsignedRequest
         "UpdatePipelineNotifications"
@@ -718,6 +736,7 @@ updatePipelineNotifications id notifications =
             JE.null
         )
         updatePipelineNotificationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -733,7 +752,7 @@ __Required Parameters__
 updatePipelineStatus :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdatePipelineStatusResponse
+    -> AWS.Request UpdatePipelineStatusResponse
 updatePipelineStatus id status =
     AWS.Http.unsignedRequest
         "UpdatePipelineStatus"
@@ -743,6 +762,7 @@ updatePipelineStatus id status =
             JE.null
         )
         updatePipelineStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

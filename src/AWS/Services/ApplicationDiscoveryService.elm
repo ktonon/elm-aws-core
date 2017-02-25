@@ -176,7 +176,9 @@ module AWS.Services.ApplicationDiscoveryService
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -188,15 +190,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "discovery"
         "2015-11-01"
         "1.1"
         "AWSDISCOVERY_20151101."
         "discovery.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -214,7 +217,7 @@ __Required Parameters__
 associateConfigurationItemsToApplication :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest AssociateConfigurationItemsToApplicationResponse
+    -> AWS.Request AssociateConfigurationItemsToApplicationResponse
 associateConfigurationItemsToApplication applicationConfigurationId configurationIds =
     AWS.Http.unsignedRequest
         "AssociateConfigurationItemsToApplication"
@@ -224,6 +227,7 @@ associateConfigurationItemsToApplication applicationConfigurationId configuratio
             JE.null
         )
         associateConfigurationItemsToApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -238,7 +242,7 @@ __Required Parameters__
 createApplication :
     String
     -> (CreateApplicationOptions -> CreateApplicationOptions)
-    -> AWS.Http.UnsignedRequest CreateApplicationResponse
+    -> AWS.Request CreateApplicationResponse
 createApplication name setOptions =
   let
     options = setOptions (CreateApplicationOptions Nothing)
@@ -251,6 +255,7 @@ createApplication name setOptions =
             JE.null
         )
         createApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createApplication request
@@ -273,7 +278,7 @@ __Required Parameters__
 createTags :
     (List String)
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest CreateTagsResponse
+    -> AWS.Request CreateTagsResponse
 createTags configurationIds tags =
     AWS.Http.unsignedRequest
         "CreateTags"
@@ -283,6 +288,7 @@ createTags configurationIds tags =
             JE.null
         )
         createTagsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -296,7 +302,7 @@ __Required Parameters__
 -}
 deleteApplications :
     (List String)
-    -> AWS.Http.UnsignedRequest DeleteApplicationsResponse
+    -> AWS.Request DeleteApplicationsResponse
 deleteApplications configurationIds =
     AWS.Http.unsignedRequest
         "DeleteApplications"
@@ -306,6 +312,7 @@ deleteApplications configurationIds =
             JE.null
         )
         deleteApplicationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -320,7 +327,7 @@ __Required Parameters__
 deleteTags :
     (List String)
     -> (DeleteTagsOptions -> DeleteTagsOptions)
-    -> AWS.Http.UnsignedRequest DeleteTagsResponse
+    -> AWS.Request DeleteTagsResponse
 deleteTags configurationIds setOptions =
   let
     options = setOptions (DeleteTagsOptions Nothing)
@@ -333,6 +340,7 @@ deleteTags configurationIds setOptions =
             JE.null
         )
         deleteTagsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteTags request
@@ -352,7 +360,7 @@ __Required Parameters__
 -}
 describeAgents :
     (DescribeAgentsOptions -> DescribeAgentsOptions)
-    -> AWS.Http.UnsignedRequest DescribeAgentsResponse
+    -> AWS.Request DescribeAgentsResponse
 describeAgents setOptions =
   let
     options = setOptions (DescribeAgentsOptions Nothing Nothing Nothing Nothing)
@@ -365,6 +373,7 @@ describeAgents setOptions =
             JE.null
         )
         describeAgentsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAgents request
@@ -388,7 +397,7 @@ __Required Parameters__
 -}
 describeConfigurations :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeConfigurationsResponse
+    -> AWS.Request DescribeConfigurationsResponse
 describeConfigurations configurationIds =
     AWS.Http.unsignedRequest
         "DescribeConfigurations"
@@ -398,6 +407,7 @@ describeConfigurations configurationIds =
             JE.null
         )
         describeConfigurationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -410,7 +420,7 @@ __Required Parameters__
 -}
 describeExportConfigurations :
     (DescribeExportConfigurationsOptions -> DescribeExportConfigurationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeExportConfigurationsResponse
+    -> AWS.Request DescribeExportConfigurationsResponse
 describeExportConfigurations setOptions =
   let
     options = setOptions (DescribeExportConfigurationsOptions Nothing Nothing Nothing)
@@ -423,6 +433,7 @@ describeExportConfigurations setOptions =
             JE.null
         )
         describeExportConfigurationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeExportConfigurations request
@@ -444,7 +455,7 @@ __Required Parameters__
 -}
 describeTags :
     (DescribeTagsOptions -> DescribeTagsOptions)
-    -> AWS.Http.UnsignedRequest DescribeTagsResponse
+    -> AWS.Request DescribeTagsResponse
 describeTags setOptions =
   let
     options = setOptions (DescribeTagsOptions Nothing Nothing Nothing)
@@ -457,6 +468,7 @@ describeTags setOptions =
             JE.null
         )
         describeTagsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTags request
@@ -481,7 +493,7 @@ __Required Parameters__
 disassociateConfigurationItemsFromApplication :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest DisassociateConfigurationItemsFromApplicationResponse
+    -> AWS.Request DisassociateConfigurationItemsFromApplicationResponse
 disassociateConfigurationItemsFromApplication applicationConfigurationId configurationIds =
     AWS.Http.unsignedRequest
         "DisassociateConfigurationItemsFromApplication"
@@ -491,6 +503,7 @@ disassociateConfigurationItemsFromApplication applicationConfigurationId configu
             JE.null
         )
         disassociateConfigurationItemsFromApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -502,7 +515,7 @@ __Required Parameters__
 
 -}
 exportConfigurations :
-    AWS.Http.UnsignedRequest ExportConfigurationsResponse
+    AWS.Request ExportConfigurationsResponse
 exportConfigurations =
     AWS.Http.unsignedRequest
         "ExportConfigurations"
@@ -512,6 +525,7 @@ exportConfigurations =
             JE.null
         )
         exportConfigurationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -523,7 +537,7 @@ __Required Parameters__
 
 -}
 getDiscoverySummary :
-    AWS.Http.UnsignedRequest GetDiscoverySummaryResponse
+    AWS.Request GetDiscoverySummaryResponse
 getDiscoverySummary =
     AWS.Http.unsignedRequest
         "GetDiscoverySummary"
@@ -533,6 +547,7 @@ getDiscoverySummary =
             JE.null
         )
         getDiscoverySummaryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -547,7 +562,7 @@ __Required Parameters__
 listConfigurations :
     ConfigurationItemType
     -> (ListConfigurationsOptions -> ListConfigurationsOptions)
-    -> AWS.Http.UnsignedRequest ListConfigurationsResponse
+    -> AWS.Request ListConfigurationsResponse
 listConfigurations configurationType setOptions =
   let
     options = setOptions (ListConfigurationsOptions Nothing Nothing Nothing Nothing)
@@ -560,6 +575,7 @@ listConfigurations configurationType setOptions =
             JE.null
         )
         listConfigurationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listConfigurations request
@@ -584,7 +600,7 @@ __Required Parameters__
 listServerNeighbors :
     String
     -> (ListServerNeighborsOptions -> ListServerNeighborsOptions)
-    -> AWS.Http.UnsignedRequest ListServerNeighborsResponse
+    -> AWS.Request ListServerNeighborsResponse
 listServerNeighbors configurationId setOptions =
   let
     options = setOptions (ListServerNeighborsOptions Nothing Nothing Nothing Nothing)
@@ -597,6 +613,7 @@ listServerNeighbors configurationId setOptions =
             JE.null
         )
         listServerNeighborsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listServerNeighbors request
@@ -620,7 +637,7 @@ __Required Parameters__
 -}
 startDataCollectionByAgentIds :
     (List String)
-    -> AWS.Http.UnsignedRequest StartDataCollectionByAgentIdsResponse
+    -> AWS.Request StartDataCollectionByAgentIdsResponse
 startDataCollectionByAgentIds agentIds =
     AWS.Http.unsignedRequest
         "StartDataCollectionByAgentIds"
@@ -630,6 +647,7 @@ startDataCollectionByAgentIds agentIds =
             JE.null
         )
         startDataCollectionByAgentIdsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -643,7 +661,7 @@ __Required Parameters__
 -}
 stopDataCollectionByAgentIds :
     (List String)
-    -> AWS.Http.UnsignedRequest StopDataCollectionByAgentIdsResponse
+    -> AWS.Request StopDataCollectionByAgentIdsResponse
 stopDataCollectionByAgentIds agentIds =
     AWS.Http.unsignedRequest
         "StopDataCollectionByAgentIds"
@@ -653,6 +671,7 @@ stopDataCollectionByAgentIds agentIds =
             JE.null
         )
         stopDataCollectionByAgentIdsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -667,7 +686,7 @@ __Required Parameters__
 updateApplication :
     String
     -> (UpdateApplicationOptions -> UpdateApplicationOptions)
-    -> AWS.Http.UnsignedRequest UpdateApplicationResponse
+    -> AWS.Request UpdateApplicationResponse
 updateApplication configurationId setOptions =
   let
     options = setOptions (UpdateApplicationOptions Nothing Nothing)
@@ -680,6 +699,7 @@ updateApplication configurationId setOptions =
             JE.null
         )
         updateApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateApplication request

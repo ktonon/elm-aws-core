@@ -510,7 +510,9 @@ module AWS.Services.APIGateway
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -522,15 +524,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "apigateway"
         "2015-07-09"
         "undefined"
         "AWSAPIGATEWAY_20150709."
         "apigateway.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -545,7 +548,7 @@ __Required Parameters__
 -}
 createApiKey :
     (CreateApiKeyOptions -> CreateApiKeyOptions)
-    -> AWS.Http.UnsignedRequest ApiKey
+    -> AWS.Request ApiKey
 createApiKey setOptions =
   let
     options = setOptions (CreateApiKeyOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -558,6 +561,7 @@ createApiKey setOptions =
             JE.null
         )
         apiKeyDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createApiKey request
@@ -591,7 +595,7 @@ createAuthorizer :
     -> AuthorizerType
     -> String
     -> (CreateAuthorizerOptions -> CreateAuthorizerOptions)
-    -> AWS.Http.UnsignedRequest Authorizer
+    -> AWS.Request Authorizer
 createAuthorizer restApiId name type_ identitySource setOptions =
   let
     options = setOptions (CreateAuthorizerOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -604,6 +608,7 @@ createAuthorizer restApiId name type_ identitySource setOptions =
             JE.null
         )
         authorizerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createAuthorizer request
@@ -632,7 +637,7 @@ createBasePathMapping :
     String
     -> String
     -> (CreateBasePathMappingOptions -> CreateBasePathMappingOptions)
-    -> AWS.Http.UnsignedRequest BasePathMapping
+    -> AWS.Request BasePathMapping
 createBasePathMapping domainName restApiId setOptions =
   let
     options = setOptions (CreateBasePathMappingOptions Nothing Nothing)
@@ -645,6 +650,7 @@ createBasePathMapping domainName restApiId setOptions =
             JE.null
         )
         basePathMappingDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createBasePathMapping request
@@ -667,7 +673,7 @@ __Required Parameters__
 createDeployment :
     String
     -> (CreateDeploymentOptions -> CreateDeploymentOptions)
-    -> AWS.Http.UnsignedRequest Deployment
+    -> AWS.Request Deployment
 createDeployment restApiId setOptions =
   let
     options = setOptions (CreateDeploymentOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -680,6 +686,7 @@ createDeployment restApiId setOptions =
             JE.null
         )
         deploymentDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDeployment request
@@ -709,7 +716,7 @@ createDocumentationPart :
     String
     -> DocumentationPartLocation
     -> String
-    -> AWS.Http.UnsignedRequest DocumentationPart
+    -> AWS.Request DocumentationPart
 createDocumentationPart restApiId location properties =
     AWS.Http.unsignedRequest
         "CreateDocumentationPart"
@@ -719,6 +726,7 @@ createDocumentationPart restApiId location properties =
             JE.null
         )
         documentationPartDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -735,7 +743,7 @@ createDocumentationVersion :
     String
     -> String
     -> (CreateDocumentationVersionOptions -> CreateDocumentationVersionOptions)
-    -> AWS.Http.UnsignedRequest DocumentationVersion
+    -> AWS.Request DocumentationVersion
 createDocumentationVersion restApiId documentationVersion setOptions =
   let
     options = setOptions (CreateDocumentationVersionOptions Nothing Nothing)
@@ -748,6 +756,7 @@ createDocumentationVersion restApiId documentationVersion setOptions =
             JE.null
         )
         documentationVersionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDocumentationVersion request
@@ -777,7 +786,7 @@ createDomainName :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest DomainName
+    -> AWS.Request DomainName
 createDomainName domainName certificateName certificateBody certificatePrivateKey certificateChain =
     AWS.Http.unsignedRequest
         "CreateDomainName"
@@ -787,6 +796,7 @@ createDomainName domainName certificateName certificateBody certificatePrivateKe
             JE.null
         )
         domainNameDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -805,7 +815,7 @@ createModel :
     -> String
     -> String
     -> (CreateModelOptions -> CreateModelOptions)
-    -> AWS.Http.UnsignedRequest Model
+    -> AWS.Request Model
 createModel restApiId name contentType setOptions =
   let
     options = setOptions (CreateModelOptions Nothing Nothing)
@@ -818,6 +828,7 @@ createModel restApiId name contentType setOptions =
             JE.null
         )
         modelDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createModel request
@@ -843,7 +854,7 @@ createResource :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest Resource
+    -> AWS.Request Resource
 createResource restApiId parentId pathPart =
     AWS.Http.unsignedRequest
         "CreateResource"
@@ -853,6 +864,7 @@ createResource restApiId parentId pathPart =
             JE.null
         )
         resourceDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -867,7 +879,7 @@ __Required Parameters__
 createRestApi :
     String
     -> (CreateRestApiOptions -> CreateRestApiOptions)
-    -> AWS.Http.UnsignedRequest RestApi
+    -> AWS.Request RestApi
 createRestApi name setOptions =
   let
     options = setOptions (CreateRestApiOptions Nothing Nothing Nothing Nothing)
@@ -880,6 +892,7 @@ createRestApi name setOptions =
             JE.null
         )
         restApiDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createRestApi request
@@ -908,7 +921,7 @@ createStage :
     -> String
     -> String
     -> (CreateStageOptions -> CreateStageOptions)
-    -> AWS.Http.UnsignedRequest Stage
+    -> AWS.Request Stage
 createStage restApiId stageName deploymentId setOptions =
   let
     options = setOptions (CreateStageOptions Nothing Nothing Nothing Nothing Nothing)
@@ -921,6 +934,7 @@ createStage restApiId stageName deploymentId setOptions =
             JE.null
         )
         stageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createStage request
@@ -946,7 +960,7 @@ __Required Parameters__
 createUsagePlan :
     String
     -> (CreateUsagePlanOptions -> CreateUsagePlanOptions)
-    -> AWS.Http.UnsignedRequest UsagePlan
+    -> AWS.Request UsagePlan
 createUsagePlan name setOptions =
   let
     options = setOptions (CreateUsagePlanOptions Nothing Nothing Nothing Nothing)
@@ -959,6 +973,7 @@ createUsagePlan name setOptions =
             JE.null
         )
         usagePlanDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createUsagePlan request
@@ -986,7 +1001,7 @@ createUsagePlanKey :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest UsagePlanKey
+    -> AWS.Request UsagePlanKey
 createUsagePlanKey usagePlanId keyId keyType =
     AWS.Http.unsignedRequest
         "CreateUsagePlanKey"
@@ -996,6 +1011,7 @@ createUsagePlanKey usagePlanId keyId keyType =
             JE.null
         )
         usagePlanKeyDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1009,7 +1025,7 @@ __Required Parameters__
 -}
 deleteApiKey :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteApiKey apiKey =
     AWS.Http.unsignedRequest
         "DeleteApiKey"
@@ -1019,6 +1035,7 @@ deleteApiKey apiKey =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1034,7 +1051,7 @@ __Required Parameters__
 deleteAuthorizer :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAuthorizer restApiId authorizerId =
     AWS.Http.unsignedRequest
         "DeleteAuthorizer"
@@ -1044,6 +1061,7 @@ deleteAuthorizer restApiId authorizerId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1059,7 +1077,7 @@ __Required Parameters__
 deleteBasePathMapping :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBasePathMapping domainName basePath =
     AWS.Http.unsignedRequest
         "DeleteBasePathMapping"
@@ -1069,6 +1087,7 @@ deleteBasePathMapping domainName basePath =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1082,7 +1101,7 @@ __Required Parameters__
 -}
 deleteClientCertificate :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteClientCertificate clientCertificateId =
     AWS.Http.unsignedRequest
         "DeleteClientCertificate"
@@ -1092,6 +1111,7 @@ deleteClientCertificate clientCertificateId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1107,7 +1127,7 @@ __Required Parameters__
 deleteDeployment :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDeployment restApiId deploymentId =
     AWS.Http.unsignedRequest
         "DeleteDeployment"
@@ -1117,6 +1137,7 @@ deleteDeployment restApiId deploymentId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1132,7 +1153,7 @@ __Required Parameters__
 deleteDocumentationPart :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDocumentationPart restApiId documentationPartId =
     AWS.Http.unsignedRequest
         "DeleteDocumentationPart"
@@ -1142,6 +1163,7 @@ deleteDocumentationPart restApiId documentationPartId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1157,7 +1179,7 @@ __Required Parameters__
 deleteDocumentationVersion :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDocumentationVersion restApiId documentationVersion =
     AWS.Http.unsignedRequest
         "DeleteDocumentationVersion"
@@ -1167,6 +1189,7 @@ deleteDocumentationVersion restApiId documentationVersion =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1180,7 +1203,7 @@ __Required Parameters__
 -}
 deleteDomainName :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDomainName domainName =
     AWS.Http.unsignedRequest
         "DeleteDomainName"
@@ -1190,6 +1213,7 @@ deleteDomainName domainName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1207,7 +1231,7 @@ deleteIntegration :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteIntegration restApiId resourceId httpMethod =
     AWS.Http.unsignedRequest
         "DeleteIntegration"
@@ -1217,6 +1241,7 @@ deleteIntegration restApiId resourceId httpMethod =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1236,7 +1261,7 @@ deleteIntegrationResponse :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteIntegrationResponse restApiId resourceId httpMethod statusCode =
     AWS.Http.unsignedRequest
         "DeleteIntegrationResponse"
@@ -1246,6 +1271,7 @@ deleteIntegrationResponse restApiId resourceId httpMethod statusCode =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1263,7 +1289,7 @@ deleteMethod :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteMethod restApiId resourceId httpMethod =
     AWS.Http.unsignedRequest
         "DeleteMethod"
@@ -1273,6 +1299,7 @@ deleteMethod restApiId resourceId httpMethod =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1292,7 +1319,7 @@ deleteMethodResponse :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteMethodResponse restApiId resourceId httpMethod statusCode =
     AWS.Http.unsignedRequest
         "DeleteMethodResponse"
@@ -1302,6 +1329,7 @@ deleteMethodResponse restApiId resourceId httpMethod statusCode =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1317,7 +1345,7 @@ __Required Parameters__
 deleteModel :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteModel restApiId modelName =
     AWS.Http.unsignedRequest
         "DeleteModel"
@@ -1327,6 +1355,7 @@ deleteModel restApiId modelName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1342,7 +1371,7 @@ __Required Parameters__
 deleteResource :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteResource restApiId resourceId =
     AWS.Http.unsignedRequest
         "DeleteResource"
@@ -1352,6 +1381,7 @@ deleteResource restApiId resourceId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1365,7 +1395,7 @@ __Required Parameters__
 -}
 deleteRestApi :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteRestApi restApiId =
     AWS.Http.unsignedRequest
         "DeleteRestApi"
@@ -1375,6 +1405,7 @@ deleteRestApi restApiId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1390,7 +1421,7 @@ __Required Parameters__
 deleteStage :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteStage restApiId stageName =
     AWS.Http.unsignedRequest
         "DeleteStage"
@@ -1400,6 +1431,7 @@ deleteStage restApiId stageName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1413,7 +1445,7 @@ __Required Parameters__
 -}
 deleteUsagePlan :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteUsagePlan usagePlanId =
     AWS.Http.unsignedRequest
         "DeleteUsagePlan"
@@ -1423,6 +1455,7 @@ deleteUsagePlan usagePlanId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1438,7 +1471,7 @@ __Required Parameters__
 deleteUsagePlanKey :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteUsagePlanKey usagePlanId keyId =
     AWS.Http.unsignedRequest
         "DeleteUsagePlanKey"
@@ -1448,6 +1481,7 @@ deleteUsagePlanKey usagePlanId keyId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1463,7 +1497,7 @@ __Required Parameters__
 flushStageAuthorizersCache :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 flushStageAuthorizersCache restApiId stageName =
     AWS.Http.unsignedRequest
         "FlushStageAuthorizersCache"
@@ -1473,6 +1507,7 @@ flushStageAuthorizersCache restApiId stageName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1488,7 +1523,7 @@ __Required Parameters__
 flushStageCache :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 flushStageCache restApiId stageName =
     AWS.Http.unsignedRequest
         "FlushStageCache"
@@ -1498,6 +1533,7 @@ flushStageCache restApiId stageName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1510,7 +1546,7 @@ __Required Parameters__
 -}
 generateClientCertificate :
     (GenerateClientCertificateOptions -> GenerateClientCertificateOptions)
-    -> AWS.Http.UnsignedRequest ClientCertificate
+    -> AWS.Request ClientCertificate
 generateClientCertificate setOptions =
   let
     options = setOptions (GenerateClientCertificateOptions Nothing)
@@ -1523,6 +1559,7 @@ generateClientCertificate setOptions =
             JE.null
         )
         clientCertificateDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a generateClientCertificate request
@@ -1541,7 +1578,7 @@ __Required Parameters__
 
 -}
 getAccount :
-    AWS.Http.UnsignedRequest Account
+    AWS.Request Account
 getAccount =
     AWS.Http.unsignedRequest
         "GetAccount"
@@ -1552,6 +1589,7 @@ getAccount =
             ]
         )
         accountDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1566,7 +1604,7 @@ __Required Parameters__
 getApiKey :
     String
     -> (GetApiKeyOptions -> GetApiKeyOptions)
-    -> AWS.Http.UnsignedRequest ApiKey
+    -> AWS.Request ApiKey
 getApiKey apiKey setOptions =
   let
     options = setOptions (GetApiKeyOptions Nothing)
@@ -1580,6 +1618,7 @@ getApiKey apiKey setOptions =
             ]
         )
         apiKeyDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getApiKey request
@@ -1599,7 +1638,7 @@ __Required Parameters__
 -}
 getApiKeys :
     (GetApiKeysOptions -> GetApiKeysOptions)
-    -> AWS.Http.UnsignedRequest ApiKeys
+    -> AWS.Request ApiKeys
 getApiKeys setOptions =
   let
     options = setOptions (GetApiKeysOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1613,6 +1652,7 @@ getApiKeys setOptions =
             ]
         )
         apiKeysDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getApiKeys request
@@ -1639,7 +1679,7 @@ __Required Parameters__
 getAuthorizer :
     String
     -> String
-    -> AWS.Http.UnsignedRequest Authorizer
+    -> AWS.Request Authorizer
 getAuthorizer restApiId authorizerId =
     AWS.Http.unsignedRequest
         "GetAuthorizer"
@@ -1650,6 +1690,7 @@ getAuthorizer restApiId authorizerId =
             ]
         )
         authorizerDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1664,7 +1705,7 @@ __Required Parameters__
 getAuthorizers :
     String
     -> (GetAuthorizersOptions -> GetAuthorizersOptions)
-    -> AWS.Http.UnsignedRequest Authorizers
+    -> AWS.Request Authorizers
 getAuthorizers restApiId setOptions =
   let
     options = setOptions (GetAuthorizersOptions Nothing Nothing)
@@ -1678,6 +1719,7 @@ getAuthorizers restApiId setOptions =
             ]
         )
         authorizersDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getAuthorizers request
@@ -1701,7 +1743,7 @@ __Required Parameters__
 getBasePathMapping :
     String
     -> String
-    -> AWS.Http.UnsignedRequest BasePathMapping
+    -> AWS.Request BasePathMapping
 getBasePathMapping domainName basePath =
     AWS.Http.unsignedRequest
         "GetBasePathMapping"
@@ -1712,6 +1754,7 @@ getBasePathMapping domainName basePath =
             ]
         )
         basePathMappingDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1726,7 +1769,7 @@ __Required Parameters__
 getBasePathMappings :
     String
     -> (GetBasePathMappingsOptions -> GetBasePathMappingsOptions)
-    -> AWS.Http.UnsignedRequest BasePathMappings
+    -> AWS.Request BasePathMappings
 getBasePathMappings domainName setOptions =
   let
     options = setOptions (GetBasePathMappingsOptions Nothing Nothing)
@@ -1740,6 +1783,7 @@ getBasePathMappings domainName setOptions =
             ]
         )
         basePathMappingsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getBasePathMappings request
@@ -1761,7 +1805,7 @@ __Required Parameters__
 -}
 getClientCertificate :
     String
-    -> AWS.Http.UnsignedRequest ClientCertificate
+    -> AWS.Request ClientCertificate
 getClientCertificate clientCertificateId =
     AWS.Http.unsignedRequest
         "GetClientCertificate"
@@ -1772,6 +1816,7 @@ getClientCertificate clientCertificateId =
             ]
         )
         clientCertificateDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1784,7 +1829,7 @@ __Required Parameters__
 -}
 getClientCertificates :
     (GetClientCertificatesOptions -> GetClientCertificatesOptions)
-    -> AWS.Http.UnsignedRequest ClientCertificates
+    -> AWS.Request ClientCertificates
 getClientCertificates setOptions =
   let
     options = setOptions (GetClientCertificatesOptions Nothing Nothing)
@@ -1798,6 +1843,7 @@ getClientCertificates setOptions =
             ]
         )
         clientCertificatesDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getClientCertificates request
@@ -1821,7 +1867,7 @@ __Required Parameters__
 getDeployment :
     String
     -> String
-    -> AWS.Http.UnsignedRequest Deployment
+    -> AWS.Request Deployment
 getDeployment restApiId deploymentId =
     AWS.Http.unsignedRequest
         "GetDeployment"
@@ -1832,6 +1878,7 @@ getDeployment restApiId deploymentId =
             ]
         )
         deploymentDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1846,7 +1893,7 @@ __Required Parameters__
 getDeployments :
     String
     -> (GetDeploymentsOptions -> GetDeploymentsOptions)
-    -> AWS.Http.UnsignedRequest Deployments
+    -> AWS.Request Deployments
 getDeployments restApiId setOptions =
   let
     options = setOptions (GetDeploymentsOptions Nothing Nothing)
@@ -1860,6 +1907,7 @@ getDeployments restApiId setOptions =
             ]
         )
         deploymentsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDeployments request
@@ -1883,7 +1931,7 @@ __Required Parameters__
 getDocumentationPart :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DocumentationPart
+    -> AWS.Request DocumentationPart
 getDocumentationPart restApiId documentationPartId =
     AWS.Http.unsignedRequest
         "GetDocumentationPart"
@@ -1894,6 +1942,7 @@ getDocumentationPart restApiId documentationPartId =
             ]
         )
         documentationPartDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1908,7 +1957,7 @@ __Required Parameters__
 getDocumentationParts :
     String
     -> (GetDocumentationPartsOptions -> GetDocumentationPartsOptions)
-    -> AWS.Http.UnsignedRequest DocumentationParts
+    -> AWS.Request DocumentationParts
 getDocumentationParts restApiId setOptions =
   let
     options = setOptions (GetDocumentationPartsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1922,6 +1971,7 @@ getDocumentationParts restApiId setOptions =
             ]
         )
         documentationPartsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDocumentationParts request
@@ -1948,7 +1998,7 @@ __Required Parameters__
 getDocumentationVersion :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DocumentationVersion
+    -> AWS.Request DocumentationVersion
 getDocumentationVersion restApiId documentationVersion =
     AWS.Http.unsignedRequest
         "GetDocumentationVersion"
@@ -1959,6 +2009,7 @@ getDocumentationVersion restApiId documentationVersion =
             ]
         )
         documentationVersionDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1973,7 +2024,7 @@ __Required Parameters__
 getDocumentationVersions :
     String
     -> (GetDocumentationVersionsOptions -> GetDocumentationVersionsOptions)
-    -> AWS.Http.UnsignedRequest DocumentationVersions
+    -> AWS.Request DocumentationVersions
 getDocumentationVersions restApiId setOptions =
   let
     options = setOptions (GetDocumentationVersionsOptions Nothing Nothing)
@@ -1987,6 +2038,7 @@ getDocumentationVersions restApiId setOptions =
             ]
         )
         documentationVersionsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDocumentationVersions request
@@ -2008,7 +2060,7 @@ __Required Parameters__
 -}
 getDomainName :
     String
-    -> AWS.Http.UnsignedRequest DomainName
+    -> AWS.Request DomainName
 getDomainName domainName =
     AWS.Http.unsignedRequest
         "GetDomainName"
@@ -2019,6 +2071,7 @@ getDomainName domainName =
             ]
         )
         domainNameDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2031,7 +2084,7 @@ __Required Parameters__
 -}
 getDomainNames :
     (GetDomainNamesOptions -> GetDomainNamesOptions)
-    -> AWS.Http.UnsignedRequest DomainNames
+    -> AWS.Request DomainNames
 getDomainNames setOptions =
   let
     options = setOptions (GetDomainNamesOptions Nothing Nothing)
@@ -2045,6 +2098,7 @@ getDomainNames setOptions =
             ]
         )
         domainNamesDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDomainNames request
@@ -2071,7 +2125,7 @@ getExport :
     -> String
     -> String
     -> (GetExportOptions -> GetExportOptions)
-    -> AWS.Http.UnsignedRequest ExportResponse
+    -> AWS.Request ExportResponse
 getExport restApiId stageName exportType setOptions =
   let
     options = setOptions (GetExportOptions Nothing Nothing)
@@ -2085,6 +2139,7 @@ getExport restApiId stageName exportType setOptions =
             ]
         )
         exportResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getExport request
@@ -2110,7 +2165,7 @@ getIntegration :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest Integration
+    -> AWS.Request Integration
 getIntegration restApiId resourceId httpMethod =
     AWS.Http.unsignedRequest
         "GetIntegration"
@@ -2121,6 +2176,7 @@ getIntegration restApiId resourceId httpMethod =
             ]
         )
         integrationDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2140,7 +2196,7 @@ getIntegrationResponse :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest IntegrationResponse
+    -> AWS.Request IntegrationResponse
 getIntegrationResponse restApiId resourceId httpMethod statusCode =
     AWS.Http.unsignedRequest
         "GetIntegrationResponse"
@@ -2151,6 +2207,7 @@ getIntegrationResponse restApiId resourceId httpMethod statusCode =
             ]
         )
         integrationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2168,7 +2225,7 @@ getMethod :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest Method
+    -> AWS.Request Method
 getMethod restApiId resourceId httpMethod =
     AWS.Http.unsignedRequest
         "GetMethod"
@@ -2179,6 +2236,7 @@ getMethod restApiId resourceId httpMethod =
             ]
         )
         methodDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2198,7 +2256,7 @@ getMethodResponse :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest MethodResponse
+    -> AWS.Request MethodResponse
 getMethodResponse restApiId resourceId httpMethod statusCode =
     AWS.Http.unsignedRequest
         "GetMethodResponse"
@@ -2209,6 +2267,7 @@ getMethodResponse restApiId resourceId httpMethod statusCode =
             ]
         )
         methodResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2225,7 +2284,7 @@ getModel :
     String
     -> String
     -> (GetModelOptions -> GetModelOptions)
-    -> AWS.Http.UnsignedRequest Model
+    -> AWS.Request Model
 getModel restApiId modelName setOptions =
   let
     options = setOptions (GetModelOptions Nothing)
@@ -2239,6 +2298,7 @@ getModel restApiId modelName setOptions =
             ]
         )
         modelDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getModel request
@@ -2261,7 +2321,7 @@ __Required Parameters__
 getModelTemplate :
     String
     -> String
-    -> AWS.Http.UnsignedRequest Template
+    -> AWS.Request Template
 getModelTemplate restApiId modelName =
     AWS.Http.unsignedRequest
         "GetModelTemplate"
@@ -2272,6 +2332,7 @@ getModelTemplate restApiId modelName =
             ]
         )
         templateDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2286,7 +2347,7 @@ __Required Parameters__
 getModels :
     String
     -> (GetModelsOptions -> GetModelsOptions)
-    -> AWS.Http.UnsignedRequest Models
+    -> AWS.Request Models
 getModels restApiId setOptions =
   let
     options = setOptions (GetModelsOptions Nothing Nothing)
@@ -2300,6 +2361,7 @@ getModels restApiId setOptions =
             ]
         )
         modelsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getModels request
@@ -2323,7 +2385,7 @@ __Required Parameters__
 getResource :
     String
     -> String
-    -> AWS.Http.UnsignedRequest Resource
+    -> AWS.Request Resource
 getResource restApiId resourceId =
     AWS.Http.unsignedRequest
         "GetResource"
@@ -2334,6 +2396,7 @@ getResource restApiId resourceId =
             ]
         )
         resourceDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2348,7 +2411,7 @@ __Required Parameters__
 getResources :
     String
     -> (GetResourcesOptions -> GetResourcesOptions)
-    -> AWS.Http.UnsignedRequest Resources
+    -> AWS.Request Resources
 getResources restApiId setOptions =
   let
     options = setOptions (GetResourcesOptions Nothing Nothing)
@@ -2362,6 +2425,7 @@ getResources restApiId setOptions =
             ]
         )
         resourcesDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getResources request
@@ -2383,7 +2447,7 @@ __Required Parameters__
 -}
 getRestApi :
     String
-    -> AWS.Http.UnsignedRequest RestApi
+    -> AWS.Request RestApi
 getRestApi restApiId =
     AWS.Http.unsignedRequest
         "GetRestApi"
@@ -2394,6 +2458,7 @@ getRestApi restApiId =
             ]
         )
         restApiDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2406,7 +2471,7 @@ __Required Parameters__
 -}
 getRestApis :
     (GetRestApisOptions -> GetRestApisOptions)
-    -> AWS.Http.UnsignedRequest RestApis
+    -> AWS.Request RestApis
 getRestApis setOptions =
   let
     options = setOptions (GetRestApisOptions Nothing Nothing)
@@ -2420,6 +2485,7 @@ getRestApis setOptions =
             ]
         )
         restApisDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getRestApis request
@@ -2446,7 +2512,7 @@ getSdk :
     -> String
     -> String
     -> (GetSdkOptions -> GetSdkOptions)
-    -> AWS.Http.UnsignedRequest SdkResponse
+    -> AWS.Request SdkResponse
 getSdk restApiId stageName sdkType setOptions =
   let
     options = setOptions (GetSdkOptions Nothing)
@@ -2460,6 +2526,7 @@ getSdk restApiId stageName sdkType setOptions =
             ]
         )
         sdkResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getSdk request
@@ -2480,7 +2547,7 @@ __Required Parameters__
 -}
 getSdkType :
     String
-    -> AWS.Http.UnsignedRequest SdkType
+    -> AWS.Request SdkType
 getSdkType id =
     AWS.Http.unsignedRequest
         "GetSdkType"
@@ -2491,6 +2558,7 @@ getSdkType id =
             ]
         )
         sdkTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2503,7 +2571,7 @@ __Required Parameters__
 -}
 getSdkTypes :
     (GetSdkTypesOptions -> GetSdkTypesOptions)
-    -> AWS.Http.UnsignedRequest SdkTypes
+    -> AWS.Request SdkTypes
 getSdkTypes setOptions =
   let
     options = setOptions (GetSdkTypesOptions Nothing Nothing)
@@ -2517,6 +2585,7 @@ getSdkTypes setOptions =
             ]
         )
         sdkTypesDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getSdkTypes request
@@ -2540,7 +2609,7 @@ __Required Parameters__
 getStage :
     String
     -> String
-    -> AWS.Http.UnsignedRequest Stage
+    -> AWS.Request Stage
 getStage restApiId stageName =
     AWS.Http.unsignedRequest
         "GetStage"
@@ -2551,6 +2620,7 @@ getStage restApiId stageName =
             ]
         )
         stageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2565,7 +2635,7 @@ __Required Parameters__
 getStages :
     String
     -> (GetStagesOptions -> GetStagesOptions)
-    -> AWS.Http.UnsignedRequest Stages
+    -> AWS.Request Stages
 getStages restApiId setOptions =
   let
     options = setOptions (GetStagesOptions Nothing)
@@ -2579,6 +2649,7 @@ getStages restApiId setOptions =
             ]
         )
         stagesDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getStages request
@@ -2604,7 +2675,7 @@ getUsage :
     -> String
     -> String
     -> (GetUsageOptions -> GetUsageOptions)
-    -> AWS.Http.UnsignedRequest Usage
+    -> AWS.Request Usage
 getUsage usagePlanId startDate endDate setOptions =
   let
     options = setOptions (GetUsageOptions Nothing Nothing Nothing)
@@ -2618,6 +2689,7 @@ getUsage usagePlanId startDate endDate setOptions =
             ]
         )
         usageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getUsage request
@@ -2640,7 +2712,7 @@ __Required Parameters__
 -}
 getUsagePlan :
     String
-    -> AWS.Http.UnsignedRequest UsagePlan
+    -> AWS.Request UsagePlan
 getUsagePlan usagePlanId =
     AWS.Http.unsignedRequest
         "GetUsagePlan"
@@ -2651,6 +2723,7 @@ getUsagePlan usagePlanId =
             ]
         )
         usagePlanDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2666,7 +2739,7 @@ __Required Parameters__
 getUsagePlanKey :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UsagePlanKey
+    -> AWS.Request UsagePlanKey
 getUsagePlanKey usagePlanId keyId =
     AWS.Http.unsignedRequest
         "GetUsagePlanKey"
@@ -2677,6 +2750,7 @@ getUsagePlanKey usagePlanId keyId =
             ]
         )
         usagePlanKeyDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2691,7 +2765,7 @@ __Required Parameters__
 getUsagePlanKeys :
     String
     -> (GetUsagePlanKeysOptions -> GetUsagePlanKeysOptions)
-    -> AWS.Http.UnsignedRequest UsagePlanKeys
+    -> AWS.Request UsagePlanKeys
 getUsagePlanKeys usagePlanId setOptions =
   let
     options = setOptions (GetUsagePlanKeysOptions Nothing Nothing Nothing)
@@ -2705,6 +2779,7 @@ getUsagePlanKeys usagePlanId setOptions =
             ]
         )
         usagePlanKeysDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getUsagePlanKeys request
@@ -2726,7 +2801,7 @@ __Required Parameters__
 -}
 getUsagePlans :
     (GetUsagePlansOptions -> GetUsagePlansOptions)
-    -> AWS.Http.UnsignedRequest UsagePlans
+    -> AWS.Request UsagePlans
 getUsagePlans setOptions =
   let
     options = setOptions (GetUsagePlansOptions Nothing Nothing Nothing)
@@ -2740,6 +2815,7 @@ getUsagePlans setOptions =
             ]
         )
         usagePlansDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getUsagePlans request
@@ -2765,7 +2841,7 @@ importApiKeys :
     String
     -> ApiKeysFormat
     -> (ImportApiKeysOptions -> ImportApiKeysOptions)
-    -> AWS.Http.UnsignedRequest ApiKeyIds
+    -> AWS.Request ApiKeyIds
 importApiKeys body format setOptions =
   let
     options = setOptions (ImportApiKeysOptions Nothing)
@@ -2778,6 +2854,7 @@ importApiKeys body format setOptions =
             JE.null
         )
         apiKeyIdsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importApiKeys request
@@ -2801,7 +2878,7 @@ importDocumentationParts :
     String
     -> String
     -> (ImportDocumentationPartsOptions -> ImportDocumentationPartsOptions)
-    -> AWS.Http.UnsignedRequest DocumentationPartIds
+    -> AWS.Request DocumentationPartIds
 importDocumentationParts restApiId body setOptions =
   let
     options = setOptions (ImportDocumentationPartsOptions Nothing Nothing)
@@ -2814,6 +2891,7 @@ importDocumentationParts restApiId body setOptions =
             JE.null
         )
         documentationPartIdsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importDocumentationParts request
@@ -2836,7 +2914,7 @@ __Required Parameters__
 importRestApi :
     String
     -> (ImportRestApiOptions -> ImportRestApiOptions)
-    -> AWS.Http.UnsignedRequest RestApi
+    -> AWS.Request RestApi
 importRestApi body setOptions =
   let
     options = setOptions (ImportRestApiOptions Nothing Nothing)
@@ -2849,6 +2927,7 @@ importRestApi body setOptions =
             JE.null
         )
         restApiDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importRestApi request
@@ -2877,7 +2956,7 @@ putIntegration :
     -> String
     -> IntegrationType
     -> (PutIntegrationOptions -> PutIntegrationOptions)
-    -> AWS.Http.UnsignedRequest Integration
+    -> AWS.Request Integration
 putIntegration restApiId resourceId httpMethod type_ setOptions =
   let
     options = setOptions (PutIntegrationOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2890,6 +2969,7 @@ putIntegration restApiId resourceId httpMethod type_ setOptions =
             JE.null
         )
         integrationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putIntegration request
@@ -2925,7 +3005,7 @@ putIntegrationResponse :
     -> String
     -> String
     -> (PutIntegrationResponseOptions -> PutIntegrationResponseOptions)
-    -> AWS.Http.UnsignedRequest IntegrationResponse
+    -> AWS.Request IntegrationResponse
 putIntegrationResponse restApiId resourceId httpMethod statusCode setOptions =
   let
     options = setOptions (PutIntegrationResponseOptions Nothing Nothing Nothing Nothing)
@@ -2938,6 +3018,7 @@ putIntegrationResponse restApiId resourceId httpMethod statusCode setOptions =
             JE.null
         )
         integrationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putIntegrationResponse request
@@ -2968,7 +3049,7 @@ putMethod :
     -> String
     -> String
     -> (PutMethodOptions -> PutMethodOptions)
-    -> AWS.Http.UnsignedRequest Method
+    -> AWS.Request Method
 putMethod restApiId resourceId httpMethod authorizationType setOptions =
   let
     options = setOptions (PutMethodOptions Nothing Nothing Nothing Nothing Nothing)
@@ -2981,6 +3062,7 @@ putMethod restApiId resourceId httpMethod authorizationType setOptions =
             JE.null
         )
         methodDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putMethod request
@@ -3012,7 +3094,7 @@ putMethodResponse :
     -> String
     -> String
     -> (PutMethodResponseOptions -> PutMethodResponseOptions)
-    -> AWS.Http.UnsignedRequest MethodResponse
+    -> AWS.Request MethodResponse
 putMethodResponse restApiId resourceId httpMethod statusCode setOptions =
   let
     options = setOptions (PutMethodResponseOptions Nothing Nothing)
@@ -3025,6 +3107,7 @@ putMethodResponse restApiId resourceId httpMethod statusCode setOptions =
             JE.null
         )
         methodResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putMethodResponse request
@@ -3049,7 +3132,7 @@ putRestApi :
     String
     -> String
     -> (PutRestApiOptions -> PutRestApiOptions)
-    -> AWS.Http.UnsignedRequest RestApi
+    -> AWS.Request RestApi
 putRestApi restApiId body setOptions =
   let
     options = setOptions (PutRestApiOptions Nothing Nothing Nothing)
@@ -3062,6 +3145,7 @@ putRestApi restApiId body setOptions =
             JE.null
         )
         restApiDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putRestApi request
@@ -3087,7 +3171,7 @@ testInvokeAuthorizer :
     String
     -> String
     -> (TestInvokeAuthorizerOptions -> TestInvokeAuthorizerOptions)
-    -> AWS.Http.UnsignedRequest TestInvokeAuthorizerResponse
+    -> AWS.Request TestInvokeAuthorizerResponse
 testInvokeAuthorizer restApiId authorizerId setOptions =
   let
     options = setOptions (TestInvokeAuthorizerOptions Nothing Nothing Nothing Nothing Nothing)
@@ -3100,6 +3184,7 @@ testInvokeAuthorizer restApiId authorizerId setOptions =
             JE.null
         )
         testInvokeAuthorizerResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a testInvokeAuthorizer request
@@ -3129,7 +3214,7 @@ testInvokeMethod :
     -> String
     -> String
     -> (TestInvokeMethodOptions -> TestInvokeMethodOptions)
-    -> AWS.Http.UnsignedRequest TestInvokeMethodResponse
+    -> AWS.Request TestInvokeMethodResponse
 testInvokeMethod restApiId resourceId httpMethod setOptions =
   let
     options = setOptions (TestInvokeMethodOptions Nothing Nothing Nothing Nothing Nothing)
@@ -3142,6 +3227,7 @@ testInvokeMethod restApiId resourceId httpMethod setOptions =
             JE.null
         )
         testInvokeMethodResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a testInvokeMethod request
@@ -3165,7 +3251,7 @@ __Required Parameters__
 -}
 updateAccount :
     (UpdateAccountOptions -> UpdateAccountOptions)
-    -> AWS.Http.UnsignedRequest Account
+    -> AWS.Request Account
 updateAccount setOptions =
   let
     options = setOptions (UpdateAccountOptions Nothing)
@@ -3178,6 +3264,7 @@ updateAccount setOptions =
             JE.null
         )
         accountDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateAccount request
@@ -3199,7 +3286,7 @@ __Required Parameters__
 updateApiKey :
     String
     -> (UpdateApiKeyOptions -> UpdateApiKeyOptions)
-    -> AWS.Http.UnsignedRequest ApiKey
+    -> AWS.Request ApiKey
 updateApiKey apiKey setOptions =
   let
     options = setOptions (UpdateApiKeyOptions Nothing)
@@ -3212,6 +3299,7 @@ updateApiKey apiKey setOptions =
             JE.null
         )
         apiKeyDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateApiKey request
@@ -3235,7 +3323,7 @@ updateAuthorizer :
     String
     -> String
     -> (UpdateAuthorizerOptions -> UpdateAuthorizerOptions)
-    -> AWS.Http.UnsignedRequest Authorizer
+    -> AWS.Request Authorizer
 updateAuthorizer restApiId authorizerId setOptions =
   let
     options = setOptions (UpdateAuthorizerOptions Nothing)
@@ -3248,6 +3336,7 @@ updateAuthorizer restApiId authorizerId setOptions =
             JE.null
         )
         authorizerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateAuthorizer request
@@ -3271,7 +3360,7 @@ updateBasePathMapping :
     String
     -> String
     -> (UpdateBasePathMappingOptions -> UpdateBasePathMappingOptions)
-    -> AWS.Http.UnsignedRequest BasePathMapping
+    -> AWS.Request BasePathMapping
 updateBasePathMapping domainName basePath setOptions =
   let
     options = setOptions (UpdateBasePathMappingOptions Nothing)
@@ -3284,6 +3373,7 @@ updateBasePathMapping domainName basePath setOptions =
             JE.null
         )
         basePathMappingDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateBasePathMapping request
@@ -3305,7 +3395,7 @@ __Required Parameters__
 updateClientCertificate :
     String
     -> (UpdateClientCertificateOptions -> UpdateClientCertificateOptions)
-    -> AWS.Http.UnsignedRequest ClientCertificate
+    -> AWS.Request ClientCertificate
 updateClientCertificate clientCertificateId setOptions =
   let
     options = setOptions (UpdateClientCertificateOptions Nothing)
@@ -3318,6 +3408,7 @@ updateClientCertificate clientCertificateId setOptions =
             JE.null
         )
         clientCertificateDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateClientCertificate request
@@ -3341,7 +3432,7 @@ updateDeployment :
     String
     -> String
     -> (UpdateDeploymentOptions -> UpdateDeploymentOptions)
-    -> AWS.Http.UnsignedRequest Deployment
+    -> AWS.Request Deployment
 updateDeployment restApiId deploymentId setOptions =
   let
     options = setOptions (UpdateDeploymentOptions Nothing)
@@ -3354,6 +3445,7 @@ updateDeployment restApiId deploymentId setOptions =
             JE.null
         )
         deploymentDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDeployment request
@@ -3377,7 +3469,7 @@ updateDocumentationPart :
     String
     -> String
     -> (UpdateDocumentationPartOptions -> UpdateDocumentationPartOptions)
-    -> AWS.Http.UnsignedRequest DocumentationPart
+    -> AWS.Request DocumentationPart
 updateDocumentationPart restApiId documentationPartId setOptions =
   let
     options = setOptions (UpdateDocumentationPartOptions Nothing)
@@ -3390,6 +3482,7 @@ updateDocumentationPart restApiId documentationPartId setOptions =
             JE.null
         )
         documentationPartDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDocumentationPart request
@@ -3413,7 +3506,7 @@ updateDocumentationVersion :
     String
     -> String
     -> (UpdateDocumentationVersionOptions -> UpdateDocumentationVersionOptions)
-    -> AWS.Http.UnsignedRequest DocumentationVersion
+    -> AWS.Request DocumentationVersion
 updateDocumentationVersion restApiId documentationVersion setOptions =
   let
     options = setOptions (UpdateDocumentationVersionOptions Nothing)
@@ -3426,6 +3519,7 @@ updateDocumentationVersion restApiId documentationVersion setOptions =
             JE.null
         )
         documentationVersionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDocumentationVersion request
@@ -3447,7 +3541,7 @@ __Required Parameters__
 updateDomainName :
     String
     -> (UpdateDomainNameOptions -> UpdateDomainNameOptions)
-    -> AWS.Http.UnsignedRequest DomainName
+    -> AWS.Request DomainName
 updateDomainName domainName setOptions =
   let
     options = setOptions (UpdateDomainNameOptions Nothing)
@@ -3460,6 +3554,7 @@ updateDomainName domainName setOptions =
             JE.null
         )
         domainNameDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDomainName request
@@ -3485,7 +3580,7 @@ updateIntegration :
     -> String
     -> String
     -> (UpdateIntegrationOptions -> UpdateIntegrationOptions)
-    -> AWS.Http.UnsignedRequest Integration
+    -> AWS.Request Integration
 updateIntegration restApiId resourceId httpMethod setOptions =
   let
     options = setOptions (UpdateIntegrationOptions Nothing)
@@ -3498,6 +3593,7 @@ updateIntegration restApiId resourceId httpMethod setOptions =
             JE.null
         )
         integrationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateIntegration request
@@ -3525,7 +3621,7 @@ updateIntegrationResponse :
     -> String
     -> String
     -> (UpdateIntegrationResponseOptions -> UpdateIntegrationResponseOptions)
-    -> AWS.Http.UnsignedRequest IntegrationResponse
+    -> AWS.Request IntegrationResponse
 updateIntegrationResponse restApiId resourceId httpMethod statusCode setOptions =
   let
     options = setOptions (UpdateIntegrationResponseOptions Nothing)
@@ -3538,6 +3634,7 @@ updateIntegrationResponse restApiId resourceId httpMethod statusCode setOptions 
             JE.null
         )
         integrationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateIntegrationResponse request
@@ -3563,7 +3660,7 @@ updateMethod :
     -> String
     -> String
     -> (UpdateMethodOptions -> UpdateMethodOptions)
-    -> AWS.Http.UnsignedRequest Method
+    -> AWS.Request Method
 updateMethod restApiId resourceId httpMethod setOptions =
   let
     options = setOptions (UpdateMethodOptions Nothing)
@@ -3576,6 +3673,7 @@ updateMethod restApiId resourceId httpMethod setOptions =
             JE.null
         )
         methodDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateMethod request
@@ -3603,7 +3701,7 @@ updateMethodResponse :
     -> String
     -> String
     -> (UpdateMethodResponseOptions -> UpdateMethodResponseOptions)
-    -> AWS.Http.UnsignedRequest MethodResponse
+    -> AWS.Request MethodResponse
 updateMethodResponse restApiId resourceId httpMethod statusCode setOptions =
   let
     options = setOptions (UpdateMethodResponseOptions Nothing)
@@ -3616,6 +3714,7 @@ updateMethodResponse restApiId resourceId httpMethod statusCode setOptions =
             JE.null
         )
         methodResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateMethodResponse request
@@ -3639,7 +3738,7 @@ updateModel :
     String
     -> String
     -> (UpdateModelOptions -> UpdateModelOptions)
-    -> AWS.Http.UnsignedRequest Model
+    -> AWS.Request Model
 updateModel restApiId modelName setOptions =
   let
     options = setOptions (UpdateModelOptions Nothing)
@@ -3652,6 +3751,7 @@ updateModel restApiId modelName setOptions =
             JE.null
         )
         modelDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateModel request
@@ -3675,7 +3775,7 @@ updateResource :
     String
     -> String
     -> (UpdateResourceOptions -> UpdateResourceOptions)
-    -> AWS.Http.UnsignedRequest Resource
+    -> AWS.Request Resource
 updateResource restApiId resourceId setOptions =
   let
     options = setOptions (UpdateResourceOptions Nothing)
@@ -3688,6 +3788,7 @@ updateResource restApiId resourceId setOptions =
             JE.null
         )
         resourceDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateResource request
@@ -3709,7 +3810,7 @@ __Required Parameters__
 updateRestApi :
     String
     -> (UpdateRestApiOptions -> UpdateRestApiOptions)
-    -> AWS.Http.UnsignedRequest RestApi
+    -> AWS.Request RestApi
 updateRestApi restApiId setOptions =
   let
     options = setOptions (UpdateRestApiOptions Nothing)
@@ -3722,6 +3823,7 @@ updateRestApi restApiId setOptions =
             JE.null
         )
         restApiDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateRestApi request
@@ -3745,7 +3847,7 @@ updateStage :
     String
     -> String
     -> (UpdateStageOptions -> UpdateStageOptions)
-    -> AWS.Http.UnsignedRequest Stage
+    -> AWS.Request Stage
 updateStage restApiId stageName setOptions =
   let
     options = setOptions (UpdateStageOptions Nothing)
@@ -3758,6 +3860,7 @@ updateStage restApiId stageName setOptions =
             JE.null
         )
         stageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateStage request
@@ -3781,7 +3884,7 @@ updateUsage :
     String
     -> String
     -> (UpdateUsageOptions -> UpdateUsageOptions)
-    -> AWS.Http.UnsignedRequest Usage
+    -> AWS.Request Usage
 updateUsage usagePlanId keyId setOptions =
   let
     options = setOptions (UpdateUsageOptions Nothing)
@@ -3794,6 +3897,7 @@ updateUsage usagePlanId keyId setOptions =
             JE.null
         )
         usageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateUsage request
@@ -3815,7 +3919,7 @@ __Required Parameters__
 updateUsagePlan :
     String
     -> (UpdateUsagePlanOptions -> UpdateUsagePlanOptions)
-    -> AWS.Http.UnsignedRequest UsagePlan
+    -> AWS.Request UsagePlan
 updateUsagePlan usagePlanId setOptions =
   let
     options = setOptions (UpdateUsagePlanOptions Nothing)
@@ -3828,6 +3932,7 @@ updateUsagePlan usagePlanId setOptions =
             JE.null
         )
         usagePlanDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateUsagePlan request

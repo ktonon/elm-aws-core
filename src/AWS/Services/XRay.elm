@@ -117,7 +117,9 @@ module AWS.Services.XRay
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -129,15 +131,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "xray"
         "2016-04-12"
         "undefined"
         "AWSXRAY_20160412."
         "xray.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -154,7 +157,7 @@ __Required Parameters__
 batchGetTraces :
     (List String)
     -> (BatchGetTracesOptions -> BatchGetTracesOptions)
-    -> AWS.Http.UnsignedRequest BatchGetTracesResult
+    -> AWS.Request BatchGetTracesResult
 batchGetTraces traceIds setOptions =
   let
     options = setOptions (BatchGetTracesOptions Nothing)
@@ -167,6 +170,7 @@ batchGetTraces traceIds setOptions =
             JE.null
         )
         batchGetTracesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a batchGetTraces request
@@ -190,7 +194,7 @@ getServiceGraph :
     Date
     -> Date
     -> (GetServiceGraphOptions -> GetServiceGraphOptions)
-    -> AWS.Http.UnsignedRequest GetServiceGraphResult
+    -> AWS.Request GetServiceGraphResult
 getServiceGraph startTime endTime setOptions =
   let
     options = setOptions (GetServiceGraphOptions Nothing)
@@ -203,6 +207,7 @@ getServiceGraph startTime endTime setOptions =
             JE.null
         )
         getServiceGraphResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getServiceGraph request
@@ -224,7 +229,7 @@ __Required Parameters__
 getTraceGraph :
     (List String)
     -> (GetTraceGraphOptions -> GetTraceGraphOptions)
-    -> AWS.Http.UnsignedRequest GetTraceGraphResult
+    -> AWS.Request GetTraceGraphResult
 getTraceGraph traceIds setOptions =
   let
     options = setOptions (GetTraceGraphOptions Nothing)
@@ -237,6 +242,7 @@ getTraceGraph traceIds setOptions =
             JE.null
         )
         getTraceGraphResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getTraceGraph request
@@ -260,7 +266,7 @@ getTraceSummaries :
     Date
     -> Date
     -> (GetTraceSummariesOptions -> GetTraceSummariesOptions)
-    -> AWS.Http.UnsignedRequest GetTraceSummariesResult
+    -> AWS.Request GetTraceSummariesResult
 getTraceSummaries startTime endTime setOptions =
   let
     options = setOptions (GetTraceSummariesOptions Nothing Nothing Nothing)
@@ -273,6 +279,7 @@ getTraceSummaries startTime endTime setOptions =
             JE.null
         )
         getTraceSummariesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getTraceSummaries request
@@ -296,7 +303,7 @@ __Required Parameters__
 putTelemetryRecords :
     (List TelemetryRecord)
     -> (PutTelemetryRecordsOptions -> PutTelemetryRecordsOptions)
-    -> AWS.Http.UnsignedRequest PutTelemetryRecordsResult
+    -> AWS.Request PutTelemetryRecordsResult
 putTelemetryRecords telemetryRecords setOptions =
   let
     options = setOptions (PutTelemetryRecordsOptions Nothing Nothing Nothing)
@@ -309,6 +316,7 @@ putTelemetryRecords telemetryRecords setOptions =
             JE.null
         )
         putTelemetryRecordsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putTelemetryRecords request
@@ -331,7 +339,7 @@ __Required Parameters__
 -}
 putTraceSegments :
     (List String)
-    -> AWS.Http.UnsignedRequest PutTraceSegmentsResult
+    -> AWS.Request PutTraceSegmentsResult
 putTraceSegments traceSegmentDocuments =
     AWS.Http.unsignedRequest
         "PutTraceSegments"
@@ -341,6 +349,7 @@ putTraceSegments traceSegmentDocuments =
             JE.null
         )
         putTraceSegmentsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 

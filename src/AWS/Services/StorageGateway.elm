@@ -376,7 +376,9 @@ module AWS.Services.StorageGateway
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -388,15 +390,16 @@ import Dict exposing (Dict)
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "storagegateway"
         "2013-06-30"
         "1.1"
         "AWSSTORAGEGATEWAY_20130630."
         "storagegateway.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -419,7 +422,7 @@ activateGateway :
     -> String
     -> String
     -> (ActivateGatewayOptions -> ActivateGatewayOptions)
-    -> AWS.Http.UnsignedRequest ActivateGatewayOutput
+    -> AWS.Request ActivateGatewayOutput
 activateGateway activationKey gatewayName gatewayTimezone gatewayRegion setOptions =
   let
     options = setOptions (ActivateGatewayOptions Nothing Nothing Nothing)
@@ -432,6 +435,7 @@ activateGateway activationKey gatewayName gatewayTimezone gatewayRegion setOptio
             JE.null
         )
         activateGatewayOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a activateGateway request
@@ -456,7 +460,7 @@ __Required Parameters__
 addCache :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest AddCacheOutput
+    -> AWS.Request AddCacheOutput
 addCache gatewayARN diskIds =
     AWS.Http.unsignedRequest
         "AddCache"
@@ -466,6 +470,7 @@ addCache gatewayARN diskIds =
             JE.null
         )
         addCacheOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -481,7 +486,7 @@ __Required Parameters__
 addTagsToResource :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest AddTagsToResourceOutput
+    -> AWS.Request AddTagsToResourceOutput
 addTagsToResource resourceARN tags =
     AWS.Http.unsignedRequest
         "AddTagsToResource"
@@ -491,6 +496,7 @@ addTagsToResource resourceARN tags =
             JE.null
         )
         addTagsToResourceOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -506,7 +512,7 @@ __Required Parameters__
 addUploadBuffer :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest AddUploadBufferOutput
+    -> AWS.Request AddUploadBufferOutput
 addUploadBuffer gatewayARN diskIds =
     AWS.Http.unsignedRequest
         "AddUploadBuffer"
@@ -516,6 +522,7 @@ addUploadBuffer gatewayARN diskIds =
             JE.null
         )
         addUploadBufferOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -531,7 +538,7 @@ __Required Parameters__
 addWorkingStorage :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest AddWorkingStorageOutput
+    -> AWS.Request AddWorkingStorageOutput
 addWorkingStorage gatewayARN diskIds =
     AWS.Http.unsignedRequest
         "AddWorkingStorage"
@@ -541,6 +548,7 @@ addWorkingStorage gatewayARN diskIds =
             JE.null
         )
         addWorkingStorageOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -556,7 +564,7 @@ __Required Parameters__
 cancelArchival :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CancelArchivalOutput
+    -> AWS.Request CancelArchivalOutput
 cancelArchival gatewayARN tapeARN =
     AWS.Http.unsignedRequest
         "CancelArchival"
@@ -566,6 +574,7 @@ cancelArchival gatewayARN tapeARN =
             JE.null
         )
         cancelArchivalOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -581,7 +590,7 @@ __Required Parameters__
 cancelRetrieval :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CancelRetrievalOutput
+    -> AWS.Request CancelRetrievalOutput
 cancelRetrieval gatewayARN tapeARN =
     AWS.Http.unsignedRequest
         "CancelRetrieval"
@@ -591,6 +600,7 @@ cancelRetrieval gatewayARN tapeARN =
             JE.null
         )
         cancelRetrievalOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -613,7 +623,7 @@ createCachediSCSIVolume :
     -> String
     -> String
     -> (CreateCachediSCSIVolumeOptions -> CreateCachediSCSIVolumeOptions)
-    -> AWS.Http.UnsignedRequest CreateCachediSCSIVolumeOutput
+    -> AWS.Request CreateCachediSCSIVolumeOutput
 createCachediSCSIVolume gatewayARN volumeSizeInBytes targetName networkInterfaceId clientToken setOptions =
   let
     options = setOptions (CreateCachediSCSIVolumeOptions Nothing Nothing)
@@ -626,6 +636,7 @@ createCachediSCSIVolume gatewayARN volumeSizeInBytes targetName networkInterface
             JE.null
         )
         createCachediSCSIVolumeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createCachediSCSIVolume request
@@ -654,7 +665,7 @@ createNFSFileShare :
     -> String
     -> String
     -> (CreateNFSFileShareOptions -> CreateNFSFileShareOptions)
-    -> AWS.Http.UnsignedRequest CreateNFSFileShareOutput
+    -> AWS.Request CreateNFSFileShareOutput
 createNFSFileShare clientToken gatewayARN role locationARN setOptions =
   let
     options = setOptions (CreateNFSFileShareOptions Nothing Nothing Nothing Nothing)
@@ -667,6 +678,7 @@ createNFSFileShare clientToken gatewayARN role locationARN setOptions =
             JE.null
         )
         createNFSFileShareOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createNFSFileShare request
@@ -692,7 +704,7 @@ __Required Parameters__
 createSnapshot :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateSnapshotOutput
+    -> AWS.Request CreateSnapshotOutput
 createSnapshot volumeARN snapshotDescription =
     AWS.Http.unsignedRequest
         "CreateSnapshot"
@@ -702,6 +714,7 @@ createSnapshot volumeARN snapshotDescription =
             JE.null
         )
         createSnapshotOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -717,7 +730,7 @@ __Required Parameters__
 createSnapshotFromVolumeRecoveryPoint :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateSnapshotFromVolumeRecoveryPointOutput
+    -> AWS.Request CreateSnapshotFromVolumeRecoveryPointOutput
 createSnapshotFromVolumeRecoveryPoint volumeARN snapshotDescription =
     AWS.Http.unsignedRequest
         "CreateSnapshotFromVolumeRecoveryPoint"
@@ -727,6 +740,7 @@ createSnapshotFromVolumeRecoveryPoint volumeARN snapshotDescription =
             JE.null
         )
         createSnapshotFromVolumeRecoveryPointOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -749,7 +763,7 @@ createStorediSCSIVolume :
     -> String
     -> String
     -> (CreateStorediSCSIVolumeOptions -> CreateStorediSCSIVolumeOptions)
-    -> AWS.Http.UnsignedRequest CreateStorediSCSIVolumeOutput
+    -> AWS.Request CreateStorediSCSIVolumeOutput
 createStorediSCSIVolume gatewayARN diskId preserveExistingData targetName networkInterfaceId setOptions =
   let
     options = setOptions (CreateStorediSCSIVolumeOptions Nothing)
@@ -762,6 +776,7 @@ createStorediSCSIVolume gatewayARN diskId preserveExistingData targetName networ
             JE.null
         )
         createStorediSCSIVolumeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createStorediSCSIVolume request
@@ -786,7 +801,7 @@ createTapeWithBarcode :
     String
     -> Int
     -> String
-    -> AWS.Http.UnsignedRequest CreateTapeWithBarcodeOutput
+    -> AWS.Request CreateTapeWithBarcodeOutput
 createTapeWithBarcode gatewayARN tapeSizeInBytes tapeBarcode =
     AWS.Http.unsignedRequest
         "CreateTapeWithBarcode"
@@ -796,6 +811,7 @@ createTapeWithBarcode gatewayARN tapeSizeInBytes tapeBarcode =
             JE.null
         )
         createTapeWithBarcodeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -817,7 +833,7 @@ createTapes :
     -> String
     -> Int
     -> String
-    -> AWS.Http.UnsignedRequest CreateTapesOutput
+    -> AWS.Request CreateTapesOutput
 createTapes gatewayARN tapeSizeInBytes clientToken numTapesToCreate tapeBarcodePrefix =
     AWS.Http.unsignedRequest
         "CreateTapes"
@@ -827,6 +843,7 @@ createTapes gatewayARN tapeSizeInBytes clientToken numTapesToCreate tapeBarcodeP
             JE.null
         )
         createTapesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -842,7 +859,7 @@ __Required Parameters__
 deleteBandwidthRateLimit :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteBandwidthRateLimitOutput
+    -> AWS.Request DeleteBandwidthRateLimitOutput
 deleteBandwidthRateLimit gatewayARN bandwidthType =
     AWS.Http.unsignedRequest
         "DeleteBandwidthRateLimit"
@@ -852,6 +869,7 @@ deleteBandwidthRateLimit gatewayARN bandwidthType =
             JE.null
         )
         deleteBandwidthRateLimitOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -867,7 +885,7 @@ __Required Parameters__
 deleteChapCredentials :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteChapCredentialsOutput
+    -> AWS.Request DeleteChapCredentialsOutput
 deleteChapCredentials targetARN initiatorName =
     AWS.Http.unsignedRequest
         "DeleteChapCredentials"
@@ -877,6 +895,7 @@ deleteChapCredentials targetARN initiatorName =
             JE.null
         )
         deleteChapCredentialsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -890,7 +909,7 @@ __Required Parameters__
 -}
 deleteFileShare :
     String
-    -> AWS.Http.UnsignedRequest DeleteFileShareOutput
+    -> AWS.Request DeleteFileShareOutput
 deleteFileShare fileShareARN =
     AWS.Http.unsignedRequest
         "DeleteFileShare"
@@ -900,6 +919,7 @@ deleteFileShare fileShareARN =
             JE.null
         )
         deleteFileShareOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -913,7 +933,7 @@ __Required Parameters__
 -}
 deleteGateway :
     String
-    -> AWS.Http.UnsignedRequest DeleteGatewayOutput
+    -> AWS.Request DeleteGatewayOutput
 deleteGateway gatewayARN =
     AWS.Http.unsignedRequest
         "DeleteGateway"
@@ -923,6 +943,7 @@ deleteGateway gatewayARN =
             JE.null
         )
         deleteGatewayOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -936,7 +957,7 @@ __Required Parameters__
 -}
 deleteSnapshotSchedule :
     String
-    -> AWS.Http.UnsignedRequest DeleteSnapshotScheduleOutput
+    -> AWS.Request DeleteSnapshotScheduleOutput
 deleteSnapshotSchedule volumeARN =
     AWS.Http.unsignedRequest
         "DeleteSnapshotSchedule"
@@ -946,6 +967,7 @@ deleteSnapshotSchedule volumeARN =
             JE.null
         )
         deleteSnapshotScheduleOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -961,7 +983,7 @@ __Required Parameters__
 deleteTape :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteTapeOutput
+    -> AWS.Request DeleteTapeOutput
 deleteTape gatewayARN tapeARN =
     AWS.Http.unsignedRequest
         "DeleteTape"
@@ -971,6 +993,7 @@ deleteTape gatewayARN tapeARN =
             JE.null
         )
         deleteTapeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -984,7 +1007,7 @@ __Required Parameters__
 -}
 deleteTapeArchive :
     String
-    -> AWS.Http.UnsignedRequest DeleteTapeArchiveOutput
+    -> AWS.Request DeleteTapeArchiveOutput
 deleteTapeArchive tapeARN =
     AWS.Http.unsignedRequest
         "DeleteTapeArchive"
@@ -994,6 +1017,7 @@ deleteTapeArchive tapeARN =
             JE.null
         )
         deleteTapeArchiveOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1007,7 +1031,7 @@ __Required Parameters__
 -}
 deleteVolume :
     String
-    -> AWS.Http.UnsignedRequest DeleteVolumeOutput
+    -> AWS.Request DeleteVolumeOutput
 deleteVolume volumeARN =
     AWS.Http.unsignedRequest
         "DeleteVolume"
@@ -1017,6 +1041,7 @@ deleteVolume volumeARN =
             JE.null
         )
         deleteVolumeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1030,7 +1055,7 @@ __Required Parameters__
 -}
 describeBandwidthRateLimit :
     String
-    -> AWS.Http.UnsignedRequest DescribeBandwidthRateLimitOutput
+    -> AWS.Request DescribeBandwidthRateLimitOutput
 describeBandwidthRateLimit gatewayARN =
     AWS.Http.unsignedRequest
         "DescribeBandwidthRateLimit"
@@ -1040,6 +1065,7 @@ describeBandwidthRateLimit gatewayARN =
             JE.null
         )
         describeBandwidthRateLimitOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1053,7 +1079,7 @@ __Required Parameters__
 -}
 describeCache :
     String
-    -> AWS.Http.UnsignedRequest DescribeCacheOutput
+    -> AWS.Request DescribeCacheOutput
 describeCache gatewayARN =
     AWS.Http.unsignedRequest
         "DescribeCache"
@@ -1063,6 +1089,7 @@ describeCache gatewayARN =
             JE.null
         )
         describeCacheOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1076,7 +1103,7 @@ __Required Parameters__
 -}
 describeCachediSCSIVolumes :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeCachediSCSIVolumesOutput
+    -> AWS.Request DescribeCachediSCSIVolumesOutput
 describeCachediSCSIVolumes volumeARNs =
     AWS.Http.unsignedRequest
         "DescribeCachediSCSIVolumes"
@@ -1086,6 +1113,7 @@ describeCachediSCSIVolumes volumeARNs =
             JE.null
         )
         describeCachediSCSIVolumesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1099,7 +1127,7 @@ __Required Parameters__
 -}
 describeChapCredentials :
     String
-    -> AWS.Http.UnsignedRequest DescribeChapCredentialsOutput
+    -> AWS.Request DescribeChapCredentialsOutput
 describeChapCredentials targetARN =
     AWS.Http.unsignedRequest
         "DescribeChapCredentials"
@@ -1109,6 +1137,7 @@ describeChapCredentials targetARN =
             JE.null
         )
         describeChapCredentialsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1122,7 +1151,7 @@ __Required Parameters__
 -}
 describeGatewayInformation :
     String
-    -> AWS.Http.UnsignedRequest DescribeGatewayInformationOutput
+    -> AWS.Request DescribeGatewayInformationOutput
 describeGatewayInformation gatewayARN =
     AWS.Http.unsignedRequest
         "DescribeGatewayInformation"
@@ -1132,6 +1161,7 @@ describeGatewayInformation gatewayARN =
             JE.null
         )
         describeGatewayInformationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1145,7 +1175,7 @@ __Required Parameters__
 -}
 describeMaintenanceStartTime :
     String
-    -> AWS.Http.UnsignedRequest DescribeMaintenanceStartTimeOutput
+    -> AWS.Request DescribeMaintenanceStartTimeOutput
 describeMaintenanceStartTime gatewayARN =
     AWS.Http.unsignedRequest
         "DescribeMaintenanceStartTime"
@@ -1155,6 +1185,7 @@ describeMaintenanceStartTime gatewayARN =
             JE.null
         )
         describeMaintenanceStartTimeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1168,7 +1199,7 @@ __Required Parameters__
 -}
 describeNFSFileShares :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeNFSFileSharesOutput
+    -> AWS.Request DescribeNFSFileSharesOutput
 describeNFSFileShares fileShareARNList =
     AWS.Http.unsignedRequest
         "DescribeNFSFileShares"
@@ -1178,6 +1209,7 @@ describeNFSFileShares fileShareARNList =
             JE.null
         )
         describeNFSFileSharesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1191,7 +1223,7 @@ __Required Parameters__
 -}
 describeSnapshotSchedule :
     String
-    -> AWS.Http.UnsignedRequest DescribeSnapshotScheduleOutput
+    -> AWS.Request DescribeSnapshotScheduleOutput
 describeSnapshotSchedule volumeARN =
     AWS.Http.unsignedRequest
         "DescribeSnapshotSchedule"
@@ -1201,6 +1233,7 @@ describeSnapshotSchedule volumeARN =
             JE.null
         )
         describeSnapshotScheduleOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1214,7 +1247,7 @@ __Required Parameters__
 -}
 describeStorediSCSIVolumes :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeStorediSCSIVolumesOutput
+    -> AWS.Request DescribeStorediSCSIVolumesOutput
 describeStorediSCSIVolumes volumeARNs =
     AWS.Http.unsignedRequest
         "DescribeStorediSCSIVolumes"
@@ -1224,6 +1257,7 @@ describeStorediSCSIVolumes volumeARNs =
             JE.null
         )
         describeStorediSCSIVolumesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1236,7 +1270,7 @@ __Required Parameters__
 -}
 describeTapeArchives :
     (DescribeTapeArchivesOptions -> DescribeTapeArchivesOptions)
-    -> AWS.Http.UnsignedRequest DescribeTapeArchivesOutput
+    -> AWS.Request DescribeTapeArchivesOutput
 describeTapeArchives setOptions =
   let
     options = setOptions (DescribeTapeArchivesOptions Nothing Nothing Nothing)
@@ -1249,6 +1283,7 @@ describeTapeArchives setOptions =
             JE.null
         )
         describeTapeArchivesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTapeArchives request
@@ -1272,7 +1307,7 @@ __Required Parameters__
 describeTapeRecoveryPoints :
     String
     -> (DescribeTapeRecoveryPointsOptions -> DescribeTapeRecoveryPointsOptions)
-    -> AWS.Http.UnsignedRequest DescribeTapeRecoveryPointsOutput
+    -> AWS.Request DescribeTapeRecoveryPointsOutput
 describeTapeRecoveryPoints gatewayARN setOptions =
   let
     options = setOptions (DescribeTapeRecoveryPointsOptions Nothing Nothing)
@@ -1285,6 +1320,7 @@ describeTapeRecoveryPoints gatewayARN setOptions =
             JE.null
         )
         describeTapeRecoveryPointsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTapeRecoveryPoints request
@@ -1307,7 +1343,7 @@ __Required Parameters__
 describeTapes :
     String
     -> (DescribeTapesOptions -> DescribeTapesOptions)
-    -> AWS.Http.UnsignedRequest DescribeTapesOutput
+    -> AWS.Request DescribeTapesOutput
 describeTapes gatewayARN setOptions =
   let
     options = setOptions (DescribeTapesOptions Nothing Nothing Nothing)
@@ -1320,6 +1356,7 @@ describeTapes gatewayARN setOptions =
             JE.null
         )
         describeTapesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTapes request
@@ -1342,7 +1379,7 @@ __Required Parameters__
 -}
 describeUploadBuffer :
     String
-    -> AWS.Http.UnsignedRequest DescribeUploadBufferOutput
+    -> AWS.Request DescribeUploadBufferOutput
 describeUploadBuffer gatewayARN =
     AWS.Http.unsignedRequest
         "DescribeUploadBuffer"
@@ -1352,6 +1389,7 @@ describeUploadBuffer gatewayARN =
             JE.null
         )
         describeUploadBufferOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1366,7 +1404,7 @@ __Required Parameters__
 describeVTLDevices :
     String
     -> (DescribeVTLDevicesOptions -> DescribeVTLDevicesOptions)
-    -> AWS.Http.UnsignedRequest DescribeVTLDevicesOutput
+    -> AWS.Request DescribeVTLDevicesOutput
 describeVTLDevices gatewayARN setOptions =
   let
     options = setOptions (DescribeVTLDevicesOptions Nothing Nothing Nothing)
@@ -1379,6 +1417,7 @@ describeVTLDevices gatewayARN setOptions =
             JE.null
         )
         describeVTLDevicesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVTLDevices request
@@ -1401,7 +1440,7 @@ __Required Parameters__
 -}
 describeWorkingStorage :
     String
-    -> AWS.Http.UnsignedRequest DescribeWorkingStorageOutput
+    -> AWS.Request DescribeWorkingStorageOutput
 describeWorkingStorage gatewayARN =
     AWS.Http.unsignedRequest
         "DescribeWorkingStorage"
@@ -1411,6 +1450,7 @@ describeWorkingStorage gatewayARN =
             JE.null
         )
         describeWorkingStorageOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1424,7 +1464,7 @@ __Required Parameters__
 -}
 disableGateway :
     String
-    -> AWS.Http.UnsignedRequest DisableGatewayOutput
+    -> AWS.Request DisableGatewayOutput
 disableGateway gatewayARN =
     AWS.Http.unsignedRequest
         "DisableGateway"
@@ -1434,6 +1474,7 @@ disableGateway gatewayARN =
             JE.null
         )
         disableGatewayOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1446,7 +1487,7 @@ __Required Parameters__
 -}
 listFileShares :
     (ListFileSharesOptions -> ListFileSharesOptions)
-    -> AWS.Http.UnsignedRequest ListFileSharesOutput
+    -> AWS.Request ListFileSharesOutput
 listFileShares setOptions =
   let
     options = setOptions (ListFileSharesOptions Nothing Nothing Nothing)
@@ -1459,6 +1500,7 @@ listFileShares setOptions =
             JE.null
         )
         listFileSharesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listFileShares request
@@ -1480,7 +1522,7 @@ __Required Parameters__
 -}
 listGateways :
     (ListGatewaysOptions -> ListGatewaysOptions)
-    -> AWS.Http.UnsignedRequest ListGatewaysOutput
+    -> AWS.Request ListGatewaysOutput
 listGateways setOptions =
   let
     options = setOptions (ListGatewaysOptions Nothing Nothing)
@@ -1493,6 +1535,7 @@ listGateways setOptions =
             JE.null
         )
         listGatewaysOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listGateways request
@@ -1514,7 +1557,7 @@ __Required Parameters__
 -}
 listLocalDisks :
     String
-    -> AWS.Http.UnsignedRequest ListLocalDisksOutput
+    -> AWS.Request ListLocalDisksOutput
 listLocalDisks gatewayARN =
     AWS.Http.unsignedRequest
         "ListLocalDisks"
@@ -1524,6 +1567,7 @@ listLocalDisks gatewayARN =
             JE.null
         )
         listLocalDisksOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1538,7 +1582,7 @@ __Required Parameters__
 listTagsForResource :
     String
     -> (ListTagsForResourceOptions -> ListTagsForResourceOptions)
-    -> AWS.Http.UnsignedRequest ListTagsForResourceOutput
+    -> AWS.Request ListTagsForResourceOutput
 listTagsForResource resourceARN setOptions =
   let
     options = setOptions (ListTagsForResourceOptions Nothing Nothing)
@@ -1551,6 +1595,7 @@ listTagsForResource resourceARN setOptions =
             JE.null
         )
         listTagsForResourceOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTagsForResource request
@@ -1571,7 +1616,7 @@ __Required Parameters__
 -}
 listTapes :
     (ListTapesOptions -> ListTapesOptions)
-    -> AWS.Http.UnsignedRequest ListTapesOutput
+    -> AWS.Request ListTapesOutput
 listTapes setOptions =
   let
     options = setOptions (ListTapesOptions Nothing Nothing Nothing)
@@ -1584,6 +1629,7 @@ listTapes setOptions =
             JE.null
         )
         listTapesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTapes request
@@ -1606,7 +1652,7 @@ __Required Parameters__
 -}
 listVolumeInitiators :
     String
-    -> AWS.Http.UnsignedRequest ListVolumeInitiatorsOutput
+    -> AWS.Request ListVolumeInitiatorsOutput
 listVolumeInitiators volumeARN =
     AWS.Http.unsignedRequest
         "ListVolumeInitiators"
@@ -1616,6 +1662,7 @@ listVolumeInitiators volumeARN =
             JE.null
         )
         listVolumeInitiatorsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1629,7 +1676,7 @@ __Required Parameters__
 -}
 listVolumeRecoveryPoints :
     String
-    -> AWS.Http.UnsignedRequest ListVolumeRecoveryPointsOutput
+    -> AWS.Request ListVolumeRecoveryPointsOutput
 listVolumeRecoveryPoints gatewayARN =
     AWS.Http.unsignedRequest
         "ListVolumeRecoveryPoints"
@@ -1639,6 +1686,7 @@ listVolumeRecoveryPoints gatewayARN =
             JE.null
         )
         listVolumeRecoveryPointsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1651,7 +1699,7 @@ __Required Parameters__
 -}
 listVolumes :
     (ListVolumesOptions -> ListVolumesOptions)
-    -> AWS.Http.UnsignedRequest ListVolumesOutput
+    -> AWS.Request ListVolumesOutput
 listVolumes setOptions =
   let
     options = setOptions (ListVolumesOptions Nothing Nothing Nothing)
@@ -1664,6 +1712,7 @@ listVolumes setOptions =
             JE.null
         )
         listVolumesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listVolumes request
@@ -1688,7 +1737,7 @@ __Required Parameters__
 removeTagsFromResource :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveTagsFromResourceOutput
+    -> AWS.Request RemoveTagsFromResourceOutput
 removeTagsFromResource resourceARN tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTagsFromResource"
@@ -1698,6 +1747,7 @@ removeTagsFromResource resourceARN tagKeys =
             JE.null
         )
         removeTagsFromResourceOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1711,7 +1761,7 @@ __Required Parameters__
 -}
 resetCache :
     String
-    -> AWS.Http.UnsignedRequest ResetCacheOutput
+    -> AWS.Request ResetCacheOutput
 resetCache gatewayARN =
     AWS.Http.unsignedRequest
         "ResetCache"
@@ -1721,6 +1771,7 @@ resetCache gatewayARN =
             JE.null
         )
         resetCacheOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1736,7 +1787,7 @@ __Required Parameters__
 retrieveTapeArchive :
     String
     -> String
-    -> AWS.Http.UnsignedRequest RetrieveTapeArchiveOutput
+    -> AWS.Request RetrieveTapeArchiveOutput
 retrieveTapeArchive tapeARN gatewayARN =
     AWS.Http.unsignedRequest
         "RetrieveTapeArchive"
@@ -1746,6 +1797,7 @@ retrieveTapeArchive tapeARN gatewayARN =
             JE.null
         )
         retrieveTapeArchiveOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1761,7 +1813,7 @@ __Required Parameters__
 retrieveTapeRecoveryPoint :
     String
     -> String
-    -> AWS.Http.UnsignedRequest RetrieveTapeRecoveryPointOutput
+    -> AWS.Request RetrieveTapeRecoveryPointOutput
 retrieveTapeRecoveryPoint tapeARN gatewayARN =
     AWS.Http.unsignedRequest
         "RetrieveTapeRecoveryPoint"
@@ -1771,6 +1823,7 @@ retrieveTapeRecoveryPoint tapeARN gatewayARN =
             JE.null
         )
         retrieveTapeRecoveryPointOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1786,7 +1839,7 @@ __Required Parameters__
 setLocalConsolePassword :
     String
     -> String
-    -> AWS.Http.UnsignedRequest SetLocalConsolePasswordOutput
+    -> AWS.Request SetLocalConsolePasswordOutput
 setLocalConsolePassword gatewayARN localConsolePassword =
     AWS.Http.unsignedRequest
         "SetLocalConsolePassword"
@@ -1796,6 +1849,7 @@ setLocalConsolePassword gatewayARN localConsolePassword =
             JE.null
         )
         setLocalConsolePasswordOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1809,7 +1863,7 @@ __Required Parameters__
 -}
 shutdownGateway :
     String
-    -> AWS.Http.UnsignedRequest ShutdownGatewayOutput
+    -> AWS.Request ShutdownGatewayOutput
 shutdownGateway gatewayARN =
     AWS.Http.unsignedRequest
         "ShutdownGateway"
@@ -1819,6 +1873,7 @@ shutdownGateway gatewayARN =
             JE.null
         )
         shutdownGatewayOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1832,7 +1887,7 @@ __Required Parameters__
 -}
 startGateway :
     String
-    -> AWS.Http.UnsignedRequest StartGatewayOutput
+    -> AWS.Request StartGatewayOutput
 startGateway gatewayARN =
     AWS.Http.unsignedRequest
         "StartGateway"
@@ -1842,6 +1897,7 @@ startGateway gatewayARN =
             JE.null
         )
         startGatewayOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1856,7 +1912,7 @@ __Required Parameters__
 updateBandwidthRateLimit :
     String
     -> (UpdateBandwidthRateLimitOptions -> UpdateBandwidthRateLimitOptions)
-    -> AWS.Http.UnsignedRequest UpdateBandwidthRateLimitOutput
+    -> AWS.Request UpdateBandwidthRateLimitOutput
 updateBandwidthRateLimit gatewayARN setOptions =
   let
     options = setOptions (UpdateBandwidthRateLimitOptions Nothing Nothing)
@@ -1869,6 +1925,7 @@ updateBandwidthRateLimit gatewayARN setOptions =
             JE.null
         )
         updateBandwidthRateLimitOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateBandwidthRateLimit request
@@ -1895,7 +1952,7 @@ updateChapCredentials :
     -> String
     -> String
     -> (UpdateChapCredentialsOptions -> UpdateChapCredentialsOptions)
-    -> AWS.Http.UnsignedRequest UpdateChapCredentialsOutput
+    -> AWS.Request UpdateChapCredentialsOutput
 updateChapCredentials targetARN secretToAuthenticateInitiator initiatorName setOptions =
   let
     options = setOptions (UpdateChapCredentialsOptions Nothing)
@@ -1908,6 +1965,7 @@ updateChapCredentials targetARN secretToAuthenticateInitiator initiatorName setO
             JE.null
         )
         updateChapCredentialsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateChapCredentials request
@@ -1929,7 +1987,7 @@ __Required Parameters__
 updateGatewayInformation :
     String
     -> (UpdateGatewayInformationOptions -> UpdateGatewayInformationOptions)
-    -> AWS.Http.UnsignedRequest UpdateGatewayInformationOutput
+    -> AWS.Request UpdateGatewayInformationOutput
 updateGatewayInformation gatewayARN setOptions =
   let
     options = setOptions (UpdateGatewayInformationOptions Nothing Nothing)
@@ -1942,6 +2000,7 @@ updateGatewayInformation gatewayARN setOptions =
             JE.null
         )
         updateGatewayInformationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateGatewayInformation request
@@ -1963,7 +2022,7 @@ __Required Parameters__
 -}
 updateGatewaySoftwareNow :
     String
-    -> AWS.Http.UnsignedRequest UpdateGatewaySoftwareNowOutput
+    -> AWS.Request UpdateGatewaySoftwareNowOutput
 updateGatewaySoftwareNow gatewayARN =
     AWS.Http.unsignedRequest
         "UpdateGatewaySoftwareNow"
@@ -1973,6 +2032,7 @@ updateGatewaySoftwareNow gatewayARN =
             JE.null
         )
         updateGatewaySoftwareNowOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1992,7 +2052,7 @@ updateMaintenanceStartTime :
     -> Int
     -> Int
     -> Int
-    -> AWS.Http.UnsignedRequest UpdateMaintenanceStartTimeOutput
+    -> AWS.Request UpdateMaintenanceStartTimeOutput
 updateMaintenanceStartTime gatewayARN hourOfDay minuteOfHour dayOfWeek =
     AWS.Http.unsignedRequest
         "UpdateMaintenanceStartTime"
@@ -2002,6 +2062,7 @@ updateMaintenanceStartTime gatewayARN hourOfDay minuteOfHour dayOfWeek =
             JE.null
         )
         updateMaintenanceStartTimeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2016,7 +2077,7 @@ __Required Parameters__
 updateNFSFileShare :
     String
     -> (UpdateNFSFileShareOptions -> UpdateNFSFileShareOptions)
-    -> AWS.Http.UnsignedRequest UpdateNFSFileShareOutput
+    -> AWS.Request UpdateNFSFileShareOutput
 updateNFSFileShare fileShareARN setOptions =
   let
     options = setOptions (UpdateNFSFileShareOptions Nothing Nothing Nothing Nothing)
@@ -2029,6 +2090,7 @@ updateNFSFileShare fileShareARN setOptions =
             JE.null
         )
         updateNFSFileShareOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateNFSFileShare request
@@ -2057,7 +2119,7 @@ updateSnapshotSchedule :
     -> Int
     -> Int
     -> (UpdateSnapshotScheduleOptions -> UpdateSnapshotScheduleOptions)
-    -> AWS.Http.UnsignedRequest UpdateSnapshotScheduleOutput
+    -> AWS.Request UpdateSnapshotScheduleOutput
 updateSnapshotSchedule volumeARN startAt recurrenceInHours setOptions =
   let
     options = setOptions (UpdateSnapshotScheduleOptions Nothing)
@@ -2070,6 +2132,7 @@ updateSnapshotSchedule volumeARN startAt recurrenceInHours setOptions =
             JE.null
         )
         updateSnapshotScheduleOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateSnapshotSchedule request
@@ -2092,7 +2155,7 @@ __Required Parameters__
 updateVTLDeviceType :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateVTLDeviceTypeOutput
+    -> AWS.Request UpdateVTLDeviceTypeOutput
 updateVTLDeviceType vTLDeviceARN deviceType =
     AWS.Http.unsignedRequest
         "UpdateVTLDeviceType"
@@ -2102,6 +2165,7 @@ updateVTLDeviceType vTLDeviceARN deviceType =
             JE.null
         )
         updateVTLDeviceTypeOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 

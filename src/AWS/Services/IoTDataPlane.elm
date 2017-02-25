@@ -70,7 +70,9 @@ module AWS.Services.IoTDataPlane
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -79,15 +81,16 @@ import Json.Encode as JE
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "data.iot"
         "2015-05-28"
         "undefined"
         "AWSDATA.IOT_20150528."
         "data.iot.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -103,7 +106,7 @@ __Required Parameters__
 -}
 deleteThingShadow :
     String
-    -> AWS.Http.UnsignedRequest DeleteThingShadowResponse
+    -> AWS.Request DeleteThingShadowResponse
 deleteThingShadow thingName =
     AWS.Http.unsignedRequest
         "DeleteThingShadow"
@@ -113,6 +116,7 @@ deleteThingShadow thingName =
             JE.null
         )
         deleteThingShadowResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -126,7 +130,7 @@ __Required Parameters__
 -}
 getThingShadow :
     String
-    -> AWS.Http.UnsignedRequest GetThingShadowResponse
+    -> AWS.Request GetThingShadowResponse
 getThingShadow thingName =
     AWS.Http.unsignedRequest
         "GetThingShadow"
@@ -137,6 +141,7 @@ getThingShadow thingName =
             ]
         )
         getThingShadowResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -151,7 +156,7 @@ __Required Parameters__
 publish :
     String
     -> (PublishOptions -> PublishOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 publish topic setOptions =
   let
     options = setOptions (PublishOptions Nothing Nothing)
@@ -164,6 +169,7 @@ publish topic setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a publish request
@@ -187,7 +193,7 @@ __Required Parameters__
 updateThingShadow :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateThingShadowResponse
+    -> AWS.Request UpdateThingShadowResponse
 updateThingShadow thingName payload =
     AWS.Http.unsignedRequest
         "UpdateThingShadow"
@@ -197,6 +203,7 @@ updateThingShadow thingName payload =
             JE.null
         )
         updateThingShadowResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

@@ -200,7 +200,9 @@ module AWS.Services.DirectConnect
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -211,15 +213,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "directconnect"
         "2012-10-25"
         "1.1"
         "AWSDIRECTCONNECT_20121025."
         "directconnect.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -243,7 +246,7 @@ allocateConnectionOnInterconnect :
     -> String
     -> String
     -> Int
-    -> AWS.Http.UnsignedRequest Connection
+    -> AWS.Request Connection
 allocateConnectionOnInterconnect bandwidth connectionName ownerAccount interconnectId vlan =
     AWS.Http.unsignedRequest
         "AllocateConnectionOnInterconnect"
@@ -253,6 +256,7 @@ allocateConnectionOnInterconnect bandwidth connectionName ownerAccount interconn
             JE.null
         )
         connectionDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -270,7 +274,7 @@ allocatePrivateVirtualInterface :
     String
     -> String
     -> NewPrivateVirtualInterfaceAllocation
-    -> AWS.Http.UnsignedRequest VirtualInterface
+    -> AWS.Request VirtualInterface
 allocatePrivateVirtualInterface connectionId ownerAccount newPrivateVirtualInterfaceAllocation =
     AWS.Http.unsignedRequest
         "AllocatePrivateVirtualInterface"
@@ -280,6 +284,7 @@ allocatePrivateVirtualInterface connectionId ownerAccount newPrivateVirtualInter
             JE.null
         )
         virtualInterfaceDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -297,7 +302,7 @@ allocatePublicVirtualInterface :
     String
     -> String
     -> NewPublicVirtualInterfaceAllocation
-    -> AWS.Http.UnsignedRequest VirtualInterface
+    -> AWS.Request VirtualInterface
 allocatePublicVirtualInterface connectionId ownerAccount newPublicVirtualInterfaceAllocation =
     AWS.Http.unsignedRequest
         "AllocatePublicVirtualInterface"
@@ -307,6 +312,7 @@ allocatePublicVirtualInterface connectionId ownerAccount newPublicVirtualInterfa
             JE.null
         )
         virtualInterfaceDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -320,7 +326,7 @@ __Required Parameters__
 -}
 confirmConnection :
     String
-    -> AWS.Http.UnsignedRequest ConfirmConnectionResponse
+    -> AWS.Request ConfirmConnectionResponse
 confirmConnection connectionId =
     AWS.Http.unsignedRequest
         "ConfirmConnection"
@@ -330,6 +336,7 @@ confirmConnection connectionId =
             JE.null
         )
         confirmConnectionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -345,7 +352,7 @@ __Required Parameters__
 confirmPrivateVirtualInterface :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ConfirmPrivateVirtualInterfaceResponse
+    -> AWS.Request ConfirmPrivateVirtualInterfaceResponse
 confirmPrivateVirtualInterface virtualInterfaceId virtualGatewayId =
     AWS.Http.unsignedRequest
         "ConfirmPrivateVirtualInterface"
@@ -355,6 +362,7 @@ confirmPrivateVirtualInterface virtualInterfaceId virtualGatewayId =
             JE.null
         )
         confirmPrivateVirtualInterfaceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -368,7 +376,7 @@ __Required Parameters__
 -}
 confirmPublicVirtualInterface :
     String
-    -> AWS.Http.UnsignedRequest ConfirmPublicVirtualInterfaceResponse
+    -> AWS.Request ConfirmPublicVirtualInterfaceResponse
 confirmPublicVirtualInterface virtualInterfaceId =
     AWS.Http.unsignedRequest
         "ConfirmPublicVirtualInterface"
@@ -378,6 +386,7 @@ confirmPublicVirtualInterface virtualInterfaceId =
             JE.null
         )
         confirmPublicVirtualInterfaceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -390,7 +399,7 @@ __Required Parameters__
 -}
 createBGPPeer :
     (CreateBGPPeerOptions -> CreateBGPPeerOptions)
-    -> AWS.Http.UnsignedRequest CreateBGPPeerResponse
+    -> AWS.Request CreateBGPPeerResponse
 createBGPPeer setOptions =
   let
     options = setOptions (CreateBGPPeerOptions Nothing Nothing)
@@ -403,6 +412,7 @@ createBGPPeer setOptions =
             JE.null
         )
         createBGPPeerResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createBGPPeer request
@@ -428,7 +438,7 @@ createConnection :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest Connection
+    -> AWS.Request Connection
 createConnection location bandwidth connectionName =
     AWS.Http.unsignedRequest
         "CreateConnection"
@@ -438,6 +448,7 @@ createConnection location bandwidth connectionName =
             JE.null
         )
         connectionDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -455,7 +466,7 @@ createInterconnect :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest Interconnect
+    -> AWS.Request Interconnect
 createInterconnect interconnectName bandwidth location =
     AWS.Http.unsignedRequest
         "CreateInterconnect"
@@ -465,6 +476,7 @@ createInterconnect interconnectName bandwidth location =
             JE.null
         )
         interconnectDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -480,7 +492,7 @@ __Required Parameters__
 createPrivateVirtualInterface :
     String
     -> NewPrivateVirtualInterface
-    -> AWS.Http.UnsignedRequest VirtualInterface
+    -> AWS.Request VirtualInterface
 createPrivateVirtualInterface connectionId newPrivateVirtualInterface =
     AWS.Http.unsignedRequest
         "CreatePrivateVirtualInterface"
@@ -490,6 +502,7 @@ createPrivateVirtualInterface connectionId newPrivateVirtualInterface =
             JE.null
         )
         virtualInterfaceDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -505,7 +518,7 @@ __Required Parameters__
 createPublicVirtualInterface :
     String
     -> NewPublicVirtualInterface
-    -> AWS.Http.UnsignedRequest VirtualInterface
+    -> AWS.Request VirtualInterface
 createPublicVirtualInterface connectionId newPublicVirtualInterface =
     AWS.Http.unsignedRequest
         "CreatePublicVirtualInterface"
@@ -515,6 +528,7 @@ createPublicVirtualInterface connectionId newPublicVirtualInterface =
             JE.null
         )
         virtualInterfaceDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -527,7 +541,7 @@ __Required Parameters__
 -}
 deleteBGPPeer :
     (DeleteBGPPeerOptions -> DeleteBGPPeerOptions)
-    -> AWS.Http.UnsignedRequest DeleteBGPPeerResponse
+    -> AWS.Request DeleteBGPPeerResponse
 deleteBGPPeer setOptions =
   let
     options = setOptions (DeleteBGPPeerOptions Nothing Nothing Nothing)
@@ -540,6 +554,7 @@ deleteBGPPeer setOptions =
             JE.null
         )
         deleteBGPPeerResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteBGPPeer request
@@ -562,7 +577,7 @@ __Required Parameters__
 -}
 deleteConnection :
     String
-    -> AWS.Http.UnsignedRequest Connection
+    -> AWS.Request Connection
 deleteConnection connectionId =
     AWS.Http.unsignedRequest
         "DeleteConnection"
@@ -572,6 +587,7 @@ deleteConnection connectionId =
             JE.null
         )
         connectionDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -585,7 +601,7 @@ __Required Parameters__
 -}
 deleteInterconnect :
     String
-    -> AWS.Http.UnsignedRequest DeleteInterconnectResponse
+    -> AWS.Request DeleteInterconnectResponse
 deleteInterconnect interconnectId =
     AWS.Http.unsignedRequest
         "DeleteInterconnect"
@@ -595,6 +611,7 @@ deleteInterconnect interconnectId =
             JE.null
         )
         deleteInterconnectResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -608,7 +625,7 @@ __Required Parameters__
 -}
 deleteVirtualInterface :
     String
-    -> AWS.Http.UnsignedRequest DeleteVirtualInterfaceResponse
+    -> AWS.Request DeleteVirtualInterfaceResponse
 deleteVirtualInterface virtualInterfaceId =
     AWS.Http.unsignedRequest
         "DeleteVirtualInterface"
@@ -618,6 +635,7 @@ deleteVirtualInterface virtualInterfaceId =
             JE.null
         )
         deleteVirtualInterfaceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -632,7 +650,7 @@ __Required Parameters__
 describeConnectionLoa :
     String
     -> (DescribeConnectionLoaOptions -> DescribeConnectionLoaOptions)
-    -> AWS.Http.UnsignedRequest DescribeConnectionLoaResponse
+    -> AWS.Request DescribeConnectionLoaResponse
 describeConnectionLoa connectionId setOptions =
   let
     options = setOptions (DescribeConnectionLoaOptions Nothing Nothing)
@@ -645,6 +663,7 @@ describeConnectionLoa connectionId setOptions =
             JE.null
         )
         describeConnectionLoaResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConnectionLoa request
@@ -665,7 +684,7 @@ __Required Parameters__
 -}
 describeConnections :
     (DescribeConnectionsOptions -> DescribeConnectionsOptions)
-    -> AWS.Http.UnsignedRequest Connections
+    -> AWS.Request Connections
 describeConnections setOptions =
   let
     options = setOptions (DescribeConnectionsOptions Nothing)
@@ -678,6 +697,7 @@ describeConnections setOptions =
             JE.null
         )
         connectionsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConnections request
@@ -698,7 +718,7 @@ __Required Parameters__
 -}
 describeConnectionsOnInterconnect :
     String
-    -> AWS.Http.UnsignedRequest Connections
+    -> AWS.Request Connections
 describeConnectionsOnInterconnect interconnectId =
     AWS.Http.unsignedRequest
         "DescribeConnectionsOnInterconnect"
@@ -708,6 +728,7 @@ describeConnectionsOnInterconnect interconnectId =
             JE.null
         )
         connectionsDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -722,7 +743,7 @@ __Required Parameters__
 describeInterconnectLoa :
     String
     -> (DescribeInterconnectLoaOptions -> DescribeInterconnectLoaOptions)
-    -> AWS.Http.UnsignedRequest DescribeInterconnectLoaResponse
+    -> AWS.Request DescribeInterconnectLoaResponse
 describeInterconnectLoa interconnectId setOptions =
   let
     options = setOptions (DescribeInterconnectLoaOptions Nothing Nothing)
@@ -735,6 +756,7 @@ describeInterconnectLoa interconnectId setOptions =
             JE.null
         )
         describeInterconnectLoaResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInterconnectLoa request
@@ -755,7 +777,7 @@ __Required Parameters__
 -}
 describeInterconnects :
     (DescribeInterconnectsOptions -> DescribeInterconnectsOptions)
-    -> AWS.Http.UnsignedRequest Interconnects
+    -> AWS.Request Interconnects
 describeInterconnects setOptions =
   let
     options = setOptions (DescribeInterconnectsOptions Nothing)
@@ -768,6 +790,7 @@ describeInterconnects setOptions =
             JE.null
         )
         interconnectsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInterconnects request
@@ -786,7 +809,7 @@ __Required Parameters__
 
 -}
 describeLocations :
-    AWS.Http.UnsignedRequest Locations
+    AWS.Request Locations
 describeLocations =
     AWS.Http.unsignedRequest
         "DescribeLocations"
@@ -796,6 +819,7 @@ describeLocations =
             JE.null
         )
         locationsDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -809,7 +833,7 @@ __Required Parameters__
 -}
 describeTags :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeTagsResponse
+    -> AWS.Request DescribeTagsResponse
 describeTags resourceArns =
     AWS.Http.unsignedRequest
         "DescribeTags"
@@ -819,6 +843,7 @@ describeTags resourceArns =
             JE.null
         )
         describeTagsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -830,7 +855,7 @@ __Required Parameters__
 
 -}
 describeVirtualGateways :
-    AWS.Http.UnsignedRequest VirtualGateways
+    AWS.Request VirtualGateways
 describeVirtualGateways =
     AWS.Http.unsignedRequest
         "DescribeVirtualGateways"
@@ -840,6 +865,7 @@ describeVirtualGateways =
             JE.null
         )
         virtualGatewaysDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -852,7 +878,7 @@ __Required Parameters__
 -}
 describeVirtualInterfaces :
     (DescribeVirtualInterfacesOptions -> DescribeVirtualInterfacesOptions)
-    -> AWS.Http.UnsignedRequest VirtualInterfaces
+    -> AWS.Request VirtualInterfaces
 describeVirtualInterfaces setOptions =
   let
     options = setOptions (DescribeVirtualInterfacesOptions Nothing Nothing)
@@ -865,6 +891,7 @@ describeVirtualInterfaces setOptions =
             JE.null
         )
         virtualInterfacesDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVirtualInterfaces request
@@ -888,7 +915,7 @@ __Required Parameters__
 tagResource :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest TagResourceResponse
+    -> AWS.Request TagResourceResponse
 tagResource resourceArn tags =
     AWS.Http.unsignedRequest
         "TagResource"
@@ -898,6 +925,7 @@ tagResource resourceArn tags =
             JE.null
         )
         tagResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -913,7 +941,7 @@ __Required Parameters__
 untagResource :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest UntagResourceResponse
+    -> AWS.Request UntagResourceResponse
 untagResource resourceArn tagKeys =
     AWS.Http.unsignedRequest
         "UntagResource"
@@ -923,6 +951,7 @@ untagResource resourceArn tagKeys =
             JE.null
         )
         untagResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

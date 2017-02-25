@@ -160,7 +160,9 @@ module AWS.Services.OpsWorksCM
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -171,15 +173,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "opsworks-cm"
         "2016-11-01"
         "1.1"
         "AWSOPSWORKS-CM_20161101."
         "opsworks-cm.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -198,7 +201,7 @@ associateNode :
     String
     -> String
     -> (AssociateNodeOptions -> AssociateNodeOptions)
-    -> AWS.Http.UnsignedRequest AssociateNodeResponse
+    -> AWS.Request AssociateNodeResponse
 associateNode serverName nodeName setOptions =
   let
     options = setOptions (AssociateNodeOptions Nothing)
@@ -211,6 +214,7 @@ associateNode serverName nodeName setOptions =
             JE.null
         )
         associateNodeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a associateNode request
@@ -232,7 +236,7 @@ __Required Parameters__
 createBackup :
     String
     -> (CreateBackupOptions -> CreateBackupOptions)
-    -> AWS.Http.UnsignedRequest CreateBackupResponse
+    -> AWS.Request CreateBackupResponse
 createBackup serverName setOptions =
   let
     options = setOptions (CreateBackupOptions Nothing)
@@ -245,6 +249,7 @@ createBackup serverName setOptions =
             JE.null
         )
         createBackupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createBackup request
@@ -270,7 +275,7 @@ createServer :
     -> String
     -> String
     -> (CreateServerOptions -> CreateServerOptions)
-    -> AWS.Http.UnsignedRequest CreateServerResponse
+    -> AWS.Request CreateServerResponse
 createServer serverName instanceProfileArn serviceRoleArn setOptions =
   let
     options = setOptions (CreateServerOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -283,6 +288,7 @@ createServer serverName instanceProfileArn serviceRoleArn setOptions =
             JE.null
         )
         createServerResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createServer request
@@ -315,7 +321,7 @@ __Required Parameters__
 -}
 deleteBackup :
     String
-    -> AWS.Http.UnsignedRequest DeleteBackupResponse
+    -> AWS.Request DeleteBackupResponse
 deleteBackup backupId =
     AWS.Http.unsignedRequest
         "DeleteBackup"
@@ -325,6 +331,7 @@ deleteBackup backupId =
             JE.null
         )
         deleteBackupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -338,7 +345,7 @@ __Required Parameters__
 -}
 deleteServer :
     String
-    -> AWS.Http.UnsignedRequest DeleteServerResponse
+    -> AWS.Request DeleteServerResponse
 deleteServer serverName =
     AWS.Http.unsignedRequest
         "DeleteServer"
@@ -348,6 +355,7 @@ deleteServer serverName =
             JE.null
         )
         deleteServerResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -359,7 +367,7 @@ __Required Parameters__
 
 -}
 describeAccountAttributes :
-    AWS.Http.UnsignedRequest DescribeAccountAttributesResponse
+    AWS.Request DescribeAccountAttributesResponse
 describeAccountAttributes =
     AWS.Http.unsignedRequest
         "DescribeAccountAttributes"
@@ -369,6 +377,7 @@ describeAccountAttributes =
             JE.null
         )
         describeAccountAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -381,7 +390,7 @@ __Required Parameters__
 -}
 describeBackups :
     (DescribeBackupsOptions -> DescribeBackupsOptions)
-    -> AWS.Http.UnsignedRequest DescribeBackupsResponse
+    -> AWS.Request DescribeBackupsResponse
 describeBackups setOptions =
   let
     options = setOptions (DescribeBackupsOptions Nothing Nothing Nothing Nothing)
@@ -394,6 +403,7 @@ describeBackups setOptions =
             JE.null
         )
         describeBackupsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeBackups request
@@ -418,7 +428,7 @@ __Required Parameters__
 describeEvents :
     String
     -> (DescribeEventsOptions -> DescribeEventsOptions)
-    -> AWS.Http.UnsignedRequest DescribeEventsResponse
+    -> AWS.Request DescribeEventsResponse
 describeEvents serverName setOptions =
   let
     options = setOptions (DescribeEventsOptions Nothing Nothing)
@@ -431,6 +441,7 @@ describeEvents serverName setOptions =
             JE.null
         )
         describeEventsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEvents request
@@ -454,7 +465,7 @@ __Required Parameters__
 describeNodeAssociationStatus :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DescribeNodeAssociationStatusResponse
+    -> AWS.Request DescribeNodeAssociationStatusResponse
 describeNodeAssociationStatus nodeAssociationStatusToken serverName =
     AWS.Http.unsignedRequest
         "DescribeNodeAssociationStatus"
@@ -464,6 +475,7 @@ describeNodeAssociationStatus nodeAssociationStatusToken serverName =
             JE.null
         )
         describeNodeAssociationStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -476,7 +488,7 @@ __Required Parameters__
 -}
 describeServers :
     (DescribeServersOptions -> DescribeServersOptions)
-    -> AWS.Http.UnsignedRequest DescribeServersResponse
+    -> AWS.Request DescribeServersResponse
 describeServers setOptions =
   let
     options = setOptions (DescribeServersOptions Nothing Nothing Nothing)
@@ -489,6 +501,7 @@ describeServers setOptions =
             JE.null
         )
         describeServersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeServers request
@@ -514,7 +527,7 @@ disassociateNode :
     String
     -> String
     -> (DisassociateNodeOptions -> DisassociateNodeOptions)
-    -> AWS.Http.UnsignedRequest DisassociateNodeResponse
+    -> AWS.Request DisassociateNodeResponse
 disassociateNode serverName nodeName setOptions =
   let
     options = setOptions (DisassociateNodeOptions Nothing)
@@ -527,6 +540,7 @@ disassociateNode serverName nodeName setOptions =
             JE.null
         )
         disassociateNodeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disassociateNode request
@@ -550,7 +564,7 @@ restoreServer :
     String
     -> String
     -> (RestoreServerOptions -> RestoreServerOptions)
-    -> AWS.Http.UnsignedRequest RestoreServerResponse
+    -> AWS.Request RestoreServerResponse
 restoreServer backupId serverName setOptions =
   let
     options = setOptions (RestoreServerOptions Nothing Nothing)
@@ -563,6 +577,7 @@ restoreServer backupId serverName setOptions =
             JE.null
         )
         restoreServerResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreServer request
@@ -584,7 +599,7 @@ __Required Parameters__
 -}
 startMaintenance :
     String
-    -> AWS.Http.UnsignedRequest StartMaintenanceResponse
+    -> AWS.Request StartMaintenanceResponse
 startMaintenance serverName =
     AWS.Http.unsignedRequest
         "StartMaintenance"
@@ -594,6 +609,7 @@ startMaintenance serverName =
             JE.null
         )
         startMaintenanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -608,7 +624,7 @@ __Required Parameters__
 updateServer :
     String
     -> (UpdateServerOptions -> UpdateServerOptions)
-    -> AWS.Http.UnsignedRequest UpdateServerResponse
+    -> AWS.Request UpdateServerResponse
 updateServer serverName setOptions =
   let
     options = setOptions (UpdateServerOptions Nothing Nothing Nothing Nothing)
@@ -621,6 +637,7 @@ updateServer serverName setOptions =
             JE.null
         )
         updateServerResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateServer request
@@ -647,7 +664,7 @@ updateServerEngineAttributes :
     String
     -> String
     -> (UpdateServerEngineAttributesOptions -> UpdateServerEngineAttributesOptions)
-    -> AWS.Http.UnsignedRequest UpdateServerEngineAttributesResponse
+    -> AWS.Request UpdateServerEngineAttributesResponse
 updateServerEngineAttributes serverName attributeName setOptions =
   let
     options = setOptions (UpdateServerEngineAttributesOptions Nothing)
@@ -660,6 +677,7 @@ updateServerEngineAttributes serverName attributeName setOptions =
             JE.null
         )
         updateServerEngineAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateServerEngineAttributes request

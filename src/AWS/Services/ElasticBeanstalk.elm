@@ -374,7 +374,9 @@ module AWS.Services.ElasticBeanstalk
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -385,15 +387,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "elasticbeanstalk"
         "2010-12-01"
         "undefined"
         "AWSELASTICBEANSTALK_20101201."
         "elasticbeanstalk.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -408,7 +411,7 @@ __Required Parameters__
 -}
 abortEnvironmentUpdate :
     (AbortEnvironmentUpdateOptions -> AbortEnvironmentUpdateOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 abortEnvironmentUpdate setOptions =
   let
     options = setOptions (AbortEnvironmentUpdateOptions Nothing Nothing)
@@ -421,6 +424,7 @@ abortEnvironmentUpdate setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a abortEnvironmentUpdate request
@@ -443,7 +447,7 @@ __Required Parameters__
 applyEnvironmentManagedAction :
     String
     -> (ApplyEnvironmentManagedActionOptions -> ApplyEnvironmentManagedActionOptions)
-    -> AWS.Http.UnsignedRequest ApplyEnvironmentManagedActionResult
+    -> AWS.Request ApplyEnvironmentManagedActionResult
 applyEnvironmentManagedAction actionId setOptions =
   let
     options = setOptions (ApplyEnvironmentManagedActionOptions Nothing Nothing)
@@ -456,6 +460,7 @@ applyEnvironmentManagedAction actionId setOptions =
             JE.null
         )
         applyEnvironmentManagedActionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a applyEnvironmentManagedAction request
@@ -477,7 +482,7 @@ __Required Parameters__
 -}
 checkDNSAvailability :
     String
-    -> AWS.Http.UnsignedRequest CheckDNSAvailabilityResultMessage
+    -> AWS.Request CheckDNSAvailabilityResultMessage
 checkDNSAvailability cNAMEPrefix =
     AWS.Http.unsignedRequest
         "CheckDNSAvailability"
@@ -487,6 +492,7 @@ checkDNSAvailability cNAMEPrefix =
             JE.null
         )
         checkDNSAvailabilityResultMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -499,7 +505,7 @@ __Required Parameters__
 -}
 composeEnvironments :
     (ComposeEnvironmentsOptions -> ComposeEnvironmentsOptions)
-    -> AWS.Http.UnsignedRequest EnvironmentDescriptionsMessage
+    -> AWS.Request EnvironmentDescriptionsMessage
 composeEnvironments setOptions =
   let
     options = setOptions (ComposeEnvironmentsOptions Nothing Nothing Nothing)
@@ -512,6 +518,7 @@ composeEnvironments setOptions =
             JE.null
         )
         environmentDescriptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a composeEnvironments request
@@ -535,7 +542,7 @@ __Required Parameters__
 createApplication :
     String
     -> (CreateApplicationOptions -> CreateApplicationOptions)
-    -> AWS.Http.UnsignedRequest ApplicationDescriptionMessage
+    -> AWS.Request ApplicationDescriptionMessage
 createApplication applicationName setOptions =
   let
     options = setOptions (CreateApplicationOptions Nothing Nothing)
@@ -548,6 +555,7 @@ createApplication applicationName setOptions =
             JE.null
         )
         applicationDescriptionMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createApplication request
@@ -572,7 +580,7 @@ createApplicationVersion :
     String
     -> String
     -> (CreateApplicationVersionOptions -> CreateApplicationVersionOptions)
-    -> AWS.Http.UnsignedRequest ApplicationVersionDescriptionMessage
+    -> AWS.Request ApplicationVersionDescriptionMessage
 createApplicationVersion applicationName versionLabel setOptions =
   let
     options = setOptions (CreateApplicationVersionOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -585,6 +593,7 @@ createApplicationVersion applicationName versionLabel setOptions =
             JE.null
         )
         applicationVersionDescriptionMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createApplicationVersion request
@@ -613,7 +622,7 @@ createConfigurationTemplate :
     String
     -> String
     -> (CreateConfigurationTemplateOptions -> CreateConfigurationTemplateOptions)
-    -> AWS.Http.UnsignedRequest ConfigurationSettingsDescription
+    -> AWS.Request ConfigurationSettingsDescription
 createConfigurationTemplate applicationName templateName setOptions =
   let
     options = setOptions (CreateConfigurationTemplateOptions Nothing Nothing Nothing Nothing Nothing)
@@ -626,6 +635,7 @@ createConfigurationTemplate applicationName templateName setOptions =
             JE.null
         )
         configurationSettingsDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createConfigurationTemplate request
@@ -651,7 +661,7 @@ __Required Parameters__
 createEnvironment :
     String
     -> (CreateEnvironmentOptions -> CreateEnvironmentOptions)
-    -> AWS.Http.UnsignedRequest EnvironmentDescription
+    -> AWS.Request EnvironmentDescription
 createEnvironment applicationName setOptions =
   let
     options = setOptions (CreateEnvironmentOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -664,6 +674,7 @@ createEnvironment applicationName setOptions =
             JE.null
         )
         environmentDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createEnvironment request
@@ -692,7 +703,7 @@ __Required Parameters__
 
 -}
 createStorageLocation :
-    AWS.Http.UnsignedRequest CreateStorageLocationResultMessage
+    AWS.Request CreateStorageLocationResultMessage
 createStorageLocation =
     AWS.Http.unsignedRequest
         "CreateStorageLocation"
@@ -702,6 +713,7 @@ createStorageLocation =
             JE.null
         )
         createStorageLocationResultMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -716,7 +728,7 @@ __Required Parameters__
 deleteApplication :
     String
     -> (DeleteApplicationOptions -> DeleteApplicationOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteApplication applicationName setOptions =
   let
     options = setOptions (DeleteApplicationOptions Nothing)
@@ -729,6 +741,7 @@ deleteApplication applicationName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteApplication request
@@ -752,7 +765,7 @@ deleteApplicationVersion :
     String
     -> String
     -> (DeleteApplicationVersionOptions -> DeleteApplicationVersionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteApplicationVersion applicationName versionLabel setOptions =
   let
     options = setOptions (DeleteApplicationVersionOptions Nothing)
@@ -765,6 +778,7 @@ deleteApplicationVersion applicationName versionLabel setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteApplicationVersion request
@@ -787,7 +801,7 @@ __Required Parameters__
 deleteConfigurationTemplate :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteConfigurationTemplate applicationName templateName =
     AWS.Http.unsignedRequest
         "DeleteConfigurationTemplate"
@@ -797,6 +811,7 @@ deleteConfigurationTemplate applicationName templateName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -812,7 +827,7 @@ __Required Parameters__
 deleteEnvironmentConfiguration :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteEnvironmentConfiguration applicationName environmentName =
     AWS.Http.unsignedRequest
         "DeleteEnvironmentConfiguration"
@@ -822,6 +837,7 @@ deleteEnvironmentConfiguration applicationName environmentName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -834,7 +850,7 @@ __Required Parameters__
 -}
 describeApplicationVersions :
     (DescribeApplicationVersionsOptions -> DescribeApplicationVersionsOptions)
-    -> AWS.Http.UnsignedRequest ApplicationVersionDescriptionsMessage
+    -> AWS.Request ApplicationVersionDescriptionsMessage
 describeApplicationVersions setOptions =
   let
     options = setOptions (DescribeApplicationVersionsOptions Nothing Nothing Nothing Nothing)
@@ -847,6 +863,7 @@ describeApplicationVersions setOptions =
             JE.null
         )
         applicationVersionDescriptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeApplicationVersions request
@@ -869,7 +886,7 @@ __Required Parameters__
 -}
 describeApplications :
     (DescribeApplicationsOptions -> DescribeApplicationsOptions)
-    -> AWS.Http.UnsignedRequest ApplicationDescriptionsMessage
+    -> AWS.Request ApplicationDescriptionsMessage
 describeApplications setOptions =
   let
     options = setOptions (DescribeApplicationsOptions Nothing)
@@ -882,6 +899,7 @@ describeApplications setOptions =
             JE.null
         )
         applicationDescriptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeApplications request
@@ -901,7 +919,7 @@ __Required Parameters__
 -}
 describeConfigurationOptions :
     (DescribeConfigurationOptionsOptions -> DescribeConfigurationOptionsOptions)
-    -> AWS.Http.UnsignedRequest ConfigurationOptionsDescription
+    -> AWS.Request ConfigurationOptionsDescription
 describeConfigurationOptions setOptions =
   let
     options = setOptions (DescribeConfigurationOptionsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -914,6 +932,7 @@ describeConfigurationOptions setOptions =
             JE.null
         )
         configurationOptionsDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConfigurationOptions request
@@ -939,7 +958,7 @@ __Required Parameters__
 describeConfigurationSettings :
     String
     -> (DescribeConfigurationSettingsOptions -> DescribeConfigurationSettingsOptions)
-    -> AWS.Http.UnsignedRequest ConfigurationSettingsDescriptions
+    -> AWS.Request ConfigurationSettingsDescriptions
 describeConfigurationSettings applicationName setOptions =
   let
     options = setOptions (DescribeConfigurationSettingsOptions Nothing Nothing)
@@ -952,6 +971,7 @@ describeConfigurationSettings applicationName setOptions =
             JE.null
         )
         configurationSettingsDescriptionsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConfigurationSettings request
@@ -972,7 +992,7 @@ __Required Parameters__
 -}
 describeEnvironmentHealth :
     (DescribeEnvironmentHealthOptions -> DescribeEnvironmentHealthOptions)
-    -> AWS.Http.UnsignedRequest DescribeEnvironmentHealthResult
+    -> AWS.Request DescribeEnvironmentHealthResult
 describeEnvironmentHealth setOptions =
   let
     options = setOptions (DescribeEnvironmentHealthOptions Nothing Nothing Nothing)
@@ -985,6 +1005,7 @@ describeEnvironmentHealth setOptions =
             JE.null
         )
         describeEnvironmentHealthResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEnvironmentHealth request
@@ -1006,7 +1027,7 @@ __Required Parameters__
 -}
 describeEnvironmentManagedActionHistory :
     (DescribeEnvironmentManagedActionHistoryOptions -> DescribeEnvironmentManagedActionHistoryOptions)
-    -> AWS.Http.UnsignedRequest DescribeEnvironmentManagedActionHistoryResult
+    -> AWS.Request DescribeEnvironmentManagedActionHistoryResult
 describeEnvironmentManagedActionHistory setOptions =
   let
     options = setOptions (DescribeEnvironmentManagedActionHistoryOptions Nothing Nothing Nothing Nothing)
@@ -1019,6 +1040,7 @@ describeEnvironmentManagedActionHistory setOptions =
             JE.null
         )
         describeEnvironmentManagedActionHistoryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEnvironmentManagedActionHistory request
@@ -1041,7 +1063,7 @@ __Required Parameters__
 -}
 describeEnvironmentManagedActions :
     (DescribeEnvironmentManagedActionsOptions -> DescribeEnvironmentManagedActionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeEnvironmentManagedActionsResult
+    -> AWS.Request DescribeEnvironmentManagedActionsResult
 describeEnvironmentManagedActions setOptions =
   let
     options = setOptions (DescribeEnvironmentManagedActionsOptions Nothing Nothing Nothing)
@@ -1054,6 +1076,7 @@ describeEnvironmentManagedActions setOptions =
             JE.null
         )
         describeEnvironmentManagedActionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEnvironmentManagedActions request
@@ -1075,7 +1098,7 @@ __Required Parameters__
 -}
 describeEnvironmentResources :
     (DescribeEnvironmentResourcesOptions -> DescribeEnvironmentResourcesOptions)
-    -> AWS.Http.UnsignedRequest EnvironmentResourceDescriptionsMessage
+    -> AWS.Request EnvironmentResourceDescriptionsMessage
 describeEnvironmentResources setOptions =
   let
     options = setOptions (DescribeEnvironmentResourcesOptions Nothing Nothing)
@@ -1088,6 +1111,7 @@ describeEnvironmentResources setOptions =
             JE.null
         )
         environmentResourceDescriptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEnvironmentResources request
@@ -1108,7 +1132,7 @@ __Required Parameters__
 -}
 describeEnvironments :
     (DescribeEnvironmentsOptions -> DescribeEnvironmentsOptions)
-    -> AWS.Http.UnsignedRequest EnvironmentDescriptionsMessage
+    -> AWS.Request EnvironmentDescriptionsMessage
 describeEnvironments setOptions =
   let
     options = setOptions (DescribeEnvironmentsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1121,6 +1145,7 @@ describeEnvironments setOptions =
             JE.null
         )
         environmentDescriptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEnvironments request
@@ -1145,7 +1170,7 @@ __Required Parameters__
 -}
 describeEvents :
     (DescribeEventsOptions -> DescribeEventsOptions)
-    -> AWS.Http.UnsignedRequest EventDescriptionsMessage
+    -> AWS.Request EventDescriptionsMessage
 describeEvents setOptions =
   let
     options = setOptions (DescribeEventsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1158,6 +1183,7 @@ describeEvents setOptions =
             JE.null
         )
         eventDescriptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEvents request
@@ -1187,7 +1213,7 @@ __Required Parameters__
 -}
 describeInstancesHealth :
     (DescribeInstancesHealthOptions -> DescribeInstancesHealthOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstancesHealthResult
+    -> AWS.Request DescribeInstancesHealthResult
 describeInstancesHealth setOptions =
   let
     options = setOptions (DescribeInstancesHealthOptions Nothing Nothing Nothing Nothing)
@@ -1200,6 +1226,7 @@ describeInstancesHealth setOptions =
             JE.null
         )
         describeInstancesHealthResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstancesHealth request
@@ -1221,7 +1248,7 @@ __Required Parameters__
 
 -}
 listAvailableSolutionStacks :
-    AWS.Http.UnsignedRequest ListAvailableSolutionStacksResultMessage
+    AWS.Request ListAvailableSolutionStacksResultMessage
 listAvailableSolutionStacks =
     AWS.Http.unsignedRequest
         "ListAvailableSolutionStacks"
@@ -1231,6 +1258,7 @@ listAvailableSolutionStacks =
             JE.null
         )
         listAvailableSolutionStacksResultMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1243,7 +1271,7 @@ __Required Parameters__
 -}
 rebuildEnvironment :
     (RebuildEnvironmentOptions -> RebuildEnvironmentOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 rebuildEnvironment setOptions =
   let
     options = setOptions (RebuildEnvironmentOptions Nothing Nothing)
@@ -1256,6 +1284,7 @@ rebuildEnvironment setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a rebuildEnvironment request
@@ -1278,7 +1307,7 @@ __Required Parameters__
 requestEnvironmentInfo :
     EnvironmentInfoType
     -> (RequestEnvironmentInfoOptions -> RequestEnvironmentInfoOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 requestEnvironmentInfo infoType setOptions =
   let
     options = setOptions (RequestEnvironmentInfoOptions Nothing Nothing)
@@ -1291,6 +1320,7 @@ requestEnvironmentInfo infoType setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a requestEnvironmentInfo request
@@ -1311,7 +1341,7 @@ __Required Parameters__
 -}
 restartAppServer :
     (RestartAppServerOptions -> RestartAppServerOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 restartAppServer setOptions =
   let
     options = setOptions (RestartAppServerOptions Nothing Nothing)
@@ -1324,6 +1354,7 @@ restartAppServer setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restartAppServer request
@@ -1346,7 +1377,7 @@ __Required Parameters__
 retrieveEnvironmentInfo :
     EnvironmentInfoType
     -> (RetrieveEnvironmentInfoOptions -> RetrieveEnvironmentInfoOptions)
-    -> AWS.Http.UnsignedRequest RetrieveEnvironmentInfoResultMessage
+    -> AWS.Request RetrieveEnvironmentInfoResultMessage
 retrieveEnvironmentInfo infoType setOptions =
   let
     options = setOptions (RetrieveEnvironmentInfoOptions Nothing Nothing)
@@ -1359,6 +1390,7 @@ retrieveEnvironmentInfo infoType setOptions =
             JE.null
         )
         retrieveEnvironmentInfoResultMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a retrieveEnvironmentInfo request
@@ -1379,7 +1411,7 @@ __Required Parameters__
 -}
 swapEnvironmentCNAMEs :
     (SwapEnvironmentCNAMEsOptions -> SwapEnvironmentCNAMEsOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 swapEnvironmentCNAMEs setOptions =
   let
     options = setOptions (SwapEnvironmentCNAMEsOptions Nothing Nothing Nothing Nothing)
@@ -1392,6 +1424,7 @@ swapEnvironmentCNAMEs setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a swapEnvironmentCNAMEs request
@@ -1414,7 +1447,7 @@ __Required Parameters__
 -}
 terminateEnvironment :
     (TerminateEnvironmentOptions -> TerminateEnvironmentOptions)
-    -> AWS.Http.UnsignedRequest EnvironmentDescription
+    -> AWS.Request EnvironmentDescription
 terminateEnvironment setOptions =
   let
     options = setOptions (TerminateEnvironmentOptions Nothing Nothing Nothing Nothing)
@@ -1427,6 +1460,7 @@ terminateEnvironment setOptions =
             JE.null
         )
         environmentDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a terminateEnvironment request
@@ -1451,7 +1485,7 @@ __Required Parameters__
 updateApplication :
     String
     -> (UpdateApplicationOptions -> UpdateApplicationOptions)
-    -> AWS.Http.UnsignedRequest ApplicationDescriptionMessage
+    -> AWS.Request ApplicationDescriptionMessage
 updateApplication applicationName setOptions =
   let
     options = setOptions (UpdateApplicationOptions Nothing)
@@ -1464,6 +1498,7 @@ updateApplication applicationName setOptions =
             JE.null
         )
         applicationDescriptionMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateApplication request
@@ -1486,7 +1521,7 @@ __Required Parameters__
 updateApplicationResourceLifecycle :
     String
     -> ApplicationResourceLifecycleConfig
-    -> AWS.Http.UnsignedRequest ApplicationResourceLifecycleDescriptionMessage
+    -> AWS.Request ApplicationResourceLifecycleDescriptionMessage
 updateApplicationResourceLifecycle applicationName resourceLifecycleConfig =
     AWS.Http.unsignedRequest
         "UpdateApplicationResourceLifecycle"
@@ -1496,6 +1531,7 @@ updateApplicationResourceLifecycle applicationName resourceLifecycleConfig =
             JE.null
         )
         applicationResourceLifecycleDescriptionMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1512,7 +1548,7 @@ updateApplicationVersion :
     String
     -> String
     -> (UpdateApplicationVersionOptions -> UpdateApplicationVersionOptions)
-    -> AWS.Http.UnsignedRequest ApplicationVersionDescriptionMessage
+    -> AWS.Request ApplicationVersionDescriptionMessage
 updateApplicationVersion applicationName versionLabel setOptions =
   let
     options = setOptions (UpdateApplicationVersionOptions Nothing)
@@ -1525,6 +1561,7 @@ updateApplicationVersion applicationName versionLabel setOptions =
             JE.null
         )
         applicationVersionDescriptionMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateApplicationVersion request
@@ -1548,7 +1585,7 @@ updateConfigurationTemplate :
     String
     -> String
     -> (UpdateConfigurationTemplateOptions -> UpdateConfigurationTemplateOptions)
-    -> AWS.Http.UnsignedRequest ConfigurationSettingsDescription
+    -> AWS.Request ConfigurationSettingsDescription
 updateConfigurationTemplate applicationName templateName setOptions =
   let
     options = setOptions (UpdateConfigurationTemplateOptions Nothing Nothing Nothing)
@@ -1561,6 +1598,7 @@ updateConfigurationTemplate applicationName templateName setOptions =
             JE.null
         )
         configurationSettingsDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateConfigurationTemplate request
@@ -1582,7 +1620,7 @@ __Required Parameters__
 -}
 updateEnvironment :
     (UpdateEnvironmentOptions -> UpdateEnvironmentOptions)
-    -> AWS.Http.UnsignedRequest EnvironmentDescription
+    -> AWS.Request EnvironmentDescription
 updateEnvironment setOptions =
   let
     options = setOptions (UpdateEnvironmentOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1595,6 +1633,7 @@ updateEnvironment setOptions =
             JE.null
         )
         environmentDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateEnvironment request
@@ -1628,7 +1667,7 @@ validateConfigurationSettings :
     String
     -> (List ConfigurationOptionSetting)
     -> (ValidateConfigurationSettingsOptions -> ValidateConfigurationSettingsOptions)
-    -> AWS.Http.UnsignedRequest ConfigurationSettingsValidationMessages
+    -> AWS.Request ConfigurationSettingsValidationMessages
 validateConfigurationSettings applicationName optionSettings setOptions =
   let
     options = setOptions (ValidateConfigurationSettingsOptions Nothing Nothing)
@@ -1641,6 +1680,7 @@ validateConfigurationSettings applicationName optionSettings setOptions =
             JE.null
         )
         configurationSettingsValidationMessagesDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a validateConfigurationSettings request

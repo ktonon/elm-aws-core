@@ -31,7 +31,9 @@ module AWS.Services.{{= it.mod }}
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -41,15 +43,16 @@ import Json.Encode as JE
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "{{= it.metadata.endpointPrefix }}"
         "{{= it.metadata.apiVersion }}"
         "{{= it.metadata.jsonVersion }}"
         "AWS{{= it.metadata.endpointPrefix.toUpperCase() }}_{{= it.metadata.apiVersion.replace(/-/g, '') }}."
         "{{= it.metadata.endpointPrefix }}.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 

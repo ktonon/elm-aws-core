@@ -502,7 +502,9 @@ module AWS.Services.CognitoIdentityProvider
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -514,15 +516,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "cognito-idp"
         "2016-04-18"
         "1.1"
         "AWSCOGNITO-IDP_20160418."
         "cognito-idp.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -540,7 +543,7 @@ __Required Parameters__
 addCustomAttributes :
     String
     -> (List SchemaAttributeType)
-    -> AWS.Http.UnsignedRequest AddCustomAttributesResponse
+    -> AWS.Request AddCustomAttributesResponse
 addCustomAttributes userPoolId customAttributes =
     AWS.Http.unsignedRequest
         "AddCustomAttributes"
@@ -550,6 +553,7 @@ addCustomAttributes userPoolId customAttributes =
             JE.null
         )
         addCustomAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -567,7 +571,7 @@ adminAddUserToGroup :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 adminAddUserToGroup userPoolId username groupName =
     AWS.Http.unsignedRequest
         "AdminAddUserToGroup"
@@ -577,6 +581,7 @@ adminAddUserToGroup userPoolId username groupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -592,7 +597,7 @@ __Required Parameters__
 adminConfirmSignUp :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AdminConfirmSignUpResponse
+    -> AWS.Request AdminConfirmSignUpResponse
 adminConfirmSignUp userPoolId username =
     AWS.Http.unsignedRequest
         "AdminConfirmSignUp"
@@ -602,6 +607,7 @@ adminConfirmSignUp userPoolId username =
             JE.null
         )
         adminConfirmSignUpResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -618,7 +624,7 @@ adminCreateUser :
     String
     -> String
     -> (AdminCreateUserOptions -> AdminCreateUserOptions)
-    -> AWS.Http.UnsignedRequest AdminCreateUserResponse
+    -> AWS.Request AdminCreateUserResponse
 adminCreateUser userPoolId username setOptions =
   let
     options = setOptions (AdminCreateUserOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -631,6 +637,7 @@ adminCreateUser userPoolId username setOptions =
             JE.null
         )
         adminCreateUserResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a adminCreateUser request
@@ -658,7 +665,7 @@ __Required Parameters__
 adminDeleteUser :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 adminDeleteUser userPoolId username =
     AWS.Http.unsignedRequest
         "AdminDeleteUser"
@@ -668,6 +675,7 @@ adminDeleteUser userPoolId username =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -685,7 +693,7 @@ adminDeleteUserAttributes :
     String
     -> String
     -> (List String)
-    -> AWS.Http.UnsignedRequest AdminDeleteUserAttributesResponse
+    -> AWS.Request AdminDeleteUserAttributesResponse
 adminDeleteUserAttributes userPoolId username userAttributeNames =
     AWS.Http.unsignedRequest
         "AdminDeleteUserAttributes"
@@ -695,6 +703,7 @@ adminDeleteUserAttributes userPoolId username userAttributeNames =
             JE.null
         )
         adminDeleteUserAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -710,7 +719,7 @@ __Required Parameters__
 adminDisableUser :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AdminDisableUserResponse
+    -> AWS.Request AdminDisableUserResponse
 adminDisableUser userPoolId username =
     AWS.Http.unsignedRequest
         "AdminDisableUser"
@@ -720,6 +729,7 @@ adminDisableUser userPoolId username =
             JE.null
         )
         adminDisableUserResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -735,7 +745,7 @@ __Required Parameters__
 adminEnableUser :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AdminEnableUserResponse
+    -> AWS.Request AdminEnableUserResponse
 adminEnableUser userPoolId username =
     AWS.Http.unsignedRequest
         "AdminEnableUser"
@@ -745,6 +755,7 @@ adminEnableUser userPoolId username =
             JE.null
         )
         adminEnableUserResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -762,7 +773,7 @@ adminForgetDevice :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 adminForgetDevice userPoolId username deviceKey =
     AWS.Http.unsignedRequest
         "AdminForgetDevice"
@@ -772,6 +783,7 @@ adminForgetDevice userPoolId username deviceKey =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -789,7 +801,7 @@ adminGetDevice :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest AdminGetDeviceResponse
+    -> AWS.Request AdminGetDeviceResponse
 adminGetDevice deviceKey userPoolId username =
     AWS.Http.unsignedRequest
         "AdminGetDevice"
@@ -799,6 +811,7 @@ adminGetDevice deviceKey userPoolId username =
             JE.null
         )
         adminGetDeviceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -814,7 +827,7 @@ __Required Parameters__
 adminGetUser :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AdminGetUserResponse
+    -> AWS.Request AdminGetUserResponse
 adminGetUser userPoolId username =
     AWS.Http.unsignedRequest
         "AdminGetUser"
@@ -824,6 +837,7 @@ adminGetUser userPoolId username =
             JE.null
         )
         adminGetUserResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -842,7 +856,7 @@ adminInitiateAuth :
     -> String
     -> AuthFlowType
     -> (AdminInitiateAuthOptions -> AdminInitiateAuthOptions)
-    -> AWS.Http.UnsignedRequest AdminInitiateAuthResponse
+    -> AWS.Request AdminInitiateAuthResponse
 adminInitiateAuth userPoolId clientId authFlow setOptions =
   let
     options = setOptions (AdminInitiateAuthOptions Nothing Nothing)
@@ -855,6 +869,7 @@ adminInitiateAuth userPoolId clientId authFlow setOptions =
             JE.null
         )
         adminInitiateAuthResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a adminInitiateAuth request
@@ -879,7 +894,7 @@ adminListDevices :
     String
     -> String
     -> (AdminListDevicesOptions -> AdminListDevicesOptions)
-    -> AWS.Http.UnsignedRequest AdminListDevicesResponse
+    -> AWS.Request AdminListDevicesResponse
 adminListDevices userPoolId username setOptions =
   let
     options = setOptions (AdminListDevicesOptions Nothing Nothing)
@@ -892,6 +907,7 @@ adminListDevices userPoolId username setOptions =
             JE.null
         )
         adminListDevicesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a adminListDevices request
@@ -916,7 +932,7 @@ adminListGroupsForUser :
     String
     -> String
     -> (AdminListGroupsForUserOptions -> AdminListGroupsForUserOptions)
-    -> AWS.Http.UnsignedRequest AdminListGroupsForUserResponse
+    -> AWS.Request AdminListGroupsForUserResponse
 adminListGroupsForUser username userPoolId setOptions =
   let
     options = setOptions (AdminListGroupsForUserOptions Nothing Nothing)
@@ -929,6 +945,7 @@ adminListGroupsForUser username userPoolId setOptions =
             JE.null
         )
         adminListGroupsForUserResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a adminListGroupsForUser request
@@ -954,7 +971,7 @@ adminRemoveUserFromGroup :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 adminRemoveUserFromGroup userPoolId username groupName =
     AWS.Http.unsignedRequest
         "AdminRemoveUserFromGroup"
@@ -964,6 +981,7 @@ adminRemoveUserFromGroup userPoolId username groupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -979,7 +997,7 @@ __Required Parameters__
 adminResetUserPassword :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AdminResetUserPasswordResponse
+    -> AWS.Request AdminResetUserPasswordResponse
 adminResetUserPassword userPoolId username =
     AWS.Http.unsignedRequest
         "AdminResetUserPassword"
@@ -989,6 +1007,7 @@ adminResetUserPassword userPoolId username =
             JE.null
         )
         adminResetUserPasswordResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1007,7 +1026,7 @@ adminRespondToAuthChallenge :
     -> String
     -> ChallengeNameType
     -> (AdminRespondToAuthChallengeOptions -> AdminRespondToAuthChallengeOptions)
-    -> AWS.Http.UnsignedRequest AdminRespondToAuthChallengeResponse
+    -> AWS.Request AdminRespondToAuthChallengeResponse
 adminRespondToAuthChallenge userPoolId clientId challengeName setOptions =
   let
     options = setOptions (AdminRespondToAuthChallengeOptions Nothing Nothing)
@@ -1020,6 +1039,7 @@ adminRespondToAuthChallenge userPoolId clientId challengeName setOptions =
             JE.null
         )
         adminRespondToAuthChallengeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a adminRespondToAuthChallenge request
@@ -1045,7 +1065,7 @@ adminSetUserSettings :
     String
     -> String
     -> (List MFAOptionType)
-    -> AWS.Http.UnsignedRequest AdminSetUserSettingsResponse
+    -> AWS.Request AdminSetUserSettingsResponse
 adminSetUserSettings userPoolId username mFAOptions =
     AWS.Http.unsignedRequest
         "AdminSetUserSettings"
@@ -1055,6 +1075,7 @@ adminSetUserSettings userPoolId username mFAOptions =
             JE.null
         )
         adminSetUserSettingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1073,7 +1094,7 @@ adminUpdateDeviceStatus :
     -> String
     -> String
     -> (AdminUpdateDeviceStatusOptions -> AdminUpdateDeviceStatusOptions)
-    -> AWS.Http.UnsignedRequest AdminUpdateDeviceStatusResponse
+    -> AWS.Request AdminUpdateDeviceStatusResponse
 adminUpdateDeviceStatus userPoolId username deviceKey setOptions =
   let
     options = setOptions (AdminUpdateDeviceStatusOptions Nothing)
@@ -1086,6 +1107,7 @@ adminUpdateDeviceStatus userPoolId username deviceKey setOptions =
             JE.null
         )
         adminUpdateDeviceStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a adminUpdateDeviceStatus request
@@ -1110,7 +1132,7 @@ adminUpdateUserAttributes :
     String
     -> String
     -> (List AttributeType)
-    -> AWS.Http.UnsignedRequest AdminUpdateUserAttributesResponse
+    -> AWS.Request AdminUpdateUserAttributesResponse
 adminUpdateUserAttributes userPoolId username userAttributes =
     AWS.Http.unsignedRequest
         "AdminUpdateUserAttributes"
@@ -1120,6 +1142,7 @@ adminUpdateUserAttributes userPoolId username userAttributes =
             JE.null
         )
         adminUpdateUserAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1135,7 +1158,7 @@ __Required Parameters__
 adminUserGlobalSignOut :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AdminUserGlobalSignOutResponse
+    -> AWS.Request AdminUserGlobalSignOutResponse
 adminUserGlobalSignOut userPoolId username =
     AWS.Http.unsignedRequest
         "AdminUserGlobalSignOut"
@@ -1145,6 +1168,7 @@ adminUserGlobalSignOut userPoolId username =
             JE.null
         )
         adminUserGlobalSignOutResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1161,7 +1185,7 @@ changePassword :
     String
     -> String
     -> (ChangePasswordOptions -> ChangePasswordOptions)
-    -> AWS.Http.UnsignedRequest ChangePasswordResponse
+    -> AWS.Request ChangePasswordResponse
 changePassword previousPassword proposedPassword setOptions =
   let
     options = setOptions (ChangePasswordOptions Nothing)
@@ -1174,6 +1198,7 @@ changePassword previousPassword proposedPassword setOptions =
             JE.null
         )
         changePasswordResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a changePassword request
@@ -1197,7 +1222,7 @@ confirmDevice :
     String
     -> String
     -> (ConfirmDeviceOptions -> ConfirmDeviceOptions)
-    -> AWS.Http.UnsignedRequest ConfirmDeviceResponse
+    -> AWS.Request ConfirmDeviceResponse
 confirmDevice accessToken deviceKey setOptions =
   let
     options = setOptions (ConfirmDeviceOptions Nothing Nothing)
@@ -1210,6 +1235,7 @@ confirmDevice accessToken deviceKey setOptions =
             JE.null
         )
         confirmDeviceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a confirmDevice request
@@ -1238,7 +1264,7 @@ confirmForgotPassword :
     -> String
     -> String
     -> (ConfirmForgotPasswordOptions -> ConfirmForgotPasswordOptions)
-    -> AWS.Http.UnsignedRequest ConfirmForgotPasswordResponse
+    -> AWS.Request ConfirmForgotPasswordResponse
 confirmForgotPassword clientId username confirmationCode password setOptions =
   let
     options = setOptions (ConfirmForgotPasswordOptions Nothing)
@@ -1251,6 +1277,7 @@ confirmForgotPassword clientId username confirmationCode password setOptions =
             JE.null
         )
         confirmForgotPasswordResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a confirmForgotPassword request
@@ -1276,7 +1303,7 @@ confirmSignUp :
     -> String
     -> String
     -> (ConfirmSignUpOptions -> ConfirmSignUpOptions)
-    -> AWS.Http.UnsignedRequest ConfirmSignUpResponse
+    -> AWS.Request ConfirmSignUpResponse
 confirmSignUp clientId username confirmationCode setOptions =
   let
     options = setOptions (ConfirmSignUpOptions Nothing Nothing)
@@ -1289,6 +1316,7 @@ confirmSignUp clientId username confirmationCode setOptions =
             JE.null
         )
         confirmSignUpResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a confirmSignUp request
@@ -1313,7 +1341,7 @@ createGroup :
     String
     -> String
     -> (CreateGroupOptions -> CreateGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateGroupResponse
+    -> AWS.Request CreateGroupResponse
 createGroup groupName userPoolId setOptions =
   let
     options = setOptions (CreateGroupOptions Nothing Nothing Nothing)
@@ -1326,6 +1354,7 @@ createGroup groupName userPoolId setOptions =
             JE.null
         )
         createGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createGroup request
@@ -1352,7 +1381,7 @@ createUserImportJob :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest CreateUserImportJobResponse
+    -> AWS.Request CreateUserImportJobResponse
 createUserImportJob jobName userPoolId cloudWatchLogsRoleArn =
     AWS.Http.unsignedRequest
         "CreateUserImportJob"
@@ -1362,6 +1391,7 @@ createUserImportJob jobName userPoolId cloudWatchLogsRoleArn =
             JE.null
         )
         createUserImportJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1376,7 +1406,7 @@ __Required Parameters__
 createUserPool :
     String
     -> (CreateUserPoolOptions -> CreateUserPoolOptions)
-    -> AWS.Http.UnsignedRequest CreateUserPoolResponse
+    -> AWS.Request CreateUserPoolResponse
 createUserPool poolName setOptions =
   let
     options = setOptions (CreateUserPoolOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1389,6 +1419,7 @@ createUserPool poolName setOptions =
             JE.null
         )
         createUserPoolResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createUserPool request
@@ -1426,7 +1457,7 @@ createUserPoolClient :
     String
     -> String
     -> (CreateUserPoolClientOptions -> CreateUserPoolClientOptions)
-    -> AWS.Http.UnsignedRequest CreateUserPoolClientResponse
+    -> AWS.Request CreateUserPoolClientResponse
 createUserPoolClient userPoolId clientName setOptions =
   let
     options = setOptions (CreateUserPoolClientOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1439,6 +1470,7 @@ createUserPoolClient userPoolId clientName setOptions =
             JE.null
         )
         createUserPoolClientResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createUserPoolClient request
@@ -1465,7 +1497,7 @@ __Required Parameters__
 deleteGroup :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteGroup groupName userPoolId =
     AWS.Http.unsignedRequest
         "DeleteGroup"
@@ -1475,6 +1507,7 @@ deleteGroup groupName userPoolId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1487,7 +1520,7 @@ __Required Parameters__
 -}
 deleteUser :
     (DeleteUserOptions -> DeleteUserOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteUser setOptions =
   let
     options = setOptions (DeleteUserOptions Nothing)
@@ -1500,6 +1533,7 @@ deleteUser setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteUser request
@@ -1521,7 +1555,7 @@ __Required Parameters__
 deleteUserAttributes :
     (List String)
     -> (DeleteUserAttributesOptions -> DeleteUserAttributesOptions)
-    -> AWS.Http.UnsignedRequest DeleteUserAttributesResponse
+    -> AWS.Request DeleteUserAttributesResponse
 deleteUserAttributes userAttributeNames setOptions =
   let
     options = setOptions (DeleteUserAttributesOptions Nothing)
@@ -1534,6 +1568,7 @@ deleteUserAttributes userAttributeNames setOptions =
             JE.null
         )
         deleteUserAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteUserAttributes request
@@ -1554,7 +1589,7 @@ __Required Parameters__
 -}
 deleteUserPool :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteUserPool userPoolId =
     AWS.Http.unsignedRequest
         "DeleteUserPool"
@@ -1564,6 +1599,7 @@ deleteUserPool userPoolId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1579,7 +1615,7 @@ __Required Parameters__
 deleteUserPoolClient :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteUserPoolClient userPoolId clientId =
     AWS.Http.unsignedRequest
         "DeleteUserPoolClient"
@@ -1589,6 +1625,7 @@ deleteUserPoolClient userPoolId clientId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1604,7 +1641,7 @@ __Required Parameters__
 describeUserImportJob :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DescribeUserImportJobResponse
+    -> AWS.Request DescribeUserImportJobResponse
 describeUserImportJob userPoolId jobId =
     AWS.Http.unsignedRequest
         "DescribeUserImportJob"
@@ -1614,6 +1651,7 @@ describeUserImportJob userPoolId jobId =
             JE.null
         )
         describeUserImportJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1627,7 +1665,7 @@ __Required Parameters__
 -}
 describeUserPool :
     String
-    -> AWS.Http.UnsignedRequest DescribeUserPoolResponse
+    -> AWS.Request DescribeUserPoolResponse
 describeUserPool userPoolId =
     AWS.Http.unsignedRequest
         "DescribeUserPool"
@@ -1637,6 +1675,7 @@ describeUserPool userPoolId =
             JE.null
         )
         describeUserPoolResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1652,7 +1691,7 @@ __Required Parameters__
 describeUserPoolClient :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DescribeUserPoolClientResponse
+    -> AWS.Request DescribeUserPoolClientResponse
 describeUserPoolClient userPoolId clientId =
     AWS.Http.unsignedRequest
         "DescribeUserPoolClient"
@@ -1662,6 +1701,7 @@ describeUserPoolClient userPoolId clientId =
             JE.null
         )
         describeUserPoolClientResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1676,7 +1716,7 @@ __Required Parameters__
 forgetDevice :
     String
     -> (ForgetDeviceOptions -> ForgetDeviceOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 forgetDevice deviceKey setOptions =
   let
     options = setOptions (ForgetDeviceOptions Nothing)
@@ -1689,6 +1729,7 @@ forgetDevice deviceKey setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a forgetDevice request
@@ -1712,7 +1753,7 @@ forgotPassword :
     String
     -> String
     -> (ForgotPasswordOptions -> ForgotPasswordOptions)
-    -> AWS.Http.UnsignedRequest ForgotPasswordResponse
+    -> AWS.Request ForgotPasswordResponse
 forgotPassword clientId username setOptions =
   let
     options = setOptions (ForgotPasswordOptions Nothing)
@@ -1725,6 +1766,7 @@ forgotPassword clientId username setOptions =
             JE.null
         )
         forgotPasswordResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a forgotPassword request
@@ -1745,7 +1787,7 @@ __Required Parameters__
 -}
 getCSVHeader :
     String
-    -> AWS.Http.UnsignedRequest GetCSVHeaderResponse
+    -> AWS.Request GetCSVHeaderResponse
 getCSVHeader userPoolId =
     AWS.Http.unsignedRequest
         "GetCSVHeader"
@@ -1755,6 +1797,7 @@ getCSVHeader userPoolId =
             JE.null
         )
         getCSVHeaderResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1769,7 +1812,7 @@ __Required Parameters__
 getDevice :
     String
     -> (GetDeviceOptions -> GetDeviceOptions)
-    -> AWS.Http.UnsignedRequest GetDeviceResponse
+    -> AWS.Request GetDeviceResponse
 getDevice deviceKey setOptions =
   let
     options = setOptions (GetDeviceOptions Nothing)
@@ -1782,6 +1825,7 @@ getDevice deviceKey setOptions =
             JE.null
         )
         getDeviceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDevice request
@@ -1804,7 +1848,7 @@ __Required Parameters__
 getGroup :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetGroupResponse
+    -> AWS.Request GetGroupResponse
 getGroup groupName userPoolId =
     AWS.Http.unsignedRequest
         "GetGroup"
@@ -1814,6 +1858,7 @@ getGroup groupName userPoolId =
             JE.null
         )
         getGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1826,7 +1871,7 @@ __Required Parameters__
 -}
 getUser :
     (GetUserOptions -> GetUserOptions)
-    -> AWS.Http.UnsignedRequest GetUserResponse
+    -> AWS.Request GetUserResponse
 getUser setOptions =
   let
     options = setOptions (GetUserOptions Nothing)
@@ -1839,6 +1884,7 @@ getUser setOptions =
             JE.null
         )
         getUserResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getUser request
@@ -1860,7 +1906,7 @@ __Required Parameters__
 getUserAttributeVerificationCode :
     String
     -> (GetUserAttributeVerificationCodeOptions -> GetUserAttributeVerificationCodeOptions)
-    -> AWS.Http.UnsignedRequest GetUserAttributeVerificationCodeResponse
+    -> AWS.Request GetUserAttributeVerificationCodeResponse
 getUserAttributeVerificationCode attributeName setOptions =
   let
     options = setOptions (GetUserAttributeVerificationCodeOptions Nothing)
@@ -1873,6 +1919,7 @@ getUserAttributeVerificationCode attributeName setOptions =
             JE.null
         )
         getUserAttributeVerificationCodeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getUserAttributeVerificationCode request
@@ -1892,7 +1939,7 @@ __Required Parameters__
 -}
 globalSignOut :
     (GlobalSignOutOptions -> GlobalSignOutOptions)
-    -> AWS.Http.UnsignedRequest GlobalSignOutResponse
+    -> AWS.Request GlobalSignOutResponse
 globalSignOut setOptions =
   let
     options = setOptions (GlobalSignOutOptions Nothing)
@@ -1905,6 +1952,7 @@ globalSignOut setOptions =
             JE.null
         )
         globalSignOutResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a globalSignOut request
@@ -1928,7 +1976,7 @@ initiateAuth :
     AuthFlowType
     -> String
     -> (InitiateAuthOptions -> InitiateAuthOptions)
-    -> AWS.Http.UnsignedRequest InitiateAuthResponse
+    -> AWS.Request InitiateAuthResponse
 initiateAuth authFlow clientId setOptions =
   let
     options = setOptions (InitiateAuthOptions Nothing Nothing)
@@ -1941,6 +1989,7 @@ initiateAuth authFlow clientId setOptions =
             JE.null
         )
         initiateAuthResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a initiateAuth request
@@ -1963,7 +2012,7 @@ __Required Parameters__
 listDevices :
     String
     -> (ListDevicesOptions -> ListDevicesOptions)
-    -> AWS.Http.UnsignedRequest ListDevicesResponse
+    -> AWS.Request ListDevicesResponse
 listDevices accessToken setOptions =
   let
     options = setOptions (ListDevicesOptions Nothing Nothing)
@@ -1976,6 +2025,7 @@ listDevices accessToken setOptions =
             JE.null
         )
         listDevicesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDevices request
@@ -1998,7 +2048,7 @@ __Required Parameters__
 listGroups :
     String
     -> (ListGroupsOptions -> ListGroupsOptions)
-    -> AWS.Http.UnsignedRequest ListGroupsResponse
+    -> AWS.Request ListGroupsResponse
 listGroups userPoolId setOptions =
   let
     options = setOptions (ListGroupsOptions Nothing Nothing)
@@ -2011,6 +2061,7 @@ listGroups userPoolId setOptions =
             JE.null
         )
         listGroupsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listGroups request
@@ -2035,7 +2086,7 @@ listUserImportJobs :
     String
     -> Int
     -> (ListUserImportJobsOptions -> ListUserImportJobsOptions)
-    -> AWS.Http.UnsignedRequest ListUserImportJobsResponse
+    -> AWS.Request ListUserImportJobsResponse
 listUserImportJobs userPoolId maxResults setOptions =
   let
     options = setOptions (ListUserImportJobsOptions Nothing)
@@ -2048,6 +2099,7 @@ listUserImportJobs userPoolId maxResults setOptions =
             JE.null
         )
         listUserImportJobsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listUserImportJobs request
@@ -2069,7 +2121,7 @@ __Required Parameters__
 listUserPoolClients :
     String
     -> (ListUserPoolClientsOptions -> ListUserPoolClientsOptions)
-    -> AWS.Http.UnsignedRequest ListUserPoolClientsResponse
+    -> AWS.Request ListUserPoolClientsResponse
 listUserPoolClients userPoolId setOptions =
   let
     options = setOptions (ListUserPoolClientsOptions Nothing Nothing)
@@ -2082,6 +2134,7 @@ listUserPoolClients userPoolId setOptions =
             JE.null
         )
         listUserPoolClientsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listUserPoolClients request
@@ -2104,7 +2157,7 @@ __Required Parameters__
 listUserPools :
     Int
     -> (ListUserPoolsOptions -> ListUserPoolsOptions)
-    -> AWS.Http.UnsignedRequest ListUserPoolsResponse
+    -> AWS.Request ListUserPoolsResponse
 listUserPools maxResults setOptions =
   let
     options = setOptions (ListUserPoolsOptions Nothing)
@@ -2117,6 +2170,7 @@ listUserPools maxResults setOptions =
             JE.null
         )
         listUserPoolsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listUserPools request
@@ -2138,7 +2192,7 @@ __Required Parameters__
 listUsers :
     String
     -> (ListUsersOptions -> ListUsersOptions)
-    -> AWS.Http.UnsignedRequest ListUsersResponse
+    -> AWS.Request ListUsersResponse
 listUsers userPoolId setOptions =
   let
     options = setOptions (ListUsersOptions Nothing Nothing Nothing Nothing)
@@ -2151,6 +2205,7 @@ listUsers userPoolId setOptions =
             JE.null
         )
         listUsersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listUsers request
@@ -2177,7 +2232,7 @@ listUsersInGroup :
     String
     -> String
     -> (ListUsersInGroupOptions -> ListUsersInGroupOptions)
-    -> AWS.Http.UnsignedRequest ListUsersInGroupResponse
+    -> AWS.Request ListUsersInGroupResponse
 listUsersInGroup userPoolId groupName setOptions =
   let
     options = setOptions (ListUsersInGroupOptions Nothing Nothing)
@@ -2190,6 +2245,7 @@ listUsersInGroup userPoolId groupName setOptions =
             JE.null
         )
         listUsersInGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listUsersInGroup request
@@ -2214,7 +2270,7 @@ resendConfirmationCode :
     String
     -> String
     -> (ResendConfirmationCodeOptions -> ResendConfirmationCodeOptions)
-    -> AWS.Http.UnsignedRequest ResendConfirmationCodeResponse
+    -> AWS.Request ResendConfirmationCodeResponse
 resendConfirmationCode clientId username setOptions =
   let
     options = setOptions (ResendConfirmationCodeOptions Nothing)
@@ -2227,6 +2283,7 @@ resendConfirmationCode clientId username setOptions =
             JE.null
         )
         resendConfirmationCodeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resendConfirmationCode request
@@ -2250,7 +2307,7 @@ respondToAuthChallenge :
     String
     -> ChallengeNameType
     -> (RespondToAuthChallengeOptions -> RespondToAuthChallengeOptions)
-    -> AWS.Http.UnsignedRequest RespondToAuthChallengeResponse
+    -> AWS.Request RespondToAuthChallengeResponse
 respondToAuthChallenge clientId challengeName setOptions =
   let
     options = setOptions (RespondToAuthChallengeOptions Nothing Nothing)
@@ -2263,6 +2320,7 @@ respondToAuthChallenge clientId challengeName setOptions =
             JE.null
         )
         respondToAuthChallengeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a respondToAuthChallenge request
@@ -2286,7 +2344,7 @@ __Required Parameters__
 setUserSettings :
     String
     -> (List MFAOptionType)
-    -> AWS.Http.UnsignedRequest SetUserSettingsResponse
+    -> AWS.Request SetUserSettingsResponse
 setUserSettings accessToken mFAOptions =
     AWS.Http.unsignedRequest
         "SetUserSettings"
@@ -2296,6 +2354,7 @@ setUserSettings accessToken mFAOptions =
             JE.null
         )
         setUserSettingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2314,7 +2373,7 @@ signUp :
     -> String
     -> String
     -> (SignUpOptions -> SignUpOptions)
-    -> AWS.Http.UnsignedRequest SignUpResponse
+    -> AWS.Request SignUpResponse
 signUp clientId username password setOptions =
   let
     options = setOptions (SignUpOptions Nothing Nothing Nothing)
@@ -2327,6 +2386,7 @@ signUp clientId username password setOptions =
             JE.null
         )
         signUpResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a signUp request
@@ -2351,7 +2411,7 @@ __Required Parameters__
 startUserImportJob :
     String
     -> String
-    -> AWS.Http.UnsignedRequest StartUserImportJobResponse
+    -> AWS.Request StartUserImportJobResponse
 startUserImportJob userPoolId jobId =
     AWS.Http.unsignedRequest
         "StartUserImportJob"
@@ -2361,6 +2421,7 @@ startUserImportJob userPoolId jobId =
             JE.null
         )
         startUserImportJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2376,7 +2437,7 @@ __Required Parameters__
 stopUserImportJob :
     String
     -> String
-    -> AWS.Http.UnsignedRequest StopUserImportJobResponse
+    -> AWS.Request StopUserImportJobResponse
 stopUserImportJob userPoolId jobId =
     AWS.Http.unsignedRequest
         "StopUserImportJob"
@@ -2386,6 +2447,7 @@ stopUserImportJob userPoolId jobId =
             JE.null
         )
         stopUserImportJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2402,7 +2464,7 @@ updateDeviceStatus :
     String
     -> String
     -> (UpdateDeviceStatusOptions -> UpdateDeviceStatusOptions)
-    -> AWS.Http.UnsignedRequest UpdateDeviceStatusResponse
+    -> AWS.Request UpdateDeviceStatusResponse
 updateDeviceStatus accessToken deviceKey setOptions =
   let
     options = setOptions (UpdateDeviceStatusOptions Nothing)
@@ -2415,6 +2477,7 @@ updateDeviceStatus accessToken deviceKey setOptions =
             JE.null
         )
         updateDeviceStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDeviceStatus request
@@ -2438,7 +2501,7 @@ updateGroup :
     String
     -> String
     -> (UpdateGroupOptions -> UpdateGroupOptions)
-    -> AWS.Http.UnsignedRequest UpdateGroupResponse
+    -> AWS.Request UpdateGroupResponse
 updateGroup groupName userPoolId setOptions =
   let
     options = setOptions (UpdateGroupOptions Nothing Nothing Nothing)
@@ -2451,6 +2514,7 @@ updateGroup groupName userPoolId setOptions =
             JE.null
         )
         updateGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateGroup request
@@ -2474,7 +2538,7 @@ __Required Parameters__
 updateUserAttributes :
     (List AttributeType)
     -> (UpdateUserAttributesOptions -> UpdateUserAttributesOptions)
-    -> AWS.Http.UnsignedRequest UpdateUserAttributesResponse
+    -> AWS.Request UpdateUserAttributesResponse
 updateUserAttributes userAttributes setOptions =
   let
     options = setOptions (UpdateUserAttributesOptions Nothing)
@@ -2487,6 +2551,7 @@ updateUserAttributes userAttributes setOptions =
             JE.null
         )
         updateUserAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateUserAttributes request
@@ -2508,7 +2573,7 @@ __Required Parameters__
 updateUserPool :
     String
     -> (UpdateUserPoolOptions -> UpdateUserPoolOptions)
-    -> AWS.Http.UnsignedRequest UpdateUserPoolResponse
+    -> AWS.Request UpdateUserPoolResponse
 updateUserPool userPoolId setOptions =
   let
     options = setOptions (UpdateUserPoolOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2521,6 +2586,7 @@ updateUserPool userPoolId setOptions =
             JE.null
         )
         updateUserPoolResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateUserPool request
@@ -2556,7 +2622,7 @@ updateUserPoolClient :
     String
     -> String
     -> (UpdateUserPoolClientOptions -> UpdateUserPoolClientOptions)
-    -> AWS.Http.UnsignedRequest UpdateUserPoolClientResponse
+    -> AWS.Request UpdateUserPoolClientResponse
 updateUserPoolClient userPoolId clientId setOptions =
   let
     options = setOptions (UpdateUserPoolClientOptions Nothing Nothing Nothing Nothing Nothing)
@@ -2569,6 +2635,7 @@ updateUserPoolClient userPoolId clientId setOptions =
             JE.null
         )
         updateUserPoolClientResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateUserPoolClient request
@@ -2596,7 +2663,7 @@ verifyUserAttribute :
     String
     -> String
     -> (VerifyUserAttributeOptions -> VerifyUserAttributeOptions)
-    -> AWS.Http.UnsignedRequest VerifyUserAttributeResponse
+    -> AWS.Request VerifyUserAttributeResponse
 verifyUserAttribute attributeName code setOptions =
   let
     options = setOptions (VerifyUserAttributeOptions Nothing)
@@ -2609,6 +2676,7 @@ verifyUserAttribute attributeName code setOptions =
             JE.null
         )
         verifyUserAttributeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a verifyUserAttribute request

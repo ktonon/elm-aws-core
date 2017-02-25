@@ -186,7 +186,9 @@ module AWS.Services.Rekognition
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -195,15 +197,16 @@ import Json.Encode as JE
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "rekognition"
         "2016-06-27"
         "1.1"
         "AWSREKOGNITION_20160627."
         "rekognition.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -222,7 +225,7 @@ compareFaces :
     Image
     -> Image
     -> (CompareFacesOptions -> CompareFacesOptions)
-    -> AWS.Http.UnsignedRequest CompareFacesResponse
+    -> AWS.Request CompareFacesResponse
 compareFaces sourceImage targetImage setOptions =
   let
     options = setOptions (CompareFacesOptions Nothing)
@@ -235,6 +238,7 @@ compareFaces sourceImage targetImage setOptions =
             JE.null
         )
         compareFacesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a compareFaces request
@@ -255,7 +259,7 @@ __Required Parameters__
 -}
 createCollection :
     String
-    -> AWS.Http.UnsignedRequest CreateCollectionResponse
+    -> AWS.Request CreateCollectionResponse
 createCollection collectionId =
     AWS.Http.unsignedRequest
         "CreateCollection"
@@ -265,6 +269,7 @@ createCollection collectionId =
             JE.null
         )
         createCollectionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -278,7 +283,7 @@ __Required Parameters__
 -}
 deleteCollection :
     String
-    -> AWS.Http.UnsignedRequest DeleteCollectionResponse
+    -> AWS.Request DeleteCollectionResponse
 deleteCollection collectionId =
     AWS.Http.unsignedRequest
         "DeleteCollection"
@@ -288,6 +293,7 @@ deleteCollection collectionId =
             JE.null
         )
         deleteCollectionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -303,7 +309,7 @@ __Required Parameters__
 deleteFaces :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest DeleteFacesResponse
+    -> AWS.Request DeleteFacesResponse
 deleteFaces collectionId faceIds =
     AWS.Http.unsignedRequest
         "DeleteFaces"
@@ -313,6 +319,7 @@ deleteFaces collectionId faceIds =
             JE.null
         )
         deleteFacesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -327,7 +334,7 @@ __Required Parameters__
 detectFaces :
     Image
     -> (DetectFacesOptions -> DetectFacesOptions)
-    -> AWS.Http.UnsignedRequest DetectFacesResponse
+    -> AWS.Request DetectFacesResponse
 detectFaces image setOptions =
   let
     options = setOptions (DetectFacesOptions Nothing)
@@ -340,6 +347,7 @@ detectFaces image setOptions =
             JE.null
         )
         detectFacesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a detectFaces request
@@ -361,7 +369,7 @@ __Required Parameters__
 detectLabels :
     Image
     -> (DetectLabelsOptions -> DetectLabelsOptions)
-    -> AWS.Http.UnsignedRequest DetectLabelsResponse
+    -> AWS.Request DetectLabelsResponse
 detectLabels image setOptions =
   let
     options = setOptions (DetectLabelsOptions Nothing Nothing)
@@ -374,6 +382,7 @@ detectLabels image setOptions =
             JE.null
         )
         detectLabelsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a detectLabels request
@@ -398,7 +407,7 @@ indexFaces :
     String
     -> Image
     -> (IndexFacesOptions -> IndexFacesOptions)
-    -> AWS.Http.UnsignedRequest IndexFacesResponse
+    -> AWS.Request IndexFacesResponse
 indexFaces collectionId image setOptions =
   let
     options = setOptions (IndexFacesOptions Nothing Nothing)
@@ -411,6 +420,7 @@ indexFaces collectionId image setOptions =
             JE.null
         )
         indexFacesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a indexFaces request
@@ -431,7 +441,7 @@ __Required Parameters__
 -}
 listCollections :
     (ListCollectionsOptions -> ListCollectionsOptions)
-    -> AWS.Http.UnsignedRequest ListCollectionsResponse
+    -> AWS.Request ListCollectionsResponse
 listCollections setOptions =
   let
     options = setOptions (ListCollectionsOptions Nothing Nothing)
@@ -444,6 +454,7 @@ listCollections setOptions =
             JE.null
         )
         listCollectionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listCollections request
@@ -466,7 +477,7 @@ __Required Parameters__
 listFaces :
     String
     -> (ListFacesOptions -> ListFacesOptions)
-    -> AWS.Http.UnsignedRequest ListFacesResponse
+    -> AWS.Request ListFacesResponse
 listFaces collectionId setOptions =
   let
     options = setOptions (ListFacesOptions Nothing Nothing)
@@ -479,6 +490,7 @@ listFaces collectionId setOptions =
             JE.null
         )
         listFacesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listFaces request
@@ -503,7 +515,7 @@ searchFaces :
     String
     -> String
     -> (SearchFacesOptions -> SearchFacesOptions)
-    -> AWS.Http.UnsignedRequest SearchFacesResponse
+    -> AWS.Request SearchFacesResponse
 searchFaces collectionId faceId setOptions =
   let
     options = setOptions (SearchFacesOptions Nothing Nothing)
@@ -516,6 +528,7 @@ searchFaces collectionId faceId setOptions =
             JE.null
         )
         searchFacesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a searchFaces request
@@ -540,7 +553,7 @@ searchFacesByImage :
     String
     -> Image
     -> (SearchFacesByImageOptions -> SearchFacesByImageOptions)
-    -> AWS.Http.UnsignedRequest SearchFacesByImageResponse
+    -> AWS.Request SearchFacesByImageResponse
 searchFacesByImage collectionId image setOptions =
   let
     options = setOptions (SearchFacesByImageOptions Nothing Nothing)
@@ -553,6 +566,7 @@ searchFacesByImage collectionId image setOptions =
             JE.null
         )
         searchFacesByImageResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a searchFacesByImage request

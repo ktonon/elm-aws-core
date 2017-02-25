@@ -165,7 +165,9 @@ module AWS.Services.Support
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -174,15 +176,16 @@ import Json.Encode as JE
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "support"
         "2013-04-15"
         "1.1"
         "AWSSUPPORT_20130415."
         "support.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -199,7 +202,7 @@ __Required Parameters__
 addAttachmentsToSet :
     (List Attachment)
     -> (AddAttachmentsToSetOptions -> AddAttachmentsToSetOptions)
-    -> AWS.Http.UnsignedRequest AddAttachmentsToSetResponse
+    -> AWS.Request AddAttachmentsToSetResponse
 addAttachmentsToSet attachments setOptions =
   let
     options = setOptions (AddAttachmentsToSetOptions Nothing)
@@ -212,6 +215,7 @@ addAttachmentsToSet attachments setOptions =
             JE.null
         )
         addAttachmentsToSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a addAttachmentsToSet request
@@ -233,7 +237,7 @@ __Required Parameters__
 addCommunicationToCase :
     String
     -> (AddCommunicationToCaseOptions -> AddCommunicationToCaseOptions)
-    -> AWS.Http.UnsignedRequest AddCommunicationToCaseResponse
+    -> AWS.Request AddCommunicationToCaseResponse
 addCommunicationToCase communicationBody setOptions =
   let
     options = setOptions (AddCommunicationToCaseOptions Nothing Nothing Nothing)
@@ -246,6 +250,7 @@ addCommunicationToCase communicationBody setOptions =
             JE.null
         )
         addCommunicationToCaseResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a addCommunicationToCase request
@@ -271,7 +276,7 @@ createCase :
     String
     -> String
     -> (CreateCaseOptions -> CreateCaseOptions)
-    -> AWS.Http.UnsignedRequest CreateCaseResponse
+    -> AWS.Request CreateCaseResponse
 createCase subject communicationBody setOptions =
   let
     options = setOptions (CreateCaseOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -284,6 +289,7 @@ createCase subject communicationBody setOptions =
             JE.null
         )
         createCaseResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createCase request
@@ -310,7 +316,7 @@ __Required Parameters__
 -}
 describeAttachment :
     String
-    -> AWS.Http.UnsignedRequest DescribeAttachmentResponse
+    -> AWS.Request DescribeAttachmentResponse
 describeAttachment attachmentId =
     AWS.Http.unsignedRequest
         "DescribeAttachment"
@@ -320,6 +326,7 @@ describeAttachment attachmentId =
             JE.null
         )
         describeAttachmentResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -332,7 +339,7 @@ __Required Parameters__
 -}
 describeCases :
     (DescribeCasesOptions -> DescribeCasesOptions)
-    -> AWS.Http.UnsignedRequest DescribeCasesResponse
+    -> AWS.Request DescribeCasesResponse
 describeCases setOptions =
   let
     options = setOptions (DescribeCasesOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -345,6 +352,7 @@ describeCases setOptions =
             JE.null
         )
         describeCasesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCases request
@@ -374,7 +382,7 @@ __Required Parameters__
 describeCommunications :
     String
     -> (DescribeCommunicationsOptions -> DescribeCommunicationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeCommunicationsResponse
+    -> AWS.Request DescribeCommunicationsResponse
 describeCommunications caseId setOptions =
   let
     options = setOptions (DescribeCommunicationsOptions Nothing Nothing Nothing Nothing)
@@ -387,6 +395,7 @@ describeCommunications caseId setOptions =
             JE.null
         )
         describeCommunicationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCommunications request
@@ -409,7 +418,7 @@ __Required Parameters__
 -}
 describeServices :
     (DescribeServicesOptions -> DescribeServicesOptions)
-    -> AWS.Http.UnsignedRequest DescribeServicesResponse
+    -> AWS.Request DescribeServicesResponse
 describeServices setOptions =
   let
     options = setOptions (DescribeServicesOptions Nothing Nothing)
@@ -422,6 +431,7 @@ describeServices setOptions =
             JE.null
         )
         describeServicesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeServices request
@@ -442,7 +452,7 @@ __Required Parameters__
 -}
 describeSeverityLevels :
     (DescribeSeverityLevelsOptions -> DescribeSeverityLevelsOptions)
-    -> AWS.Http.UnsignedRequest DescribeSeverityLevelsResponse
+    -> AWS.Request DescribeSeverityLevelsResponse
 describeSeverityLevels setOptions =
   let
     options = setOptions (DescribeSeverityLevelsOptions Nothing)
@@ -455,6 +465,7 @@ describeSeverityLevels setOptions =
             JE.null
         )
         describeSeverityLevelsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSeverityLevels request
@@ -475,7 +486,7 @@ __Required Parameters__
 -}
 describeTrustedAdvisorCheckRefreshStatuses :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeTrustedAdvisorCheckRefreshStatusesResponse
+    -> AWS.Request DescribeTrustedAdvisorCheckRefreshStatusesResponse
 describeTrustedAdvisorCheckRefreshStatuses checkIds =
     AWS.Http.unsignedRequest
         "DescribeTrustedAdvisorCheckRefreshStatuses"
@@ -485,6 +496,7 @@ describeTrustedAdvisorCheckRefreshStatuses checkIds =
             JE.null
         )
         describeTrustedAdvisorCheckRefreshStatusesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -499,7 +511,7 @@ __Required Parameters__
 describeTrustedAdvisorCheckResult :
     String
     -> (DescribeTrustedAdvisorCheckResultOptions -> DescribeTrustedAdvisorCheckResultOptions)
-    -> AWS.Http.UnsignedRequest DescribeTrustedAdvisorCheckResultResponse
+    -> AWS.Request DescribeTrustedAdvisorCheckResultResponse
 describeTrustedAdvisorCheckResult checkId setOptions =
   let
     options = setOptions (DescribeTrustedAdvisorCheckResultOptions Nothing)
@@ -512,6 +524,7 @@ describeTrustedAdvisorCheckResult checkId setOptions =
             JE.null
         )
         describeTrustedAdvisorCheckResultResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTrustedAdvisorCheckResult request
@@ -532,7 +545,7 @@ __Required Parameters__
 -}
 describeTrustedAdvisorCheckSummaries :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeTrustedAdvisorCheckSummariesResponse
+    -> AWS.Request DescribeTrustedAdvisorCheckSummariesResponse
 describeTrustedAdvisorCheckSummaries checkIds =
     AWS.Http.unsignedRequest
         "DescribeTrustedAdvisorCheckSummaries"
@@ -542,6 +555,7 @@ describeTrustedAdvisorCheckSummaries checkIds =
             JE.null
         )
         describeTrustedAdvisorCheckSummariesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -555,7 +569,7 @@ __Required Parameters__
 -}
 describeTrustedAdvisorChecks :
     String
-    -> AWS.Http.UnsignedRequest DescribeTrustedAdvisorChecksResponse
+    -> AWS.Request DescribeTrustedAdvisorChecksResponse
 describeTrustedAdvisorChecks language =
     AWS.Http.unsignedRequest
         "DescribeTrustedAdvisorChecks"
@@ -565,6 +579,7 @@ describeTrustedAdvisorChecks language =
             JE.null
         )
         describeTrustedAdvisorChecksResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -578,7 +593,7 @@ __Required Parameters__
 -}
 refreshTrustedAdvisorCheck :
     String
-    -> AWS.Http.UnsignedRequest RefreshTrustedAdvisorCheckResponse
+    -> AWS.Request RefreshTrustedAdvisorCheckResponse
 refreshTrustedAdvisorCheck checkId =
     AWS.Http.unsignedRequest
         "RefreshTrustedAdvisorCheck"
@@ -588,6 +603,7 @@ refreshTrustedAdvisorCheck checkId =
             JE.null
         )
         refreshTrustedAdvisorCheckResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -600,7 +616,7 @@ __Required Parameters__
 -}
 resolveCase :
     (ResolveCaseOptions -> ResolveCaseOptions)
-    -> AWS.Http.UnsignedRequest ResolveCaseResponse
+    -> AWS.Request ResolveCaseResponse
 resolveCase setOptions =
   let
     options = setOptions (ResolveCaseOptions Nothing)
@@ -613,6 +629,7 @@ resolveCase setOptions =
             JE.null
         )
         resolveCaseResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resolveCase request

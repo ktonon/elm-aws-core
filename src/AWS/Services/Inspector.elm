@@ -282,7 +282,9 @@ module AWS.Services.Inspector
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -294,15 +296,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "inspector"
         "2016-02-16"
         "1.1"
         "AWSINSPECTOR_20160216."
         "inspector.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -320,7 +323,7 @@ __Required Parameters__
 addAttributesToFindings :
     (List String)
     -> (List Attribute)
-    -> AWS.Http.UnsignedRequest AddAttributesToFindingsResponse
+    -> AWS.Request AddAttributesToFindingsResponse
 addAttributesToFindings findingArns attributes =
     AWS.Http.unsignedRequest
         "AddAttributesToFindings"
@@ -330,6 +333,7 @@ addAttributesToFindings findingArns attributes =
             JE.null
         )
         addAttributesToFindingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -345,7 +349,7 @@ __Required Parameters__
 createAssessmentTarget :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateAssessmentTargetResponse
+    -> AWS.Request CreateAssessmentTargetResponse
 createAssessmentTarget assessmentTargetName resourceGroupArn =
     AWS.Http.unsignedRequest
         "CreateAssessmentTarget"
@@ -355,6 +359,7 @@ createAssessmentTarget assessmentTargetName resourceGroupArn =
             JE.null
         )
         createAssessmentTargetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -375,7 +380,7 @@ createAssessmentTemplate :
     -> Int
     -> (List String)
     -> (CreateAssessmentTemplateOptions -> CreateAssessmentTemplateOptions)
-    -> AWS.Http.UnsignedRequest CreateAssessmentTemplateResponse
+    -> AWS.Request CreateAssessmentTemplateResponse
 createAssessmentTemplate assessmentTargetArn assessmentTemplateName durationInSeconds rulesPackageArns setOptions =
   let
     options = setOptions (CreateAssessmentTemplateOptions Nothing)
@@ -388,6 +393,7 @@ createAssessmentTemplate assessmentTargetArn assessmentTemplateName durationInSe
             JE.null
         )
         createAssessmentTemplateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createAssessmentTemplate request
@@ -408,7 +414,7 @@ __Required Parameters__
 -}
 createResourceGroup :
     (List ResourceGroupTag)
-    -> AWS.Http.UnsignedRequest CreateResourceGroupResponse
+    -> AWS.Request CreateResourceGroupResponse
 createResourceGroup resourceGroupTags =
     AWS.Http.unsignedRequest
         "CreateResourceGroup"
@@ -418,6 +424,7 @@ createResourceGroup resourceGroupTags =
             JE.null
         )
         createResourceGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -431,7 +438,7 @@ __Required Parameters__
 -}
 deleteAssessmentRun :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAssessmentRun assessmentRunArn =
     AWS.Http.unsignedRequest
         "DeleteAssessmentRun"
@@ -441,6 +448,7 @@ deleteAssessmentRun assessmentRunArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -454,7 +462,7 @@ __Required Parameters__
 -}
 deleteAssessmentTarget :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAssessmentTarget assessmentTargetArn =
     AWS.Http.unsignedRequest
         "DeleteAssessmentTarget"
@@ -464,6 +472,7 @@ deleteAssessmentTarget assessmentTargetArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -477,7 +486,7 @@ __Required Parameters__
 -}
 deleteAssessmentTemplate :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAssessmentTemplate assessmentTemplateArn =
     AWS.Http.unsignedRequest
         "DeleteAssessmentTemplate"
@@ -487,6 +496,7 @@ deleteAssessmentTemplate assessmentTemplateArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -500,7 +510,7 @@ __Required Parameters__
 -}
 describeAssessmentRuns :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeAssessmentRunsResponse
+    -> AWS.Request DescribeAssessmentRunsResponse
 describeAssessmentRuns assessmentRunArns =
     AWS.Http.unsignedRequest
         "DescribeAssessmentRuns"
@@ -510,6 +520,7 @@ describeAssessmentRuns assessmentRunArns =
             JE.null
         )
         describeAssessmentRunsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -523,7 +534,7 @@ __Required Parameters__
 -}
 describeAssessmentTargets :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeAssessmentTargetsResponse
+    -> AWS.Request DescribeAssessmentTargetsResponse
 describeAssessmentTargets assessmentTargetArns =
     AWS.Http.unsignedRequest
         "DescribeAssessmentTargets"
@@ -533,6 +544,7 @@ describeAssessmentTargets assessmentTargetArns =
             JE.null
         )
         describeAssessmentTargetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -546,7 +558,7 @@ __Required Parameters__
 -}
 describeAssessmentTemplates :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeAssessmentTemplatesResponse
+    -> AWS.Request DescribeAssessmentTemplatesResponse
 describeAssessmentTemplates assessmentTemplateArns =
     AWS.Http.unsignedRequest
         "DescribeAssessmentTemplates"
@@ -556,6 +568,7 @@ describeAssessmentTemplates assessmentTemplateArns =
             JE.null
         )
         describeAssessmentTemplatesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -567,7 +580,7 @@ __Required Parameters__
 
 -}
 describeCrossAccountAccessRole :
-    AWS.Http.UnsignedRequest DescribeCrossAccountAccessRoleResponse
+    AWS.Request DescribeCrossAccountAccessRoleResponse
 describeCrossAccountAccessRole =
     AWS.Http.unsignedRequest
         "DescribeCrossAccountAccessRole"
@@ -577,6 +590,7 @@ describeCrossAccountAccessRole =
             JE.null
         )
         describeCrossAccountAccessRoleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -591,7 +605,7 @@ __Required Parameters__
 describeFindings :
     (List String)
     -> (DescribeFindingsOptions -> DescribeFindingsOptions)
-    -> AWS.Http.UnsignedRequest DescribeFindingsResponse
+    -> AWS.Request DescribeFindingsResponse
 describeFindings findingArns setOptions =
   let
     options = setOptions (DescribeFindingsOptions Nothing)
@@ -604,6 +618,7 @@ describeFindings findingArns setOptions =
             JE.null
         )
         describeFindingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeFindings request
@@ -624,7 +639,7 @@ __Required Parameters__
 -}
 describeResourceGroups :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeResourceGroupsResponse
+    -> AWS.Request DescribeResourceGroupsResponse
 describeResourceGroups resourceGroupArns =
     AWS.Http.unsignedRequest
         "DescribeResourceGroups"
@@ -634,6 +649,7 @@ describeResourceGroups resourceGroupArns =
             JE.null
         )
         describeResourceGroupsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -648,7 +664,7 @@ __Required Parameters__
 describeRulesPackages :
     (List String)
     -> (DescribeRulesPackagesOptions -> DescribeRulesPackagesOptions)
-    -> AWS.Http.UnsignedRequest DescribeRulesPackagesResponse
+    -> AWS.Request DescribeRulesPackagesResponse
 describeRulesPackages rulesPackageArns setOptions =
   let
     options = setOptions (DescribeRulesPackagesOptions Nothing)
@@ -661,6 +677,7 @@ describeRulesPackages rulesPackageArns setOptions =
             JE.null
         )
         describeRulesPackagesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeRulesPackages request
@@ -681,7 +698,7 @@ __Required Parameters__
 -}
 getTelemetryMetadata :
     String
-    -> AWS.Http.UnsignedRequest GetTelemetryMetadataResponse
+    -> AWS.Request GetTelemetryMetadataResponse
 getTelemetryMetadata assessmentRunArn =
     AWS.Http.unsignedRequest
         "GetTelemetryMetadata"
@@ -691,6 +708,7 @@ getTelemetryMetadata assessmentRunArn =
             JE.null
         )
         getTelemetryMetadataResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -705,7 +723,7 @@ __Required Parameters__
 listAssessmentRunAgents :
     String
     -> (ListAssessmentRunAgentsOptions -> ListAssessmentRunAgentsOptions)
-    -> AWS.Http.UnsignedRequest ListAssessmentRunAgentsResponse
+    -> AWS.Request ListAssessmentRunAgentsResponse
 listAssessmentRunAgents assessmentRunArn setOptions =
   let
     options = setOptions (ListAssessmentRunAgentsOptions Nothing Nothing Nothing)
@@ -718,6 +736,7 @@ listAssessmentRunAgents assessmentRunArn setOptions =
             JE.null
         )
         listAssessmentRunAgentsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAssessmentRunAgents request
@@ -739,7 +758,7 @@ __Required Parameters__
 -}
 listAssessmentRuns :
     (ListAssessmentRunsOptions -> ListAssessmentRunsOptions)
-    -> AWS.Http.UnsignedRequest ListAssessmentRunsResponse
+    -> AWS.Request ListAssessmentRunsResponse
 listAssessmentRuns setOptions =
   let
     options = setOptions (ListAssessmentRunsOptions Nothing Nothing Nothing Nothing)
@@ -752,6 +771,7 @@ listAssessmentRuns setOptions =
             JE.null
         )
         listAssessmentRunsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAssessmentRuns request
@@ -774,7 +794,7 @@ __Required Parameters__
 -}
 listAssessmentTargets :
     (ListAssessmentTargetsOptions -> ListAssessmentTargetsOptions)
-    -> AWS.Http.UnsignedRequest ListAssessmentTargetsResponse
+    -> AWS.Request ListAssessmentTargetsResponse
 listAssessmentTargets setOptions =
   let
     options = setOptions (ListAssessmentTargetsOptions Nothing Nothing Nothing)
@@ -787,6 +807,7 @@ listAssessmentTargets setOptions =
             JE.null
         )
         listAssessmentTargetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAssessmentTargets request
@@ -808,7 +829,7 @@ __Required Parameters__
 -}
 listAssessmentTemplates :
     (ListAssessmentTemplatesOptions -> ListAssessmentTemplatesOptions)
-    -> AWS.Http.UnsignedRequest ListAssessmentTemplatesResponse
+    -> AWS.Request ListAssessmentTemplatesResponse
 listAssessmentTemplates setOptions =
   let
     options = setOptions (ListAssessmentTemplatesOptions Nothing Nothing Nothing Nothing)
@@ -821,6 +842,7 @@ listAssessmentTemplates setOptions =
             JE.null
         )
         listAssessmentTemplatesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAssessmentTemplates request
@@ -843,7 +865,7 @@ __Required Parameters__
 -}
 listEventSubscriptions :
     (ListEventSubscriptionsOptions -> ListEventSubscriptionsOptions)
-    -> AWS.Http.UnsignedRequest ListEventSubscriptionsResponse
+    -> AWS.Request ListEventSubscriptionsResponse
 listEventSubscriptions setOptions =
   let
     options = setOptions (ListEventSubscriptionsOptions Nothing Nothing Nothing)
@@ -856,6 +878,7 @@ listEventSubscriptions setOptions =
             JE.null
         )
         listEventSubscriptionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listEventSubscriptions request
@@ -877,7 +900,7 @@ __Required Parameters__
 -}
 listFindings :
     (ListFindingsOptions -> ListFindingsOptions)
-    -> AWS.Http.UnsignedRequest ListFindingsResponse
+    -> AWS.Request ListFindingsResponse
 listFindings setOptions =
   let
     options = setOptions (ListFindingsOptions Nothing Nothing Nothing Nothing)
@@ -890,6 +913,7 @@ listFindings setOptions =
             JE.null
         )
         listFindingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listFindings request
@@ -912,7 +936,7 @@ __Required Parameters__
 -}
 listRulesPackages :
     (ListRulesPackagesOptions -> ListRulesPackagesOptions)
-    -> AWS.Http.UnsignedRequest ListRulesPackagesResponse
+    -> AWS.Request ListRulesPackagesResponse
 listRulesPackages setOptions =
   let
     options = setOptions (ListRulesPackagesOptions Nothing Nothing)
@@ -925,6 +949,7 @@ listRulesPackages setOptions =
             JE.null
         )
         listRulesPackagesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRulesPackages request
@@ -946,7 +971,7 @@ __Required Parameters__
 -}
 listTagsForResource :
     String
-    -> AWS.Http.UnsignedRequest ListTagsForResourceResponse
+    -> AWS.Request ListTagsForResourceResponse
 listTagsForResource resourceArn =
     AWS.Http.unsignedRequest
         "ListTagsForResource"
@@ -956,6 +981,7 @@ listTagsForResource resourceArn =
             JE.null
         )
         listTagsForResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -970,7 +996,7 @@ __Required Parameters__
 previewAgents :
     String
     -> (PreviewAgentsOptions -> PreviewAgentsOptions)
-    -> AWS.Http.UnsignedRequest PreviewAgentsResponse
+    -> AWS.Request PreviewAgentsResponse
 previewAgents previewAgentsArn setOptions =
   let
     options = setOptions (PreviewAgentsOptions Nothing Nothing)
@@ -983,6 +1009,7 @@ previewAgents previewAgentsArn setOptions =
             JE.null
         )
         previewAgentsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a previewAgents request
@@ -1004,7 +1031,7 @@ __Required Parameters__
 -}
 registerCrossAccountAccessRole :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 registerCrossAccountAccessRole roleArn =
     AWS.Http.unsignedRequest
         "RegisterCrossAccountAccessRole"
@@ -1014,6 +1041,7 @@ registerCrossAccountAccessRole roleArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1029,7 +1057,7 @@ __Required Parameters__
 removeAttributesFromFindings :
     (List String)
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveAttributesFromFindingsResponse
+    -> AWS.Request RemoveAttributesFromFindingsResponse
 removeAttributesFromFindings findingArns attributeKeys =
     AWS.Http.unsignedRequest
         "RemoveAttributesFromFindings"
@@ -1039,6 +1067,7 @@ removeAttributesFromFindings findingArns attributeKeys =
             JE.null
         )
         removeAttributesFromFindingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1053,7 +1082,7 @@ __Required Parameters__
 setTagsForResource :
     String
     -> (SetTagsForResourceOptions -> SetTagsForResourceOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setTagsForResource resourceArn setOptions =
   let
     options = setOptions (SetTagsForResourceOptions Nothing)
@@ -1066,6 +1095,7 @@ setTagsForResource resourceArn setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setTagsForResource request
@@ -1087,7 +1117,7 @@ __Required Parameters__
 startAssessmentRun :
     String
     -> (StartAssessmentRunOptions -> StartAssessmentRunOptions)
-    -> AWS.Http.UnsignedRequest StartAssessmentRunResponse
+    -> AWS.Request StartAssessmentRunResponse
 startAssessmentRun assessmentTemplateArn setOptions =
   let
     options = setOptions (StartAssessmentRunOptions Nothing)
@@ -1100,6 +1130,7 @@ startAssessmentRun assessmentTemplateArn setOptions =
             JE.null
         )
         startAssessmentRunResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startAssessmentRun request
@@ -1120,7 +1151,7 @@ __Required Parameters__
 -}
 stopAssessmentRun :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 stopAssessmentRun assessmentRunArn =
     AWS.Http.unsignedRequest
         "StopAssessmentRun"
@@ -1130,6 +1161,7 @@ stopAssessmentRun assessmentRunArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1147,7 +1179,7 @@ subscribeToEvent :
     String
     -> InspectorEvent
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 subscribeToEvent resourceArn event topicArn =
     AWS.Http.unsignedRequest
         "SubscribeToEvent"
@@ -1157,6 +1189,7 @@ subscribeToEvent resourceArn event topicArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1174,7 +1207,7 @@ unsubscribeFromEvent :
     String
     -> InspectorEvent
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 unsubscribeFromEvent resourceArn event topicArn =
     AWS.Http.unsignedRequest
         "UnsubscribeFromEvent"
@@ -1184,6 +1217,7 @@ unsubscribeFromEvent resourceArn event topicArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1201,7 +1235,7 @@ updateAssessmentTarget :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateAssessmentTarget assessmentTargetArn assessmentTargetName resourceGroupArn =
     AWS.Http.unsignedRequest
         "UpdateAssessmentTarget"
@@ -1211,6 +1245,7 @@ updateAssessmentTarget assessmentTargetArn assessmentTargetName resourceGroupArn
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 

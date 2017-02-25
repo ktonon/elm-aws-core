@@ -328,7 +328,9 @@ module AWS.Services.WAF
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -339,15 +341,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "waf"
         "2015-08-24"
         "1.1"
         "AWSWAF_20150824."
         "waf.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -365,7 +368,7 @@ __Required Parameters__
 createByteMatchSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateByteMatchSetResponse
+    -> AWS.Request CreateByteMatchSetResponse
 createByteMatchSet name changeToken =
     AWS.Http.unsignedRequest
         "CreateByteMatchSet"
@@ -375,6 +378,7 @@ createByteMatchSet name changeToken =
             JE.null
         )
         createByteMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -390,7 +394,7 @@ __Required Parameters__
 createIPSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateIPSetResponse
+    -> AWS.Request CreateIPSetResponse
 createIPSet name changeToken =
     AWS.Http.unsignedRequest
         "CreateIPSet"
@@ -400,6 +404,7 @@ createIPSet name changeToken =
             JE.null
         )
         createIPSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -417,7 +422,7 @@ createRule :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest CreateRuleResponse
+    -> AWS.Request CreateRuleResponse
 createRule name metricName changeToken =
     AWS.Http.unsignedRequest
         "CreateRule"
@@ -427,6 +432,7 @@ createRule name metricName changeToken =
             JE.null
         )
         createRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -442,7 +448,7 @@ __Required Parameters__
 createSizeConstraintSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateSizeConstraintSetResponse
+    -> AWS.Request CreateSizeConstraintSetResponse
 createSizeConstraintSet name changeToken =
     AWS.Http.unsignedRequest
         "CreateSizeConstraintSet"
@@ -452,6 +458,7 @@ createSizeConstraintSet name changeToken =
             JE.null
         )
         createSizeConstraintSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -467,7 +474,7 @@ __Required Parameters__
 createSqlInjectionMatchSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateSqlInjectionMatchSetResponse
+    -> AWS.Request CreateSqlInjectionMatchSetResponse
 createSqlInjectionMatchSet name changeToken =
     AWS.Http.unsignedRequest
         "CreateSqlInjectionMatchSet"
@@ -477,6 +484,7 @@ createSqlInjectionMatchSet name changeToken =
             JE.null
         )
         createSqlInjectionMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -496,7 +504,7 @@ createWebACL :
     -> String
     -> WafAction
     -> String
-    -> AWS.Http.UnsignedRequest CreateWebACLResponse
+    -> AWS.Request CreateWebACLResponse
 createWebACL name metricName defaultAction changeToken =
     AWS.Http.unsignedRequest
         "CreateWebACL"
@@ -506,6 +514,7 @@ createWebACL name metricName defaultAction changeToken =
             JE.null
         )
         createWebACLResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -521,7 +530,7 @@ __Required Parameters__
 createXssMatchSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateXssMatchSetResponse
+    -> AWS.Request CreateXssMatchSetResponse
 createXssMatchSet name changeToken =
     AWS.Http.unsignedRequest
         "CreateXssMatchSet"
@@ -531,6 +540,7 @@ createXssMatchSet name changeToken =
             JE.null
         )
         createXssMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -546,7 +556,7 @@ __Required Parameters__
 deleteByteMatchSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteByteMatchSetResponse
+    -> AWS.Request DeleteByteMatchSetResponse
 deleteByteMatchSet byteMatchSetId changeToken =
     AWS.Http.unsignedRequest
         "DeleteByteMatchSet"
@@ -556,6 +566,7 @@ deleteByteMatchSet byteMatchSetId changeToken =
             JE.null
         )
         deleteByteMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -571,7 +582,7 @@ __Required Parameters__
 deleteIPSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteIPSetResponse
+    -> AWS.Request DeleteIPSetResponse
 deleteIPSet iPSetId changeToken =
     AWS.Http.unsignedRequest
         "DeleteIPSet"
@@ -581,6 +592,7 @@ deleteIPSet iPSetId changeToken =
             JE.null
         )
         deleteIPSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -596,7 +608,7 @@ __Required Parameters__
 deleteRule :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteRuleResponse
+    -> AWS.Request DeleteRuleResponse
 deleteRule ruleId changeToken =
     AWS.Http.unsignedRequest
         "DeleteRule"
@@ -606,6 +618,7 @@ deleteRule ruleId changeToken =
             JE.null
         )
         deleteRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -621,7 +634,7 @@ __Required Parameters__
 deleteSizeConstraintSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteSizeConstraintSetResponse
+    -> AWS.Request DeleteSizeConstraintSetResponse
 deleteSizeConstraintSet sizeConstraintSetId changeToken =
     AWS.Http.unsignedRequest
         "DeleteSizeConstraintSet"
@@ -631,6 +644,7 @@ deleteSizeConstraintSet sizeConstraintSetId changeToken =
             JE.null
         )
         deleteSizeConstraintSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -646,7 +660,7 @@ __Required Parameters__
 deleteSqlInjectionMatchSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteSqlInjectionMatchSetResponse
+    -> AWS.Request DeleteSqlInjectionMatchSetResponse
 deleteSqlInjectionMatchSet sqlInjectionMatchSetId changeToken =
     AWS.Http.unsignedRequest
         "DeleteSqlInjectionMatchSet"
@@ -656,6 +670,7 @@ deleteSqlInjectionMatchSet sqlInjectionMatchSetId changeToken =
             JE.null
         )
         deleteSqlInjectionMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -671,7 +686,7 @@ __Required Parameters__
 deleteWebACL :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteWebACLResponse
+    -> AWS.Request DeleteWebACLResponse
 deleteWebACL webACLId changeToken =
     AWS.Http.unsignedRequest
         "DeleteWebACL"
@@ -681,6 +696,7 @@ deleteWebACL webACLId changeToken =
             JE.null
         )
         deleteWebACLResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -696,7 +712,7 @@ __Required Parameters__
 deleteXssMatchSet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteXssMatchSetResponse
+    -> AWS.Request DeleteXssMatchSetResponse
 deleteXssMatchSet xssMatchSetId changeToken =
     AWS.Http.unsignedRequest
         "DeleteXssMatchSet"
@@ -706,6 +722,7 @@ deleteXssMatchSet xssMatchSetId changeToken =
             JE.null
         )
         deleteXssMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -719,7 +736,7 @@ __Required Parameters__
 -}
 getByteMatchSet :
     String
-    -> AWS.Http.UnsignedRequest GetByteMatchSetResponse
+    -> AWS.Request GetByteMatchSetResponse
 getByteMatchSet byteMatchSetId =
     AWS.Http.unsignedRequest
         "GetByteMatchSet"
@@ -729,6 +746,7 @@ getByteMatchSet byteMatchSetId =
             JE.null
         )
         getByteMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -740,7 +758,7 @@ __Required Parameters__
 
 -}
 getChangeToken :
-    AWS.Http.UnsignedRequest GetChangeTokenResponse
+    AWS.Request GetChangeTokenResponse
 getChangeToken =
     AWS.Http.unsignedRequest
         "GetChangeToken"
@@ -750,6 +768,7 @@ getChangeToken =
             JE.null
         )
         getChangeTokenResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -763,7 +782,7 @@ __Required Parameters__
 -}
 getChangeTokenStatus :
     String
-    -> AWS.Http.UnsignedRequest GetChangeTokenStatusResponse
+    -> AWS.Request GetChangeTokenStatusResponse
 getChangeTokenStatus changeToken =
     AWS.Http.unsignedRequest
         "GetChangeTokenStatus"
@@ -773,6 +792,7 @@ getChangeTokenStatus changeToken =
             JE.null
         )
         getChangeTokenStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -786,7 +806,7 @@ __Required Parameters__
 -}
 getIPSet :
     String
-    -> AWS.Http.UnsignedRequest GetIPSetResponse
+    -> AWS.Request GetIPSetResponse
 getIPSet iPSetId =
     AWS.Http.unsignedRequest
         "GetIPSet"
@@ -796,6 +816,7 @@ getIPSet iPSetId =
             JE.null
         )
         getIPSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -809,7 +830,7 @@ __Required Parameters__
 -}
 getRule :
     String
-    -> AWS.Http.UnsignedRequest GetRuleResponse
+    -> AWS.Request GetRuleResponse
 getRule ruleId =
     AWS.Http.unsignedRequest
         "GetRule"
@@ -819,6 +840,7 @@ getRule ruleId =
             JE.null
         )
         getRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -838,7 +860,7 @@ getSampledRequests :
     -> String
     -> TimeWindow
     -> Int
-    -> AWS.Http.UnsignedRequest GetSampledRequestsResponse
+    -> AWS.Request GetSampledRequestsResponse
 getSampledRequests webAclId ruleId timeWindow maxItems =
     AWS.Http.unsignedRequest
         "GetSampledRequests"
@@ -848,6 +870,7 @@ getSampledRequests webAclId ruleId timeWindow maxItems =
             JE.null
         )
         getSampledRequestsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -861,7 +884,7 @@ __Required Parameters__
 -}
 getSizeConstraintSet :
     String
-    -> AWS.Http.UnsignedRequest GetSizeConstraintSetResponse
+    -> AWS.Request GetSizeConstraintSetResponse
 getSizeConstraintSet sizeConstraintSetId =
     AWS.Http.unsignedRequest
         "GetSizeConstraintSet"
@@ -871,6 +894,7 @@ getSizeConstraintSet sizeConstraintSetId =
             JE.null
         )
         getSizeConstraintSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -884,7 +908,7 @@ __Required Parameters__
 -}
 getSqlInjectionMatchSet :
     String
-    -> AWS.Http.UnsignedRequest GetSqlInjectionMatchSetResponse
+    -> AWS.Request GetSqlInjectionMatchSetResponse
 getSqlInjectionMatchSet sqlInjectionMatchSetId =
     AWS.Http.unsignedRequest
         "GetSqlInjectionMatchSet"
@@ -894,6 +918,7 @@ getSqlInjectionMatchSet sqlInjectionMatchSetId =
             JE.null
         )
         getSqlInjectionMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -907,7 +932,7 @@ __Required Parameters__
 -}
 getWebACL :
     String
-    -> AWS.Http.UnsignedRequest GetWebACLResponse
+    -> AWS.Request GetWebACLResponse
 getWebACL webACLId =
     AWS.Http.unsignedRequest
         "GetWebACL"
@@ -917,6 +942,7 @@ getWebACL webACLId =
             JE.null
         )
         getWebACLResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -930,7 +956,7 @@ __Required Parameters__
 -}
 getXssMatchSet :
     String
-    -> AWS.Http.UnsignedRequest GetXssMatchSetResponse
+    -> AWS.Request GetXssMatchSetResponse
 getXssMatchSet xssMatchSetId =
     AWS.Http.unsignedRequest
         "GetXssMatchSet"
@@ -940,6 +966,7 @@ getXssMatchSet xssMatchSetId =
             JE.null
         )
         getXssMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -952,7 +979,7 @@ __Required Parameters__
 -}
 listByteMatchSets :
     (ListByteMatchSetsOptions -> ListByteMatchSetsOptions)
-    -> AWS.Http.UnsignedRequest ListByteMatchSetsResponse
+    -> AWS.Request ListByteMatchSetsResponse
 listByteMatchSets setOptions =
   let
     options = setOptions (ListByteMatchSetsOptions Nothing Nothing)
@@ -965,6 +992,7 @@ listByteMatchSets setOptions =
             JE.null
         )
         listByteMatchSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listByteMatchSets request
@@ -985,7 +1013,7 @@ __Required Parameters__
 -}
 listIPSets :
     (ListIPSetsOptions -> ListIPSetsOptions)
-    -> AWS.Http.UnsignedRequest ListIPSetsResponse
+    -> AWS.Request ListIPSetsResponse
 listIPSets setOptions =
   let
     options = setOptions (ListIPSetsOptions Nothing Nothing)
@@ -998,6 +1026,7 @@ listIPSets setOptions =
             JE.null
         )
         listIPSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listIPSets request
@@ -1018,7 +1047,7 @@ __Required Parameters__
 -}
 listRules :
     (ListRulesOptions -> ListRulesOptions)
-    -> AWS.Http.UnsignedRequest ListRulesResponse
+    -> AWS.Request ListRulesResponse
 listRules setOptions =
   let
     options = setOptions (ListRulesOptions Nothing Nothing)
@@ -1031,6 +1060,7 @@ listRules setOptions =
             JE.null
         )
         listRulesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRules request
@@ -1051,7 +1081,7 @@ __Required Parameters__
 -}
 listSizeConstraintSets :
     (ListSizeConstraintSetsOptions -> ListSizeConstraintSetsOptions)
-    -> AWS.Http.UnsignedRequest ListSizeConstraintSetsResponse
+    -> AWS.Request ListSizeConstraintSetsResponse
 listSizeConstraintSets setOptions =
   let
     options = setOptions (ListSizeConstraintSetsOptions Nothing Nothing)
@@ -1064,6 +1094,7 @@ listSizeConstraintSets setOptions =
             JE.null
         )
         listSizeConstraintSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listSizeConstraintSets request
@@ -1084,7 +1115,7 @@ __Required Parameters__
 -}
 listSqlInjectionMatchSets :
     (ListSqlInjectionMatchSetsOptions -> ListSqlInjectionMatchSetsOptions)
-    -> AWS.Http.UnsignedRequest ListSqlInjectionMatchSetsResponse
+    -> AWS.Request ListSqlInjectionMatchSetsResponse
 listSqlInjectionMatchSets setOptions =
   let
     options = setOptions (ListSqlInjectionMatchSetsOptions Nothing Nothing)
@@ -1097,6 +1128,7 @@ listSqlInjectionMatchSets setOptions =
             JE.null
         )
         listSqlInjectionMatchSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listSqlInjectionMatchSets request
@@ -1117,7 +1149,7 @@ __Required Parameters__
 -}
 listWebACLs :
     (ListWebACLsOptions -> ListWebACLsOptions)
-    -> AWS.Http.UnsignedRequest ListWebACLsResponse
+    -> AWS.Request ListWebACLsResponse
 listWebACLs setOptions =
   let
     options = setOptions (ListWebACLsOptions Nothing Nothing)
@@ -1130,6 +1162,7 @@ listWebACLs setOptions =
             JE.null
         )
         listWebACLsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listWebACLs request
@@ -1150,7 +1183,7 @@ __Required Parameters__
 -}
 listXssMatchSets :
     (ListXssMatchSetsOptions -> ListXssMatchSetsOptions)
-    -> AWS.Http.UnsignedRequest ListXssMatchSetsResponse
+    -> AWS.Request ListXssMatchSetsResponse
 listXssMatchSets setOptions =
   let
     options = setOptions (ListXssMatchSetsOptions Nothing Nothing)
@@ -1163,6 +1196,7 @@ listXssMatchSets setOptions =
             JE.null
         )
         listXssMatchSetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listXssMatchSets request
@@ -1188,7 +1222,7 @@ updateByteMatchSet :
     String
     -> String
     -> (List ByteMatchSetUpdate)
-    -> AWS.Http.UnsignedRequest UpdateByteMatchSetResponse
+    -> AWS.Request UpdateByteMatchSetResponse
 updateByteMatchSet byteMatchSetId changeToken updates =
     AWS.Http.unsignedRequest
         "UpdateByteMatchSet"
@@ -1198,6 +1232,7 @@ updateByteMatchSet byteMatchSetId changeToken updates =
             JE.null
         )
         updateByteMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1215,7 +1250,7 @@ updateIPSet :
     String
     -> String
     -> (List IPSetUpdate)
-    -> AWS.Http.UnsignedRequest UpdateIPSetResponse
+    -> AWS.Request UpdateIPSetResponse
 updateIPSet iPSetId changeToken updates =
     AWS.Http.unsignedRequest
         "UpdateIPSet"
@@ -1225,6 +1260,7 @@ updateIPSet iPSetId changeToken updates =
             JE.null
         )
         updateIPSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1242,7 +1278,7 @@ updateRule :
     String
     -> String
     -> (List RuleUpdate)
-    -> AWS.Http.UnsignedRequest UpdateRuleResponse
+    -> AWS.Request UpdateRuleResponse
 updateRule ruleId changeToken updates =
     AWS.Http.unsignedRequest
         "UpdateRule"
@@ -1252,6 +1288,7 @@ updateRule ruleId changeToken updates =
             JE.null
         )
         updateRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1269,7 +1306,7 @@ updateSizeConstraintSet :
     String
     -> String
     -> (List SizeConstraintSetUpdate)
-    -> AWS.Http.UnsignedRequest UpdateSizeConstraintSetResponse
+    -> AWS.Request UpdateSizeConstraintSetResponse
 updateSizeConstraintSet sizeConstraintSetId changeToken updates =
     AWS.Http.unsignedRequest
         "UpdateSizeConstraintSet"
@@ -1279,6 +1316,7 @@ updateSizeConstraintSet sizeConstraintSetId changeToken updates =
             JE.null
         )
         updateSizeConstraintSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1296,7 +1334,7 @@ updateSqlInjectionMatchSet :
     String
     -> String
     -> (List SqlInjectionMatchSetUpdate)
-    -> AWS.Http.UnsignedRequest UpdateSqlInjectionMatchSetResponse
+    -> AWS.Request UpdateSqlInjectionMatchSetResponse
 updateSqlInjectionMatchSet sqlInjectionMatchSetId changeToken updates =
     AWS.Http.unsignedRequest
         "UpdateSqlInjectionMatchSet"
@@ -1306,6 +1344,7 @@ updateSqlInjectionMatchSet sqlInjectionMatchSetId changeToken updates =
             JE.null
         )
         updateSqlInjectionMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1322,7 +1361,7 @@ updateWebACL :
     String
     -> String
     -> (UpdateWebACLOptions -> UpdateWebACLOptions)
-    -> AWS.Http.UnsignedRequest UpdateWebACLResponse
+    -> AWS.Request UpdateWebACLResponse
 updateWebACL webACLId changeToken setOptions =
   let
     options = setOptions (UpdateWebACLOptions Nothing Nothing)
@@ -1335,6 +1374,7 @@ updateWebACL webACLId changeToken setOptions =
             JE.null
         )
         updateWebACLResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateWebACL request
@@ -1360,7 +1400,7 @@ updateXssMatchSet :
     String
     -> String
     -> (List XssMatchSetUpdate)
-    -> AWS.Http.UnsignedRequest UpdateXssMatchSetResponse
+    -> AWS.Request UpdateXssMatchSetResponse
 updateXssMatchSet xssMatchSetId changeToken updates =
     AWS.Http.unsignedRequest
         "UpdateXssMatchSet"
@@ -1370,6 +1410,7 @@ updateXssMatchSet xssMatchSetId changeToken updates =
             JE.null
         )
         updateXssMatchSetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

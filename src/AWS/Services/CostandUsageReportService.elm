@@ -86,7 +86,9 @@ module AWS.Services.CostandUsageReportService
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -95,15 +97,16 @@ import Json.Encode as JE
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "cur"
         "2017-01-06"
         "1.1"
         "AWSCUR_20170106."
         "cur.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -118,7 +121,7 @@ __Required Parameters__
 -}
 deleteReportDefinition :
     (DeleteReportDefinitionOptions -> DeleteReportDefinitionOptions)
-    -> AWS.Http.UnsignedRequest DeleteReportDefinitionResponse
+    -> AWS.Request DeleteReportDefinitionResponse
 deleteReportDefinition setOptions =
   let
     options = setOptions (DeleteReportDefinitionOptions Nothing)
@@ -131,6 +134,7 @@ deleteReportDefinition setOptions =
             JE.null
         )
         deleteReportDefinitionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteReportDefinition request
@@ -150,7 +154,7 @@ __Required Parameters__
 -}
 describeReportDefinitions :
     (DescribeReportDefinitionsOptions -> DescribeReportDefinitionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeReportDefinitionsResponse
+    -> AWS.Request DescribeReportDefinitionsResponse
 describeReportDefinitions setOptions =
   let
     options = setOptions (DescribeReportDefinitionsOptions Nothing Nothing)
@@ -163,6 +167,7 @@ describeReportDefinitions setOptions =
             JE.null
         )
         describeReportDefinitionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReportDefinitions request
@@ -184,7 +189,7 @@ __Required Parameters__
 -}
 putReportDefinition :
     ReportDefinition
-    -> AWS.Http.UnsignedRequest PutReportDefinitionResponse
+    -> AWS.Request PutReportDefinitionResponse
 putReportDefinition reportDefinition =
     AWS.Http.unsignedRequest
         "PutReportDefinition"
@@ -194,6 +199,7 @@ putReportDefinition reportDefinition =
             JE.null
         )
         putReportDefinitionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

@@ -130,7 +130,9 @@ module AWS.Services.ACM
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
+import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -141,15 +143,16 @@ import Json.Decode.Extra as JDX
 {-| Configuration for this service
 -}
 config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config maybeCreds =
+    AWS.Config.Service
         "acm"
         "2015-12-08"
         "1.1"
         "AWSACM_20151208."
         "acm.amazonaws.com"
         "us-east-1"
-        creds
+        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
+        |> AWS.ServiceConfig
 
 
 
@@ -167,7 +170,7 @@ __Required Parameters__
 addTagsToCertificate :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addTagsToCertificate certificateArn tags =
     AWS.Http.unsignedRequest
         "AddTagsToCertificate"
@@ -177,6 +180,7 @@ addTagsToCertificate certificateArn tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -190,7 +194,7 @@ __Required Parameters__
 -}
 deleteCertificate :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteCertificate certificateArn =
     AWS.Http.unsignedRequest
         "DeleteCertificate"
@@ -200,6 +204,7 @@ deleteCertificate certificateArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -213,7 +218,7 @@ __Required Parameters__
 -}
 describeCertificate :
     String
-    -> AWS.Http.UnsignedRequest DescribeCertificateResponse
+    -> AWS.Request DescribeCertificateResponse
 describeCertificate certificateArn =
     AWS.Http.unsignedRequest
         "DescribeCertificate"
@@ -223,6 +228,7 @@ describeCertificate certificateArn =
             JE.null
         )
         describeCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -236,7 +242,7 @@ __Required Parameters__
 -}
 getCertificate :
     String
-    -> AWS.Http.UnsignedRequest GetCertificateResponse
+    -> AWS.Request GetCertificateResponse
 getCertificate certificateArn =
     AWS.Http.unsignedRequest
         "GetCertificate"
@@ -246,6 +252,7 @@ getCertificate certificateArn =
             JE.null
         )
         getCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -262,7 +269,7 @@ importCertificate :
     String
     -> String
     -> (ImportCertificateOptions -> ImportCertificateOptions)
-    -> AWS.Http.UnsignedRequest ImportCertificateResponse
+    -> AWS.Request ImportCertificateResponse
 importCertificate certificate privateKey setOptions =
   let
     options = setOptions (ImportCertificateOptions Nothing Nothing)
@@ -275,6 +282,7 @@ importCertificate certificate privateKey setOptions =
             JE.null
         )
         importCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importCertificate request
@@ -295,7 +303,7 @@ __Required Parameters__
 -}
 listCertificates :
     (ListCertificatesOptions -> ListCertificatesOptions)
-    -> AWS.Http.UnsignedRequest ListCertificatesResponse
+    -> AWS.Request ListCertificatesResponse
 listCertificates setOptions =
   let
     options = setOptions (ListCertificatesOptions Nothing Nothing Nothing)
@@ -308,6 +316,7 @@ listCertificates setOptions =
             JE.null
         )
         listCertificatesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listCertificates request
@@ -330,7 +339,7 @@ __Required Parameters__
 -}
 listTagsForCertificate :
     String
-    -> AWS.Http.UnsignedRequest ListTagsForCertificateResponse
+    -> AWS.Request ListTagsForCertificateResponse
 listTagsForCertificate certificateArn =
     AWS.Http.unsignedRequest
         "ListTagsForCertificate"
@@ -340,6 +349,7 @@ listTagsForCertificate certificateArn =
             JE.null
         )
         listTagsForCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -355,7 +365,7 @@ __Required Parameters__
 removeTagsFromCertificate :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeTagsFromCertificate certificateArn tags =
     AWS.Http.unsignedRequest
         "RemoveTagsFromCertificate"
@@ -365,6 +375,7 @@ removeTagsFromCertificate certificateArn tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -379,7 +390,7 @@ __Required Parameters__
 requestCertificate :
     String
     -> (RequestCertificateOptions -> RequestCertificateOptions)
-    -> AWS.Http.UnsignedRequest RequestCertificateResponse
+    -> AWS.Request RequestCertificateResponse
 requestCertificate domainName setOptions =
   let
     options = setOptions (RequestCertificateOptions Nothing Nothing Nothing)
@@ -392,6 +403,7 @@ requestCertificate domainName setOptions =
             JE.null
         )
         requestCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a requestCertificate request
@@ -418,7 +430,7 @@ resendValidationEmail :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 resendValidationEmail certificateArn domain validationDomain =
     AWS.Http.unsignedRequest
         "ResendValidationEmail"
@@ -428,6 +440,7 @@ resendValidationEmail certificateArn domain validationDomain =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
