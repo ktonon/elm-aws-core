@@ -88,7 +88,6 @@ module AWS.Services.CostandUsageReportService
 import AWS
 import AWS.Config
 import AWS.Http
-import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -96,8 +95,8 @@ import Json.Encode as JE
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config maybeCreds =
+config : AWS.ServiceConfig
+config =
     AWS.Config.Service
         "cur"
         "2017-01-06"
@@ -105,7 +104,6 @@ config maybeCreds =
         "AWSCUR_20170106."
         "cur.amazonaws.com"
         "us-east-1"
-        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
         |> AWS.ServiceConfig
 
 

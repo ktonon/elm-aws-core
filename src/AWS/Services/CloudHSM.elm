@@ -164,7 +164,6 @@ module AWS.Services.CloudHSM
 import AWS
 import AWS.Config
 import AWS.Http
-import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -172,8 +171,8 @@ import Json.Encode as JE
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config maybeCreds =
+config : AWS.ServiceConfig
+config =
     AWS.Config.Service
         "cloudhsm"
         "2014-05-30"
@@ -181,7 +180,6 @@ config maybeCreds =
         "AWSCLOUDHSM_20140530."
         "cloudhsm.amazonaws.com"
         "us-east-1"
-        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
         |> AWS.ServiceConfig
 
 

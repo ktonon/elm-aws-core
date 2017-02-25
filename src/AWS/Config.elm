@@ -15,5 +15,4 @@ type alias Service =
     , xAmzTargetPrefix : String
     , host : String
     , region : String
-    , credentials : Maybe Credentials
     }

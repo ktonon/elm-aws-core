@@ -178,7 +178,6 @@ module AWS.Services.ApplicationDiscoveryService
 import AWS
 import AWS.Config
 import AWS.Http
-import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -189,8 +188,8 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config maybeCreds =
+config : AWS.ServiceConfig
+config =
     AWS.Config.Service
         "discovery"
         "2015-11-01"
@@ -198,7 +197,6 @@ config maybeCreds =
         "AWSDISCOVERY_20151101."
         "discovery.amazonaws.com"
         "us-east-1"
-        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
         |> AWS.ServiceConfig
 
 

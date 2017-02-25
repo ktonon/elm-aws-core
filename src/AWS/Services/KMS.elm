@@ -254,7 +254,6 @@ module AWS.Services.KMS
 import AWS
 import AWS.Config
 import AWS.Http
-import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -265,8 +264,8 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config maybeCreds =
+config : AWS.ServiceConfig
+config =
     AWS.Config.Service
         "kms"
         "2014-11-01"
@@ -274,7 +273,6 @@ config maybeCreds =
         "AWSKMS_20141101."
         "kms.amazonaws.com"
         "us-east-1"
-        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
         |> AWS.ServiceConfig
 
 

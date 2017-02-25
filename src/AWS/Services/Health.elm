@@ -122,7 +122,6 @@ module AWS.Services.Health
 import AWS
 import AWS.Config
 import AWS.Http
-import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -133,8 +132,8 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config maybeCreds =
+config : AWS.ServiceConfig
+config =
     AWS.Config.Service
         "health"
         "2016-08-04"
@@ -142,7 +141,6 @@ config maybeCreds =
         "AWSHEALTH_20160804."
         "health.amazonaws.com"
         "us-east-1"
-        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
         |> AWS.ServiceConfig
 
 

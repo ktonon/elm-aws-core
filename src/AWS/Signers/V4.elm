@@ -13,17 +13,18 @@ import Regex exposing (HowMany(All), regex)
 
 
 sign :
-    UnsignedRequest a
+    AWS.Config.Service
+    -> AWS.Config.Credentials
     -> Date
-    -> AWS.Config.Service
-    -> Http.Request a
-sign req date config =
+    -> UnsignedRequest a
+    -> Result String (Http.Request a)
+sign config creds date req =
     Http.request
         { method = req.method
         , headers =
             headers config
-                |> addAuthorization date config
-                |> addSessionToken config
+                |> addAuthorization config creds date
+                |> addSessionToken creds
                 |> List.map (\( key, val ) -> Http.header key val)
         , url = AWS.Http.url config.host req.path req.params
         , body = AWS.Http.body req.params
@@ -31,6 +32,7 @@ sign req date config =
         , timeout = Nothing
         , withCredentials = False
         }
+        |> Ok
 
 
 algorithm : String
@@ -54,10 +56,12 @@ formatDate date =
             (\_ -> "")
 
 
-addSessionToken : AWS.Config.Service -> List ( String, String ) -> List ( String, String )
-addSessionToken config headers =
-    config.credentials
-        |> Maybe.andThen .sessionToken
+addSessionToken :
+    AWS.Config.Credentials
+    -> List ( String, String )
+    -> List ( String, String )
+addSessionToken creds headers =
+    creds.sessionToken
         |> Maybe.map
             (\token ->
                 ( "x-amz-security-token", token ) :: headers
@@ -65,17 +69,17 @@ addSessionToken config headers =
         |> Maybe.withDefault headers
 
 
-addAuthorization : Date -> AWS.Config.Service -> List ( String, String ) -> List ( String, String )
-addAuthorization date config headers =
-    config.credentials
-        |> Maybe.map
-            (\creds ->
-                [ ( "X-Amz-Date", formatDate date )
-                , ( "Authorization", authorization creds date config headers )
-                ]
-                    |> List.append headers
-            )
-        |> Maybe.withDefault headers
+addAuthorization :
+    AWS.Config.Service
+    -> AWS.Config.Credentials
+    -> Date
+    -> List ( String, String )
+    -> List ( String, String )
+addAuthorization config creds date headers =
+    [ ( "X-Amz-Date", formatDate date )
+    , ( "Authorization", authorization creds date config headers )
+    ]
+        |> List.append headers
 
 
 authorization : Credentials -> Date -> AWS.Config.Service -> List ( String, String ) -> String

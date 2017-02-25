@@ -378,7 +378,6 @@ module AWS.Services.StorageGateway
 import AWS
 import AWS.Config
 import AWS.Http
-import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -389,8 +388,8 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config maybeCreds =
+config : AWS.ServiceConfig
+config =
     AWS.Config.Service
         "storagegateway"
         "2013-06-30"
@@ -398,7 +397,6 @@ config maybeCreds =
         "AWSSTORAGEGATEWAY_20130630."
         "storagegateway.amazonaws.com"
         "us-east-1"
-        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
         |> AWS.ServiceConfig
 
 

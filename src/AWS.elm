@@ -78,8 +78,15 @@ type alias SignedRequest a =
 
 {-| Sign an unsigned request, given the current time
 -}
-signV4 : Request a -> Date -> ServiceConfig -> SignedRequest a
-signV4 req date serviceConfig =
-    case ( req, serviceConfig ) of
-        ( UnsignedRequest unsignedReq, ServiceConfig config ) ->
-            AWS.Signers.V4.sign unsignedReq date config
+signV4 :
+    ServiceConfig
+    -> Credentials
+    -> Date
+    -> Request a
+    -> Result String (SignedRequest a)
+signV4 serviceConfig credentials date req =
+    case
+        ( serviceConfig, credentials, req )
+    of
+        ( ServiceConfig config, Credentials creds, UnsignedRequest unsignedReq ) ->
+            AWS.Signers.V4.sign config creds date unsignedReq

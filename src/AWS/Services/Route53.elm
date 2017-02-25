@@ -456,7 +456,6 @@ module AWS.Services.Route53
 import AWS
 import AWS.Config
 import AWS.Http
-import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -467,8 +466,8 @@ import AWS.Enum
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config maybeCreds =
+config : AWS.ServiceConfig
+config =
     AWS.Config.Service
         "route53"
         "2013-04-01"
@@ -476,7 +475,6 @@ config maybeCreds =
         "AWSROUTE53_20130401."
         "route53.amazonaws.com"
         "us-east-1"
-        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
         |> AWS.ServiceConfig
 
 

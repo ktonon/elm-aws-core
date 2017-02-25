@@ -188,7 +188,6 @@ module AWS.Services.Rekognition
 import AWS
 import AWS.Config
 import AWS.Http
-import AWS.Util
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
@@ -196,8 +195,8 @@ import Json.Encode as JE
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config maybeCreds =
+config : AWS.ServiceConfig
+config =
     AWS.Config.Service
         "rekognition"
         "2016-06-27"
@@ -205,7 +204,6 @@ config maybeCreds =
         "AWSREKOGNITION_20160627."
         "rekognition.amazonaws.com"
         "us-east-1"
-        (maybeCreds |> Maybe.map AWS.Util.toConfigCreds)
         |> AWS.ServiceConfig
 
 
