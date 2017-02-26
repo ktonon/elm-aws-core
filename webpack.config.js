@@ -1,3 +1,4 @@
+/* eslint no-use-before-define: 0 */
 var path = require('path');
 
 module.exports = {
