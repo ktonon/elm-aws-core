@@ -1,3 +1,5 @@
+var _ktonon$aws_sdk_elm$Crypto;
+
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6818,11 +6820,12 @@
 /* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-window.Crypto = __webpack_require__(10);
+_ktonon$aws_sdk_elm$Crypto = __webpack_require__(10);
 
 
 /***/ })
 /******/ ]);
+
 var _ktonon$aws_sdk_elm$Native_HMAC = function () {
 
     var signatureKey = function(secretKey, dateStamp, regionName, serviceName, toSign) {
@@ -6831,7 +6834,7 @@ var _ktonon$aws_sdk_elm$Native_HMAC = function () {
         // HMAC(key, data)
         // crypto-js flips these arguments to:
         // HMAC(data, key)
-        var Crypto = window.Crypto;
+        var Crypto = _ktonon$aws_sdk_elm$Crypto;
 
         var kDate = Crypto.HmacSHA256(dateStamp, "AWS4" + secretKey);
         var kRegion = Crypto.HmacSHA256(regionName, kDate);

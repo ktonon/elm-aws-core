@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf src/AWS/Services/*.elm",
-    "webpack": "./node_modules/.bin/webpack && cat src/Native/HMAC.out.js src/Native/HMAC.src.js > src/Native/HMAC.js",
-    "build": "npm run clean && npm run webpack && node scripts/generate-sdk.js && elm package install -y && elm make --docs=docs.json",
+    "build:crypto": "webpack",
+    "build": "npm run clean && npm run build:crypto && node scripts/generate-sdk.js && elm package install -y && elm make --docs=docs.json",
     "test": "npm run build && elm test",
     "posttest": "eslint ."
   },
@@ -40,7 +40,6 @@
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",
     "fuzzy": "^0.1.3",
-    "path": "^0.12.7",
     "webpack": "^2.2.1"
   }
 }

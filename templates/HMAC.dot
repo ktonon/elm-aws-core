@@ -1,3 +1,6 @@
+var _ktonon$aws_sdk_elm$Crypto;
+
+{{= it.crypto }}
 
 var _ktonon$aws_sdk_elm$Native_HMAC = function () {
 
@@ -7,7 +10,7 @@ var _ktonon$aws_sdk_elm$Native_HMAC = function () {
         // HMAC(key, data)
         // crypto-js flips these arguments to:
         // HMAC(data, key)
-        var Crypto = window.Crypto;
+        var Crypto = _ktonon$aws_sdk_elm$Crypto;
 
         var kDate = Crypto.HmacSHA256(dateStamp, "AWS4" + secretKey);
         var kRegion = Crypto.HmacSHA256(regionName, kDate);

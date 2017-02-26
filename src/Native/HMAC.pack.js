@@ -1,1 +1,1 @@
-window.Crypto = require("crypto-js");
+_ktonon$aws_sdk_elm$Crypto = require("crypto-js");
