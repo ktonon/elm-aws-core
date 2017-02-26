@@ -1,13 +1,14 @@
 {
     "version": "1.0.0",
     "summary": "Sample Elm Test",
-    "repository": "https://github.com/user/project.git",
+    "repository": "https://github.com/ktonon/aws-sdk-elm.git",
     "license": "BSD-3-Clause",
     "source-directories": [
         ".",
         "../src"
     ],
     "exposed-modules": [],
+    "native-modules": true,
     "dependencies": {
         "Bogdanp/elm-querystring": "1.0.0 <= v < 2.0.0",
         "elm-community/elm-test": "3.0.0 <= v < 4.0.0",
