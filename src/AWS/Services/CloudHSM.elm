@@ -162,6 +162,7 @@ module AWS.Services.CloudHSM
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -170,16 +171,16 @@ import Json.Encode as JE
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "cloudhsm"
         "2014-05-30"
         "1.1"
         "AWSCLOUDHSM_20140530."
         "cloudhsm.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -197,7 +198,7 @@ __Required Parameters__
 addTagsToResource :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest AddTagsToResourceResponse
+    -> AWS.Request AddTagsToResourceResponse
 addTagsToResource resourceArn tagList =
     AWS.Http.unsignedRequest
         "AddTagsToResource"
@@ -207,6 +208,7 @@ addTagsToResource resourceArn tagList =
             JE.null
         )
         addTagsToResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -220,7 +222,7 @@ __Required Parameters__
 -}
 createHapg :
     String
-    -> AWS.Http.UnsignedRequest CreateHapgResponse
+    -> AWS.Request CreateHapgResponse
 createHapg label =
     AWS.Http.unsignedRequest
         "CreateHapg"
@@ -230,6 +232,7 @@ createHapg label =
             JE.null
         )
         createHapgResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -250,7 +253,7 @@ createHsm :
     -> String
     -> SubscriptionType
     -> (CreateHsmOptions -> CreateHsmOptions)
-    -> AWS.Http.UnsignedRequest CreateHsmResponse
+    -> AWS.Request CreateHsmResponse
 createHsm subnetId sshKey iamRoleArn subscriptionType setOptions =
   let
     options = setOptions (CreateHsmOptions Nothing Nothing Nothing Nothing)
@@ -263,6 +266,7 @@ createHsm subnetId sshKey iamRoleArn subscriptionType setOptions =
             JE.null
         )
         createHsmResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createHsm request
@@ -287,7 +291,7 @@ __Required Parameters__
 createLunaClient :
     String
     -> (CreateLunaClientOptions -> CreateLunaClientOptions)
-    -> AWS.Http.UnsignedRequest CreateLunaClientResponse
+    -> AWS.Request CreateLunaClientResponse
 createLunaClient certificate setOptions =
   let
     options = setOptions (CreateLunaClientOptions Nothing)
@@ -300,6 +304,7 @@ createLunaClient certificate setOptions =
             JE.null
         )
         createLunaClientResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createLunaClient request
@@ -320,7 +325,7 @@ __Required Parameters__
 -}
 deleteHapg :
     String
-    -> AWS.Http.UnsignedRequest DeleteHapgResponse
+    -> AWS.Request DeleteHapgResponse
 deleteHapg hapgArn =
     AWS.Http.unsignedRequest
         "DeleteHapg"
@@ -330,6 +335,7 @@ deleteHapg hapgArn =
             JE.null
         )
         deleteHapgResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -343,7 +349,7 @@ __Required Parameters__
 -}
 deleteHsm :
     String
-    -> AWS.Http.UnsignedRequest DeleteHsmResponse
+    -> AWS.Request DeleteHsmResponse
 deleteHsm hsmArn =
     AWS.Http.unsignedRequest
         "DeleteHsm"
@@ -353,6 +359,7 @@ deleteHsm hsmArn =
             JE.null
         )
         deleteHsmResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -366,7 +373,7 @@ __Required Parameters__
 -}
 deleteLunaClient :
     String
-    -> AWS.Http.UnsignedRequest DeleteLunaClientResponse
+    -> AWS.Request DeleteLunaClientResponse
 deleteLunaClient clientArn =
     AWS.Http.unsignedRequest
         "DeleteLunaClient"
@@ -376,6 +383,7 @@ deleteLunaClient clientArn =
             JE.null
         )
         deleteLunaClientResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -389,7 +397,7 @@ __Required Parameters__
 -}
 describeHapg :
     String
-    -> AWS.Http.UnsignedRequest DescribeHapgResponse
+    -> AWS.Request DescribeHapgResponse
 describeHapg hapgArn =
     AWS.Http.unsignedRequest
         "DescribeHapg"
@@ -399,6 +407,7 @@ describeHapg hapgArn =
             JE.null
         )
         describeHapgResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -411,7 +420,7 @@ __Required Parameters__
 -}
 describeHsm :
     (DescribeHsmOptions -> DescribeHsmOptions)
-    -> AWS.Http.UnsignedRequest DescribeHsmResponse
+    -> AWS.Request DescribeHsmResponse
 describeHsm setOptions =
   let
     options = setOptions (DescribeHsmOptions Nothing Nothing)
@@ -424,6 +433,7 @@ describeHsm setOptions =
             JE.null
         )
         describeHsmResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeHsm request
@@ -444,7 +454,7 @@ __Required Parameters__
 -}
 describeLunaClient :
     (DescribeLunaClientOptions -> DescribeLunaClientOptions)
-    -> AWS.Http.UnsignedRequest DescribeLunaClientResponse
+    -> AWS.Request DescribeLunaClientResponse
 describeLunaClient setOptions =
   let
     options = setOptions (DescribeLunaClientOptions Nothing Nothing)
@@ -457,6 +467,7 @@ describeLunaClient setOptions =
             JE.null
         )
         describeLunaClientResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLunaClient request
@@ -482,7 +493,7 @@ getConfig :
     String
     -> ClientVersion
     -> (List String)
-    -> AWS.Http.UnsignedRequest GetConfigResponse
+    -> AWS.Request GetConfigResponse
 getConfig clientArn clientVersion hapgList =
     AWS.Http.unsignedRequest
         "GetConfig"
@@ -492,6 +503,7 @@ getConfig clientArn clientVersion hapgList =
             JE.null
         )
         getConfigResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -503,7 +515,7 @@ __Required Parameters__
 
 -}
 listAvailableZones :
-    AWS.Http.UnsignedRequest ListAvailableZonesResponse
+    AWS.Request ListAvailableZonesResponse
 listAvailableZones =
     AWS.Http.unsignedRequest
         "ListAvailableZones"
@@ -513,6 +525,7 @@ listAvailableZones =
             JE.null
         )
         listAvailableZonesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -525,7 +538,7 @@ __Required Parameters__
 -}
 listHapgs :
     (ListHapgsOptions -> ListHapgsOptions)
-    -> AWS.Http.UnsignedRequest ListHapgsResponse
+    -> AWS.Request ListHapgsResponse
 listHapgs setOptions =
   let
     options = setOptions (ListHapgsOptions Nothing)
@@ -538,6 +551,7 @@ listHapgs setOptions =
             JE.null
         )
         listHapgsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listHapgs request
@@ -557,7 +571,7 @@ __Required Parameters__
 -}
 listHsms :
     (ListHsmsOptions -> ListHsmsOptions)
-    -> AWS.Http.UnsignedRequest ListHsmsResponse
+    -> AWS.Request ListHsmsResponse
 listHsms setOptions =
   let
     options = setOptions (ListHsmsOptions Nothing)
@@ -570,6 +584,7 @@ listHsms setOptions =
             JE.null
         )
         listHsmsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listHsms request
@@ -589,7 +604,7 @@ __Required Parameters__
 -}
 listLunaClients :
     (ListLunaClientsOptions -> ListLunaClientsOptions)
-    -> AWS.Http.UnsignedRequest ListLunaClientsResponse
+    -> AWS.Request ListLunaClientsResponse
 listLunaClients setOptions =
   let
     options = setOptions (ListLunaClientsOptions Nothing)
@@ -602,6 +617,7 @@ listLunaClients setOptions =
             JE.null
         )
         listLunaClientsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listLunaClients request
@@ -622,7 +638,7 @@ __Required Parameters__
 -}
 listTagsForResource :
     String
-    -> AWS.Http.UnsignedRequest ListTagsForResourceResponse
+    -> AWS.Request ListTagsForResourceResponse
 listTagsForResource resourceArn =
     AWS.Http.unsignedRequest
         "ListTagsForResource"
@@ -632,6 +648,7 @@ listTagsForResource resourceArn =
             JE.null
         )
         listTagsForResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -646,7 +663,7 @@ __Required Parameters__
 modifyHapg :
     String
     -> (ModifyHapgOptions -> ModifyHapgOptions)
-    -> AWS.Http.UnsignedRequest ModifyHapgResponse
+    -> AWS.Request ModifyHapgResponse
 modifyHapg hapgArn setOptions =
   let
     options = setOptions (ModifyHapgOptions Nothing Nothing)
@@ -659,6 +676,7 @@ modifyHapg hapgArn setOptions =
             JE.null
         )
         modifyHapgResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyHapg request
@@ -681,7 +699,7 @@ __Required Parameters__
 modifyHsm :
     String
     -> (ModifyHsmOptions -> ModifyHsmOptions)
-    -> AWS.Http.UnsignedRequest ModifyHsmResponse
+    -> AWS.Request ModifyHsmResponse
 modifyHsm hsmArn setOptions =
   let
     options = setOptions (ModifyHsmOptions Nothing Nothing Nothing Nothing Nothing)
@@ -694,6 +712,7 @@ modifyHsm hsmArn setOptions =
             JE.null
         )
         modifyHsmResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyHsm request
@@ -720,7 +739,7 @@ __Required Parameters__
 modifyLunaClient :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ModifyLunaClientResponse
+    -> AWS.Request ModifyLunaClientResponse
 modifyLunaClient clientArn certificate =
     AWS.Http.unsignedRequest
         "ModifyLunaClient"
@@ -730,6 +749,7 @@ modifyLunaClient clientArn certificate =
             JE.null
         )
         modifyLunaClientResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -745,7 +765,7 @@ __Required Parameters__
 removeTagsFromResource :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveTagsFromResourceResponse
+    -> AWS.Request RemoveTagsFromResourceResponse
 removeTagsFromResource resourceArn tagKeyList =
     AWS.Http.unsignedRequest
         "RemoveTagsFromResource"
@@ -755,6 +775,7 @@ removeTagsFromResource resourceArn tagKeyList =
             JE.null
         )
         removeTagsFromResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

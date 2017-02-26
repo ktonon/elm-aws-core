@@ -190,6 +190,7 @@ module AWS.Services.AppStream
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -201,16 +202,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "appstream2"
         "2016-12-01"
         "1.1"
         "AWSAPPSTREAM2_20161201."
         "appstream2.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -228,7 +229,7 @@ __Required Parameters__
 associateFleet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AssociateFleetResult
+    -> AWS.Request AssociateFleetResult
 associateFleet fleetName stackName =
     AWS.Http.unsignedRequest
         "AssociateFleet"
@@ -238,6 +239,7 @@ associateFleet fleetName stackName =
             JE.null
         )
         associateFleetResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -258,7 +260,7 @@ createFleet :
     -> String
     -> ComputeCapacity
     -> (CreateFleetOptions -> CreateFleetOptions)
-    -> AWS.Http.UnsignedRequest CreateFleetResult
+    -> AWS.Request CreateFleetResult
 createFleet name imageName instanceType computeCapacity setOptions =
   let
     options = setOptions (CreateFleetOptions Nothing Nothing Nothing Nothing Nothing)
@@ -271,6 +273,7 @@ createFleet name imageName instanceType computeCapacity setOptions =
             JE.null
         )
         createFleetResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createFleet request
@@ -296,7 +299,7 @@ __Required Parameters__
 createStack :
     String
     -> (CreateStackOptions -> CreateStackOptions)
-    -> AWS.Http.UnsignedRequest CreateStackResult
+    -> AWS.Request CreateStackResult
 createStack name setOptions =
   let
     options = setOptions (CreateStackOptions Nothing Nothing)
@@ -309,6 +312,7 @@ createStack name setOptions =
             JE.null
         )
         createStackResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createStack request
@@ -335,7 +339,7 @@ createStreamingURL :
     -> String
     -> String
     -> (CreateStreamingURLOptions -> CreateStreamingURLOptions)
-    -> AWS.Http.UnsignedRequest CreateStreamingURLResult
+    -> AWS.Request CreateStreamingURLResult
 createStreamingURL stackName fleetName userId setOptions =
   let
     options = setOptions (CreateStreamingURLOptions Nothing Nothing Nothing)
@@ -348,6 +352,7 @@ createStreamingURL stackName fleetName userId setOptions =
             JE.null
         )
         createStreamingURLResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createStreamingURL request
@@ -370,7 +375,7 @@ __Required Parameters__
 -}
 deleteFleet :
     String
-    -> AWS.Http.UnsignedRequest DeleteFleetResult
+    -> AWS.Request DeleteFleetResult
 deleteFleet name =
     AWS.Http.unsignedRequest
         "DeleteFleet"
@@ -380,6 +385,7 @@ deleteFleet name =
             JE.null
         )
         deleteFleetResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -393,7 +399,7 @@ __Required Parameters__
 -}
 deleteStack :
     String
-    -> AWS.Http.UnsignedRequest DeleteStackResult
+    -> AWS.Request DeleteStackResult
 deleteStack name =
     AWS.Http.unsignedRequest
         "DeleteStack"
@@ -403,6 +409,7 @@ deleteStack name =
             JE.null
         )
         deleteStackResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -415,7 +422,7 @@ __Required Parameters__
 -}
 describeFleets :
     (DescribeFleetsOptions -> DescribeFleetsOptions)
-    -> AWS.Http.UnsignedRequest DescribeFleetsResult
+    -> AWS.Request DescribeFleetsResult
 describeFleets setOptions =
   let
     options = setOptions (DescribeFleetsOptions Nothing Nothing)
@@ -428,6 +435,7 @@ describeFleets setOptions =
             JE.null
         )
         describeFleetsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeFleets request
@@ -448,7 +456,7 @@ __Required Parameters__
 -}
 describeImages :
     (DescribeImagesOptions -> DescribeImagesOptions)
-    -> AWS.Http.UnsignedRequest DescribeImagesResult
+    -> AWS.Request DescribeImagesResult
 describeImages setOptions =
   let
     options = setOptions (DescribeImagesOptions Nothing)
@@ -461,6 +469,7 @@ describeImages setOptions =
             JE.null
         )
         describeImagesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeImages request
@@ -484,7 +493,7 @@ describeSessions :
     String
     -> String
     -> (DescribeSessionsOptions -> DescribeSessionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeSessionsResult
+    -> AWS.Request DescribeSessionsResult
 describeSessions stackName fleetName setOptions =
   let
     options = setOptions (DescribeSessionsOptions Nothing Nothing Nothing)
@@ -497,6 +506,7 @@ describeSessions stackName fleetName setOptions =
             JE.null
         )
         describeSessionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSessions request
@@ -518,7 +528,7 @@ __Required Parameters__
 -}
 describeStacks :
     (DescribeStacksOptions -> DescribeStacksOptions)
-    -> AWS.Http.UnsignedRequest DescribeStacksResult
+    -> AWS.Request DescribeStacksResult
 describeStacks setOptions =
   let
     options = setOptions (DescribeStacksOptions Nothing Nothing)
@@ -531,6 +541,7 @@ describeStacks setOptions =
             JE.null
         )
         describeStacksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeStacks request
@@ -554,7 +565,7 @@ __Required Parameters__
 disassociateFleet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DisassociateFleetResult
+    -> AWS.Request DisassociateFleetResult
 disassociateFleet fleetName stackName =
     AWS.Http.unsignedRequest
         "DisassociateFleet"
@@ -564,6 +575,7 @@ disassociateFleet fleetName stackName =
             JE.null
         )
         disassociateFleetResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -577,7 +589,7 @@ __Required Parameters__
 -}
 expireSession :
     String
-    -> AWS.Http.UnsignedRequest ExpireSessionResult
+    -> AWS.Request ExpireSessionResult
 expireSession sessionId =
     AWS.Http.unsignedRequest
         "ExpireSession"
@@ -587,6 +599,7 @@ expireSession sessionId =
             JE.null
         )
         expireSessionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -601,7 +614,7 @@ __Required Parameters__
 listAssociatedFleets :
     String
     -> (ListAssociatedFleetsOptions -> ListAssociatedFleetsOptions)
-    -> AWS.Http.UnsignedRequest ListAssociatedFleetsResult
+    -> AWS.Request ListAssociatedFleetsResult
 listAssociatedFleets stackName setOptions =
   let
     options = setOptions (ListAssociatedFleetsOptions Nothing)
@@ -614,6 +627,7 @@ listAssociatedFleets stackName setOptions =
             JE.null
         )
         listAssociatedFleetsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAssociatedFleets request
@@ -635,7 +649,7 @@ __Required Parameters__
 listAssociatedStacks :
     String
     -> (ListAssociatedStacksOptions -> ListAssociatedStacksOptions)
-    -> AWS.Http.UnsignedRequest ListAssociatedStacksResult
+    -> AWS.Request ListAssociatedStacksResult
 listAssociatedStacks fleetName setOptions =
   let
     options = setOptions (ListAssociatedStacksOptions Nothing)
@@ -648,6 +662,7 @@ listAssociatedStacks fleetName setOptions =
             JE.null
         )
         listAssociatedStacksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAssociatedStacks request
@@ -668,7 +683,7 @@ __Required Parameters__
 -}
 startFleet :
     String
-    -> AWS.Http.UnsignedRequest StartFleetResult
+    -> AWS.Request StartFleetResult
 startFleet name =
     AWS.Http.unsignedRequest
         "StartFleet"
@@ -678,6 +693,7 @@ startFleet name =
             JE.null
         )
         startFleetResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -691,7 +707,7 @@ __Required Parameters__
 -}
 stopFleet :
     String
-    -> AWS.Http.UnsignedRequest StopFleetResult
+    -> AWS.Request StopFleetResult
 stopFleet name =
     AWS.Http.unsignedRequest
         "StopFleet"
@@ -701,6 +717,7 @@ stopFleet name =
             JE.null
         )
         stopFleetResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -715,7 +732,7 @@ __Required Parameters__
 updateFleet :
     String
     -> (UpdateFleetOptions -> UpdateFleetOptions)
-    -> AWS.Http.UnsignedRequest UpdateFleetResult
+    -> AWS.Request UpdateFleetResult
 updateFleet name setOptions =
   let
     options = setOptions (UpdateFleetOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -728,6 +745,7 @@ updateFleet name setOptions =
             JE.null
         )
         updateFleetResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateFleet request
@@ -757,7 +775,7 @@ __Required Parameters__
 updateStack :
     String
     -> (UpdateStackOptions -> UpdateStackOptions)
-    -> AWS.Http.UnsignedRequest UpdateStackResult
+    -> AWS.Request UpdateStackResult
 updateStack name setOptions =
   let
     options = setOptions (UpdateStackOptions Nothing Nothing)
@@ -770,6 +788,7 @@ updateStack name setOptions =
             JE.null
         )
         updateStackResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateStack request

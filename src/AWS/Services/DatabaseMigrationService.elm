@@ -292,6 +292,7 @@ module AWS.Services.DatabaseMigrationService
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -302,16 +303,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "dms"
         "2016-01-01"
         "1.1"
         "AWSDMS_20160101."
         "dms.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -329,7 +330,7 @@ __Required Parameters__
 addTagsToResource :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest AddTagsToResourceResponse
+    -> AWS.Request AddTagsToResourceResponse
 addTagsToResource resourceArn tags =
     AWS.Http.unsignedRequest
         "AddTagsToResource"
@@ -339,6 +340,7 @@ addTagsToResource resourceArn tags =
             JE.null
         )
         addTagsToResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -357,7 +359,7 @@ createEndpoint :
     -> ReplicationEndpointTypeValue
     -> String
     -> (CreateEndpointOptions -> CreateEndpointOptions)
-    -> AWS.Http.UnsignedRequest CreateEndpointResponse
+    -> AWS.Request CreateEndpointResponse
 createEndpoint endpointIdentifier endpointType engineName setOptions =
   let
     options = setOptions (CreateEndpointOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -370,6 +372,7 @@ createEndpoint endpointIdentifier endpointType engineName setOptions =
             JE.null
         )
         createEndpointResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createEndpoint request
@@ -402,7 +405,7 @@ createReplicationInstance :
     String
     -> String
     -> (CreateReplicationInstanceOptions -> CreateReplicationInstanceOptions)
-    -> AWS.Http.UnsignedRequest CreateReplicationInstanceResponse
+    -> AWS.Request CreateReplicationInstanceResponse
 createReplicationInstance replicationInstanceIdentifier replicationInstanceClass setOptions =
   let
     options = setOptions (CreateReplicationInstanceOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -415,6 +418,7 @@ createReplicationInstance replicationInstanceIdentifier replicationInstanceClass
             JE.null
         )
         createReplicationInstanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createReplicationInstance request
@@ -450,7 +454,7 @@ createReplicationSubnetGroup :
     -> String
     -> (List String)
     -> (CreateReplicationSubnetGroupOptions -> CreateReplicationSubnetGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateReplicationSubnetGroupResponse
+    -> AWS.Request CreateReplicationSubnetGroupResponse
 createReplicationSubnetGroup replicationSubnetGroupIdentifier replicationSubnetGroupDescription subnetIds setOptions =
   let
     options = setOptions (CreateReplicationSubnetGroupOptions Nothing)
@@ -463,6 +467,7 @@ createReplicationSubnetGroup replicationSubnetGroupIdentifier replicationSubnetG
             JE.null
         )
         createReplicationSubnetGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createReplicationSubnetGroup request
@@ -494,7 +499,7 @@ createReplicationTask :
     -> MigrationTypeValue
     -> String
     -> (CreateReplicationTaskOptions -> CreateReplicationTaskOptions)
-    -> AWS.Http.UnsignedRequest CreateReplicationTaskResponse
+    -> AWS.Request CreateReplicationTaskResponse
 createReplicationTask replicationTaskIdentifier sourceEndpointArn targetEndpointArn replicationInstanceArn migrationType tableMappings setOptions =
   let
     options = setOptions (CreateReplicationTaskOptions Nothing Nothing Nothing)
@@ -507,6 +512,7 @@ createReplicationTask replicationTaskIdentifier sourceEndpointArn targetEndpoint
             JE.null
         )
         createReplicationTaskResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createReplicationTask request
@@ -529,7 +535,7 @@ __Required Parameters__
 -}
 deleteCertificate :
     String
-    -> AWS.Http.UnsignedRequest DeleteCertificateResponse
+    -> AWS.Request DeleteCertificateResponse
 deleteCertificate certificateArn =
     AWS.Http.unsignedRequest
         "DeleteCertificate"
@@ -539,6 +545,7 @@ deleteCertificate certificateArn =
             JE.null
         )
         deleteCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -552,7 +559,7 @@ __Required Parameters__
 -}
 deleteEndpoint :
     String
-    -> AWS.Http.UnsignedRequest DeleteEndpointResponse
+    -> AWS.Request DeleteEndpointResponse
 deleteEndpoint endpointArn =
     AWS.Http.unsignedRequest
         "DeleteEndpoint"
@@ -562,6 +569,7 @@ deleteEndpoint endpointArn =
             JE.null
         )
         deleteEndpointResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -575,7 +583,7 @@ __Required Parameters__
 -}
 deleteReplicationInstance :
     String
-    -> AWS.Http.UnsignedRequest DeleteReplicationInstanceResponse
+    -> AWS.Request DeleteReplicationInstanceResponse
 deleteReplicationInstance replicationInstanceArn =
     AWS.Http.unsignedRequest
         "DeleteReplicationInstance"
@@ -585,6 +593,7 @@ deleteReplicationInstance replicationInstanceArn =
             JE.null
         )
         deleteReplicationInstanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -598,7 +607,7 @@ __Required Parameters__
 -}
 deleteReplicationSubnetGroup :
     String
-    -> AWS.Http.UnsignedRequest DeleteReplicationSubnetGroupResponse
+    -> AWS.Request DeleteReplicationSubnetGroupResponse
 deleteReplicationSubnetGroup replicationSubnetGroupIdentifier =
     AWS.Http.unsignedRequest
         "DeleteReplicationSubnetGroup"
@@ -608,6 +617,7 @@ deleteReplicationSubnetGroup replicationSubnetGroupIdentifier =
             JE.null
         )
         deleteReplicationSubnetGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -621,7 +631,7 @@ __Required Parameters__
 -}
 deleteReplicationTask :
     String
-    -> AWS.Http.UnsignedRequest DeleteReplicationTaskResponse
+    -> AWS.Request DeleteReplicationTaskResponse
 deleteReplicationTask replicationTaskArn =
     AWS.Http.unsignedRequest
         "DeleteReplicationTask"
@@ -631,6 +641,7 @@ deleteReplicationTask replicationTaskArn =
             JE.null
         )
         deleteReplicationTaskResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -642,7 +653,7 @@ __Required Parameters__
 
 -}
 describeAccountAttributes :
-    AWS.Http.UnsignedRequest DescribeAccountAttributesResponse
+    AWS.Request DescribeAccountAttributesResponse
 describeAccountAttributes =
     AWS.Http.unsignedRequest
         "DescribeAccountAttributes"
@@ -652,6 +663,7 @@ describeAccountAttributes =
             JE.null
         )
         describeAccountAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -664,7 +676,7 @@ __Required Parameters__
 -}
 describeCertificates :
     (DescribeCertificatesOptions -> DescribeCertificatesOptions)
-    -> AWS.Http.UnsignedRequest DescribeCertificatesResponse
+    -> AWS.Request DescribeCertificatesResponse
 describeCertificates setOptions =
   let
     options = setOptions (DescribeCertificatesOptions Nothing Nothing Nothing)
@@ -677,6 +689,7 @@ describeCertificates setOptions =
             JE.null
         )
         describeCertificatesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCertificates request
@@ -698,7 +711,7 @@ __Required Parameters__
 -}
 describeConnections :
     (DescribeConnectionsOptions -> DescribeConnectionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeConnectionsResponse
+    -> AWS.Request DescribeConnectionsResponse
 describeConnections setOptions =
   let
     options = setOptions (DescribeConnectionsOptions Nothing Nothing Nothing)
@@ -711,6 +724,7 @@ describeConnections setOptions =
             JE.null
         )
         describeConnectionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConnections request
@@ -732,7 +746,7 @@ __Required Parameters__
 -}
 describeEndpointTypes :
     (DescribeEndpointTypesOptions -> DescribeEndpointTypesOptions)
-    -> AWS.Http.UnsignedRequest DescribeEndpointTypesResponse
+    -> AWS.Request DescribeEndpointTypesResponse
 describeEndpointTypes setOptions =
   let
     options = setOptions (DescribeEndpointTypesOptions Nothing Nothing Nothing)
@@ -745,6 +759,7 @@ describeEndpointTypes setOptions =
             JE.null
         )
         describeEndpointTypesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEndpointTypes request
@@ -766,7 +781,7 @@ __Required Parameters__
 -}
 describeEndpoints :
     (DescribeEndpointsOptions -> DescribeEndpointsOptions)
-    -> AWS.Http.UnsignedRequest DescribeEndpointsResponse
+    -> AWS.Request DescribeEndpointsResponse
 describeEndpoints setOptions =
   let
     options = setOptions (DescribeEndpointsOptions Nothing Nothing Nothing)
@@ -779,6 +794,7 @@ describeEndpoints setOptions =
             JE.null
         )
         describeEndpointsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEndpoints request
@@ -800,7 +816,7 @@ __Required Parameters__
 -}
 describeOrderableReplicationInstances :
     (DescribeOrderableReplicationInstancesOptions -> DescribeOrderableReplicationInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeOrderableReplicationInstancesResponse
+    -> AWS.Request DescribeOrderableReplicationInstancesResponse
 describeOrderableReplicationInstances setOptions =
   let
     options = setOptions (DescribeOrderableReplicationInstancesOptions Nothing Nothing)
@@ -813,6 +829,7 @@ describeOrderableReplicationInstances setOptions =
             JE.null
         )
         describeOrderableReplicationInstancesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeOrderableReplicationInstances request
@@ -834,7 +851,7 @@ __Required Parameters__
 -}
 describeRefreshSchemasStatus :
     String
-    -> AWS.Http.UnsignedRequest DescribeRefreshSchemasStatusResponse
+    -> AWS.Request DescribeRefreshSchemasStatusResponse
 describeRefreshSchemasStatus endpointArn =
     AWS.Http.unsignedRequest
         "DescribeRefreshSchemasStatus"
@@ -844,6 +861,7 @@ describeRefreshSchemasStatus endpointArn =
             JE.null
         )
         describeRefreshSchemasStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -856,7 +874,7 @@ __Required Parameters__
 -}
 describeReplicationInstances :
     (DescribeReplicationInstancesOptions -> DescribeReplicationInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeReplicationInstancesResponse
+    -> AWS.Request DescribeReplicationInstancesResponse
 describeReplicationInstances setOptions =
   let
     options = setOptions (DescribeReplicationInstancesOptions Nothing Nothing Nothing)
@@ -869,6 +887,7 @@ describeReplicationInstances setOptions =
             JE.null
         )
         describeReplicationInstancesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReplicationInstances request
@@ -890,7 +909,7 @@ __Required Parameters__
 -}
 describeReplicationSubnetGroups :
     (DescribeReplicationSubnetGroupsOptions -> DescribeReplicationSubnetGroupsOptions)
-    -> AWS.Http.UnsignedRequest DescribeReplicationSubnetGroupsResponse
+    -> AWS.Request DescribeReplicationSubnetGroupsResponse
 describeReplicationSubnetGroups setOptions =
   let
     options = setOptions (DescribeReplicationSubnetGroupsOptions Nothing Nothing Nothing)
@@ -903,6 +922,7 @@ describeReplicationSubnetGroups setOptions =
             JE.null
         )
         describeReplicationSubnetGroupsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReplicationSubnetGroups request
@@ -924,7 +944,7 @@ __Required Parameters__
 -}
 describeReplicationTasks :
     (DescribeReplicationTasksOptions -> DescribeReplicationTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeReplicationTasksResponse
+    -> AWS.Request DescribeReplicationTasksResponse
 describeReplicationTasks setOptions =
   let
     options = setOptions (DescribeReplicationTasksOptions Nothing Nothing Nothing)
@@ -937,6 +957,7 @@ describeReplicationTasks setOptions =
             JE.null
         )
         describeReplicationTasksResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReplicationTasks request
@@ -960,7 +981,7 @@ __Required Parameters__
 describeSchemas :
     String
     -> (DescribeSchemasOptions -> DescribeSchemasOptions)
-    -> AWS.Http.UnsignedRequest DescribeSchemasResponse
+    -> AWS.Request DescribeSchemasResponse
 describeSchemas endpointArn setOptions =
   let
     options = setOptions (DescribeSchemasOptions Nothing Nothing)
@@ -973,6 +994,7 @@ describeSchemas endpointArn setOptions =
             JE.null
         )
         describeSchemasResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSchemas request
@@ -995,7 +1017,7 @@ __Required Parameters__
 describeTableStatistics :
     String
     -> (DescribeTableStatisticsOptions -> DescribeTableStatisticsOptions)
-    -> AWS.Http.UnsignedRequest DescribeTableStatisticsResponse
+    -> AWS.Request DescribeTableStatisticsResponse
 describeTableStatistics replicationTaskArn setOptions =
   let
     options = setOptions (DescribeTableStatisticsOptions Nothing Nothing)
@@ -1008,6 +1030,7 @@ describeTableStatistics replicationTaskArn setOptions =
             JE.null
         )
         describeTableStatisticsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTableStatistics request
@@ -1030,7 +1053,7 @@ __Required Parameters__
 importCertificate :
     String
     -> (ImportCertificateOptions -> ImportCertificateOptions)
-    -> AWS.Http.UnsignedRequest ImportCertificateResponse
+    -> AWS.Request ImportCertificateResponse
 importCertificate certificateIdentifier setOptions =
   let
     options = setOptions (ImportCertificateOptions Nothing Nothing)
@@ -1043,6 +1066,7 @@ importCertificate certificateIdentifier setOptions =
             JE.null
         )
         importCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importCertificate request
@@ -1064,7 +1088,7 @@ __Required Parameters__
 -}
 listTagsForResource :
     String
-    -> AWS.Http.UnsignedRequest ListTagsForResourceResponse
+    -> AWS.Request ListTagsForResourceResponse
 listTagsForResource resourceArn =
     AWS.Http.unsignedRequest
         "ListTagsForResource"
@@ -1074,6 +1098,7 @@ listTagsForResource resourceArn =
             JE.null
         )
         listTagsForResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1088,7 +1113,7 @@ __Required Parameters__
 modifyEndpoint :
     String
     -> (ModifyEndpointOptions -> ModifyEndpointOptions)
-    -> AWS.Http.UnsignedRequest ModifyEndpointResponse
+    -> AWS.Request ModifyEndpointResponse
 modifyEndpoint endpointArn setOptions =
   let
     options = setOptions (ModifyEndpointOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1101,6 +1126,7 @@ modifyEndpoint endpointArn setOptions =
             JE.null
         )
         modifyEndpointResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyEndpoint request
@@ -1132,7 +1158,7 @@ __Required Parameters__
 modifyReplicationInstance :
     String
     -> (ModifyReplicationInstanceOptions -> ModifyReplicationInstanceOptions)
-    -> AWS.Http.UnsignedRequest ModifyReplicationInstanceResponse
+    -> AWS.Request ModifyReplicationInstanceResponse
 modifyReplicationInstance replicationInstanceArn setOptions =
   let
     options = setOptions (ModifyReplicationInstanceOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1145,6 +1171,7 @@ modifyReplicationInstance replicationInstanceArn setOptions =
             JE.null
         )
         modifyReplicationInstanceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyReplicationInstance request
@@ -1177,7 +1204,7 @@ modifyReplicationSubnetGroup :
     String
     -> (List String)
     -> (ModifyReplicationSubnetGroupOptions -> ModifyReplicationSubnetGroupOptions)
-    -> AWS.Http.UnsignedRequest ModifyReplicationSubnetGroupResponse
+    -> AWS.Request ModifyReplicationSubnetGroupResponse
 modifyReplicationSubnetGroup replicationSubnetGroupIdentifier subnetIds setOptions =
   let
     options = setOptions (ModifyReplicationSubnetGroupOptions Nothing)
@@ -1190,6 +1217,7 @@ modifyReplicationSubnetGroup replicationSubnetGroupIdentifier subnetIds setOptio
             JE.null
         )
         modifyReplicationSubnetGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyReplicationSubnetGroup request
@@ -1211,7 +1239,7 @@ __Required Parameters__
 modifyReplicationTask :
     String
     -> (ModifyReplicationTaskOptions -> ModifyReplicationTaskOptions)
-    -> AWS.Http.UnsignedRequest ModifyReplicationTaskResponse
+    -> AWS.Request ModifyReplicationTaskResponse
 modifyReplicationTask replicationTaskArn setOptions =
   let
     options = setOptions (ModifyReplicationTaskOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1224,6 +1252,7 @@ modifyReplicationTask replicationTaskArn setOptions =
             JE.null
         )
         modifyReplicationTaskResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyReplicationTask request
@@ -1250,7 +1279,7 @@ __Required Parameters__
 refreshSchemas :
     String
     -> String
-    -> AWS.Http.UnsignedRequest RefreshSchemasResponse
+    -> AWS.Request RefreshSchemasResponse
 refreshSchemas endpointArn replicationInstanceArn =
     AWS.Http.unsignedRequest
         "RefreshSchemas"
@@ -1260,6 +1289,7 @@ refreshSchemas endpointArn replicationInstanceArn =
             JE.null
         )
         refreshSchemasResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1275,7 +1305,7 @@ __Required Parameters__
 removeTagsFromResource :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveTagsFromResourceResponse
+    -> AWS.Request RemoveTagsFromResourceResponse
 removeTagsFromResource resourceArn tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTagsFromResource"
@@ -1285,6 +1315,7 @@ removeTagsFromResource resourceArn tagKeys =
             JE.null
         )
         removeTagsFromResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1301,7 +1332,7 @@ startReplicationTask :
     String
     -> StartReplicationTaskTypeValue
     -> (StartReplicationTaskOptions -> StartReplicationTaskOptions)
-    -> AWS.Http.UnsignedRequest StartReplicationTaskResponse
+    -> AWS.Request StartReplicationTaskResponse
 startReplicationTask replicationTaskArn startReplicationTaskType setOptions =
   let
     options = setOptions (StartReplicationTaskOptions Nothing)
@@ -1314,6 +1345,7 @@ startReplicationTask replicationTaskArn startReplicationTaskType setOptions =
             JE.null
         )
         startReplicationTaskResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startReplicationTask request
@@ -1334,7 +1366,7 @@ __Required Parameters__
 -}
 stopReplicationTask :
     String
-    -> AWS.Http.UnsignedRequest StopReplicationTaskResponse
+    -> AWS.Request StopReplicationTaskResponse
 stopReplicationTask replicationTaskArn =
     AWS.Http.unsignedRequest
         "StopReplicationTask"
@@ -1344,6 +1376,7 @@ stopReplicationTask replicationTaskArn =
             JE.null
         )
         stopReplicationTaskResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1359,7 +1392,7 @@ __Required Parameters__
 testConnection :
     String
     -> String
-    -> AWS.Http.UnsignedRequest TestConnectionResponse
+    -> AWS.Request TestConnectionResponse
 testConnection replicationInstanceArn endpointArn =
     AWS.Http.unsignedRequest
         "TestConnection"
@@ -1369,6 +1402,7 @@ testConnection replicationInstanceArn endpointArn =
             JE.null
         )
         testConnectionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

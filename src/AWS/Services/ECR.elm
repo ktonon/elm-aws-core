@@ -210,6 +210,7 @@ module AWS.Services.ECR
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -220,16 +221,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "ecr"
         "2015-09-21"
         "1.1"
         "AWSECR_20150921."
         "ecr.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -248,7 +249,7 @@ batchCheckLayerAvailability :
     String
     -> (List String)
     -> (BatchCheckLayerAvailabilityOptions -> BatchCheckLayerAvailabilityOptions)
-    -> AWS.Http.UnsignedRequest BatchCheckLayerAvailabilityResponse
+    -> AWS.Request BatchCheckLayerAvailabilityResponse
 batchCheckLayerAvailability repositoryName layerDigests setOptions =
   let
     options = setOptions (BatchCheckLayerAvailabilityOptions Nothing)
@@ -261,6 +262,7 @@ batchCheckLayerAvailability repositoryName layerDigests setOptions =
             JE.null
         )
         batchCheckLayerAvailabilityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a batchCheckLayerAvailability request
@@ -284,7 +286,7 @@ batchDeleteImage :
     String
     -> (List ImageIdentifier)
     -> (BatchDeleteImageOptions -> BatchDeleteImageOptions)
-    -> AWS.Http.UnsignedRequest BatchDeleteImageResponse
+    -> AWS.Request BatchDeleteImageResponse
 batchDeleteImage repositoryName imageIds setOptions =
   let
     options = setOptions (BatchDeleteImageOptions Nothing)
@@ -297,6 +299,7 @@ batchDeleteImage repositoryName imageIds setOptions =
             JE.null
         )
         batchDeleteImageResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a batchDeleteImage request
@@ -320,7 +323,7 @@ batchGetImage :
     String
     -> (List ImageIdentifier)
     -> (BatchGetImageOptions -> BatchGetImageOptions)
-    -> AWS.Http.UnsignedRequest BatchGetImageResponse
+    -> AWS.Request BatchGetImageResponse
 batchGetImage repositoryName imageIds setOptions =
   let
     options = setOptions (BatchGetImageOptions Nothing Nothing)
@@ -333,6 +336,7 @@ batchGetImage repositoryName imageIds setOptions =
             JE.null
         )
         batchGetImageResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a batchGetImage request
@@ -359,7 +363,7 @@ completeLayerUpload :
     -> String
     -> (List String)
     -> (CompleteLayerUploadOptions -> CompleteLayerUploadOptions)
-    -> AWS.Http.UnsignedRequest CompleteLayerUploadResponse
+    -> AWS.Request CompleteLayerUploadResponse
 completeLayerUpload repositoryName uploadId layerDigests setOptions =
   let
     options = setOptions (CompleteLayerUploadOptions Nothing)
@@ -372,6 +376,7 @@ completeLayerUpload repositoryName uploadId layerDigests setOptions =
             JE.null
         )
         completeLayerUploadResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a completeLayerUpload request
@@ -392,7 +397,7 @@ __Required Parameters__
 -}
 createRepository :
     String
-    -> AWS.Http.UnsignedRequest CreateRepositoryResponse
+    -> AWS.Request CreateRepositoryResponse
 createRepository repositoryName =
     AWS.Http.unsignedRequest
         "CreateRepository"
@@ -402,6 +407,7 @@ createRepository repositoryName =
             JE.null
         )
         createRepositoryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -416,7 +422,7 @@ __Required Parameters__
 deleteRepository :
     String
     -> (DeleteRepositoryOptions -> DeleteRepositoryOptions)
-    -> AWS.Http.UnsignedRequest DeleteRepositoryResponse
+    -> AWS.Request DeleteRepositoryResponse
 deleteRepository repositoryName setOptions =
   let
     options = setOptions (DeleteRepositoryOptions Nothing Nothing)
@@ -429,6 +435,7 @@ deleteRepository repositoryName setOptions =
             JE.null
         )
         deleteRepositoryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteRepository request
@@ -451,7 +458,7 @@ __Required Parameters__
 deleteRepositoryPolicy :
     String
     -> (DeleteRepositoryPolicyOptions -> DeleteRepositoryPolicyOptions)
-    -> AWS.Http.UnsignedRequest DeleteRepositoryPolicyResponse
+    -> AWS.Request DeleteRepositoryPolicyResponse
 deleteRepositoryPolicy repositoryName setOptions =
   let
     options = setOptions (DeleteRepositoryPolicyOptions Nothing)
@@ -464,6 +471,7 @@ deleteRepositoryPolicy repositoryName setOptions =
             JE.null
         )
         deleteRepositoryPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteRepositoryPolicy request
@@ -485,7 +493,7 @@ __Required Parameters__
 describeImages :
     String
     -> (DescribeImagesOptions -> DescribeImagesOptions)
-    -> AWS.Http.UnsignedRequest DescribeImagesResponse
+    -> AWS.Request DescribeImagesResponse
 describeImages repositoryName setOptions =
   let
     options = setOptions (DescribeImagesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -498,6 +506,7 @@ describeImages repositoryName setOptions =
             JE.null
         )
         describeImagesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeImages request
@@ -521,7 +530,7 @@ __Required Parameters__
 -}
 describeRepositories :
     (DescribeRepositoriesOptions -> DescribeRepositoriesOptions)
-    -> AWS.Http.UnsignedRequest DescribeRepositoriesResponse
+    -> AWS.Request DescribeRepositoriesResponse
 describeRepositories setOptions =
   let
     options = setOptions (DescribeRepositoriesOptions Nothing Nothing Nothing Nothing)
@@ -534,6 +543,7 @@ describeRepositories setOptions =
             JE.null
         )
         describeRepositoriesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeRepositories request
@@ -556,7 +566,7 @@ __Required Parameters__
 -}
 getAuthorizationToken :
     (GetAuthorizationTokenOptions -> GetAuthorizationTokenOptions)
-    -> AWS.Http.UnsignedRequest GetAuthorizationTokenResponse
+    -> AWS.Request GetAuthorizationTokenResponse
 getAuthorizationToken setOptions =
   let
     options = setOptions (GetAuthorizationTokenOptions Nothing)
@@ -569,6 +579,7 @@ getAuthorizationToken setOptions =
             JE.null
         )
         getAuthorizationTokenResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getAuthorizationToken request
@@ -592,7 +603,7 @@ getDownloadUrlForLayer :
     String
     -> String
     -> (GetDownloadUrlForLayerOptions -> GetDownloadUrlForLayerOptions)
-    -> AWS.Http.UnsignedRequest GetDownloadUrlForLayerResponse
+    -> AWS.Request GetDownloadUrlForLayerResponse
 getDownloadUrlForLayer repositoryName layerDigest setOptions =
   let
     options = setOptions (GetDownloadUrlForLayerOptions Nothing)
@@ -605,6 +616,7 @@ getDownloadUrlForLayer repositoryName layerDigest setOptions =
             JE.null
         )
         getDownloadUrlForLayerResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDownloadUrlForLayer request
@@ -626,7 +638,7 @@ __Required Parameters__
 getRepositoryPolicy :
     String
     -> (GetRepositoryPolicyOptions -> GetRepositoryPolicyOptions)
-    -> AWS.Http.UnsignedRequest GetRepositoryPolicyResponse
+    -> AWS.Request GetRepositoryPolicyResponse
 getRepositoryPolicy repositoryName setOptions =
   let
     options = setOptions (GetRepositoryPolicyOptions Nothing)
@@ -639,6 +651,7 @@ getRepositoryPolicy repositoryName setOptions =
             JE.null
         )
         getRepositoryPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getRepositoryPolicy request
@@ -660,7 +673,7 @@ __Required Parameters__
 initiateLayerUpload :
     String
     -> (InitiateLayerUploadOptions -> InitiateLayerUploadOptions)
-    -> AWS.Http.UnsignedRequest InitiateLayerUploadResponse
+    -> AWS.Request InitiateLayerUploadResponse
 initiateLayerUpload repositoryName setOptions =
   let
     options = setOptions (InitiateLayerUploadOptions Nothing)
@@ -673,6 +686,7 @@ initiateLayerUpload repositoryName setOptions =
             JE.null
         )
         initiateLayerUploadResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a initiateLayerUpload request
@@ -694,7 +708,7 @@ __Required Parameters__
 listImages :
     String
     -> (ListImagesOptions -> ListImagesOptions)
-    -> AWS.Http.UnsignedRequest ListImagesResponse
+    -> AWS.Request ListImagesResponse
 listImages repositoryName setOptions =
   let
     options = setOptions (ListImagesOptions Nothing Nothing Nothing Nothing)
@@ -707,6 +721,7 @@ listImages repositoryName setOptions =
             JE.null
         )
         listImagesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listImages request
@@ -733,7 +748,7 @@ putImage :
     String
     -> String
     -> (PutImageOptions -> PutImageOptions)
-    -> AWS.Http.UnsignedRequest PutImageResponse
+    -> AWS.Request PutImageResponse
 putImage repositoryName imageManifest setOptions =
   let
     options = setOptions (PutImageOptions Nothing Nothing)
@@ -746,6 +761,7 @@ putImage repositoryName imageManifest setOptions =
             JE.null
         )
         putImageResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putImage request
@@ -770,7 +786,7 @@ setRepositoryPolicy :
     String
     -> String
     -> (SetRepositoryPolicyOptions -> SetRepositoryPolicyOptions)
-    -> AWS.Http.UnsignedRequest SetRepositoryPolicyResponse
+    -> AWS.Request SetRepositoryPolicyResponse
 setRepositoryPolicy repositoryName policyText setOptions =
   let
     options = setOptions (SetRepositoryPolicyOptions Nothing Nothing)
@@ -783,6 +799,7 @@ setRepositoryPolicy repositoryName policyText setOptions =
             JE.null
         )
         setRepositoryPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setRepositoryPolicy request
@@ -813,7 +830,7 @@ uploadLayerPart :
     -> Int
     -> String
     -> (UploadLayerPartOptions -> UploadLayerPartOptions)
-    -> AWS.Http.UnsignedRequest UploadLayerPartResponse
+    -> AWS.Request UploadLayerPartResponse
 uploadLayerPart repositoryName uploadId partFirstByte partLastByte layerPartBlob setOptions =
   let
     options = setOptions (UploadLayerPartOptions Nothing)
@@ -826,6 +843,7 @@ uploadLayerPart repositoryName uploadId partFirstByte partLastByte layerPartBlob
             JE.null
         )
         uploadLayerPartResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a uploadLayerPart request

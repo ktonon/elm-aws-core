@@ -156,6 +156,7 @@ module AWS.Services.Kinesis
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -167,16 +168,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "kinesis"
         "2013-12-02"
         "1.1"
         "AWSKINESIS_20131202."
         "kinesis.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -194,7 +195,7 @@ __Required Parameters__
 addTagsToStream :
     String
     -> (Dict String String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addTagsToStream streamName tags =
     AWS.Http.unsignedRequest
         "AddTagsToStream"
@@ -204,6 +205,7 @@ addTagsToStream streamName tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -219,7 +221,7 @@ __Required Parameters__
 createStream :
     String
     -> Int
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createStream streamName shardCount =
     AWS.Http.unsignedRequest
         "CreateStream"
@@ -229,6 +231,7 @@ createStream streamName shardCount =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -244,7 +247,7 @@ __Required Parameters__
 decreaseStreamRetentionPeriod :
     String
     -> Int
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 decreaseStreamRetentionPeriod streamName retentionPeriodHours =
     AWS.Http.unsignedRequest
         "DecreaseStreamRetentionPeriod"
@@ -254,6 +257,7 @@ decreaseStreamRetentionPeriod streamName retentionPeriodHours =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -267,7 +271,7 @@ __Required Parameters__
 -}
 deleteStream :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteStream streamName =
     AWS.Http.unsignedRequest
         "DeleteStream"
@@ -277,6 +281,7 @@ deleteStream streamName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -288,7 +293,7 @@ __Required Parameters__
 
 -}
 describeLimits :
-    AWS.Http.UnsignedRequest DescribeLimitsOutput
+    AWS.Request DescribeLimitsOutput
 describeLimits =
     AWS.Http.unsignedRequest
         "DescribeLimits"
@@ -298,6 +303,7 @@ describeLimits =
             JE.null
         )
         describeLimitsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -312,7 +318,7 @@ __Required Parameters__
 describeStream :
     String
     -> (DescribeStreamOptions -> DescribeStreamOptions)
-    -> AWS.Http.UnsignedRequest DescribeStreamOutput
+    -> AWS.Request DescribeStreamOutput
 describeStream streamName setOptions =
   let
     options = setOptions (DescribeStreamOptions Nothing Nothing)
@@ -325,6 +331,7 @@ describeStream streamName setOptions =
             JE.null
         )
         describeStreamOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeStream request
@@ -348,7 +355,7 @@ __Required Parameters__
 disableEnhancedMonitoring :
     String
     -> (List MetricsName)
-    -> AWS.Http.UnsignedRequest EnhancedMonitoringOutput
+    -> AWS.Request EnhancedMonitoringOutput
 disableEnhancedMonitoring streamName shardLevelMetrics =
     AWS.Http.unsignedRequest
         "DisableEnhancedMonitoring"
@@ -358,6 +365,7 @@ disableEnhancedMonitoring streamName shardLevelMetrics =
             JE.null
         )
         enhancedMonitoringOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -373,7 +381,7 @@ __Required Parameters__
 enableEnhancedMonitoring :
     String
     -> (List MetricsName)
-    -> AWS.Http.UnsignedRequest EnhancedMonitoringOutput
+    -> AWS.Request EnhancedMonitoringOutput
 enableEnhancedMonitoring streamName shardLevelMetrics =
     AWS.Http.unsignedRequest
         "EnableEnhancedMonitoring"
@@ -383,6 +391,7 @@ enableEnhancedMonitoring streamName shardLevelMetrics =
             JE.null
         )
         enhancedMonitoringOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -397,7 +406,7 @@ __Required Parameters__
 getRecords :
     String
     -> (GetRecordsOptions -> GetRecordsOptions)
-    -> AWS.Http.UnsignedRequest GetRecordsOutput
+    -> AWS.Request GetRecordsOutput
 getRecords shardIterator setOptions =
   let
     options = setOptions (GetRecordsOptions Nothing)
@@ -410,6 +419,7 @@ getRecords shardIterator setOptions =
             JE.null
         )
         getRecordsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getRecords request
@@ -435,7 +445,7 @@ getShardIterator :
     -> String
     -> ShardIteratorType
     -> (GetShardIteratorOptions -> GetShardIteratorOptions)
-    -> AWS.Http.UnsignedRequest GetShardIteratorOutput
+    -> AWS.Request GetShardIteratorOutput
 getShardIterator streamName shardId shardIteratorType setOptions =
   let
     options = setOptions (GetShardIteratorOptions Nothing Nothing)
@@ -448,6 +458,7 @@ getShardIterator streamName shardId shardIteratorType setOptions =
             JE.null
         )
         getShardIteratorOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getShardIterator request
@@ -471,7 +482,7 @@ __Required Parameters__
 increaseStreamRetentionPeriod :
     String
     -> Int
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 increaseStreamRetentionPeriod streamName retentionPeriodHours =
     AWS.Http.unsignedRequest
         "IncreaseStreamRetentionPeriod"
@@ -481,6 +492,7 @@ increaseStreamRetentionPeriod streamName retentionPeriodHours =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -493,7 +505,7 @@ __Required Parameters__
 -}
 listStreams :
     (ListStreamsOptions -> ListStreamsOptions)
-    -> AWS.Http.UnsignedRequest ListStreamsOutput
+    -> AWS.Request ListStreamsOutput
 listStreams setOptions =
   let
     options = setOptions (ListStreamsOptions Nothing Nothing)
@@ -506,6 +518,7 @@ listStreams setOptions =
             JE.null
         )
         listStreamsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listStreams request
@@ -528,7 +541,7 @@ __Required Parameters__
 listTagsForStream :
     String
     -> (ListTagsForStreamOptions -> ListTagsForStreamOptions)
-    -> AWS.Http.UnsignedRequest ListTagsForStreamOutput
+    -> AWS.Request ListTagsForStreamOutput
 listTagsForStream streamName setOptions =
   let
     options = setOptions (ListTagsForStreamOptions Nothing Nothing)
@@ -541,6 +554,7 @@ listTagsForStream streamName setOptions =
             JE.null
         )
         listTagsForStreamOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTagsForStream request
@@ -566,7 +580,7 @@ mergeShards :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 mergeShards streamName shardToMerge adjacentShardToMerge =
     AWS.Http.unsignedRequest
         "MergeShards"
@@ -576,6 +590,7 @@ mergeShards streamName shardToMerge adjacentShardToMerge =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -594,7 +609,7 @@ putRecord :
     -> String
     -> String
     -> (PutRecordOptions -> PutRecordOptions)
-    -> AWS.Http.UnsignedRequest PutRecordOutput
+    -> AWS.Request PutRecordOutput
 putRecord streamName data partitionKey setOptions =
   let
     options = setOptions (PutRecordOptions Nothing Nothing)
@@ -607,6 +622,7 @@ putRecord streamName data partitionKey setOptions =
             JE.null
         )
         putRecordOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putRecord request
@@ -630,7 +646,7 @@ __Required Parameters__
 putRecords :
     (List PutRecordsRequestEntry)
     -> String
-    -> AWS.Http.UnsignedRequest PutRecordsOutput
+    -> AWS.Request PutRecordsOutput
 putRecords records streamName =
     AWS.Http.unsignedRequest
         "PutRecords"
@@ -640,6 +656,7 @@ putRecords records streamName =
             JE.null
         )
         putRecordsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -655,7 +672,7 @@ __Required Parameters__
 removeTagsFromStream :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeTagsFromStream streamName tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTagsFromStream"
@@ -665,6 +682,7 @@ removeTagsFromStream streamName tagKeys =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -682,7 +700,7 @@ splitShard :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 splitShard streamName shardToSplit newStartingHashKey =
     AWS.Http.unsignedRequest
         "SplitShard"
@@ -692,6 +710,7 @@ splitShard streamName shardToSplit newStartingHashKey =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -709,7 +728,7 @@ updateShardCount :
     String
     -> Int
     -> ScalingType
-    -> AWS.Http.UnsignedRequest UpdateShardCountOutput
+    -> AWS.Request UpdateShardCountOutput
 updateShardCount streamName targetShardCount scalingType =
     AWS.Http.unsignedRequest
         "UpdateShardCount"
@@ -719,6 +738,7 @@ updateShardCount streamName targetShardCount scalingType =
             JE.null
         )
         updateShardCountOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 

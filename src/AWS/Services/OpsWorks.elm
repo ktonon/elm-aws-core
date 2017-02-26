@@ -444,6 +444,7 @@ module AWS.Services.OpsWorks
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -453,16 +454,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "opsworks"
         "2013-02-18"
         "1.1"
         "AWSOPSWORKS_20130218."
         "opsworks.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -480,7 +481,7 @@ __Required Parameters__
 assignInstance :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 assignInstance instanceId layerIds =
     AWS.Http.unsignedRequest
         "AssignInstance"
@@ -490,6 +491,7 @@ assignInstance instanceId layerIds =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -504,7 +506,7 @@ __Required Parameters__
 assignVolume :
     String
     -> (AssignVolumeOptions -> AssignVolumeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 assignVolume volumeId setOptions =
   let
     options = setOptions (AssignVolumeOptions Nothing)
@@ -517,6 +519,7 @@ assignVolume volumeId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a assignVolume request
@@ -538,7 +541,7 @@ __Required Parameters__
 associateElasticIp :
     String
     -> (AssociateElasticIpOptions -> AssociateElasticIpOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 associateElasticIp elasticIp setOptions =
   let
     options = setOptions (AssociateElasticIpOptions Nothing)
@@ -551,6 +554,7 @@ associateElasticIp elasticIp setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a associateElasticIp request
@@ -573,7 +577,7 @@ __Required Parameters__
 attachElasticLoadBalancer :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 attachElasticLoadBalancer elasticLoadBalancerName layerId =
     AWS.Http.unsignedRequest
         "AttachElasticLoadBalancer"
@@ -583,6 +587,7 @@ attachElasticLoadBalancer elasticLoadBalancerName layerId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -599,7 +604,7 @@ cloneStack :
     String
     -> String
     -> (CloneStackOptions -> CloneStackOptions)
-    -> AWS.Http.UnsignedRequest CloneStackResult
+    -> AWS.Request CloneStackResult
 cloneStack sourceStackId serviceRoleArn setOptions =
   let
     options = setOptions (CloneStackOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -612,6 +617,7 @@ cloneStack sourceStackId serviceRoleArn setOptions =
             JE.null
         )
         cloneStackResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a cloneStack request
@@ -656,7 +662,7 @@ createApp :
     -> String
     -> AppType
     -> (CreateAppOptions -> CreateAppOptions)
-    -> AWS.Http.UnsignedRequest CreateAppResult
+    -> AWS.Request CreateAppResult
 createApp stackId name type_ setOptions =
   let
     options = setOptions (CreateAppOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -669,6 +675,7 @@ createApp stackId name type_ setOptions =
             JE.null
         )
         createAppResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createApp request
@@ -700,7 +707,7 @@ createDeployment :
     String
     -> DeploymentCommand
     -> (CreateDeploymentOptions -> CreateDeploymentOptions)
-    -> AWS.Http.UnsignedRequest CreateDeploymentResult
+    -> AWS.Request CreateDeploymentResult
 createDeployment stackId command setOptions =
   let
     options = setOptions (CreateDeploymentOptions Nothing Nothing Nothing Nothing Nothing)
@@ -713,6 +720,7 @@ createDeployment stackId command setOptions =
             JE.null
         )
         createDeploymentResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDeployment request
@@ -742,7 +750,7 @@ createInstance :
     -> (List String)
     -> String
     -> (CreateInstanceOptions -> CreateInstanceOptions)
-    -> AWS.Http.UnsignedRequest CreateInstanceResult
+    -> AWS.Request CreateInstanceResult
 createInstance stackId layerIds instanceType setOptions =
   let
     options = setOptions (CreateInstanceOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -755,6 +763,7 @@ createInstance stackId layerIds instanceType setOptions =
             JE.null
         )
         createInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createInstance request
@@ -796,7 +805,7 @@ createLayer :
     -> String
     -> String
     -> (CreateLayerOptions -> CreateLayerOptions)
-    -> AWS.Http.UnsignedRequest CreateLayerResult
+    -> AWS.Request CreateLayerResult
 createLayer stackId type_ name shortname setOptions =
   let
     options = setOptions (CreateLayerOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -809,6 +818,7 @@ createLayer stackId type_ name shortname setOptions =
             JE.null
         )
         createLayerResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createLayer request
@@ -848,7 +858,7 @@ createStack :
     -> String
     -> String
     -> (CreateStackOptions -> CreateStackOptions)
-    -> AWS.Http.UnsignedRequest CreateStackResult
+    -> AWS.Request CreateStackResult
 createStack name region serviceRoleArn defaultInstanceProfileArn setOptions =
   let
     options = setOptions (CreateStackOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -861,6 +871,7 @@ createStack name region serviceRoleArn defaultInstanceProfileArn setOptions =
             JE.null
         )
         createStackResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createStack request
@@ -896,7 +907,7 @@ __Required Parameters__
 createUserProfile :
     String
     -> (CreateUserProfileOptions -> CreateUserProfileOptions)
-    -> AWS.Http.UnsignedRequest CreateUserProfileResult
+    -> AWS.Request CreateUserProfileResult
 createUserProfile iamUserArn setOptions =
   let
     options = setOptions (CreateUserProfileOptions Nothing Nothing Nothing)
@@ -909,6 +920,7 @@ createUserProfile iamUserArn setOptions =
             JE.null
         )
         createUserProfileResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createUserProfile request
@@ -931,7 +943,7 @@ __Required Parameters__
 -}
 deleteApp :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteApp appId =
     AWS.Http.unsignedRequest
         "DeleteApp"
@@ -941,6 +953,7 @@ deleteApp appId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -955,7 +968,7 @@ __Required Parameters__
 deleteInstance :
     String
     -> (DeleteInstanceOptions -> DeleteInstanceOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteInstance instanceId setOptions =
   let
     options = setOptions (DeleteInstanceOptions Nothing Nothing)
@@ -968,6 +981,7 @@ deleteInstance instanceId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteInstance request
@@ -989,7 +1003,7 @@ __Required Parameters__
 -}
 deleteLayer :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteLayer layerId =
     AWS.Http.unsignedRequest
         "DeleteLayer"
@@ -999,6 +1013,7 @@ deleteLayer layerId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1012,7 +1027,7 @@ __Required Parameters__
 -}
 deleteStack :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteStack stackId =
     AWS.Http.unsignedRequest
         "DeleteStack"
@@ -1022,6 +1037,7 @@ deleteStack stackId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1035,7 +1051,7 @@ __Required Parameters__
 -}
 deleteUserProfile :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteUserProfile iamUserArn =
     AWS.Http.unsignedRequest
         "DeleteUserProfile"
@@ -1045,6 +1061,7 @@ deleteUserProfile iamUserArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1058,7 +1075,7 @@ __Required Parameters__
 -}
 deregisterEcsCluster :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deregisterEcsCluster ecsClusterArn =
     AWS.Http.unsignedRequest
         "DeregisterEcsCluster"
@@ -1068,6 +1085,7 @@ deregisterEcsCluster ecsClusterArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1081,7 +1099,7 @@ __Required Parameters__
 -}
 deregisterElasticIp :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deregisterElasticIp elasticIp =
     AWS.Http.unsignedRequest
         "DeregisterElasticIp"
@@ -1091,6 +1109,7 @@ deregisterElasticIp elasticIp =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1104,7 +1123,7 @@ __Required Parameters__
 -}
 deregisterInstance :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deregisterInstance instanceId =
     AWS.Http.unsignedRequest
         "DeregisterInstance"
@@ -1114,6 +1133,7 @@ deregisterInstance instanceId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1127,7 +1147,7 @@ __Required Parameters__
 -}
 deregisterRdsDbInstance :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deregisterRdsDbInstance rdsDbInstanceArn =
     AWS.Http.unsignedRequest
         "DeregisterRdsDbInstance"
@@ -1137,6 +1157,7 @@ deregisterRdsDbInstance rdsDbInstanceArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1150,7 +1171,7 @@ __Required Parameters__
 -}
 deregisterVolume :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deregisterVolume volumeId =
     AWS.Http.unsignedRequest
         "DeregisterVolume"
@@ -1160,6 +1181,7 @@ deregisterVolume volumeId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1172,7 +1194,7 @@ __Required Parameters__
 -}
 describeAgentVersions :
     (DescribeAgentVersionsOptions -> DescribeAgentVersionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeAgentVersionsResult
+    -> AWS.Request DescribeAgentVersionsResult
 describeAgentVersions setOptions =
   let
     options = setOptions (DescribeAgentVersionsOptions Nothing Nothing)
@@ -1185,6 +1207,7 @@ describeAgentVersions setOptions =
             JE.null
         )
         describeAgentVersionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAgentVersions request
@@ -1205,7 +1228,7 @@ __Required Parameters__
 -}
 describeApps :
     (DescribeAppsOptions -> DescribeAppsOptions)
-    -> AWS.Http.UnsignedRequest DescribeAppsResult
+    -> AWS.Request DescribeAppsResult
 describeApps setOptions =
   let
     options = setOptions (DescribeAppsOptions Nothing Nothing)
@@ -1218,6 +1241,7 @@ describeApps setOptions =
             JE.null
         )
         describeAppsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeApps request
@@ -1238,7 +1262,7 @@ __Required Parameters__
 -}
 describeCommands :
     (DescribeCommandsOptions -> DescribeCommandsOptions)
-    -> AWS.Http.UnsignedRequest DescribeCommandsResult
+    -> AWS.Request DescribeCommandsResult
 describeCommands setOptions =
   let
     options = setOptions (DescribeCommandsOptions Nothing Nothing Nothing)
@@ -1251,6 +1275,7 @@ describeCommands setOptions =
             JE.null
         )
         describeCommandsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCommands request
@@ -1272,7 +1297,7 @@ __Required Parameters__
 -}
 describeDeployments :
     (DescribeDeploymentsOptions -> DescribeDeploymentsOptions)
-    -> AWS.Http.UnsignedRequest DescribeDeploymentsResult
+    -> AWS.Request DescribeDeploymentsResult
 describeDeployments setOptions =
   let
     options = setOptions (DescribeDeploymentsOptions Nothing Nothing Nothing)
@@ -1285,6 +1310,7 @@ describeDeployments setOptions =
             JE.null
         )
         describeDeploymentsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDeployments request
@@ -1306,7 +1332,7 @@ __Required Parameters__
 -}
 describeEcsClusters :
     (DescribeEcsClustersOptions -> DescribeEcsClustersOptions)
-    -> AWS.Http.UnsignedRequest DescribeEcsClustersResult
+    -> AWS.Request DescribeEcsClustersResult
 describeEcsClusters setOptions =
   let
     options = setOptions (DescribeEcsClustersOptions Nothing Nothing Nothing Nothing)
@@ -1319,6 +1345,7 @@ describeEcsClusters setOptions =
             JE.null
         )
         describeEcsClustersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEcsClusters request
@@ -1341,7 +1368,7 @@ __Required Parameters__
 -}
 describeElasticIps :
     (DescribeElasticIpsOptions -> DescribeElasticIpsOptions)
-    -> AWS.Http.UnsignedRequest DescribeElasticIpsResult
+    -> AWS.Request DescribeElasticIpsResult
 describeElasticIps setOptions =
   let
     options = setOptions (DescribeElasticIpsOptions Nothing Nothing Nothing)
@@ -1354,6 +1381,7 @@ describeElasticIps setOptions =
             JE.null
         )
         describeElasticIpsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeElasticIps request
@@ -1375,7 +1403,7 @@ __Required Parameters__
 -}
 describeElasticLoadBalancers :
     (DescribeElasticLoadBalancersOptions -> DescribeElasticLoadBalancersOptions)
-    -> AWS.Http.UnsignedRequest DescribeElasticLoadBalancersResult
+    -> AWS.Request DescribeElasticLoadBalancersResult
 describeElasticLoadBalancers setOptions =
   let
     options = setOptions (DescribeElasticLoadBalancersOptions Nothing Nothing)
@@ -1388,6 +1416,7 @@ describeElasticLoadBalancers setOptions =
             JE.null
         )
         describeElasticLoadBalancersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeElasticLoadBalancers request
@@ -1408,7 +1437,7 @@ __Required Parameters__
 -}
 describeInstances :
     (DescribeInstancesOptions -> DescribeInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstancesResult
+    -> AWS.Request DescribeInstancesResult
 describeInstances setOptions =
   let
     options = setOptions (DescribeInstancesOptions Nothing Nothing Nothing)
@@ -1421,6 +1450,7 @@ describeInstances setOptions =
             JE.null
         )
         describeInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstances request
@@ -1442,7 +1472,7 @@ __Required Parameters__
 -}
 describeLayers :
     (DescribeLayersOptions -> DescribeLayersOptions)
-    -> AWS.Http.UnsignedRequest DescribeLayersResult
+    -> AWS.Request DescribeLayersResult
 describeLayers setOptions =
   let
     options = setOptions (DescribeLayersOptions Nothing Nothing)
@@ -1455,6 +1485,7 @@ describeLayers setOptions =
             JE.null
         )
         describeLayersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLayers request
@@ -1476,7 +1507,7 @@ __Required Parameters__
 -}
 describeLoadBasedAutoScaling :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeLoadBasedAutoScalingResult
+    -> AWS.Request DescribeLoadBasedAutoScalingResult
 describeLoadBasedAutoScaling layerIds =
     AWS.Http.unsignedRequest
         "DescribeLoadBasedAutoScaling"
@@ -1486,6 +1517,7 @@ describeLoadBasedAutoScaling layerIds =
             JE.null
         )
         describeLoadBasedAutoScalingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1497,7 +1529,7 @@ __Required Parameters__
 
 -}
 describeMyUserProfile :
-    AWS.Http.UnsignedRequest DescribeMyUserProfileResult
+    AWS.Request DescribeMyUserProfileResult
 describeMyUserProfile =
     AWS.Http.unsignedRequest
         "DescribeMyUserProfile"
@@ -1507,6 +1539,7 @@ describeMyUserProfile =
             JE.null
         )
         describeMyUserProfileResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1519,7 +1552,7 @@ __Required Parameters__
 -}
 describePermissions :
     (DescribePermissionsOptions -> DescribePermissionsOptions)
-    -> AWS.Http.UnsignedRequest DescribePermissionsResult
+    -> AWS.Request DescribePermissionsResult
 describePermissions setOptions =
   let
     options = setOptions (DescribePermissionsOptions Nothing Nothing)
@@ -1532,6 +1565,7 @@ describePermissions setOptions =
             JE.null
         )
         describePermissionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describePermissions request
@@ -1552,7 +1586,7 @@ __Required Parameters__
 -}
 describeRaidArrays :
     (DescribeRaidArraysOptions -> DescribeRaidArraysOptions)
-    -> AWS.Http.UnsignedRequest DescribeRaidArraysResult
+    -> AWS.Request DescribeRaidArraysResult
 describeRaidArrays setOptions =
   let
     options = setOptions (DescribeRaidArraysOptions Nothing Nothing Nothing)
@@ -1565,6 +1599,7 @@ describeRaidArrays setOptions =
             JE.null
         )
         describeRaidArraysResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeRaidArrays request
@@ -1588,7 +1623,7 @@ __Required Parameters__
 describeRdsDbInstances :
     String
     -> (DescribeRdsDbInstancesOptions -> DescribeRdsDbInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeRdsDbInstancesResult
+    -> AWS.Request DescribeRdsDbInstancesResult
 describeRdsDbInstances stackId setOptions =
   let
     options = setOptions (DescribeRdsDbInstancesOptions Nothing)
@@ -1601,6 +1636,7 @@ describeRdsDbInstances stackId setOptions =
             JE.null
         )
         describeRdsDbInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeRdsDbInstances request
@@ -1620,7 +1656,7 @@ __Required Parameters__
 -}
 describeServiceErrors :
     (DescribeServiceErrorsOptions -> DescribeServiceErrorsOptions)
-    -> AWS.Http.UnsignedRequest DescribeServiceErrorsResult
+    -> AWS.Request DescribeServiceErrorsResult
 describeServiceErrors setOptions =
   let
     options = setOptions (DescribeServiceErrorsOptions Nothing Nothing Nothing)
@@ -1633,6 +1669,7 @@ describeServiceErrors setOptions =
             JE.null
         )
         describeServiceErrorsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeServiceErrors request
@@ -1655,7 +1692,7 @@ __Required Parameters__
 -}
 describeStackProvisioningParameters :
     String
-    -> AWS.Http.UnsignedRequest DescribeStackProvisioningParametersResult
+    -> AWS.Request DescribeStackProvisioningParametersResult
 describeStackProvisioningParameters stackId =
     AWS.Http.unsignedRequest
         "DescribeStackProvisioningParameters"
@@ -1665,6 +1702,7 @@ describeStackProvisioningParameters stackId =
             JE.null
         )
         describeStackProvisioningParametersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1678,7 +1716,7 @@ __Required Parameters__
 -}
 describeStackSummary :
     String
-    -> AWS.Http.UnsignedRequest DescribeStackSummaryResult
+    -> AWS.Request DescribeStackSummaryResult
 describeStackSummary stackId =
     AWS.Http.unsignedRequest
         "DescribeStackSummary"
@@ -1688,6 +1726,7 @@ describeStackSummary stackId =
             JE.null
         )
         describeStackSummaryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1700,7 +1739,7 @@ __Required Parameters__
 -}
 describeStacks :
     (DescribeStacksOptions -> DescribeStacksOptions)
-    -> AWS.Http.UnsignedRequest DescribeStacksResult
+    -> AWS.Request DescribeStacksResult
 describeStacks setOptions =
   let
     options = setOptions (DescribeStacksOptions Nothing)
@@ -1713,6 +1752,7 @@ describeStacks setOptions =
             JE.null
         )
         describeStacksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeStacks request
@@ -1733,7 +1773,7 @@ __Required Parameters__
 -}
 describeTimeBasedAutoScaling :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeTimeBasedAutoScalingResult
+    -> AWS.Request DescribeTimeBasedAutoScalingResult
 describeTimeBasedAutoScaling instanceIds =
     AWS.Http.unsignedRequest
         "DescribeTimeBasedAutoScaling"
@@ -1743,6 +1783,7 @@ describeTimeBasedAutoScaling instanceIds =
             JE.null
         )
         describeTimeBasedAutoScalingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1755,7 +1796,7 @@ __Required Parameters__
 -}
 describeUserProfiles :
     (DescribeUserProfilesOptions -> DescribeUserProfilesOptions)
-    -> AWS.Http.UnsignedRequest DescribeUserProfilesResult
+    -> AWS.Request DescribeUserProfilesResult
 describeUserProfiles setOptions =
   let
     options = setOptions (DescribeUserProfilesOptions Nothing)
@@ -1768,6 +1809,7 @@ describeUserProfiles setOptions =
             JE.null
         )
         describeUserProfilesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeUserProfiles request
@@ -1787,7 +1829,7 @@ __Required Parameters__
 -}
 describeVolumes :
     (DescribeVolumesOptions -> DescribeVolumesOptions)
-    -> AWS.Http.UnsignedRequest DescribeVolumesResult
+    -> AWS.Request DescribeVolumesResult
 describeVolumes setOptions =
   let
     options = setOptions (DescribeVolumesOptions Nothing Nothing Nothing Nothing)
@@ -1800,6 +1842,7 @@ describeVolumes setOptions =
             JE.null
         )
         describeVolumesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVolumes request
@@ -1825,7 +1868,7 @@ __Required Parameters__
 detachElasticLoadBalancer :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 detachElasticLoadBalancer elasticLoadBalancerName layerId =
     AWS.Http.unsignedRequest
         "DetachElasticLoadBalancer"
@@ -1835,6 +1878,7 @@ detachElasticLoadBalancer elasticLoadBalancerName layerId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1848,7 +1892,7 @@ __Required Parameters__
 -}
 disassociateElasticIp :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disassociateElasticIp elasticIp =
     AWS.Http.unsignedRequest
         "DisassociateElasticIp"
@@ -1858,6 +1902,7 @@ disassociateElasticIp elasticIp =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1871,7 +1916,7 @@ __Required Parameters__
 -}
 getHostnameSuggestion :
     String
-    -> AWS.Http.UnsignedRequest GetHostnameSuggestionResult
+    -> AWS.Request GetHostnameSuggestionResult
 getHostnameSuggestion layerId =
     AWS.Http.unsignedRequest
         "GetHostnameSuggestion"
@@ -1881,6 +1926,7 @@ getHostnameSuggestion layerId =
             JE.null
         )
         getHostnameSuggestionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1895,7 +1941,7 @@ __Required Parameters__
 grantAccess :
     String
     -> (GrantAccessOptions -> GrantAccessOptions)
-    -> AWS.Http.UnsignedRequest GrantAccessResult
+    -> AWS.Request GrantAccessResult
 grantAccess instanceId setOptions =
   let
     options = setOptions (GrantAccessOptions Nothing)
@@ -1908,6 +1954,7 @@ grantAccess instanceId setOptions =
             JE.null
         )
         grantAccessResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a grantAccess request
@@ -1928,7 +1975,7 @@ __Required Parameters__
 -}
 rebootInstance :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 rebootInstance instanceId =
     AWS.Http.unsignedRequest
         "RebootInstance"
@@ -1938,6 +1985,7 @@ rebootInstance instanceId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1953,7 +2001,7 @@ __Required Parameters__
 registerEcsCluster :
     String
     -> String
-    -> AWS.Http.UnsignedRequest RegisterEcsClusterResult
+    -> AWS.Request RegisterEcsClusterResult
 registerEcsCluster ecsClusterArn stackId =
     AWS.Http.unsignedRequest
         "RegisterEcsCluster"
@@ -1963,6 +2011,7 @@ registerEcsCluster ecsClusterArn stackId =
             JE.null
         )
         registerEcsClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1978,7 +2027,7 @@ __Required Parameters__
 registerElasticIp :
     String
     -> String
-    -> AWS.Http.UnsignedRequest RegisterElasticIpResult
+    -> AWS.Request RegisterElasticIpResult
 registerElasticIp elasticIp stackId =
     AWS.Http.unsignedRequest
         "RegisterElasticIp"
@@ -1988,6 +2037,7 @@ registerElasticIp elasticIp stackId =
             JE.null
         )
         registerElasticIpResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2002,7 +2052,7 @@ __Required Parameters__
 registerInstance :
     String
     -> (RegisterInstanceOptions -> RegisterInstanceOptions)
-    -> AWS.Http.UnsignedRequest RegisterInstanceResult
+    -> AWS.Request RegisterInstanceResult
 registerInstance stackId setOptions =
   let
     options = setOptions (RegisterInstanceOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2015,6 +2065,7 @@ registerInstance stackId setOptions =
             JE.null
         )
         registerInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerInstance request
@@ -2046,7 +2097,7 @@ registerRdsDbInstance :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 registerRdsDbInstance stackId rdsDbInstanceArn dbUser dbPassword =
     AWS.Http.unsignedRequest
         "RegisterRdsDbInstance"
@@ -2056,6 +2107,7 @@ registerRdsDbInstance stackId rdsDbInstanceArn dbUser dbPassword =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2070,7 +2122,7 @@ __Required Parameters__
 registerVolume :
     String
     -> (RegisterVolumeOptions -> RegisterVolumeOptions)
-    -> AWS.Http.UnsignedRequest RegisterVolumeResult
+    -> AWS.Request RegisterVolumeResult
 registerVolume stackId setOptions =
   let
     options = setOptions (RegisterVolumeOptions Nothing)
@@ -2083,6 +2135,7 @@ registerVolume stackId setOptions =
             JE.null
         )
         registerVolumeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerVolume request
@@ -2104,7 +2157,7 @@ __Required Parameters__
 setLoadBasedAutoScaling :
     String
     -> (SetLoadBasedAutoScalingOptions -> SetLoadBasedAutoScalingOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setLoadBasedAutoScaling layerId setOptions =
   let
     options = setOptions (SetLoadBasedAutoScalingOptions Nothing Nothing Nothing)
@@ -2117,6 +2170,7 @@ setLoadBasedAutoScaling layerId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setLoadBasedAutoScaling request
@@ -2142,7 +2196,7 @@ setPermission :
     String
     -> String
     -> (SetPermissionOptions -> SetPermissionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setPermission stackId iamUserArn setOptions =
   let
     options = setOptions (SetPermissionOptions Nothing Nothing Nothing)
@@ -2155,6 +2209,7 @@ setPermission stackId iamUserArn setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setPermission request
@@ -2178,7 +2233,7 @@ __Required Parameters__
 setTimeBasedAutoScaling :
     String
     -> (SetTimeBasedAutoScalingOptions -> SetTimeBasedAutoScalingOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setTimeBasedAutoScaling instanceId setOptions =
   let
     options = setOptions (SetTimeBasedAutoScalingOptions Nothing)
@@ -2191,6 +2246,7 @@ setTimeBasedAutoScaling instanceId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setTimeBasedAutoScaling request
@@ -2211,7 +2267,7 @@ __Required Parameters__
 -}
 startInstance :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 startInstance instanceId =
     AWS.Http.unsignedRequest
         "StartInstance"
@@ -2221,6 +2277,7 @@ startInstance instanceId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2234,7 +2291,7 @@ __Required Parameters__
 -}
 startStack :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 startStack stackId =
     AWS.Http.unsignedRequest
         "StartStack"
@@ -2244,6 +2301,7 @@ startStack stackId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2257,7 +2315,7 @@ __Required Parameters__
 -}
 stopInstance :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 stopInstance instanceId =
     AWS.Http.unsignedRequest
         "StopInstance"
@@ -2267,6 +2325,7 @@ stopInstance instanceId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2280,7 +2339,7 @@ __Required Parameters__
 -}
 stopStack :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 stopStack stackId =
     AWS.Http.unsignedRequest
         "StopStack"
@@ -2290,6 +2349,7 @@ stopStack stackId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2303,7 +2363,7 @@ __Required Parameters__
 -}
 unassignInstance :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 unassignInstance instanceId =
     AWS.Http.unsignedRequest
         "UnassignInstance"
@@ -2313,6 +2373,7 @@ unassignInstance instanceId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2326,7 +2387,7 @@ __Required Parameters__
 -}
 unassignVolume :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 unassignVolume volumeId =
     AWS.Http.unsignedRequest
         "UnassignVolume"
@@ -2336,6 +2397,7 @@ unassignVolume volumeId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2350,7 +2412,7 @@ __Required Parameters__
 updateApp :
     String
     -> (UpdateAppOptions -> UpdateAppOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateApp appId setOptions =
   let
     options = setOptions (UpdateAppOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2363,6 +2425,7 @@ updateApp appId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateApp request
@@ -2393,7 +2456,7 @@ __Required Parameters__
 updateElasticIp :
     String
     -> (UpdateElasticIpOptions -> UpdateElasticIpOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateElasticIp elasticIp setOptions =
   let
     options = setOptions (UpdateElasticIpOptions Nothing)
@@ -2406,6 +2469,7 @@ updateElasticIp elasticIp setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateElasticIp request
@@ -2427,7 +2491,7 @@ __Required Parameters__
 updateInstance :
     String
     -> (UpdateInstanceOptions -> UpdateInstanceOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateInstance instanceId setOptions =
   let
     options = setOptions (UpdateInstanceOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2440,6 +2504,7 @@ updateInstance instanceId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateInstance request
@@ -2471,7 +2536,7 @@ __Required Parameters__
 updateLayer :
     String
     -> (UpdateLayerOptions -> UpdateLayerOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateLayer layerId setOptions =
   let
     options = setOptions (UpdateLayerOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2484,6 +2549,7 @@ updateLayer layerId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateLayer request
@@ -2517,7 +2583,7 @@ __Required Parameters__
 -}
 updateMyUserProfile :
     (UpdateMyUserProfileOptions -> UpdateMyUserProfileOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateMyUserProfile setOptions =
   let
     options = setOptions (UpdateMyUserProfileOptions Nothing)
@@ -2530,6 +2596,7 @@ updateMyUserProfile setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateMyUserProfile request
@@ -2551,7 +2618,7 @@ __Required Parameters__
 updateRdsDbInstance :
     String
     -> (UpdateRdsDbInstanceOptions -> UpdateRdsDbInstanceOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateRdsDbInstance rdsDbInstanceArn setOptions =
   let
     options = setOptions (UpdateRdsDbInstanceOptions Nothing Nothing)
@@ -2564,6 +2631,7 @@ updateRdsDbInstance rdsDbInstanceArn setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateRdsDbInstance request
@@ -2586,7 +2654,7 @@ __Required Parameters__
 updateStack :
     String
     -> (UpdateStackOptions -> UpdateStackOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateStack stackId setOptions =
   let
     options = setOptions (UpdateStackOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2599,6 +2667,7 @@ updateStack stackId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateStack request
@@ -2636,7 +2705,7 @@ __Required Parameters__
 updateUserProfile :
     String
     -> (UpdateUserProfileOptions -> UpdateUserProfileOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateUserProfile iamUserArn setOptions =
   let
     options = setOptions (UpdateUserProfileOptions Nothing Nothing Nothing)
@@ -2649,6 +2718,7 @@ updateUserProfile iamUserArn setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateUserProfile request
@@ -2672,7 +2742,7 @@ __Required Parameters__
 updateVolume :
     String
     -> (UpdateVolumeOptions -> UpdateVolumeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateVolume volumeId setOptions =
   let
     options = setOptions (UpdateVolumeOptions Nothing Nothing)
@@ -2685,6 +2755,7 @@ updateVolume volumeId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateVolume request

@@ -658,6 +658,7 @@ module AWS.Services.IAM
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -669,16 +670,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "iam"
         "2010-05-08"
         "undefined"
         "AWSIAM_20100508."
         "iam.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -696,7 +697,7 @@ __Required Parameters__
 addClientIDToOpenIDConnectProvider :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addClientIDToOpenIDConnectProvider openIDConnectProviderArn clientID =
     AWS.Http.unsignedRequest
         "AddClientIDToOpenIDConnectProvider"
@@ -706,6 +707,7 @@ addClientIDToOpenIDConnectProvider openIDConnectProviderArn clientID =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -721,7 +723,7 @@ __Required Parameters__
 addRoleToInstanceProfile :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addRoleToInstanceProfile instanceProfileName roleName =
     AWS.Http.unsignedRequest
         "AddRoleToInstanceProfile"
@@ -731,6 +733,7 @@ addRoleToInstanceProfile instanceProfileName roleName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -746,7 +749,7 @@ __Required Parameters__
 addUserToGroup :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addUserToGroup groupName userName =
     AWS.Http.unsignedRequest
         "AddUserToGroup"
@@ -756,6 +759,7 @@ addUserToGroup groupName userName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -771,7 +775,7 @@ __Required Parameters__
 attachGroupPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 attachGroupPolicy groupName policyArn =
     AWS.Http.unsignedRequest
         "AttachGroupPolicy"
@@ -781,6 +785,7 @@ attachGroupPolicy groupName policyArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -796,7 +801,7 @@ __Required Parameters__
 attachRolePolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 attachRolePolicy roleName policyArn =
     AWS.Http.unsignedRequest
         "AttachRolePolicy"
@@ -806,6 +811,7 @@ attachRolePolicy roleName policyArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -821,7 +827,7 @@ __Required Parameters__
 attachUserPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 attachUserPolicy userName policyArn =
     AWS.Http.unsignedRequest
         "AttachUserPolicy"
@@ -831,6 +837,7 @@ attachUserPolicy userName policyArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -846,7 +853,7 @@ __Required Parameters__
 changePassword :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 changePassword oldPassword newPassword =
     AWS.Http.unsignedRequest
         "ChangePassword"
@@ -856,6 +863,7 @@ changePassword oldPassword newPassword =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -868,7 +876,7 @@ __Required Parameters__
 -}
 createAccessKey :
     (CreateAccessKeyOptions -> CreateAccessKeyOptions)
-    -> AWS.Http.UnsignedRequest CreateAccessKeyResponse
+    -> AWS.Request CreateAccessKeyResponse
 createAccessKey setOptions =
   let
     options = setOptions (CreateAccessKeyOptions Nothing)
@@ -881,6 +889,7 @@ createAccessKey setOptions =
             JE.null
         )
         createAccessKeyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createAccessKey request
@@ -901,7 +910,7 @@ __Required Parameters__
 -}
 createAccountAlias :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createAccountAlias accountAlias =
     AWS.Http.unsignedRequest
         "CreateAccountAlias"
@@ -911,6 +920,7 @@ createAccountAlias accountAlias =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -925,7 +935,7 @@ __Required Parameters__
 createGroup :
     String
     -> (CreateGroupOptions -> CreateGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateGroupResponse
+    -> AWS.Request CreateGroupResponse
 createGroup groupName setOptions =
   let
     options = setOptions (CreateGroupOptions Nothing)
@@ -938,6 +948,7 @@ createGroup groupName setOptions =
             JE.null
         )
         createGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createGroup request
@@ -959,7 +970,7 @@ __Required Parameters__
 createInstanceProfile :
     String
     -> (CreateInstanceProfileOptions -> CreateInstanceProfileOptions)
-    -> AWS.Http.UnsignedRequest CreateInstanceProfileResponse
+    -> AWS.Request CreateInstanceProfileResponse
 createInstanceProfile instanceProfileName setOptions =
   let
     options = setOptions (CreateInstanceProfileOptions Nothing)
@@ -972,6 +983,7 @@ createInstanceProfile instanceProfileName setOptions =
             JE.null
         )
         createInstanceProfileResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createInstanceProfile request
@@ -995,7 +1007,7 @@ createLoginProfile :
     String
     -> String
     -> (CreateLoginProfileOptions -> CreateLoginProfileOptions)
-    -> AWS.Http.UnsignedRequest CreateLoginProfileResponse
+    -> AWS.Request CreateLoginProfileResponse
 createLoginProfile userName password setOptions =
   let
     options = setOptions (CreateLoginProfileOptions Nothing)
@@ -1008,6 +1020,7 @@ createLoginProfile userName password setOptions =
             JE.null
         )
         createLoginProfileResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createLoginProfile request
@@ -1031,7 +1044,7 @@ createOpenIDConnectProvider :
     String
     -> (List String)
     -> (CreateOpenIDConnectProviderOptions -> CreateOpenIDConnectProviderOptions)
-    -> AWS.Http.UnsignedRequest CreateOpenIDConnectProviderResponse
+    -> AWS.Request CreateOpenIDConnectProviderResponse
 createOpenIDConnectProvider url thumbprintList setOptions =
   let
     options = setOptions (CreateOpenIDConnectProviderOptions Nothing)
@@ -1044,6 +1057,7 @@ createOpenIDConnectProvider url thumbprintList setOptions =
             JE.null
         )
         createOpenIDConnectProviderResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createOpenIDConnectProvider request
@@ -1067,7 +1081,7 @@ createPolicy :
     String
     -> String
     -> (CreatePolicyOptions -> CreatePolicyOptions)
-    -> AWS.Http.UnsignedRequest CreatePolicyResponse
+    -> AWS.Request CreatePolicyResponse
 createPolicy policyName policyDocument setOptions =
   let
     options = setOptions (CreatePolicyOptions Nothing Nothing)
@@ -1080,6 +1094,7 @@ createPolicy policyName policyDocument setOptions =
             JE.null
         )
         createPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPolicy request
@@ -1104,7 +1119,7 @@ createPolicyVersion :
     String
     -> String
     -> (CreatePolicyVersionOptions -> CreatePolicyVersionOptions)
-    -> AWS.Http.UnsignedRequest CreatePolicyVersionResponse
+    -> AWS.Request CreatePolicyVersionResponse
 createPolicyVersion policyArn policyDocument setOptions =
   let
     options = setOptions (CreatePolicyVersionOptions Nothing)
@@ -1117,6 +1132,7 @@ createPolicyVersion policyArn policyDocument setOptions =
             JE.null
         )
         createPolicyVersionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPolicyVersion request
@@ -1140,7 +1156,7 @@ createRole :
     String
     -> String
     -> (CreateRoleOptions -> CreateRoleOptions)
-    -> AWS.Http.UnsignedRequest CreateRoleResponse
+    -> AWS.Request CreateRoleResponse
 createRole roleName assumeRolePolicyDocument setOptions =
   let
     options = setOptions (CreateRoleOptions Nothing)
@@ -1153,6 +1169,7 @@ createRole roleName assumeRolePolicyDocument setOptions =
             JE.null
         )
         createRoleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createRole request
@@ -1175,7 +1192,7 @@ __Required Parameters__
 createSAMLProvider :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateSAMLProviderResponse
+    -> AWS.Request CreateSAMLProviderResponse
 createSAMLProvider sAMLMetadataDocument name =
     AWS.Http.unsignedRequest
         "CreateSAMLProvider"
@@ -1185,6 +1202,7 @@ createSAMLProvider sAMLMetadataDocument name =
             JE.null
         )
         createSAMLProviderResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1200,7 +1218,7 @@ __Required Parameters__
 createServiceSpecificCredential :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateServiceSpecificCredentialResponse
+    -> AWS.Request CreateServiceSpecificCredentialResponse
 createServiceSpecificCredential userName serviceName =
     AWS.Http.unsignedRequest
         "CreateServiceSpecificCredential"
@@ -1210,6 +1228,7 @@ createServiceSpecificCredential userName serviceName =
             JE.null
         )
         createServiceSpecificCredentialResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1224,7 +1243,7 @@ __Required Parameters__
 createUser :
     String
     -> (CreateUserOptions -> CreateUserOptions)
-    -> AWS.Http.UnsignedRequest CreateUserResponse
+    -> AWS.Request CreateUserResponse
 createUser userName setOptions =
   let
     options = setOptions (CreateUserOptions Nothing)
@@ -1237,6 +1256,7 @@ createUser userName setOptions =
             JE.null
         )
         createUserResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createUser request
@@ -1258,7 +1278,7 @@ __Required Parameters__
 createVirtualMFADevice :
     String
     -> (CreateVirtualMFADeviceOptions -> CreateVirtualMFADeviceOptions)
-    -> AWS.Http.UnsignedRequest CreateVirtualMFADeviceResponse
+    -> AWS.Request CreateVirtualMFADeviceResponse
 createVirtualMFADevice virtualMFADeviceName setOptions =
   let
     options = setOptions (CreateVirtualMFADeviceOptions Nothing)
@@ -1271,6 +1291,7 @@ createVirtualMFADevice virtualMFADeviceName setOptions =
             JE.null
         )
         createVirtualMFADeviceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createVirtualMFADevice request
@@ -1293,7 +1314,7 @@ __Required Parameters__
 deactivateMFADevice :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deactivateMFADevice userName serialNumber =
     AWS.Http.unsignedRequest
         "DeactivateMFADevice"
@@ -1303,6 +1324,7 @@ deactivateMFADevice userName serialNumber =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1317,7 +1339,7 @@ __Required Parameters__
 deleteAccessKey :
     String
     -> (DeleteAccessKeyOptions -> DeleteAccessKeyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAccessKey accessKeyId setOptions =
   let
     options = setOptions (DeleteAccessKeyOptions Nothing)
@@ -1330,6 +1352,7 @@ deleteAccessKey accessKeyId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteAccessKey request
@@ -1350,7 +1373,7 @@ __Required Parameters__
 -}
 deleteAccountAlias :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAccountAlias accountAlias =
     AWS.Http.unsignedRequest
         "DeleteAccountAlias"
@@ -1360,6 +1383,7 @@ deleteAccountAlias accountAlias =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1371,7 +1395,7 @@ __Required Parameters__
 
 -}
 deleteAccountPasswordPolicy :
-    AWS.Http.UnsignedRequest ()
+    AWS.Request ()
 deleteAccountPasswordPolicy =
     AWS.Http.unsignedRequest
         "DeleteAccountPasswordPolicy"
@@ -1381,6 +1405,7 @@ deleteAccountPasswordPolicy =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1394,7 +1419,7 @@ __Required Parameters__
 -}
 deleteGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteGroup groupName =
     AWS.Http.unsignedRequest
         "DeleteGroup"
@@ -1404,6 +1429,7 @@ deleteGroup groupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1419,7 +1445,7 @@ __Required Parameters__
 deleteGroupPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteGroupPolicy groupName policyName =
     AWS.Http.unsignedRequest
         "DeleteGroupPolicy"
@@ -1429,6 +1455,7 @@ deleteGroupPolicy groupName policyName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1442,7 +1469,7 @@ __Required Parameters__
 -}
 deleteInstanceProfile :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteInstanceProfile instanceProfileName =
     AWS.Http.unsignedRequest
         "DeleteInstanceProfile"
@@ -1452,6 +1479,7 @@ deleteInstanceProfile instanceProfileName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1465,7 +1493,7 @@ __Required Parameters__
 -}
 deleteLoginProfile :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteLoginProfile userName =
     AWS.Http.unsignedRequest
         "DeleteLoginProfile"
@@ -1475,6 +1503,7 @@ deleteLoginProfile userName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1488,7 +1517,7 @@ __Required Parameters__
 -}
 deleteOpenIDConnectProvider :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteOpenIDConnectProvider openIDConnectProviderArn =
     AWS.Http.unsignedRequest
         "DeleteOpenIDConnectProvider"
@@ -1498,6 +1527,7 @@ deleteOpenIDConnectProvider openIDConnectProviderArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1511,7 +1541,7 @@ __Required Parameters__
 -}
 deletePolicy :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deletePolicy policyArn =
     AWS.Http.unsignedRequest
         "DeletePolicy"
@@ -1521,6 +1551,7 @@ deletePolicy policyArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1536,7 +1567,7 @@ __Required Parameters__
 deletePolicyVersion :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deletePolicyVersion policyArn versionId =
     AWS.Http.unsignedRequest
         "DeletePolicyVersion"
@@ -1546,6 +1577,7 @@ deletePolicyVersion policyArn versionId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1559,7 +1591,7 @@ __Required Parameters__
 -}
 deleteRole :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteRole roleName =
     AWS.Http.unsignedRequest
         "DeleteRole"
@@ -1569,6 +1601,7 @@ deleteRole roleName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1584,7 +1617,7 @@ __Required Parameters__
 deleteRolePolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteRolePolicy roleName policyName =
     AWS.Http.unsignedRequest
         "DeleteRolePolicy"
@@ -1594,6 +1627,7 @@ deleteRolePolicy roleName policyName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1607,7 +1641,7 @@ __Required Parameters__
 -}
 deleteSAMLProvider :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteSAMLProvider sAMLProviderArn =
     AWS.Http.unsignedRequest
         "DeleteSAMLProvider"
@@ -1617,6 +1651,7 @@ deleteSAMLProvider sAMLProviderArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1632,7 +1667,7 @@ __Required Parameters__
 deleteSSHPublicKey :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteSSHPublicKey userName sSHPublicKeyId =
     AWS.Http.unsignedRequest
         "DeleteSSHPublicKey"
@@ -1642,6 +1677,7 @@ deleteSSHPublicKey userName sSHPublicKeyId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1655,7 +1691,7 @@ __Required Parameters__
 -}
 deleteServerCertificate :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteServerCertificate serverCertificateName =
     AWS.Http.unsignedRequest
         "DeleteServerCertificate"
@@ -1665,6 +1701,7 @@ deleteServerCertificate serverCertificateName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1679,7 +1716,7 @@ __Required Parameters__
 deleteServiceSpecificCredential :
     String
     -> (DeleteServiceSpecificCredentialOptions -> DeleteServiceSpecificCredentialOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteServiceSpecificCredential serviceSpecificCredentialId setOptions =
   let
     options = setOptions (DeleteServiceSpecificCredentialOptions Nothing)
@@ -1692,6 +1729,7 @@ deleteServiceSpecificCredential serviceSpecificCredentialId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteServiceSpecificCredential request
@@ -1713,7 +1751,7 @@ __Required Parameters__
 deleteSigningCertificate :
     String
     -> (DeleteSigningCertificateOptions -> DeleteSigningCertificateOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteSigningCertificate certificateId setOptions =
   let
     options = setOptions (DeleteSigningCertificateOptions Nothing)
@@ -1726,6 +1764,7 @@ deleteSigningCertificate certificateId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteSigningCertificate request
@@ -1746,7 +1785,7 @@ __Required Parameters__
 -}
 deleteUser :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteUser userName =
     AWS.Http.unsignedRequest
         "DeleteUser"
@@ -1756,6 +1795,7 @@ deleteUser userName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1771,7 +1811,7 @@ __Required Parameters__
 deleteUserPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteUserPolicy userName policyName =
     AWS.Http.unsignedRequest
         "DeleteUserPolicy"
@@ -1781,6 +1821,7 @@ deleteUserPolicy userName policyName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1794,7 +1835,7 @@ __Required Parameters__
 -}
 deleteVirtualMFADevice :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVirtualMFADevice serialNumber =
     AWS.Http.unsignedRequest
         "DeleteVirtualMFADevice"
@@ -1804,6 +1845,7 @@ deleteVirtualMFADevice serialNumber =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1819,7 +1861,7 @@ __Required Parameters__
 detachGroupPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 detachGroupPolicy groupName policyArn =
     AWS.Http.unsignedRequest
         "DetachGroupPolicy"
@@ -1829,6 +1871,7 @@ detachGroupPolicy groupName policyArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1844,7 +1887,7 @@ __Required Parameters__
 detachRolePolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 detachRolePolicy roleName policyArn =
     AWS.Http.unsignedRequest
         "DetachRolePolicy"
@@ -1854,6 +1897,7 @@ detachRolePolicy roleName policyArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1869,7 +1913,7 @@ __Required Parameters__
 detachUserPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 detachUserPolicy userName policyArn =
     AWS.Http.unsignedRequest
         "DetachUserPolicy"
@@ -1879,6 +1923,7 @@ detachUserPolicy userName policyArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1898,7 +1943,7 @@ enableMFADevice :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableMFADevice userName serialNumber authenticationCode1 authenticationCode2 =
     AWS.Http.unsignedRequest
         "EnableMFADevice"
@@ -1908,6 +1953,7 @@ enableMFADevice userName serialNumber authenticationCode1 authenticationCode2 =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1919,7 +1965,7 @@ __Required Parameters__
 
 -}
 generateCredentialReport :
-    AWS.Http.UnsignedRequest GenerateCredentialReportResponse
+    AWS.Request GenerateCredentialReportResponse
 generateCredentialReport =
     AWS.Http.unsignedRequest
         "GenerateCredentialReport"
@@ -1929,6 +1975,7 @@ generateCredentialReport =
             JE.null
         )
         generateCredentialReportResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1942,7 +1989,7 @@ __Required Parameters__
 -}
 getAccessKeyLastUsed :
     String
-    -> AWS.Http.UnsignedRequest GetAccessKeyLastUsedResponse
+    -> AWS.Request GetAccessKeyLastUsedResponse
 getAccessKeyLastUsed accessKeyId =
     AWS.Http.unsignedRequest
         "GetAccessKeyLastUsed"
@@ -1952,6 +1999,7 @@ getAccessKeyLastUsed accessKeyId =
             JE.null
         )
         getAccessKeyLastUsedResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1964,7 +2012,7 @@ __Required Parameters__
 -}
 getAccountAuthorizationDetails :
     (GetAccountAuthorizationDetailsOptions -> GetAccountAuthorizationDetailsOptions)
-    -> AWS.Http.UnsignedRequest GetAccountAuthorizationDetailsResponse
+    -> AWS.Request GetAccountAuthorizationDetailsResponse
 getAccountAuthorizationDetails setOptions =
   let
     options = setOptions (GetAccountAuthorizationDetailsOptions Nothing Nothing Nothing)
@@ -1977,6 +2025,7 @@ getAccountAuthorizationDetails setOptions =
             JE.null
         )
         getAccountAuthorizationDetailsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getAccountAuthorizationDetails request
@@ -1997,7 +2046,7 @@ __Required Parameters__
 
 -}
 getAccountPasswordPolicy :
-    AWS.Http.UnsignedRequest GetAccountPasswordPolicyResponse
+    AWS.Request GetAccountPasswordPolicyResponse
 getAccountPasswordPolicy =
     AWS.Http.unsignedRequest
         "GetAccountPasswordPolicy"
@@ -2007,6 +2056,7 @@ getAccountPasswordPolicy =
             JE.null
         )
         getAccountPasswordPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2018,7 +2068,7 @@ __Required Parameters__
 
 -}
 getAccountSummary :
-    AWS.Http.UnsignedRequest GetAccountSummaryResponse
+    AWS.Request GetAccountSummaryResponse
 getAccountSummary =
     AWS.Http.unsignedRequest
         "GetAccountSummary"
@@ -2028,6 +2078,7 @@ getAccountSummary =
             JE.null
         )
         getAccountSummaryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2041,7 +2092,7 @@ __Required Parameters__
 -}
 getContextKeysForCustomPolicy :
     (List String)
-    -> AWS.Http.UnsignedRequest GetContextKeysForPolicyResponse
+    -> AWS.Request GetContextKeysForPolicyResponse
 getContextKeysForCustomPolicy policyInputList =
     AWS.Http.unsignedRequest
         "GetContextKeysForCustomPolicy"
@@ -2051,6 +2102,7 @@ getContextKeysForCustomPolicy policyInputList =
             JE.null
         )
         getContextKeysForPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2065,7 +2117,7 @@ __Required Parameters__
 getContextKeysForPrincipalPolicy :
     String
     -> (GetContextKeysForPrincipalPolicyOptions -> GetContextKeysForPrincipalPolicyOptions)
-    -> AWS.Http.UnsignedRequest GetContextKeysForPolicyResponse
+    -> AWS.Request GetContextKeysForPolicyResponse
 getContextKeysForPrincipalPolicy policySourceArn setOptions =
   let
     options = setOptions (GetContextKeysForPrincipalPolicyOptions Nothing)
@@ -2078,6 +2130,7 @@ getContextKeysForPrincipalPolicy policySourceArn setOptions =
             JE.null
         )
         getContextKeysForPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getContextKeysForPrincipalPolicy request
@@ -2096,7 +2149,7 @@ __Required Parameters__
 
 -}
 getCredentialReport :
-    AWS.Http.UnsignedRequest GetCredentialReportResponse
+    AWS.Request GetCredentialReportResponse
 getCredentialReport =
     AWS.Http.unsignedRequest
         "GetCredentialReport"
@@ -2106,6 +2159,7 @@ getCredentialReport =
             JE.null
         )
         getCredentialReportResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2120,7 +2174,7 @@ __Required Parameters__
 getGroup :
     String
     -> (GetGroupOptions -> GetGroupOptions)
-    -> AWS.Http.UnsignedRequest GetGroupResponse
+    -> AWS.Request GetGroupResponse
 getGroup groupName setOptions =
   let
     options = setOptions (GetGroupOptions Nothing Nothing)
@@ -2133,6 +2187,7 @@ getGroup groupName setOptions =
             JE.null
         )
         getGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getGroup request
@@ -2156,7 +2211,7 @@ __Required Parameters__
 getGroupPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetGroupPolicyResponse
+    -> AWS.Request GetGroupPolicyResponse
 getGroupPolicy groupName policyName =
     AWS.Http.unsignedRequest
         "GetGroupPolicy"
@@ -2166,6 +2221,7 @@ getGroupPolicy groupName policyName =
             JE.null
         )
         getGroupPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2179,7 +2235,7 @@ __Required Parameters__
 -}
 getInstanceProfile :
     String
-    -> AWS.Http.UnsignedRequest GetInstanceProfileResponse
+    -> AWS.Request GetInstanceProfileResponse
 getInstanceProfile instanceProfileName =
     AWS.Http.unsignedRequest
         "GetInstanceProfile"
@@ -2189,6 +2245,7 @@ getInstanceProfile instanceProfileName =
             JE.null
         )
         getInstanceProfileResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2202,7 +2259,7 @@ __Required Parameters__
 -}
 getLoginProfile :
     String
-    -> AWS.Http.UnsignedRequest GetLoginProfileResponse
+    -> AWS.Request GetLoginProfileResponse
 getLoginProfile userName =
     AWS.Http.unsignedRequest
         "GetLoginProfile"
@@ -2212,6 +2269,7 @@ getLoginProfile userName =
             JE.null
         )
         getLoginProfileResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2225,7 +2283,7 @@ __Required Parameters__
 -}
 getOpenIDConnectProvider :
     String
-    -> AWS.Http.UnsignedRequest GetOpenIDConnectProviderResponse
+    -> AWS.Request GetOpenIDConnectProviderResponse
 getOpenIDConnectProvider openIDConnectProviderArn =
     AWS.Http.unsignedRequest
         "GetOpenIDConnectProvider"
@@ -2235,6 +2293,7 @@ getOpenIDConnectProvider openIDConnectProviderArn =
             JE.null
         )
         getOpenIDConnectProviderResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2248,7 +2307,7 @@ __Required Parameters__
 -}
 getPolicy :
     String
-    -> AWS.Http.UnsignedRequest GetPolicyResponse
+    -> AWS.Request GetPolicyResponse
 getPolicy policyArn =
     AWS.Http.unsignedRequest
         "GetPolicy"
@@ -2258,6 +2317,7 @@ getPolicy policyArn =
             JE.null
         )
         getPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2273,7 +2333,7 @@ __Required Parameters__
 getPolicyVersion :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetPolicyVersionResponse
+    -> AWS.Request GetPolicyVersionResponse
 getPolicyVersion policyArn versionId =
     AWS.Http.unsignedRequest
         "GetPolicyVersion"
@@ -2283,6 +2343,7 @@ getPolicyVersion policyArn versionId =
             JE.null
         )
         getPolicyVersionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2296,7 +2357,7 @@ __Required Parameters__
 -}
 getRole :
     String
-    -> AWS.Http.UnsignedRequest GetRoleResponse
+    -> AWS.Request GetRoleResponse
 getRole roleName =
     AWS.Http.unsignedRequest
         "GetRole"
@@ -2306,6 +2367,7 @@ getRole roleName =
             JE.null
         )
         getRoleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2321,7 +2383,7 @@ __Required Parameters__
 getRolePolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetRolePolicyResponse
+    -> AWS.Request GetRolePolicyResponse
 getRolePolicy roleName policyName =
     AWS.Http.unsignedRequest
         "GetRolePolicy"
@@ -2331,6 +2393,7 @@ getRolePolicy roleName policyName =
             JE.null
         )
         getRolePolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2344,7 +2407,7 @@ __Required Parameters__
 -}
 getSAMLProvider :
     String
-    -> AWS.Http.UnsignedRequest GetSAMLProviderResponse
+    -> AWS.Request GetSAMLProviderResponse
 getSAMLProvider sAMLProviderArn =
     AWS.Http.unsignedRequest
         "GetSAMLProvider"
@@ -2354,6 +2417,7 @@ getSAMLProvider sAMLProviderArn =
             JE.null
         )
         getSAMLProviderResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2371,7 +2435,7 @@ getSSHPublicKey :
     String
     -> String
     -> EncodingType
-    -> AWS.Http.UnsignedRequest GetSSHPublicKeyResponse
+    -> AWS.Request GetSSHPublicKeyResponse
 getSSHPublicKey userName sSHPublicKeyId encoding =
     AWS.Http.unsignedRequest
         "GetSSHPublicKey"
@@ -2381,6 +2445,7 @@ getSSHPublicKey userName sSHPublicKeyId encoding =
             JE.null
         )
         getSSHPublicKeyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2394,7 +2459,7 @@ __Required Parameters__
 -}
 getServerCertificate :
     String
-    -> AWS.Http.UnsignedRequest GetServerCertificateResponse
+    -> AWS.Request GetServerCertificateResponse
 getServerCertificate serverCertificateName =
     AWS.Http.unsignedRequest
         "GetServerCertificate"
@@ -2404,6 +2469,7 @@ getServerCertificate serverCertificateName =
             JE.null
         )
         getServerCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2416,7 +2482,7 @@ __Required Parameters__
 -}
 getUser :
     (GetUserOptions -> GetUserOptions)
-    -> AWS.Http.UnsignedRequest GetUserResponse
+    -> AWS.Request GetUserResponse
 getUser setOptions =
   let
     options = setOptions (GetUserOptions Nothing)
@@ -2429,6 +2495,7 @@ getUser setOptions =
             JE.null
         )
         getUserResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getUser request
@@ -2451,7 +2518,7 @@ __Required Parameters__
 getUserPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetUserPolicyResponse
+    -> AWS.Request GetUserPolicyResponse
 getUserPolicy userName policyName =
     AWS.Http.unsignedRequest
         "GetUserPolicy"
@@ -2461,6 +2528,7 @@ getUserPolicy userName policyName =
             JE.null
         )
         getUserPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2473,7 +2541,7 @@ __Required Parameters__
 -}
 listAccessKeys :
     (ListAccessKeysOptions -> ListAccessKeysOptions)
-    -> AWS.Http.UnsignedRequest ListAccessKeysResponse
+    -> AWS.Request ListAccessKeysResponse
 listAccessKeys setOptions =
   let
     options = setOptions (ListAccessKeysOptions Nothing Nothing Nothing)
@@ -2486,6 +2554,7 @@ listAccessKeys setOptions =
             JE.null
         )
         listAccessKeysResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAccessKeys request
@@ -2507,7 +2576,7 @@ __Required Parameters__
 -}
 listAccountAliases :
     (ListAccountAliasesOptions -> ListAccountAliasesOptions)
-    -> AWS.Http.UnsignedRequest ListAccountAliasesResponse
+    -> AWS.Request ListAccountAliasesResponse
 listAccountAliases setOptions =
   let
     options = setOptions (ListAccountAliasesOptions Nothing Nothing)
@@ -2520,6 +2589,7 @@ listAccountAliases setOptions =
             JE.null
         )
         listAccountAliasesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAccountAliases request
@@ -2542,7 +2612,7 @@ __Required Parameters__
 listAttachedGroupPolicies :
     String
     -> (ListAttachedGroupPoliciesOptions -> ListAttachedGroupPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListAttachedGroupPoliciesResponse
+    -> AWS.Request ListAttachedGroupPoliciesResponse
 listAttachedGroupPolicies groupName setOptions =
   let
     options = setOptions (ListAttachedGroupPoliciesOptions Nothing Nothing Nothing)
@@ -2555,6 +2625,7 @@ listAttachedGroupPolicies groupName setOptions =
             JE.null
         )
         listAttachedGroupPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAttachedGroupPolicies request
@@ -2578,7 +2649,7 @@ __Required Parameters__
 listAttachedRolePolicies :
     String
     -> (ListAttachedRolePoliciesOptions -> ListAttachedRolePoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListAttachedRolePoliciesResponse
+    -> AWS.Request ListAttachedRolePoliciesResponse
 listAttachedRolePolicies roleName setOptions =
   let
     options = setOptions (ListAttachedRolePoliciesOptions Nothing Nothing Nothing)
@@ -2591,6 +2662,7 @@ listAttachedRolePolicies roleName setOptions =
             JE.null
         )
         listAttachedRolePoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAttachedRolePolicies request
@@ -2614,7 +2686,7 @@ __Required Parameters__
 listAttachedUserPolicies :
     String
     -> (ListAttachedUserPoliciesOptions -> ListAttachedUserPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListAttachedUserPoliciesResponse
+    -> AWS.Request ListAttachedUserPoliciesResponse
 listAttachedUserPolicies userName setOptions =
   let
     options = setOptions (ListAttachedUserPoliciesOptions Nothing Nothing Nothing)
@@ -2627,6 +2699,7 @@ listAttachedUserPolicies userName setOptions =
             JE.null
         )
         listAttachedUserPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAttachedUserPolicies request
@@ -2650,7 +2723,7 @@ __Required Parameters__
 listEntitiesForPolicy :
     String
     -> (ListEntitiesForPolicyOptions -> ListEntitiesForPolicyOptions)
-    -> AWS.Http.UnsignedRequest ListEntitiesForPolicyResponse
+    -> AWS.Request ListEntitiesForPolicyResponse
 listEntitiesForPolicy policyArn setOptions =
   let
     options = setOptions (ListEntitiesForPolicyOptions Nothing Nothing Nothing Nothing)
@@ -2663,6 +2736,7 @@ listEntitiesForPolicy policyArn setOptions =
             JE.null
         )
         listEntitiesForPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listEntitiesForPolicy request
@@ -2687,7 +2761,7 @@ __Required Parameters__
 listGroupPolicies :
     String
     -> (ListGroupPoliciesOptions -> ListGroupPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListGroupPoliciesResponse
+    -> AWS.Request ListGroupPoliciesResponse
 listGroupPolicies groupName setOptions =
   let
     options = setOptions (ListGroupPoliciesOptions Nothing Nothing)
@@ -2700,6 +2774,7 @@ listGroupPolicies groupName setOptions =
             JE.null
         )
         listGroupPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listGroupPolicies request
@@ -2720,7 +2795,7 @@ __Required Parameters__
 -}
 listGroups :
     (ListGroupsOptions -> ListGroupsOptions)
-    -> AWS.Http.UnsignedRequest ListGroupsResponse
+    -> AWS.Request ListGroupsResponse
 listGroups setOptions =
   let
     options = setOptions (ListGroupsOptions Nothing Nothing Nothing)
@@ -2733,6 +2808,7 @@ listGroups setOptions =
             JE.null
         )
         listGroupsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listGroups request
@@ -2756,7 +2832,7 @@ __Required Parameters__
 listGroupsForUser :
     String
     -> (ListGroupsForUserOptions -> ListGroupsForUserOptions)
-    -> AWS.Http.UnsignedRequest ListGroupsForUserResponse
+    -> AWS.Request ListGroupsForUserResponse
 listGroupsForUser userName setOptions =
   let
     options = setOptions (ListGroupsForUserOptions Nothing Nothing)
@@ -2769,6 +2845,7 @@ listGroupsForUser userName setOptions =
             JE.null
         )
         listGroupsForUserResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listGroupsForUser request
@@ -2789,7 +2866,7 @@ __Required Parameters__
 -}
 listInstanceProfiles :
     (ListInstanceProfilesOptions -> ListInstanceProfilesOptions)
-    -> AWS.Http.UnsignedRequest ListInstanceProfilesResponse
+    -> AWS.Request ListInstanceProfilesResponse
 listInstanceProfiles setOptions =
   let
     options = setOptions (ListInstanceProfilesOptions Nothing Nothing Nothing)
@@ -2802,6 +2879,7 @@ listInstanceProfiles setOptions =
             JE.null
         )
         listInstanceProfilesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listInstanceProfiles request
@@ -2825,7 +2903,7 @@ __Required Parameters__
 listInstanceProfilesForRole :
     String
     -> (ListInstanceProfilesForRoleOptions -> ListInstanceProfilesForRoleOptions)
-    -> AWS.Http.UnsignedRequest ListInstanceProfilesForRoleResponse
+    -> AWS.Request ListInstanceProfilesForRoleResponse
 listInstanceProfilesForRole roleName setOptions =
   let
     options = setOptions (ListInstanceProfilesForRoleOptions Nothing Nothing)
@@ -2838,6 +2916,7 @@ listInstanceProfilesForRole roleName setOptions =
             JE.null
         )
         listInstanceProfilesForRoleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listInstanceProfilesForRole request
@@ -2858,7 +2937,7 @@ __Required Parameters__
 -}
 listMFADevices :
     (ListMFADevicesOptions -> ListMFADevicesOptions)
-    -> AWS.Http.UnsignedRequest ListMFADevicesResponse
+    -> AWS.Request ListMFADevicesResponse
 listMFADevices setOptions =
   let
     options = setOptions (ListMFADevicesOptions Nothing Nothing Nothing)
@@ -2871,6 +2950,7 @@ listMFADevices setOptions =
             JE.null
         )
         listMFADevicesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listMFADevices request
@@ -2891,7 +2971,7 @@ __Required Parameters__
 
 -}
 listOpenIDConnectProviders :
-    AWS.Http.UnsignedRequest ListOpenIDConnectProvidersResponse
+    AWS.Request ListOpenIDConnectProvidersResponse
 listOpenIDConnectProviders =
     AWS.Http.unsignedRequest
         "ListOpenIDConnectProviders"
@@ -2901,6 +2981,7 @@ listOpenIDConnectProviders =
             JE.null
         )
         listOpenIDConnectProvidersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2913,7 +2994,7 @@ __Required Parameters__
 -}
 listPolicies :
     (ListPoliciesOptions -> ListPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListPoliciesResponse
+    -> AWS.Request ListPoliciesResponse
 listPolicies setOptions =
   let
     options = setOptions (ListPoliciesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -2926,6 +3007,7 @@ listPolicies setOptions =
             JE.null
         )
         listPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPolicies request
@@ -2951,7 +3033,7 @@ __Required Parameters__
 listPolicyVersions :
     String
     -> (ListPolicyVersionsOptions -> ListPolicyVersionsOptions)
-    -> AWS.Http.UnsignedRequest ListPolicyVersionsResponse
+    -> AWS.Request ListPolicyVersionsResponse
 listPolicyVersions policyArn setOptions =
   let
     options = setOptions (ListPolicyVersionsOptions Nothing Nothing)
@@ -2964,6 +3046,7 @@ listPolicyVersions policyArn setOptions =
             JE.null
         )
         listPolicyVersionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPolicyVersions request
@@ -2986,7 +3069,7 @@ __Required Parameters__
 listRolePolicies :
     String
     -> (ListRolePoliciesOptions -> ListRolePoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListRolePoliciesResponse
+    -> AWS.Request ListRolePoliciesResponse
 listRolePolicies roleName setOptions =
   let
     options = setOptions (ListRolePoliciesOptions Nothing Nothing)
@@ -2999,6 +3082,7 @@ listRolePolicies roleName setOptions =
             JE.null
         )
         listRolePoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRolePolicies request
@@ -3019,7 +3103,7 @@ __Required Parameters__
 -}
 listRoles :
     (ListRolesOptions -> ListRolesOptions)
-    -> AWS.Http.UnsignedRequest ListRolesResponse
+    -> AWS.Request ListRolesResponse
 listRoles setOptions =
   let
     options = setOptions (ListRolesOptions Nothing Nothing Nothing)
@@ -3032,6 +3116,7 @@ listRoles setOptions =
             JE.null
         )
         listRolesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRoles request
@@ -3052,7 +3137,7 @@ __Required Parameters__
 
 -}
 listSAMLProviders :
-    AWS.Http.UnsignedRequest ListSAMLProvidersResponse
+    AWS.Request ListSAMLProvidersResponse
 listSAMLProviders =
     AWS.Http.unsignedRequest
         "ListSAMLProviders"
@@ -3062,6 +3147,7 @@ listSAMLProviders =
             JE.null
         )
         listSAMLProvidersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3074,7 +3160,7 @@ __Required Parameters__
 -}
 listSSHPublicKeys :
     (ListSSHPublicKeysOptions -> ListSSHPublicKeysOptions)
-    -> AWS.Http.UnsignedRequest ListSSHPublicKeysResponse
+    -> AWS.Request ListSSHPublicKeysResponse
 listSSHPublicKeys setOptions =
   let
     options = setOptions (ListSSHPublicKeysOptions Nothing Nothing Nothing)
@@ -3087,6 +3173,7 @@ listSSHPublicKeys setOptions =
             JE.null
         )
         listSSHPublicKeysResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listSSHPublicKeys request
@@ -3108,7 +3195,7 @@ __Required Parameters__
 -}
 listServerCertificates :
     (ListServerCertificatesOptions -> ListServerCertificatesOptions)
-    -> AWS.Http.UnsignedRequest ListServerCertificatesResponse
+    -> AWS.Request ListServerCertificatesResponse
 listServerCertificates setOptions =
   let
     options = setOptions (ListServerCertificatesOptions Nothing Nothing Nothing)
@@ -3121,6 +3208,7 @@ listServerCertificates setOptions =
             JE.null
         )
         listServerCertificatesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listServerCertificates request
@@ -3142,7 +3230,7 @@ __Required Parameters__
 -}
 listServiceSpecificCredentials :
     (ListServiceSpecificCredentialsOptions -> ListServiceSpecificCredentialsOptions)
-    -> AWS.Http.UnsignedRequest ListServiceSpecificCredentialsResponse
+    -> AWS.Request ListServiceSpecificCredentialsResponse
 listServiceSpecificCredentials setOptions =
   let
     options = setOptions (ListServiceSpecificCredentialsOptions Nothing Nothing)
@@ -3155,6 +3243,7 @@ listServiceSpecificCredentials setOptions =
             JE.null
         )
         listServiceSpecificCredentialsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listServiceSpecificCredentials request
@@ -3175,7 +3264,7 @@ __Required Parameters__
 -}
 listSigningCertificates :
     (ListSigningCertificatesOptions -> ListSigningCertificatesOptions)
-    -> AWS.Http.UnsignedRequest ListSigningCertificatesResponse
+    -> AWS.Request ListSigningCertificatesResponse
 listSigningCertificates setOptions =
   let
     options = setOptions (ListSigningCertificatesOptions Nothing Nothing Nothing)
@@ -3188,6 +3277,7 @@ listSigningCertificates setOptions =
             JE.null
         )
         listSigningCertificatesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listSigningCertificates request
@@ -3211,7 +3301,7 @@ __Required Parameters__
 listUserPolicies :
     String
     -> (ListUserPoliciesOptions -> ListUserPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListUserPoliciesResponse
+    -> AWS.Request ListUserPoliciesResponse
 listUserPolicies userName setOptions =
   let
     options = setOptions (ListUserPoliciesOptions Nothing Nothing)
@@ -3224,6 +3314,7 @@ listUserPolicies userName setOptions =
             JE.null
         )
         listUserPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listUserPolicies request
@@ -3244,7 +3335,7 @@ __Required Parameters__
 -}
 listUsers :
     (ListUsersOptions -> ListUsersOptions)
-    -> AWS.Http.UnsignedRequest ListUsersResponse
+    -> AWS.Request ListUsersResponse
 listUsers setOptions =
   let
     options = setOptions (ListUsersOptions Nothing Nothing Nothing)
@@ -3257,6 +3348,7 @@ listUsers setOptions =
             JE.null
         )
         listUsersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listUsers request
@@ -3278,7 +3370,7 @@ __Required Parameters__
 -}
 listVirtualMFADevices :
     (ListVirtualMFADevicesOptions -> ListVirtualMFADevicesOptions)
-    -> AWS.Http.UnsignedRequest ListVirtualMFADevicesResponse
+    -> AWS.Request ListVirtualMFADevicesResponse
 listVirtualMFADevices setOptions =
   let
     options = setOptions (ListVirtualMFADevicesOptions Nothing Nothing Nothing)
@@ -3291,6 +3383,7 @@ listVirtualMFADevices setOptions =
             JE.null
         )
         listVirtualMFADevicesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listVirtualMFADevices request
@@ -3317,7 +3410,7 @@ putGroupPolicy :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putGroupPolicy groupName policyName policyDocument =
     AWS.Http.unsignedRequest
         "PutGroupPolicy"
@@ -3327,6 +3420,7 @@ putGroupPolicy groupName policyName policyDocument =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3344,7 +3438,7 @@ putRolePolicy :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putRolePolicy roleName policyName policyDocument =
     AWS.Http.unsignedRequest
         "PutRolePolicy"
@@ -3354,6 +3448,7 @@ putRolePolicy roleName policyName policyDocument =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3371,7 +3466,7 @@ putUserPolicy :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putUserPolicy userName policyName policyDocument =
     AWS.Http.unsignedRequest
         "PutUserPolicy"
@@ -3381,6 +3476,7 @@ putUserPolicy userName policyName policyDocument =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3396,7 +3492,7 @@ __Required Parameters__
 removeClientIDFromOpenIDConnectProvider :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeClientIDFromOpenIDConnectProvider openIDConnectProviderArn clientID =
     AWS.Http.unsignedRequest
         "RemoveClientIDFromOpenIDConnectProvider"
@@ -3406,6 +3502,7 @@ removeClientIDFromOpenIDConnectProvider openIDConnectProviderArn clientID =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3421,7 +3518,7 @@ __Required Parameters__
 removeRoleFromInstanceProfile :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeRoleFromInstanceProfile instanceProfileName roleName =
     AWS.Http.unsignedRequest
         "RemoveRoleFromInstanceProfile"
@@ -3431,6 +3528,7 @@ removeRoleFromInstanceProfile instanceProfileName roleName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3446,7 +3544,7 @@ __Required Parameters__
 removeUserFromGroup :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeUserFromGroup groupName userName =
     AWS.Http.unsignedRequest
         "RemoveUserFromGroup"
@@ -3456,6 +3554,7 @@ removeUserFromGroup groupName userName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3470,7 +3569,7 @@ __Required Parameters__
 resetServiceSpecificCredential :
     String
     -> (ResetServiceSpecificCredentialOptions -> ResetServiceSpecificCredentialOptions)
-    -> AWS.Http.UnsignedRequest ResetServiceSpecificCredentialResponse
+    -> AWS.Request ResetServiceSpecificCredentialResponse
 resetServiceSpecificCredential serviceSpecificCredentialId setOptions =
   let
     options = setOptions (ResetServiceSpecificCredentialOptions Nothing)
@@ -3483,6 +3582,7 @@ resetServiceSpecificCredential serviceSpecificCredentialId setOptions =
             JE.null
         )
         resetServiceSpecificCredentialResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resetServiceSpecificCredential request
@@ -3509,7 +3609,7 @@ resyncMFADevice :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 resyncMFADevice userName serialNumber authenticationCode1 authenticationCode2 =
     AWS.Http.unsignedRequest
         "ResyncMFADevice"
@@ -3519,6 +3619,7 @@ resyncMFADevice userName serialNumber authenticationCode1 authenticationCode2 =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3534,7 +3635,7 @@ __Required Parameters__
 setDefaultPolicyVersion :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setDefaultPolicyVersion policyArn versionId =
     AWS.Http.unsignedRequest
         "SetDefaultPolicyVersion"
@@ -3544,6 +3645,7 @@ setDefaultPolicyVersion policyArn versionId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3560,7 +3662,7 @@ simulateCustomPolicy :
     (List String)
     -> (List String)
     -> (SimulateCustomPolicyOptions -> SimulateCustomPolicyOptions)
-    -> AWS.Http.UnsignedRequest SimulatePolicyResponse
+    -> AWS.Request SimulatePolicyResponse
 simulateCustomPolicy policyInputList actionNames setOptions =
   let
     options = setOptions (SimulateCustomPolicyOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3573,6 +3675,7 @@ simulateCustomPolicy policyInputList actionNames setOptions =
             JE.null
         )
         simulatePolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a simulateCustomPolicy request
@@ -3603,7 +3706,7 @@ simulatePrincipalPolicy :
     String
     -> (List String)
     -> (SimulatePrincipalPolicyOptions -> SimulatePrincipalPolicyOptions)
-    -> AWS.Http.UnsignedRequest SimulatePolicyResponse
+    -> AWS.Request SimulatePolicyResponse
 simulatePrincipalPolicy policySourceArn actionNames setOptions =
   let
     options = setOptions (SimulatePrincipalPolicyOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3616,6 +3719,7 @@ simulatePrincipalPolicy policySourceArn actionNames setOptions =
             JE.null
         )
         simulatePolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a simulatePrincipalPolicy request
@@ -3647,7 +3751,7 @@ updateAccessKey :
     String
     -> StatusType
     -> (UpdateAccessKeyOptions -> UpdateAccessKeyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateAccessKey accessKeyId status setOptions =
   let
     options = setOptions (UpdateAccessKeyOptions Nothing)
@@ -3660,6 +3764,7 @@ updateAccessKey accessKeyId status setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateAccessKey request
@@ -3679,7 +3784,7 @@ __Required Parameters__
 -}
 updateAccountPasswordPolicy :
     (UpdateAccountPasswordPolicyOptions -> UpdateAccountPasswordPolicyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateAccountPasswordPolicy setOptions =
   let
     options = setOptions (UpdateAccountPasswordPolicyOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3692,6 +3797,7 @@ updateAccountPasswordPolicy setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateAccountPasswordPolicy request
@@ -3722,7 +3828,7 @@ __Required Parameters__
 updateAssumeRolePolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateAssumeRolePolicy roleName policyDocument =
     AWS.Http.unsignedRequest
         "UpdateAssumeRolePolicy"
@@ -3732,6 +3838,7 @@ updateAssumeRolePolicy roleName policyDocument =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3746,7 +3853,7 @@ __Required Parameters__
 updateGroup :
     String
     -> (UpdateGroupOptions -> UpdateGroupOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateGroup groupName setOptions =
   let
     options = setOptions (UpdateGroupOptions Nothing Nothing)
@@ -3759,6 +3866,7 @@ updateGroup groupName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateGroup request
@@ -3781,7 +3889,7 @@ __Required Parameters__
 updateLoginProfile :
     String
     -> (UpdateLoginProfileOptions -> UpdateLoginProfileOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateLoginProfile userName setOptions =
   let
     options = setOptions (UpdateLoginProfileOptions Nothing Nothing)
@@ -3794,6 +3902,7 @@ updateLoginProfile userName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateLoginProfile request
@@ -3817,7 +3926,7 @@ __Required Parameters__
 updateOpenIDConnectProviderThumbprint :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateOpenIDConnectProviderThumbprint openIDConnectProviderArn thumbprintList =
     AWS.Http.unsignedRequest
         "UpdateOpenIDConnectProviderThumbprint"
@@ -3827,6 +3936,7 @@ updateOpenIDConnectProviderThumbprint openIDConnectProviderArn thumbprintList =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3842,7 +3952,7 @@ __Required Parameters__
 updateSAMLProvider :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateSAMLProviderResponse
+    -> AWS.Request UpdateSAMLProviderResponse
 updateSAMLProvider sAMLMetadataDocument sAMLProviderArn =
     AWS.Http.unsignedRequest
         "UpdateSAMLProvider"
@@ -3852,6 +3962,7 @@ updateSAMLProvider sAMLMetadataDocument sAMLProviderArn =
             JE.null
         )
         updateSAMLProviderResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3869,7 +3980,7 @@ updateSSHPublicKey :
     String
     -> String
     -> StatusType
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateSSHPublicKey userName sSHPublicKeyId status =
     AWS.Http.unsignedRequest
         "UpdateSSHPublicKey"
@@ -3879,6 +3990,7 @@ updateSSHPublicKey userName sSHPublicKeyId status =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3893,7 +4005,7 @@ __Required Parameters__
 updateServerCertificate :
     String
     -> (UpdateServerCertificateOptions -> UpdateServerCertificateOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateServerCertificate serverCertificateName setOptions =
   let
     options = setOptions (UpdateServerCertificateOptions Nothing Nothing)
@@ -3906,6 +4018,7 @@ updateServerCertificate serverCertificateName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateServerCertificate request
@@ -3930,7 +4043,7 @@ updateServiceSpecificCredential :
     String
     -> StatusType
     -> (UpdateServiceSpecificCredentialOptions -> UpdateServiceSpecificCredentialOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateServiceSpecificCredential serviceSpecificCredentialId status setOptions =
   let
     options = setOptions (UpdateServiceSpecificCredentialOptions Nothing)
@@ -3943,6 +4056,7 @@ updateServiceSpecificCredential serviceSpecificCredentialId status setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateServiceSpecificCredential request
@@ -3966,7 +4080,7 @@ updateSigningCertificate :
     String
     -> StatusType
     -> (UpdateSigningCertificateOptions -> UpdateSigningCertificateOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateSigningCertificate certificateId status setOptions =
   let
     options = setOptions (UpdateSigningCertificateOptions Nothing)
@@ -3979,6 +4093,7 @@ updateSigningCertificate certificateId status setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateSigningCertificate request
@@ -4000,7 +4115,7 @@ __Required Parameters__
 updateUser :
     String
     -> (UpdateUserOptions -> UpdateUserOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateUser userName setOptions =
   let
     options = setOptions (UpdateUserOptions Nothing Nothing)
@@ -4013,6 +4128,7 @@ updateUser userName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateUser request
@@ -4036,7 +4152,7 @@ __Required Parameters__
 uploadSSHPublicKey :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UploadSSHPublicKeyResponse
+    -> AWS.Request UploadSSHPublicKeyResponse
 uploadSSHPublicKey userName sSHPublicKeyBody =
     AWS.Http.unsignedRequest
         "UploadSSHPublicKey"
@@ -4046,6 +4162,7 @@ uploadSSHPublicKey userName sSHPublicKeyBody =
             JE.null
         )
         uploadSSHPublicKeyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -4064,7 +4181,7 @@ uploadServerCertificate :
     -> String
     -> String
     -> (UploadServerCertificateOptions -> UploadServerCertificateOptions)
-    -> AWS.Http.UnsignedRequest UploadServerCertificateResponse
+    -> AWS.Request UploadServerCertificateResponse
 uploadServerCertificate serverCertificateName certificateBody privateKey setOptions =
   let
     options = setOptions (UploadServerCertificateOptions Nothing Nothing)
@@ -4077,6 +4194,7 @@ uploadServerCertificate serverCertificateName certificateBody privateKey setOpti
             JE.null
         )
         uploadServerCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a uploadServerCertificate request
@@ -4099,7 +4217,7 @@ __Required Parameters__
 uploadSigningCertificate :
     String
     -> (UploadSigningCertificateOptions -> UploadSigningCertificateOptions)
-    -> AWS.Http.UnsignedRequest UploadSigningCertificateResponse
+    -> AWS.Request UploadSigningCertificateResponse
 uploadSigningCertificate certificateBody setOptions =
   let
     options = setOptions (UploadSigningCertificateOptions Nothing)
@@ -4112,6 +4230,7 @@ uploadSigningCertificate certificateBody setOptions =
             JE.null
         )
         uploadSigningCertificateResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a uploadSigningCertificate request

@@ -1807,6 +1807,7 @@ module AWS.Services.EC2
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -1817,16 +1818,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "ec2"
         "2016-11-15"
         "undefined"
         "AWSEC2_20161115."
         "ec2.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -1843,7 +1844,7 @@ __Required Parameters__
 acceptReservedInstancesExchangeQuote :
     (List String)
     -> (AcceptReservedInstancesExchangeQuoteOptions -> AcceptReservedInstancesExchangeQuoteOptions)
-    -> AWS.Http.UnsignedRequest AcceptReservedInstancesExchangeQuoteResult
+    -> AWS.Request AcceptReservedInstancesExchangeQuoteResult
 acceptReservedInstancesExchangeQuote reservedInstanceIds setOptions =
   let
     options = setOptions (AcceptReservedInstancesExchangeQuoteOptions Nothing Nothing)
@@ -1856,6 +1857,7 @@ acceptReservedInstancesExchangeQuote reservedInstanceIds setOptions =
             JE.null
         )
         acceptReservedInstancesExchangeQuoteResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a acceptReservedInstancesExchangeQuote request
@@ -1876,7 +1878,7 @@ __Required Parameters__
 -}
 acceptVpcPeeringConnection :
     (AcceptVpcPeeringConnectionOptions -> AcceptVpcPeeringConnectionOptions)
-    -> AWS.Http.UnsignedRequest AcceptVpcPeeringConnectionResult
+    -> AWS.Request AcceptVpcPeeringConnectionResult
 acceptVpcPeeringConnection setOptions =
   let
     options = setOptions (AcceptVpcPeeringConnectionOptions Nothing Nothing)
@@ -1889,6 +1891,7 @@ acceptVpcPeeringConnection setOptions =
             JE.null
         )
         acceptVpcPeeringConnectionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a acceptVpcPeeringConnection request
@@ -1909,7 +1912,7 @@ __Required Parameters__
 -}
 allocateAddress :
     (AllocateAddressOptions -> AllocateAddressOptions)
-    -> AWS.Http.UnsignedRequest AllocateAddressResult
+    -> AWS.Request AllocateAddressResult
 allocateAddress setOptions =
   let
     options = setOptions (AllocateAddressOptions Nothing Nothing)
@@ -1922,6 +1925,7 @@ allocateAddress setOptions =
             JE.null
         )
         allocateAddressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a allocateAddress request
@@ -1948,7 +1952,7 @@ allocateHosts :
     -> Int
     -> String
     -> (AllocateHostsOptions -> AllocateHostsOptions)
-    -> AWS.Http.UnsignedRequest AllocateHostsResult
+    -> AWS.Request AllocateHostsResult
 allocateHosts instanceType quantity availabilityZone setOptions =
   let
     options = setOptions (AllocateHostsOptions Nothing Nothing)
@@ -1961,6 +1965,7 @@ allocateHosts instanceType quantity availabilityZone setOptions =
             JE.null
         )
         allocateHostsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a allocateHosts request
@@ -1983,7 +1988,7 @@ __Required Parameters__
 assignIpv6Addresses :
     String
     -> (AssignIpv6AddressesOptions -> AssignIpv6AddressesOptions)
-    -> AWS.Http.UnsignedRequest AssignIpv6AddressesResult
+    -> AWS.Request AssignIpv6AddressesResult
 assignIpv6Addresses networkInterfaceId setOptions =
   let
     options = setOptions (AssignIpv6AddressesOptions Nothing Nothing)
@@ -1996,6 +2001,7 @@ assignIpv6Addresses networkInterfaceId setOptions =
             JE.null
         )
         assignIpv6AddressesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a assignIpv6Addresses request
@@ -2018,7 +2024,7 @@ __Required Parameters__
 assignPrivateIpAddresses :
     String
     -> (AssignPrivateIpAddressesOptions -> AssignPrivateIpAddressesOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 assignPrivateIpAddresses networkInterfaceId setOptions =
   let
     options = setOptions (AssignPrivateIpAddressesOptions Nothing Nothing Nothing)
@@ -2031,6 +2037,7 @@ assignPrivateIpAddresses networkInterfaceId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a assignPrivateIpAddresses request
@@ -2052,7 +2059,7 @@ __Required Parameters__
 -}
 associateAddress :
     (AssociateAddressOptions -> AssociateAddressOptions)
-    -> AWS.Http.UnsignedRequest AssociateAddressResult
+    -> AWS.Request AssociateAddressResult
 associateAddress setOptions =
   let
     options = setOptions (AssociateAddressOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2065,6 +2072,7 @@ associateAddress setOptions =
             JE.null
         )
         associateAddressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a associateAddress request
@@ -2094,7 +2102,7 @@ associateDhcpOptions :
     String
     -> String
     -> (AssociateDhcpOptionsOptions -> AssociateDhcpOptionsOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 associateDhcpOptions dhcpOptionsId vpcId setOptions =
   let
     options = setOptions (AssociateDhcpOptionsOptions Nothing)
@@ -2107,6 +2115,7 @@ associateDhcpOptions dhcpOptionsId vpcId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a associateDhcpOptions request
@@ -2130,7 +2139,7 @@ associateRouteTable :
     String
     -> String
     -> (AssociateRouteTableOptions -> AssociateRouteTableOptions)
-    -> AWS.Http.UnsignedRequest AssociateRouteTableResult
+    -> AWS.Request AssociateRouteTableResult
 associateRouteTable subnetId routeTableId setOptions =
   let
     options = setOptions (AssociateRouteTableOptions Nothing)
@@ -2143,6 +2152,7 @@ associateRouteTable subnetId routeTableId setOptions =
             JE.null
         )
         associateRouteTableResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a associateRouteTable request
@@ -2165,7 +2175,7 @@ __Required Parameters__
 associateSubnetCidrBlock :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AssociateSubnetCidrBlockResult
+    -> AWS.Request AssociateSubnetCidrBlockResult
 associateSubnetCidrBlock subnetId ipv6CidrBlock =
     AWS.Http.unsignedRequest
         "AssociateSubnetCidrBlock"
@@ -2175,6 +2185,7 @@ associateSubnetCidrBlock subnetId ipv6CidrBlock =
             JE.null
         )
         associateSubnetCidrBlockResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2189,7 +2200,7 @@ __Required Parameters__
 associateVpcCidrBlock :
     String
     -> (AssociateVpcCidrBlockOptions -> AssociateVpcCidrBlockOptions)
-    -> AWS.Http.UnsignedRequest AssociateVpcCidrBlockResult
+    -> AWS.Request AssociateVpcCidrBlockResult
 associateVpcCidrBlock vpcId setOptions =
   let
     options = setOptions (AssociateVpcCidrBlockOptions Nothing)
@@ -2202,6 +2213,7 @@ associateVpcCidrBlock vpcId setOptions =
             JE.null
         )
         associateVpcCidrBlockResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a associateVpcCidrBlock request
@@ -2227,7 +2239,7 @@ attachClassicLinkVpc :
     -> String
     -> (List String)
     -> (AttachClassicLinkVpcOptions -> AttachClassicLinkVpcOptions)
-    -> AWS.Http.UnsignedRequest AttachClassicLinkVpcResult
+    -> AWS.Request AttachClassicLinkVpcResult
 attachClassicLinkVpc instanceId vpcId groups setOptions =
   let
     options = setOptions (AttachClassicLinkVpcOptions Nothing)
@@ -2240,6 +2252,7 @@ attachClassicLinkVpc instanceId vpcId groups setOptions =
             JE.null
         )
         attachClassicLinkVpcResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a attachClassicLinkVpc request
@@ -2263,7 +2276,7 @@ attachInternetGateway :
     String
     -> String
     -> (AttachInternetGatewayOptions -> AttachInternetGatewayOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 attachInternetGateway internetGatewayId vpcId setOptions =
   let
     options = setOptions (AttachInternetGatewayOptions Nothing)
@@ -2276,6 +2289,7 @@ attachInternetGateway internetGatewayId vpcId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a attachInternetGateway request
@@ -2301,7 +2315,7 @@ attachNetworkInterface :
     -> String
     -> Int
     -> (AttachNetworkInterfaceOptions -> AttachNetworkInterfaceOptions)
-    -> AWS.Http.UnsignedRequest AttachNetworkInterfaceResult
+    -> AWS.Request AttachNetworkInterfaceResult
 attachNetworkInterface networkInterfaceId instanceId deviceIndex setOptions =
   let
     options = setOptions (AttachNetworkInterfaceOptions Nothing)
@@ -2314,6 +2328,7 @@ attachNetworkInterface networkInterfaceId instanceId deviceIndex setOptions =
             JE.null
         )
         attachNetworkInterfaceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a attachNetworkInterface request
@@ -2339,7 +2354,7 @@ attachVolume :
     -> String
     -> String
     -> (AttachVolumeOptions -> AttachVolumeOptions)
-    -> AWS.Http.UnsignedRequest VolumeAttachment
+    -> AWS.Request VolumeAttachment
 attachVolume volumeId instanceId device setOptions =
   let
     options = setOptions (AttachVolumeOptions Nothing)
@@ -2352,6 +2367,7 @@ attachVolume volumeId instanceId device setOptions =
             JE.null
         )
         volumeAttachmentDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a attachVolume request
@@ -2375,7 +2391,7 @@ attachVpnGateway :
     String
     -> String
     -> (AttachVpnGatewayOptions -> AttachVpnGatewayOptions)
-    -> AWS.Http.UnsignedRequest AttachVpnGatewayResult
+    -> AWS.Request AttachVpnGatewayResult
 attachVpnGateway vpnGatewayId vpcId setOptions =
   let
     options = setOptions (AttachVpnGatewayOptions Nothing)
@@ -2388,6 +2404,7 @@ attachVpnGateway vpnGatewayId vpcId setOptions =
             JE.null
         )
         attachVpnGatewayResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a attachVpnGateway request
@@ -2409,7 +2426,7 @@ __Required Parameters__
 authorizeSecurityGroupEgress :
     String
     -> (AuthorizeSecurityGroupEgressOptions -> AuthorizeSecurityGroupEgressOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 authorizeSecurityGroupEgress groupId setOptions =
   let
     options = setOptions (AuthorizeSecurityGroupEgressOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2422,6 +2439,7 @@ authorizeSecurityGroupEgress groupId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a authorizeSecurityGroupEgress request
@@ -2448,7 +2466,7 @@ __Required Parameters__
 -}
 authorizeSecurityGroupIngress :
     (AuthorizeSecurityGroupIngressOptions -> AuthorizeSecurityGroupIngressOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 authorizeSecurityGroupIngress setOptions =
   let
     options = setOptions (AuthorizeSecurityGroupIngressOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2461,6 +2479,7 @@ authorizeSecurityGroupIngress setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a authorizeSecurityGroupIngress request
@@ -2493,7 +2512,7 @@ bundleInstance :
     String
     -> Storage
     -> (BundleInstanceOptions -> BundleInstanceOptions)
-    -> AWS.Http.UnsignedRequest BundleInstanceResult
+    -> AWS.Request BundleInstanceResult
 bundleInstance instanceId storage setOptions =
   let
     options = setOptions (BundleInstanceOptions Nothing)
@@ -2506,6 +2525,7 @@ bundleInstance instanceId storage setOptions =
             JE.null
         )
         bundleInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a bundleInstance request
@@ -2527,7 +2547,7 @@ __Required Parameters__
 cancelBundleTask :
     String
     -> (CancelBundleTaskOptions -> CancelBundleTaskOptions)
-    -> AWS.Http.UnsignedRequest CancelBundleTaskResult
+    -> AWS.Request CancelBundleTaskResult
 cancelBundleTask bundleId setOptions =
   let
     options = setOptions (CancelBundleTaskOptions Nothing)
@@ -2540,6 +2560,7 @@ cancelBundleTask bundleId setOptions =
             JE.null
         )
         cancelBundleTaskResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a cancelBundleTask request
@@ -2561,7 +2582,7 @@ __Required Parameters__
 cancelConversionTask :
     String
     -> (CancelConversionTaskOptions -> CancelConversionTaskOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 cancelConversionTask conversionTaskId setOptions =
   let
     options = setOptions (CancelConversionTaskOptions Nothing Nothing)
@@ -2574,6 +2595,7 @@ cancelConversionTask conversionTaskId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a cancelConversionTask request
@@ -2595,7 +2617,7 @@ __Required Parameters__
 -}
 cancelExportTask :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 cancelExportTask exportTaskId =
     AWS.Http.unsignedRequest
         "CancelExportTask"
@@ -2605,6 +2627,7 @@ cancelExportTask exportTaskId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -2617,7 +2640,7 @@ __Required Parameters__
 -}
 cancelImportTask :
     (CancelImportTaskOptions -> CancelImportTaskOptions)
-    -> AWS.Http.UnsignedRequest CancelImportTaskResult
+    -> AWS.Request CancelImportTaskResult
 cancelImportTask setOptions =
   let
     options = setOptions (CancelImportTaskOptions Nothing Nothing Nothing)
@@ -2630,6 +2653,7 @@ cancelImportTask setOptions =
             JE.null
         )
         cancelImportTaskResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a cancelImportTask request
@@ -2652,7 +2676,7 @@ __Required Parameters__
 -}
 cancelReservedInstancesListing :
     String
-    -> AWS.Http.UnsignedRequest CancelReservedInstancesListingResult
+    -> AWS.Request CancelReservedInstancesListingResult
 cancelReservedInstancesListing reservedInstancesListingId =
     AWS.Http.unsignedRequest
         "CancelReservedInstancesListing"
@@ -2662,6 +2686,7 @@ cancelReservedInstancesListing reservedInstancesListingId =
             JE.null
         )
         cancelReservedInstancesListingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2678,7 +2703,7 @@ cancelSpotFleetRequests :
     (List String)
     -> Bool
     -> (CancelSpotFleetRequestsOptions -> CancelSpotFleetRequestsOptions)
-    -> AWS.Http.UnsignedRequest CancelSpotFleetRequestsResponse
+    -> AWS.Request CancelSpotFleetRequestsResponse
 cancelSpotFleetRequests spotFleetRequestIds terminateInstances setOptions =
   let
     options = setOptions (CancelSpotFleetRequestsOptions Nothing)
@@ -2691,6 +2716,7 @@ cancelSpotFleetRequests spotFleetRequestIds terminateInstances setOptions =
             JE.null
         )
         cancelSpotFleetRequestsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a cancelSpotFleetRequests request
@@ -2712,7 +2738,7 @@ __Required Parameters__
 cancelSpotInstanceRequests :
     (List String)
     -> (CancelSpotInstanceRequestsOptions -> CancelSpotInstanceRequestsOptions)
-    -> AWS.Http.UnsignedRequest CancelSpotInstanceRequestsResult
+    -> AWS.Request CancelSpotInstanceRequestsResult
 cancelSpotInstanceRequests spotInstanceRequestIds setOptions =
   let
     options = setOptions (CancelSpotInstanceRequestsOptions Nothing)
@@ -2725,6 +2751,7 @@ cancelSpotInstanceRequests spotInstanceRequestIds setOptions =
             JE.null
         )
         cancelSpotInstanceRequestsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a cancelSpotInstanceRequests request
@@ -2748,7 +2775,7 @@ confirmProductInstance :
     String
     -> String
     -> (ConfirmProductInstanceOptions -> ConfirmProductInstanceOptions)
-    -> AWS.Http.UnsignedRequest ConfirmProductInstanceResult
+    -> AWS.Request ConfirmProductInstanceResult
 confirmProductInstance productCode instanceId setOptions =
   let
     options = setOptions (ConfirmProductInstanceOptions Nothing)
@@ -2761,6 +2788,7 @@ confirmProductInstance productCode instanceId setOptions =
             JE.null
         )
         confirmProductInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a confirmProductInstance request
@@ -2786,7 +2814,7 @@ copyImage :
     -> String
     -> String
     -> (CopyImageOptions -> CopyImageOptions)
-    -> AWS.Http.UnsignedRequest CopyImageResult
+    -> AWS.Request CopyImageResult
 copyImage sourceRegion sourceImageId name setOptions =
   let
     options = setOptions (CopyImageOptions Nothing Nothing Nothing Nothing Nothing)
@@ -2799,6 +2827,7 @@ copyImage sourceRegion sourceImageId name setOptions =
             JE.null
         )
         copyImageResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copyImage request
@@ -2826,7 +2855,7 @@ copySnapshot :
     String
     -> String
     -> (CopySnapshotOptions -> CopySnapshotOptions)
-    -> AWS.Http.UnsignedRequest CopySnapshotResult
+    -> AWS.Request CopySnapshotResult
 copySnapshot sourceRegion sourceSnapshotId setOptions =
   let
     options = setOptions (CopySnapshotOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2839,6 +2868,7 @@ copySnapshot sourceRegion sourceSnapshotId setOptions =
             JE.null
         )
         copySnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copySnapshot request
@@ -2869,7 +2899,7 @@ createCustomerGateway :
     -> String
     -> Int
     -> (CreateCustomerGatewayOptions -> CreateCustomerGatewayOptions)
-    -> AWS.Http.UnsignedRequest CreateCustomerGatewayResult
+    -> AWS.Request CreateCustomerGatewayResult
 createCustomerGateway type_ publicIp bgpAsn setOptions =
   let
     options = setOptions (CreateCustomerGatewayOptions Nothing)
@@ -2882,6 +2912,7 @@ createCustomerGateway type_ publicIp bgpAsn setOptions =
             JE.null
         )
         createCustomerGatewayResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createCustomerGateway request
@@ -2903,7 +2934,7 @@ __Required Parameters__
 createDhcpOptions :
     (List NewDhcpConfiguration)
     -> (CreateDhcpOptionsOptions -> CreateDhcpOptionsOptions)
-    -> AWS.Http.UnsignedRequest CreateDhcpOptionsResult
+    -> AWS.Request CreateDhcpOptionsResult
 createDhcpOptions dhcpConfigurations setOptions =
   let
     options = setOptions (CreateDhcpOptionsOptions Nothing)
@@ -2916,6 +2947,7 @@ createDhcpOptions dhcpConfigurations setOptions =
             JE.null
         )
         createDhcpOptionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDhcpOptions request
@@ -2937,7 +2969,7 @@ __Required Parameters__
 createEgressOnlyInternetGateway :
     String
     -> (CreateEgressOnlyInternetGatewayOptions -> CreateEgressOnlyInternetGatewayOptions)
-    -> AWS.Http.UnsignedRequest CreateEgressOnlyInternetGatewayResult
+    -> AWS.Request CreateEgressOnlyInternetGatewayResult
 createEgressOnlyInternetGateway vpcId setOptions =
   let
     options = setOptions (CreateEgressOnlyInternetGatewayOptions Nothing Nothing)
@@ -2950,6 +2982,7 @@ createEgressOnlyInternetGateway vpcId setOptions =
             JE.null
         )
         createEgressOnlyInternetGatewayResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createEgressOnlyInternetGateway request
@@ -2980,7 +3013,7 @@ createFlowLogs :
     -> String
     -> String
     -> (CreateFlowLogsOptions -> CreateFlowLogsOptions)
-    -> AWS.Http.UnsignedRequest CreateFlowLogsResult
+    -> AWS.Request CreateFlowLogsResult
 createFlowLogs resourceIds resourceType trafficType logGroupName deliverLogsPermissionArn setOptions =
   let
     options = setOptions (CreateFlowLogsOptions Nothing)
@@ -2993,6 +3026,7 @@ createFlowLogs resourceIds resourceType trafficType logGroupName deliverLogsPerm
             JE.null
         )
         createFlowLogsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createFlowLogs request
@@ -3016,7 +3050,7 @@ createImage :
     String
     -> String
     -> (CreateImageOptions -> CreateImageOptions)
-    -> AWS.Http.UnsignedRequest CreateImageResult
+    -> AWS.Request CreateImageResult
 createImage instanceId name setOptions =
   let
     options = setOptions (CreateImageOptions Nothing Nothing Nothing Nothing)
@@ -3029,6 +3063,7 @@ createImage instanceId name setOptions =
             JE.null
         )
         createImageResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createImage request
@@ -3053,7 +3088,7 @@ __Required Parameters__
 createInstanceExportTask :
     String
     -> (CreateInstanceExportTaskOptions -> CreateInstanceExportTaskOptions)
-    -> AWS.Http.UnsignedRequest CreateInstanceExportTaskResult
+    -> AWS.Request CreateInstanceExportTaskResult
 createInstanceExportTask instanceId setOptions =
   let
     options = setOptions (CreateInstanceExportTaskOptions Nothing Nothing Nothing)
@@ -3066,6 +3101,7 @@ createInstanceExportTask instanceId setOptions =
             JE.null
         )
         createInstanceExportTaskResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createInstanceExportTask request
@@ -3087,7 +3123,7 @@ __Required Parameters__
 -}
 createInternetGateway :
     (CreateInternetGatewayOptions -> CreateInternetGatewayOptions)
-    -> AWS.Http.UnsignedRequest CreateInternetGatewayResult
+    -> AWS.Request CreateInternetGatewayResult
 createInternetGateway setOptions =
   let
     options = setOptions (CreateInternetGatewayOptions Nothing)
@@ -3100,6 +3136,7 @@ createInternetGateway setOptions =
             JE.null
         )
         createInternetGatewayResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createInternetGateway request
@@ -3121,7 +3158,7 @@ __Required Parameters__
 createKeyPair :
     String
     -> (CreateKeyPairOptions -> CreateKeyPairOptions)
-    -> AWS.Http.UnsignedRequest KeyPair
+    -> AWS.Request KeyPair
 createKeyPair keyName setOptions =
   let
     options = setOptions (CreateKeyPairOptions Nothing)
@@ -3134,6 +3171,7 @@ createKeyPair keyName setOptions =
             JE.null
         )
         keyPairDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createKeyPair request
@@ -3157,7 +3195,7 @@ createNatGateway :
     String
     -> String
     -> (CreateNatGatewayOptions -> CreateNatGatewayOptions)
-    -> AWS.Http.UnsignedRequest CreateNatGatewayResult
+    -> AWS.Request CreateNatGatewayResult
 createNatGateway subnetId allocationId setOptions =
   let
     options = setOptions (CreateNatGatewayOptions Nothing)
@@ -3170,6 +3208,7 @@ createNatGateway subnetId allocationId setOptions =
             JE.null
         )
         createNatGatewayResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createNatGateway request
@@ -3191,7 +3230,7 @@ __Required Parameters__
 createNetworkAcl :
     String
     -> (CreateNetworkAclOptions -> CreateNetworkAclOptions)
-    -> AWS.Http.UnsignedRequest CreateNetworkAclResult
+    -> AWS.Request CreateNetworkAclResult
 createNetworkAcl vpcId setOptions =
   let
     options = setOptions (CreateNetworkAclOptions Nothing)
@@ -3204,6 +3243,7 @@ createNetworkAcl vpcId setOptions =
             JE.null
         )
         createNetworkAclResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createNetworkAcl request
@@ -3233,7 +3273,7 @@ createNetworkAclEntry :
     -> RuleAction
     -> Bool
     -> (CreateNetworkAclEntryOptions -> CreateNetworkAclEntryOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createNetworkAclEntry networkAclId ruleNumber protocol ruleAction egress setOptions =
   let
     options = setOptions (CreateNetworkAclEntryOptions Nothing Nothing Nothing Nothing Nothing)
@@ -3246,6 +3286,7 @@ createNetworkAclEntry networkAclId ruleNumber protocol ruleAction egress setOpti
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createNetworkAclEntry request
@@ -3271,7 +3312,7 @@ __Required Parameters__
 createNetworkInterface :
     String
     -> (CreateNetworkInterfaceOptions -> CreateNetworkInterfaceOptions)
-    -> AWS.Http.UnsignedRequest CreateNetworkInterfaceResult
+    -> AWS.Request CreateNetworkInterfaceResult
 createNetworkInterface subnetId setOptions =
   let
     options = setOptions (CreateNetworkInterfaceOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3284,6 +3325,7 @@ createNetworkInterface subnetId setOptions =
             JE.null
         )
         createNetworkInterfaceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createNetworkInterface request
@@ -3314,7 +3356,7 @@ createPlacementGroup :
     String
     -> PlacementStrategy
     -> (CreatePlacementGroupOptions -> CreatePlacementGroupOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createPlacementGroup groupName strategy setOptions =
   let
     options = setOptions (CreatePlacementGroupOptions Nothing)
@@ -3327,6 +3369,7 @@ createPlacementGroup groupName strategy setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPlacementGroup request
@@ -3353,7 +3396,7 @@ createReservedInstancesListing :
     -> Int
     -> (List PriceScheduleSpecification)
     -> String
-    -> AWS.Http.UnsignedRequest CreateReservedInstancesListingResult
+    -> AWS.Request CreateReservedInstancesListingResult
 createReservedInstancesListing reservedInstancesId instanceCount priceSchedules clientToken =
     AWS.Http.unsignedRequest
         "CreateReservedInstancesListing"
@@ -3363,6 +3406,7 @@ createReservedInstancesListing reservedInstancesId instanceCount priceSchedules 
             JE.null
         )
         createReservedInstancesListingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3377,7 +3421,7 @@ __Required Parameters__
 createRoute :
     String
     -> (CreateRouteOptions -> CreateRouteOptions)
-    -> AWS.Http.UnsignedRequest CreateRouteResult
+    -> AWS.Request CreateRouteResult
 createRoute routeTableId setOptions =
   let
     options = setOptions (CreateRouteOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3390,6 +3434,7 @@ createRoute routeTableId setOptions =
             JE.null
         )
         createRouteResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createRoute request
@@ -3419,7 +3464,7 @@ __Required Parameters__
 createRouteTable :
     String
     -> (CreateRouteTableOptions -> CreateRouteTableOptions)
-    -> AWS.Http.UnsignedRequest CreateRouteTableResult
+    -> AWS.Request CreateRouteTableResult
 createRouteTable vpcId setOptions =
   let
     options = setOptions (CreateRouteTableOptions Nothing)
@@ -3432,6 +3477,7 @@ createRouteTable vpcId setOptions =
             JE.null
         )
         createRouteTableResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createRouteTable request
@@ -3455,7 +3501,7 @@ createSecurityGroup :
     String
     -> String
     -> (CreateSecurityGroupOptions -> CreateSecurityGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateSecurityGroupResult
+    -> AWS.Request CreateSecurityGroupResult
 createSecurityGroup groupName description setOptions =
   let
     options = setOptions (CreateSecurityGroupOptions Nothing Nothing)
@@ -3468,6 +3514,7 @@ createSecurityGroup groupName description setOptions =
             JE.null
         )
         createSecurityGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createSecurityGroup request
@@ -3490,7 +3537,7 @@ __Required Parameters__
 createSnapshot :
     String
     -> (CreateSnapshotOptions -> CreateSnapshotOptions)
-    -> AWS.Http.UnsignedRequest Snapshot
+    -> AWS.Request Snapshot
 createSnapshot volumeId setOptions =
   let
     options = setOptions (CreateSnapshotOptions Nothing Nothing)
@@ -3503,6 +3550,7 @@ createSnapshot volumeId setOptions =
             JE.null
         )
         snapshotDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createSnapshot request
@@ -3525,7 +3573,7 @@ __Required Parameters__
 createSpotDatafeedSubscription :
     String
     -> (CreateSpotDatafeedSubscriptionOptions -> CreateSpotDatafeedSubscriptionOptions)
-    -> AWS.Http.UnsignedRequest CreateSpotDatafeedSubscriptionResult
+    -> AWS.Request CreateSpotDatafeedSubscriptionResult
 createSpotDatafeedSubscription bucket setOptions =
   let
     options = setOptions (CreateSpotDatafeedSubscriptionOptions Nothing Nothing)
@@ -3538,6 +3586,7 @@ createSpotDatafeedSubscription bucket setOptions =
             JE.null
         )
         createSpotDatafeedSubscriptionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createSpotDatafeedSubscription request
@@ -3562,7 +3611,7 @@ createSubnet :
     String
     -> String
     -> (CreateSubnetOptions -> CreateSubnetOptions)
-    -> AWS.Http.UnsignedRequest CreateSubnetResult
+    -> AWS.Request CreateSubnetResult
 createSubnet vpcId cidrBlock setOptions =
   let
     options = setOptions (CreateSubnetOptions Nothing Nothing Nothing)
@@ -3575,6 +3624,7 @@ createSubnet vpcId cidrBlock setOptions =
             JE.null
         )
         createSubnetResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createSubnet request
@@ -3600,7 +3650,7 @@ createTags :
     (List String)
     -> (List Tag)
     -> (CreateTagsOptions -> CreateTagsOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createTags resources tags setOptions =
   let
     options = setOptions (CreateTagsOptions Nothing)
@@ -3613,6 +3663,7 @@ createTags resources tags setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createTags request
@@ -3634,7 +3685,7 @@ __Required Parameters__
 createVolume :
     String
     -> (CreateVolumeOptions -> CreateVolumeOptions)
-    -> AWS.Http.UnsignedRequest Volume
+    -> AWS.Request Volume
 createVolume availabilityZone setOptions =
   let
     options = setOptions (CreateVolumeOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3647,6 +3698,7 @@ createVolume availabilityZone setOptions =
             JE.null
         )
         volumeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createVolume request
@@ -3674,7 +3726,7 @@ __Required Parameters__
 createVpc :
     String
     -> (CreateVpcOptions -> CreateVpcOptions)
-    -> AWS.Http.UnsignedRequest CreateVpcResult
+    -> AWS.Request CreateVpcResult
 createVpc cidrBlock setOptions =
   let
     options = setOptions (CreateVpcOptions Nothing Nothing Nothing)
@@ -3687,6 +3739,7 @@ createVpc cidrBlock setOptions =
             JE.null
         )
         createVpcResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createVpc request
@@ -3712,7 +3765,7 @@ createVpcEndpoint :
     String
     -> String
     -> (CreateVpcEndpointOptions -> CreateVpcEndpointOptions)
-    -> AWS.Http.UnsignedRequest CreateVpcEndpointResult
+    -> AWS.Request CreateVpcEndpointResult
 createVpcEndpoint vpcId serviceName setOptions =
   let
     options = setOptions (CreateVpcEndpointOptions Nothing Nothing Nothing Nothing)
@@ -3725,6 +3778,7 @@ createVpcEndpoint vpcId serviceName setOptions =
             JE.null
         )
         createVpcEndpointResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createVpcEndpoint request
@@ -3747,7 +3801,7 @@ __Required Parameters__
 -}
 createVpcPeeringConnection :
     (CreateVpcPeeringConnectionOptions -> CreateVpcPeeringConnectionOptions)
-    -> AWS.Http.UnsignedRequest CreateVpcPeeringConnectionResult
+    -> AWS.Request CreateVpcPeeringConnectionResult
 createVpcPeeringConnection setOptions =
   let
     options = setOptions (CreateVpcPeeringConnectionOptions Nothing Nothing Nothing Nothing)
@@ -3760,6 +3814,7 @@ createVpcPeeringConnection setOptions =
             JE.null
         )
         createVpcPeeringConnectionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createVpcPeeringConnection request
@@ -3788,7 +3843,7 @@ createVpnConnection :
     -> String
     -> String
     -> (CreateVpnConnectionOptions -> CreateVpnConnectionOptions)
-    -> AWS.Http.UnsignedRequest CreateVpnConnectionResult
+    -> AWS.Request CreateVpnConnectionResult
 createVpnConnection type_ customerGatewayId vpnGatewayId setOptions =
   let
     options = setOptions (CreateVpnConnectionOptions Nothing Nothing)
@@ -3801,6 +3856,7 @@ createVpnConnection type_ customerGatewayId vpnGatewayId setOptions =
             JE.null
         )
         createVpnConnectionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createVpnConnection request
@@ -3824,7 +3880,7 @@ __Required Parameters__
 createVpnConnectionRoute :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createVpnConnectionRoute vpnConnectionId destinationCidrBlock =
     AWS.Http.unsignedRequest
         "CreateVpnConnectionRoute"
@@ -3834,6 +3890,7 @@ createVpnConnectionRoute vpnConnectionId destinationCidrBlock =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -3848,7 +3905,7 @@ __Required Parameters__
 createVpnGateway :
     GatewayType
     -> (CreateVpnGatewayOptions -> CreateVpnGatewayOptions)
-    -> AWS.Http.UnsignedRequest CreateVpnGatewayResult
+    -> AWS.Request CreateVpnGatewayResult
 createVpnGateway type_ setOptions =
   let
     options = setOptions (CreateVpnGatewayOptions Nothing Nothing)
@@ -3861,6 +3918,7 @@ createVpnGateway type_ setOptions =
             JE.null
         )
         createVpnGatewayResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createVpnGateway request
@@ -3883,7 +3941,7 @@ __Required Parameters__
 deleteCustomerGateway :
     String
     -> (DeleteCustomerGatewayOptions -> DeleteCustomerGatewayOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteCustomerGateway customerGatewayId setOptions =
   let
     options = setOptions (DeleteCustomerGatewayOptions Nothing)
@@ -3896,6 +3954,7 @@ deleteCustomerGateway customerGatewayId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteCustomerGateway request
@@ -3917,7 +3976,7 @@ __Required Parameters__
 deleteDhcpOptions :
     String
     -> (DeleteDhcpOptionsOptions -> DeleteDhcpOptionsOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDhcpOptions dhcpOptionsId setOptions =
   let
     options = setOptions (DeleteDhcpOptionsOptions Nothing)
@@ -3930,6 +3989,7 @@ deleteDhcpOptions dhcpOptionsId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteDhcpOptions request
@@ -3951,7 +4011,7 @@ __Required Parameters__
 deleteEgressOnlyInternetGateway :
     String
     -> (DeleteEgressOnlyInternetGatewayOptions -> DeleteEgressOnlyInternetGatewayOptions)
-    -> AWS.Http.UnsignedRequest DeleteEgressOnlyInternetGatewayResult
+    -> AWS.Request DeleteEgressOnlyInternetGatewayResult
 deleteEgressOnlyInternetGateway egressOnlyInternetGatewayId setOptions =
   let
     options = setOptions (DeleteEgressOnlyInternetGatewayOptions Nothing)
@@ -3964,6 +4024,7 @@ deleteEgressOnlyInternetGateway egressOnlyInternetGatewayId setOptions =
             JE.null
         )
         deleteEgressOnlyInternetGatewayResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteEgressOnlyInternetGateway request
@@ -3984,7 +4045,7 @@ __Required Parameters__
 -}
 deleteFlowLogs :
     (List String)
-    -> AWS.Http.UnsignedRequest DeleteFlowLogsResult
+    -> AWS.Request DeleteFlowLogsResult
 deleteFlowLogs flowLogIds =
     AWS.Http.unsignedRequest
         "DeleteFlowLogs"
@@ -3994,6 +4055,7 @@ deleteFlowLogs flowLogIds =
             JE.null
         )
         deleteFlowLogsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -4008,7 +4070,7 @@ __Required Parameters__
 deleteInternetGateway :
     String
     -> (DeleteInternetGatewayOptions -> DeleteInternetGatewayOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteInternetGateway internetGatewayId setOptions =
   let
     options = setOptions (DeleteInternetGatewayOptions Nothing)
@@ -4021,6 +4083,7 @@ deleteInternetGateway internetGatewayId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteInternetGateway request
@@ -4042,7 +4105,7 @@ __Required Parameters__
 deleteKeyPair :
     String
     -> (DeleteKeyPairOptions -> DeleteKeyPairOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteKeyPair keyName setOptions =
   let
     options = setOptions (DeleteKeyPairOptions Nothing)
@@ -4055,6 +4118,7 @@ deleteKeyPair keyName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteKeyPair request
@@ -4075,7 +4139,7 @@ __Required Parameters__
 -}
 deleteNatGateway :
     String
-    -> AWS.Http.UnsignedRequest DeleteNatGatewayResult
+    -> AWS.Request DeleteNatGatewayResult
 deleteNatGateway natGatewayId =
     AWS.Http.unsignedRequest
         "DeleteNatGateway"
@@ -4085,6 +4149,7 @@ deleteNatGateway natGatewayId =
             JE.null
         )
         deleteNatGatewayResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -4099,7 +4164,7 @@ __Required Parameters__
 deleteNetworkAcl :
     String
     -> (DeleteNetworkAclOptions -> DeleteNetworkAclOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteNetworkAcl networkAclId setOptions =
   let
     options = setOptions (DeleteNetworkAclOptions Nothing)
@@ -4112,6 +4177,7 @@ deleteNetworkAcl networkAclId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteNetworkAcl request
@@ -4137,7 +4203,7 @@ deleteNetworkAclEntry :
     -> Int
     -> Bool
     -> (DeleteNetworkAclEntryOptions -> DeleteNetworkAclEntryOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteNetworkAclEntry networkAclId ruleNumber egress setOptions =
   let
     options = setOptions (DeleteNetworkAclEntryOptions Nothing)
@@ -4150,6 +4216,7 @@ deleteNetworkAclEntry networkAclId ruleNumber egress setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteNetworkAclEntry request
@@ -4171,7 +4238,7 @@ __Required Parameters__
 deleteNetworkInterface :
     String
     -> (DeleteNetworkInterfaceOptions -> DeleteNetworkInterfaceOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteNetworkInterface networkInterfaceId setOptions =
   let
     options = setOptions (DeleteNetworkInterfaceOptions Nothing)
@@ -4184,6 +4251,7 @@ deleteNetworkInterface networkInterfaceId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteNetworkInterface request
@@ -4205,7 +4273,7 @@ __Required Parameters__
 deletePlacementGroup :
     String
     -> (DeletePlacementGroupOptions -> DeletePlacementGroupOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deletePlacementGroup groupName setOptions =
   let
     options = setOptions (DeletePlacementGroupOptions Nothing)
@@ -4218,6 +4286,7 @@ deletePlacementGroup groupName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deletePlacementGroup request
@@ -4239,7 +4308,7 @@ __Required Parameters__
 deleteRoute :
     String
     -> (DeleteRouteOptions -> DeleteRouteOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteRoute routeTableId setOptions =
   let
     options = setOptions (DeleteRouteOptions Nothing Nothing Nothing)
@@ -4252,6 +4321,7 @@ deleteRoute routeTableId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteRoute request
@@ -4275,7 +4345,7 @@ __Required Parameters__
 deleteRouteTable :
     String
     -> (DeleteRouteTableOptions -> DeleteRouteTableOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteRouteTable routeTableId setOptions =
   let
     options = setOptions (DeleteRouteTableOptions Nothing)
@@ -4288,6 +4358,7 @@ deleteRouteTable routeTableId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteRouteTable request
@@ -4307,7 +4378,7 @@ __Required Parameters__
 -}
 deleteSecurityGroup :
     (DeleteSecurityGroupOptions -> DeleteSecurityGroupOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteSecurityGroup setOptions =
   let
     options = setOptions (DeleteSecurityGroupOptions Nothing Nothing Nothing)
@@ -4320,6 +4391,7 @@ deleteSecurityGroup setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteSecurityGroup request
@@ -4343,7 +4415,7 @@ __Required Parameters__
 deleteSnapshot :
     String
     -> (DeleteSnapshotOptions -> DeleteSnapshotOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteSnapshot snapshotId setOptions =
   let
     options = setOptions (DeleteSnapshotOptions Nothing)
@@ -4356,6 +4428,7 @@ deleteSnapshot snapshotId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteSnapshot request
@@ -4375,7 +4448,7 @@ __Required Parameters__
 -}
 deleteSpotDatafeedSubscription :
     (DeleteSpotDatafeedSubscriptionOptions -> DeleteSpotDatafeedSubscriptionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteSpotDatafeedSubscription setOptions =
   let
     options = setOptions (DeleteSpotDatafeedSubscriptionOptions Nothing)
@@ -4388,6 +4461,7 @@ deleteSpotDatafeedSubscription setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteSpotDatafeedSubscription request
@@ -4409,7 +4483,7 @@ __Required Parameters__
 deleteSubnet :
     String
     -> (DeleteSubnetOptions -> DeleteSubnetOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteSubnet subnetId setOptions =
   let
     options = setOptions (DeleteSubnetOptions Nothing)
@@ -4422,6 +4496,7 @@ deleteSubnet subnetId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteSubnet request
@@ -4443,7 +4518,7 @@ __Required Parameters__
 deleteTags :
     (List String)
     -> (DeleteTagsOptions -> DeleteTagsOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteTags resources setOptions =
   let
     options = setOptions (DeleteTagsOptions Nothing Nothing)
@@ -4456,6 +4531,7 @@ deleteTags resources setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteTags request
@@ -4478,7 +4554,7 @@ __Required Parameters__
 deleteVolume :
     String
     -> (DeleteVolumeOptions -> DeleteVolumeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVolume volumeId setOptions =
   let
     options = setOptions (DeleteVolumeOptions Nothing)
@@ -4491,6 +4567,7 @@ deleteVolume volumeId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteVolume request
@@ -4512,7 +4589,7 @@ __Required Parameters__
 deleteVpc :
     String
     -> (DeleteVpcOptions -> DeleteVpcOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVpc vpcId setOptions =
   let
     options = setOptions (DeleteVpcOptions Nothing)
@@ -4525,6 +4602,7 @@ deleteVpc vpcId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteVpc request
@@ -4546,7 +4624,7 @@ __Required Parameters__
 deleteVpcEndpoints :
     (List String)
     -> (DeleteVpcEndpointsOptions -> DeleteVpcEndpointsOptions)
-    -> AWS.Http.UnsignedRequest DeleteVpcEndpointsResult
+    -> AWS.Request DeleteVpcEndpointsResult
 deleteVpcEndpoints vpcEndpointIds setOptions =
   let
     options = setOptions (DeleteVpcEndpointsOptions Nothing)
@@ -4559,6 +4637,7 @@ deleteVpcEndpoints vpcEndpointIds setOptions =
             JE.null
         )
         deleteVpcEndpointsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteVpcEndpoints request
@@ -4580,7 +4659,7 @@ __Required Parameters__
 deleteVpcPeeringConnection :
     String
     -> (DeleteVpcPeeringConnectionOptions -> DeleteVpcPeeringConnectionOptions)
-    -> AWS.Http.UnsignedRequest DeleteVpcPeeringConnectionResult
+    -> AWS.Request DeleteVpcPeeringConnectionResult
 deleteVpcPeeringConnection vpcPeeringConnectionId setOptions =
   let
     options = setOptions (DeleteVpcPeeringConnectionOptions Nothing)
@@ -4593,6 +4672,7 @@ deleteVpcPeeringConnection vpcPeeringConnectionId setOptions =
             JE.null
         )
         deleteVpcPeeringConnectionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteVpcPeeringConnection request
@@ -4614,7 +4694,7 @@ __Required Parameters__
 deleteVpnConnection :
     String
     -> (DeleteVpnConnectionOptions -> DeleteVpnConnectionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVpnConnection vpnConnectionId setOptions =
   let
     options = setOptions (DeleteVpnConnectionOptions Nothing)
@@ -4627,6 +4707,7 @@ deleteVpnConnection vpnConnectionId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteVpnConnection request
@@ -4649,7 +4730,7 @@ __Required Parameters__
 deleteVpnConnectionRoute :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVpnConnectionRoute vpnConnectionId destinationCidrBlock =
     AWS.Http.unsignedRequest
         "DeleteVpnConnectionRoute"
@@ -4659,6 +4740,7 @@ deleteVpnConnectionRoute vpnConnectionId destinationCidrBlock =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -4673,7 +4755,7 @@ __Required Parameters__
 deleteVpnGateway :
     String
     -> (DeleteVpnGatewayOptions -> DeleteVpnGatewayOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVpnGateway vpnGatewayId setOptions =
   let
     options = setOptions (DeleteVpnGatewayOptions Nothing)
@@ -4686,6 +4768,7 @@ deleteVpnGateway vpnGatewayId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteVpnGateway request
@@ -4707,7 +4790,7 @@ __Required Parameters__
 deregisterImage :
     String
     -> (DeregisterImageOptions -> DeregisterImageOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deregisterImage imageId setOptions =
   let
     options = setOptions (DeregisterImageOptions Nothing)
@@ -4720,6 +4803,7 @@ deregisterImage imageId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deregisterImage request
@@ -4739,7 +4823,7 @@ __Required Parameters__
 -}
 describeAccountAttributes :
     (DescribeAccountAttributesOptions -> DescribeAccountAttributesOptions)
-    -> AWS.Http.UnsignedRequest DescribeAccountAttributesResult
+    -> AWS.Request DescribeAccountAttributesResult
 describeAccountAttributes setOptions =
   let
     options = setOptions (DescribeAccountAttributesOptions Nothing Nothing)
@@ -4752,6 +4836,7 @@ describeAccountAttributes setOptions =
             JE.null
         )
         describeAccountAttributesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAccountAttributes request
@@ -4772,7 +4857,7 @@ __Required Parameters__
 -}
 describeAddresses :
     (DescribeAddressesOptions -> DescribeAddressesOptions)
-    -> AWS.Http.UnsignedRequest DescribeAddressesResult
+    -> AWS.Request DescribeAddressesResult
 describeAddresses setOptions =
   let
     options = setOptions (DescribeAddressesOptions Nothing Nothing Nothing Nothing)
@@ -4785,6 +4870,7 @@ describeAddresses setOptions =
             JE.null
         )
         describeAddressesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAddresses request
@@ -4807,7 +4893,7 @@ __Required Parameters__
 -}
 describeAvailabilityZones :
     (DescribeAvailabilityZonesOptions -> DescribeAvailabilityZonesOptions)
-    -> AWS.Http.UnsignedRequest DescribeAvailabilityZonesResult
+    -> AWS.Request DescribeAvailabilityZonesResult
 describeAvailabilityZones setOptions =
   let
     options = setOptions (DescribeAvailabilityZonesOptions Nothing Nothing Nothing)
@@ -4820,6 +4906,7 @@ describeAvailabilityZones setOptions =
             JE.null
         )
         describeAvailabilityZonesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAvailabilityZones request
@@ -4841,7 +4928,7 @@ __Required Parameters__
 -}
 describeBundleTasks :
     (DescribeBundleTasksOptions -> DescribeBundleTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeBundleTasksResult
+    -> AWS.Request DescribeBundleTasksResult
 describeBundleTasks setOptions =
   let
     options = setOptions (DescribeBundleTasksOptions Nothing Nothing Nothing)
@@ -4854,6 +4941,7 @@ describeBundleTasks setOptions =
             JE.null
         )
         describeBundleTasksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeBundleTasks request
@@ -4875,7 +4963,7 @@ __Required Parameters__
 -}
 describeClassicLinkInstances :
     (DescribeClassicLinkInstancesOptions -> DescribeClassicLinkInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeClassicLinkInstancesResult
+    -> AWS.Request DescribeClassicLinkInstancesResult
 describeClassicLinkInstances setOptions =
   let
     options = setOptions (DescribeClassicLinkInstancesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -4888,6 +4976,7 @@ describeClassicLinkInstances setOptions =
             JE.null
         )
         describeClassicLinkInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeClassicLinkInstances request
@@ -4911,7 +5000,7 @@ __Required Parameters__
 -}
 describeConversionTasks :
     (DescribeConversionTasksOptions -> DescribeConversionTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeConversionTasksResult
+    -> AWS.Request DescribeConversionTasksResult
 describeConversionTasks setOptions =
   let
     options = setOptions (DescribeConversionTasksOptions Nothing Nothing)
@@ -4924,6 +5013,7 @@ describeConversionTasks setOptions =
             JE.null
         )
         describeConversionTasksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConversionTasks request
@@ -4944,7 +5034,7 @@ __Required Parameters__
 -}
 describeCustomerGateways :
     (DescribeCustomerGatewaysOptions -> DescribeCustomerGatewaysOptions)
-    -> AWS.Http.UnsignedRequest DescribeCustomerGatewaysResult
+    -> AWS.Request DescribeCustomerGatewaysResult
 describeCustomerGateways setOptions =
   let
     options = setOptions (DescribeCustomerGatewaysOptions Nothing Nothing Nothing)
@@ -4957,6 +5047,7 @@ describeCustomerGateways setOptions =
             JE.null
         )
         describeCustomerGatewaysResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCustomerGateways request
@@ -4978,7 +5069,7 @@ __Required Parameters__
 -}
 describeDhcpOptions :
     (DescribeDhcpOptionsOptions -> DescribeDhcpOptionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeDhcpOptionsResult
+    -> AWS.Request DescribeDhcpOptionsResult
 describeDhcpOptions setOptions =
   let
     options = setOptions (DescribeDhcpOptionsOptions Nothing Nothing Nothing)
@@ -4991,6 +5082,7 @@ describeDhcpOptions setOptions =
             JE.null
         )
         describeDhcpOptionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDhcpOptions request
@@ -5012,7 +5104,7 @@ __Required Parameters__
 -}
 describeEgressOnlyInternetGateways :
     (DescribeEgressOnlyInternetGatewaysOptions -> DescribeEgressOnlyInternetGatewaysOptions)
-    -> AWS.Http.UnsignedRequest DescribeEgressOnlyInternetGatewaysResult
+    -> AWS.Request DescribeEgressOnlyInternetGatewaysResult
 describeEgressOnlyInternetGateways setOptions =
   let
     options = setOptions (DescribeEgressOnlyInternetGatewaysOptions Nothing Nothing Nothing Nothing)
@@ -5025,6 +5117,7 @@ describeEgressOnlyInternetGateways setOptions =
             JE.null
         )
         describeEgressOnlyInternetGatewaysResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEgressOnlyInternetGateways request
@@ -5047,7 +5140,7 @@ __Required Parameters__
 -}
 describeExportTasks :
     (DescribeExportTasksOptions -> DescribeExportTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeExportTasksResult
+    -> AWS.Request DescribeExportTasksResult
 describeExportTasks setOptions =
   let
     options = setOptions (DescribeExportTasksOptions Nothing)
@@ -5060,6 +5153,7 @@ describeExportTasks setOptions =
             JE.null
         )
         describeExportTasksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeExportTasks request
@@ -5079,7 +5173,7 @@ __Required Parameters__
 -}
 describeFlowLogs :
     (DescribeFlowLogsOptions -> DescribeFlowLogsOptions)
-    -> AWS.Http.UnsignedRequest DescribeFlowLogsResult
+    -> AWS.Request DescribeFlowLogsResult
 describeFlowLogs setOptions =
   let
     options = setOptions (DescribeFlowLogsOptions Nothing Nothing Nothing Nothing)
@@ -5092,6 +5186,7 @@ describeFlowLogs setOptions =
             JE.null
         )
         describeFlowLogsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeFlowLogs request
@@ -5114,7 +5209,7 @@ __Required Parameters__
 -}
 describeHostReservationOfferings :
     (DescribeHostReservationOfferingsOptions -> DescribeHostReservationOfferingsOptions)
-    -> AWS.Http.UnsignedRequest DescribeHostReservationOfferingsResult
+    -> AWS.Request DescribeHostReservationOfferingsResult
 describeHostReservationOfferings setOptions =
   let
     options = setOptions (DescribeHostReservationOfferingsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -5127,6 +5222,7 @@ describeHostReservationOfferings setOptions =
             JE.null
         )
         describeHostReservationOfferingsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeHostReservationOfferings request
@@ -5151,7 +5247,7 @@ __Required Parameters__
 -}
 describeHostReservations :
     (DescribeHostReservationsOptions -> DescribeHostReservationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeHostReservationsResult
+    -> AWS.Request DescribeHostReservationsResult
 describeHostReservations setOptions =
   let
     options = setOptions (DescribeHostReservationsOptions Nothing Nothing Nothing Nothing)
@@ -5164,6 +5260,7 @@ describeHostReservations setOptions =
             JE.null
         )
         describeHostReservationsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeHostReservations request
@@ -5186,7 +5283,7 @@ __Required Parameters__
 -}
 describeHosts :
     (DescribeHostsOptions -> DescribeHostsOptions)
-    -> AWS.Http.UnsignedRequest DescribeHostsResult
+    -> AWS.Request DescribeHostsResult
 describeHosts setOptions =
   let
     options = setOptions (DescribeHostsOptions Nothing Nothing Nothing Nothing)
@@ -5199,6 +5296,7 @@ describeHosts setOptions =
             JE.null
         )
         describeHostsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeHosts request
@@ -5221,7 +5319,7 @@ __Required Parameters__
 -}
 describeIdFormat :
     (DescribeIdFormatOptions -> DescribeIdFormatOptions)
-    -> AWS.Http.UnsignedRequest DescribeIdFormatResult
+    -> AWS.Request DescribeIdFormatResult
 describeIdFormat setOptions =
   let
     options = setOptions (DescribeIdFormatOptions Nothing)
@@ -5234,6 +5332,7 @@ describeIdFormat setOptions =
             JE.null
         )
         describeIdFormatResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeIdFormat request
@@ -5255,7 +5354,7 @@ __Required Parameters__
 describeIdentityIdFormat :
     String
     -> (DescribeIdentityIdFormatOptions -> DescribeIdentityIdFormatOptions)
-    -> AWS.Http.UnsignedRequest DescribeIdentityIdFormatResult
+    -> AWS.Request DescribeIdentityIdFormatResult
 describeIdentityIdFormat principalArn setOptions =
   let
     options = setOptions (DescribeIdentityIdFormatOptions Nothing)
@@ -5268,6 +5367,7 @@ describeIdentityIdFormat principalArn setOptions =
             JE.null
         )
         describeIdentityIdFormatResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeIdentityIdFormat request
@@ -5291,7 +5391,7 @@ describeImageAttribute :
     String
     -> ImageAttributeName
     -> (DescribeImageAttributeOptions -> DescribeImageAttributeOptions)
-    -> AWS.Http.UnsignedRequest ImageAttribute
+    -> AWS.Request ImageAttribute
 describeImageAttribute imageId attribute setOptions =
   let
     options = setOptions (DescribeImageAttributeOptions Nothing)
@@ -5304,6 +5404,7 @@ describeImageAttribute imageId attribute setOptions =
             JE.null
         )
         imageAttributeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeImageAttribute request
@@ -5323,7 +5424,7 @@ __Required Parameters__
 -}
 describeImages :
     (DescribeImagesOptions -> DescribeImagesOptions)
-    -> AWS.Http.UnsignedRequest DescribeImagesResult
+    -> AWS.Request DescribeImagesResult
 describeImages setOptions =
   let
     options = setOptions (DescribeImagesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -5336,6 +5437,7 @@ describeImages setOptions =
             JE.null
         )
         describeImagesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeImages request
@@ -5359,7 +5461,7 @@ __Required Parameters__
 -}
 describeImportImageTasks :
     (DescribeImportImageTasksOptions -> DescribeImportImageTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeImportImageTasksResult
+    -> AWS.Request DescribeImportImageTasksResult
 describeImportImageTasks setOptions =
   let
     options = setOptions (DescribeImportImageTasksOptions Nothing Nothing Nothing Nothing Nothing)
@@ -5372,6 +5474,7 @@ describeImportImageTasks setOptions =
             JE.null
         )
         describeImportImageTasksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeImportImageTasks request
@@ -5395,7 +5498,7 @@ __Required Parameters__
 -}
 describeImportSnapshotTasks :
     (DescribeImportSnapshotTasksOptions -> DescribeImportSnapshotTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeImportSnapshotTasksResult
+    -> AWS.Request DescribeImportSnapshotTasksResult
 describeImportSnapshotTasks setOptions =
   let
     options = setOptions (DescribeImportSnapshotTasksOptions Nothing Nothing Nothing Nothing Nothing)
@@ -5408,6 +5511,7 @@ describeImportSnapshotTasks setOptions =
             JE.null
         )
         describeImportSnapshotTasksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeImportSnapshotTasks request
@@ -5435,7 +5539,7 @@ describeInstanceAttribute :
     String
     -> InstanceAttributeName
     -> (DescribeInstanceAttributeOptions -> DescribeInstanceAttributeOptions)
-    -> AWS.Http.UnsignedRequest InstanceAttribute
+    -> AWS.Request InstanceAttribute
 describeInstanceAttribute instanceId attribute setOptions =
   let
     options = setOptions (DescribeInstanceAttributeOptions Nothing)
@@ -5448,6 +5552,7 @@ describeInstanceAttribute instanceId attribute setOptions =
             JE.null
         )
         instanceAttributeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstanceAttribute request
@@ -5467,7 +5572,7 @@ __Required Parameters__
 -}
 describeInstanceStatus :
     (DescribeInstanceStatusOptions -> DescribeInstanceStatusOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstanceStatusResult
+    -> AWS.Request DescribeInstanceStatusResult
 describeInstanceStatus setOptions =
   let
     options = setOptions (DescribeInstanceStatusOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -5480,6 +5585,7 @@ describeInstanceStatus setOptions =
             JE.null
         )
         describeInstanceStatusResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstanceStatus request
@@ -5504,7 +5610,7 @@ __Required Parameters__
 -}
 describeInstances :
     (DescribeInstancesOptions -> DescribeInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstancesResult
+    -> AWS.Request DescribeInstancesResult
 describeInstances setOptions =
   let
     options = setOptions (DescribeInstancesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -5517,6 +5623,7 @@ describeInstances setOptions =
             JE.null
         )
         describeInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstances request
@@ -5540,7 +5647,7 @@ __Required Parameters__
 -}
 describeInternetGateways :
     (DescribeInternetGatewaysOptions -> DescribeInternetGatewaysOptions)
-    -> AWS.Http.UnsignedRequest DescribeInternetGatewaysResult
+    -> AWS.Request DescribeInternetGatewaysResult
 describeInternetGateways setOptions =
   let
     options = setOptions (DescribeInternetGatewaysOptions Nothing Nothing Nothing)
@@ -5553,6 +5660,7 @@ describeInternetGateways setOptions =
             JE.null
         )
         describeInternetGatewaysResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInternetGateways request
@@ -5574,7 +5682,7 @@ __Required Parameters__
 -}
 describeKeyPairs :
     (DescribeKeyPairsOptions -> DescribeKeyPairsOptions)
-    -> AWS.Http.UnsignedRequest DescribeKeyPairsResult
+    -> AWS.Request DescribeKeyPairsResult
 describeKeyPairs setOptions =
   let
     options = setOptions (DescribeKeyPairsOptions Nothing Nothing Nothing)
@@ -5587,6 +5695,7 @@ describeKeyPairs setOptions =
             JE.null
         )
         describeKeyPairsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeKeyPairs request
@@ -5608,7 +5717,7 @@ __Required Parameters__
 -}
 describeMovingAddresses :
     (DescribeMovingAddressesOptions -> DescribeMovingAddressesOptions)
-    -> AWS.Http.UnsignedRequest DescribeMovingAddressesResult
+    -> AWS.Request DescribeMovingAddressesResult
 describeMovingAddresses setOptions =
   let
     options = setOptions (DescribeMovingAddressesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -5621,6 +5730,7 @@ describeMovingAddresses setOptions =
             JE.null
         )
         describeMovingAddressesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMovingAddresses request
@@ -5644,7 +5754,7 @@ __Required Parameters__
 -}
 describeNatGateways :
     (DescribeNatGatewaysOptions -> DescribeNatGatewaysOptions)
-    -> AWS.Http.UnsignedRequest DescribeNatGatewaysResult
+    -> AWS.Request DescribeNatGatewaysResult
 describeNatGateways setOptions =
   let
     options = setOptions (DescribeNatGatewaysOptions Nothing Nothing Nothing Nothing)
@@ -5657,6 +5767,7 @@ describeNatGateways setOptions =
             JE.null
         )
         describeNatGatewaysResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeNatGateways request
@@ -5679,7 +5790,7 @@ __Required Parameters__
 -}
 describeNetworkAcls :
     (DescribeNetworkAclsOptions -> DescribeNetworkAclsOptions)
-    -> AWS.Http.UnsignedRequest DescribeNetworkAclsResult
+    -> AWS.Request DescribeNetworkAclsResult
 describeNetworkAcls setOptions =
   let
     options = setOptions (DescribeNetworkAclsOptions Nothing Nothing Nothing)
@@ -5692,6 +5803,7 @@ describeNetworkAcls setOptions =
             JE.null
         )
         describeNetworkAclsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeNetworkAcls request
@@ -5715,7 +5827,7 @@ __Required Parameters__
 describeNetworkInterfaceAttribute :
     String
     -> (DescribeNetworkInterfaceAttributeOptions -> DescribeNetworkInterfaceAttributeOptions)
-    -> AWS.Http.UnsignedRequest DescribeNetworkInterfaceAttributeResult
+    -> AWS.Request DescribeNetworkInterfaceAttributeResult
 describeNetworkInterfaceAttribute networkInterfaceId setOptions =
   let
     options = setOptions (DescribeNetworkInterfaceAttributeOptions Nothing Nothing)
@@ -5728,6 +5840,7 @@ describeNetworkInterfaceAttribute networkInterfaceId setOptions =
             JE.null
         )
         describeNetworkInterfaceAttributeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeNetworkInterfaceAttribute request
@@ -5748,7 +5861,7 @@ __Required Parameters__
 -}
 describeNetworkInterfaces :
     (DescribeNetworkInterfacesOptions -> DescribeNetworkInterfacesOptions)
-    -> AWS.Http.UnsignedRequest DescribeNetworkInterfacesResult
+    -> AWS.Request DescribeNetworkInterfacesResult
 describeNetworkInterfaces setOptions =
   let
     options = setOptions (DescribeNetworkInterfacesOptions Nothing Nothing Nothing)
@@ -5761,6 +5874,7 @@ describeNetworkInterfaces setOptions =
             JE.null
         )
         describeNetworkInterfacesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeNetworkInterfaces request
@@ -5782,7 +5896,7 @@ __Required Parameters__
 -}
 describePlacementGroups :
     (DescribePlacementGroupsOptions -> DescribePlacementGroupsOptions)
-    -> AWS.Http.UnsignedRequest DescribePlacementGroupsResult
+    -> AWS.Request DescribePlacementGroupsResult
 describePlacementGroups setOptions =
   let
     options = setOptions (DescribePlacementGroupsOptions Nothing Nothing Nothing)
@@ -5795,6 +5909,7 @@ describePlacementGroups setOptions =
             JE.null
         )
         describePlacementGroupsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describePlacementGroups request
@@ -5816,7 +5931,7 @@ __Required Parameters__
 -}
 describePrefixLists :
     (DescribePrefixListsOptions -> DescribePrefixListsOptions)
-    -> AWS.Http.UnsignedRequest DescribePrefixListsResult
+    -> AWS.Request DescribePrefixListsResult
 describePrefixLists setOptions =
   let
     options = setOptions (DescribePrefixListsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -5829,6 +5944,7 @@ describePrefixLists setOptions =
             JE.null
         )
         describePrefixListsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describePrefixLists request
@@ -5852,7 +5968,7 @@ __Required Parameters__
 -}
 describeRegions :
     (DescribeRegionsOptions -> DescribeRegionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeRegionsResult
+    -> AWS.Request DescribeRegionsResult
 describeRegions setOptions =
   let
     options = setOptions (DescribeRegionsOptions Nothing Nothing Nothing)
@@ -5865,6 +5981,7 @@ describeRegions setOptions =
             JE.null
         )
         describeRegionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeRegions request
@@ -5886,7 +6003,7 @@ __Required Parameters__
 -}
 describeReservedInstances :
     (DescribeReservedInstancesOptions -> DescribeReservedInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeReservedInstancesResult
+    -> AWS.Request DescribeReservedInstancesResult
 describeReservedInstances setOptions =
   let
     options = setOptions (DescribeReservedInstancesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -5899,6 +6016,7 @@ describeReservedInstances setOptions =
             JE.null
         )
         describeReservedInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedInstances request
@@ -5922,7 +6040,7 @@ __Required Parameters__
 -}
 describeReservedInstancesListings :
     (DescribeReservedInstancesListingsOptions -> DescribeReservedInstancesListingsOptions)
-    -> AWS.Http.UnsignedRequest DescribeReservedInstancesListingsResult
+    -> AWS.Request DescribeReservedInstancesListingsResult
 describeReservedInstancesListings setOptions =
   let
     options = setOptions (DescribeReservedInstancesListingsOptions Nothing Nothing Nothing)
@@ -5935,6 +6053,7 @@ describeReservedInstancesListings setOptions =
             JE.null
         )
         describeReservedInstancesListingsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedInstancesListings request
@@ -5956,7 +6075,7 @@ __Required Parameters__
 -}
 describeReservedInstancesModifications :
     (DescribeReservedInstancesModificationsOptions -> DescribeReservedInstancesModificationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeReservedInstancesModificationsResult
+    -> AWS.Request DescribeReservedInstancesModificationsResult
 describeReservedInstancesModifications setOptions =
   let
     options = setOptions (DescribeReservedInstancesModificationsOptions Nothing Nothing Nothing)
@@ -5969,6 +6088,7 @@ describeReservedInstancesModifications setOptions =
             JE.null
         )
         describeReservedInstancesModificationsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedInstancesModifications request
@@ -5990,7 +6110,7 @@ __Required Parameters__
 -}
 describeReservedInstancesOfferings :
     (DescribeReservedInstancesOfferingsOptions -> DescribeReservedInstancesOfferingsOptions)
-    -> AWS.Http.UnsignedRequest DescribeReservedInstancesOfferingsResult
+    -> AWS.Request DescribeReservedInstancesOfferingsResult
 describeReservedInstancesOfferings setOptions =
   let
     options = setOptions (DescribeReservedInstancesOfferingsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -6003,6 +6123,7 @@ describeReservedInstancesOfferings setOptions =
             JE.null
         )
         describeReservedInstancesOfferingsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedInstancesOfferings request
@@ -6036,7 +6157,7 @@ __Required Parameters__
 -}
 describeRouteTables :
     (DescribeRouteTablesOptions -> DescribeRouteTablesOptions)
-    -> AWS.Http.UnsignedRequest DescribeRouteTablesResult
+    -> AWS.Request DescribeRouteTablesResult
 describeRouteTables setOptions =
   let
     options = setOptions (DescribeRouteTablesOptions Nothing Nothing Nothing)
@@ -6049,6 +6170,7 @@ describeRouteTables setOptions =
             JE.null
         )
         describeRouteTablesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeRouteTables request
@@ -6074,7 +6196,7 @@ describeScheduledInstanceAvailability :
     ScheduledInstanceRecurrenceRequest
     -> SlotDateTimeRangeRequest
     -> (DescribeScheduledInstanceAvailabilityOptions -> DescribeScheduledInstanceAvailabilityOptions)
-    -> AWS.Http.UnsignedRequest DescribeScheduledInstanceAvailabilityResult
+    -> AWS.Request DescribeScheduledInstanceAvailabilityResult
 describeScheduledInstanceAvailability recurrence firstSlotStartTimeRange setOptions =
   let
     options = setOptions (DescribeScheduledInstanceAvailabilityOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -6087,6 +6209,7 @@ describeScheduledInstanceAvailability recurrence firstSlotStartTimeRange setOpti
             JE.null
         )
         describeScheduledInstanceAvailabilityResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeScheduledInstanceAvailability request
@@ -6111,7 +6234,7 @@ __Required Parameters__
 -}
 describeScheduledInstances :
     (DescribeScheduledInstancesOptions -> DescribeScheduledInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeScheduledInstancesResult
+    -> AWS.Request DescribeScheduledInstancesResult
 describeScheduledInstances setOptions =
   let
     options = setOptions (DescribeScheduledInstancesOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -6124,6 +6247,7 @@ describeScheduledInstances setOptions =
             JE.null
         )
         describeScheduledInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeScheduledInstances request
@@ -6150,7 +6274,7 @@ __Required Parameters__
 describeSecurityGroupReferences :
     (List String)
     -> (DescribeSecurityGroupReferencesOptions -> DescribeSecurityGroupReferencesOptions)
-    -> AWS.Http.UnsignedRequest DescribeSecurityGroupReferencesResult
+    -> AWS.Request DescribeSecurityGroupReferencesResult
 describeSecurityGroupReferences groupId setOptions =
   let
     options = setOptions (DescribeSecurityGroupReferencesOptions Nothing)
@@ -6163,6 +6287,7 @@ describeSecurityGroupReferences groupId setOptions =
             JE.null
         )
         describeSecurityGroupReferencesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSecurityGroupReferences request
@@ -6182,7 +6307,7 @@ __Required Parameters__
 -}
 describeSecurityGroups :
     (DescribeSecurityGroupsOptions -> DescribeSecurityGroupsOptions)
-    -> AWS.Http.UnsignedRequest DescribeSecurityGroupsResult
+    -> AWS.Request DescribeSecurityGroupsResult
 describeSecurityGroups setOptions =
   let
     options = setOptions (DescribeSecurityGroupsOptions Nothing Nothing Nothing Nothing)
@@ -6195,6 +6320,7 @@ describeSecurityGroups setOptions =
             JE.null
         )
         describeSecurityGroupsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSecurityGroups request
@@ -6221,7 +6347,7 @@ describeSnapshotAttribute :
     String
     -> SnapshotAttributeName
     -> (DescribeSnapshotAttributeOptions -> DescribeSnapshotAttributeOptions)
-    -> AWS.Http.UnsignedRequest DescribeSnapshotAttributeResult
+    -> AWS.Request DescribeSnapshotAttributeResult
 describeSnapshotAttribute snapshotId attribute setOptions =
   let
     options = setOptions (DescribeSnapshotAttributeOptions Nothing)
@@ -6234,6 +6360,7 @@ describeSnapshotAttribute snapshotId attribute setOptions =
             JE.null
         )
         describeSnapshotAttributeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSnapshotAttribute request
@@ -6253,7 +6380,7 @@ __Required Parameters__
 -}
 describeSnapshots :
     (DescribeSnapshotsOptions -> DescribeSnapshotsOptions)
-    -> AWS.Http.UnsignedRequest DescribeSnapshotsResult
+    -> AWS.Request DescribeSnapshotsResult
 describeSnapshots setOptions =
   let
     options = setOptions (DescribeSnapshotsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -6266,6 +6393,7 @@ describeSnapshots setOptions =
             JE.null
         )
         describeSnapshotsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSnapshots request
@@ -6291,7 +6419,7 @@ __Required Parameters__
 -}
 describeSpotDatafeedSubscription :
     (DescribeSpotDatafeedSubscriptionOptions -> DescribeSpotDatafeedSubscriptionOptions)
-    -> AWS.Http.UnsignedRequest DescribeSpotDatafeedSubscriptionResult
+    -> AWS.Request DescribeSpotDatafeedSubscriptionResult
 describeSpotDatafeedSubscription setOptions =
   let
     options = setOptions (DescribeSpotDatafeedSubscriptionOptions Nothing)
@@ -6304,6 +6432,7 @@ describeSpotDatafeedSubscription setOptions =
             JE.null
         )
         describeSpotDatafeedSubscriptionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSpotDatafeedSubscription request
@@ -6325,7 +6454,7 @@ __Required Parameters__
 describeSpotFleetInstances :
     String
     -> (DescribeSpotFleetInstancesOptions -> DescribeSpotFleetInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeSpotFleetInstancesResponse
+    -> AWS.Request DescribeSpotFleetInstancesResponse
 describeSpotFleetInstances spotFleetRequestId setOptions =
   let
     options = setOptions (DescribeSpotFleetInstancesOptions Nothing Nothing Nothing)
@@ -6338,6 +6467,7 @@ describeSpotFleetInstances spotFleetRequestId setOptions =
             JE.null
         )
         describeSpotFleetInstancesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSpotFleetInstances request
@@ -6363,7 +6493,7 @@ describeSpotFleetRequestHistory :
     String
     -> Date
     -> (DescribeSpotFleetRequestHistoryOptions -> DescribeSpotFleetRequestHistoryOptions)
-    -> AWS.Http.UnsignedRequest DescribeSpotFleetRequestHistoryResponse
+    -> AWS.Request DescribeSpotFleetRequestHistoryResponse
 describeSpotFleetRequestHistory spotFleetRequestId startTime setOptions =
   let
     options = setOptions (DescribeSpotFleetRequestHistoryOptions Nothing Nothing Nothing Nothing)
@@ -6376,6 +6506,7 @@ describeSpotFleetRequestHistory spotFleetRequestId startTime setOptions =
             JE.null
         )
         describeSpotFleetRequestHistoryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSpotFleetRequestHistory request
@@ -6398,7 +6529,7 @@ __Required Parameters__
 -}
 describeSpotFleetRequests :
     (DescribeSpotFleetRequestsOptions -> DescribeSpotFleetRequestsOptions)
-    -> AWS.Http.UnsignedRequest DescribeSpotFleetRequestsResponse
+    -> AWS.Request DescribeSpotFleetRequestsResponse
 describeSpotFleetRequests setOptions =
   let
     options = setOptions (DescribeSpotFleetRequestsOptions Nothing Nothing Nothing Nothing)
@@ -6411,6 +6542,7 @@ describeSpotFleetRequests setOptions =
             JE.null
         )
         describeSpotFleetRequestsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSpotFleetRequests request
@@ -6433,7 +6565,7 @@ __Required Parameters__
 -}
 describeSpotInstanceRequests :
     (DescribeSpotInstanceRequestsOptions -> DescribeSpotInstanceRequestsOptions)
-    -> AWS.Http.UnsignedRequest DescribeSpotInstanceRequestsResult
+    -> AWS.Request DescribeSpotInstanceRequestsResult
 describeSpotInstanceRequests setOptions =
   let
     options = setOptions (DescribeSpotInstanceRequestsOptions Nothing Nothing Nothing)
@@ -6446,6 +6578,7 @@ describeSpotInstanceRequests setOptions =
             JE.null
         )
         describeSpotInstanceRequestsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSpotInstanceRequests request
@@ -6467,7 +6600,7 @@ __Required Parameters__
 -}
 describeSpotPriceHistory :
     (DescribeSpotPriceHistoryOptions -> DescribeSpotPriceHistoryOptions)
-    -> AWS.Http.UnsignedRequest DescribeSpotPriceHistoryResult
+    -> AWS.Request DescribeSpotPriceHistoryResult
 describeSpotPriceHistory setOptions =
   let
     options = setOptions (DescribeSpotPriceHistoryOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -6480,6 +6613,7 @@ describeSpotPriceHistory setOptions =
             JE.null
         )
         describeSpotPriceHistoryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSpotPriceHistory request
@@ -6509,7 +6643,7 @@ __Required Parameters__
 describeStaleSecurityGroups :
     String
     -> (DescribeStaleSecurityGroupsOptions -> DescribeStaleSecurityGroupsOptions)
-    -> AWS.Http.UnsignedRequest DescribeStaleSecurityGroupsResult
+    -> AWS.Request DescribeStaleSecurityGroupsResult
 describeStaleSecurityGroups vpcId setOptions =
   let
     options = setOptions (DescribeStaleSecurityGroupsOptions Nothing Nothing Nothing)
@@ -6522,6 +6656,7 @@ describeStaleSecurityGroups vpcId setOptions =
             JE.null
         )
         describeStaleSecurityGroupsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeStaleSecurityGroups request
@@ -6543,7 +6678,7 @@ __Required Parameters__
 -}
 describeSubnets :
     (DescribeSubnetsOptions -> DescribeSubnetsOptions)
-    -> AWS.Http.UnsignedRequest DescribeSubnetsResult
+    -> AWS.Request DescribeSubnetsResult
 describeSubnets setOptions =
   let
     options = setOptions (DescribeSubnetsOptions Nothing Nothing Nothing)
@@ -6556,6 +6691,7 @@ describeSubnets setOptions =
             JE.null
         )
         describeSubnetsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSubnets request
@@ -6577,7 +6713,7 @@ __Required Parameters__
 -}
 describeTags :
     (DescribeTagsOptions -> DescribeTagsOptions)
-    -> AWS.Http.UnsignedRequest DescribeTagsResult
+    -> AWS.Request DescribeTagsResult
 describeTags setOptions =
   let
     options = setOptions (DescribeTagsOptions Nothing Nothing Nothing Nothing)
@@ -6590,6 +6726,7 @@ describeTags setOptions =
             JE.null
         )
         describeTagsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTags request
@@ -6614,7 +6751,7 @@ __Required Parameters__
 describeVolumeAttribute :
     String
     -> (DescribeVolumeAttributeOptions -> DescribeVolumeAttributeOptions)
-    -> AWS.Http.UnsignedRequest DescribeVolumeAttributeResult
+    -> AWS.Request DescribeVolumeAttributeResult
 describeVolumeAttribute volumeId setOptions =
   let
     options = setOptions (DescribeVolumeAttributeOptions Nothing Nothing)
@@ -6627,6 +6764,7 @@ describeVolumeAttribute volumeId setOptions =
             JE.null
         )
         describeVolumeAttributeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVolumeAttribute request
@@ -6647,7 +6785,7 @@ __Required Parameters__
 -}
 describeVolumeStatus :
     (DescribeVolumeStatusOptions -> DescribeVolumeStatusOptions)
-    -> AWS.Http.UnsignedRequest DescribeVolumeStatusResult
+    -> AWS.Request DescribeVolumeStatusResult
 describeVolumeStatus setOptions =
   let
     options = setOptions (DescribeVolumeStatusOptions Nothing Nothing Nothing Nothing Nothing)
@@ -6660,6 +6798,7 @@ describeVolumeStatus setOptions =
             JE.null
         )
         describeVolumeStatusResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVolumeStatus request
@@ -6683,7 +6822,7 @@ __Required Parameters__
 -}
 describeVolumes :
     (DescribeVolumesOptions -> DescribeVolumesOptions)
-    -> AWS.Http.UnsignedRequest DescribeVolumesResult
+    -> AWS.Request DescribeVolumesResult
 describeVolumes setOptions =
   let
     options = setOptions (DescribeVolumesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -6696,6 +6835,7 @@ describeVolumes setOptions =
             JE.null
         )
         describeVolumesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVolumes request
@@ -6723,7 +6863,7 @@ describeVpcAttribute :
     String
     -> VpcAttributeName
     -> (DescribeVpcAttributeOptions -> DescribeVpcAttributeOptions)
-    -> AWS.Http.UnsignedRequest DescribeVpcAttributeResult
+    -> AWS.Request DescribeVpcAttributeResult
 describeVpcAttribute vpcId attribute setOptions =
   let
     options = setOptions (DescribeVpcAttributeOptions Nothing)
@@ -6736,6 +6876,7 @@ describeVpcAttribute vpcId attribute setOptions =
             JE.null
         )
         describeVpcAttributeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVpcAttribute request
@@ -6755,7 +6896,7 @@ __Required Parameters__
 -}
 describeVpcClassicLink :
     (DescribeVpcClassicLinkOptions -> DescribeVpcClassicLinkOptions)
-    -> AWS.Http.UnsignedRequest DescribeVpcClassicLinkResult
+    -> AWS.Request DescribeVpcClassicLinkResult
 describeVpcClassicLink setOptions =
   let
     options = setOptions (DescribeVpcClassicLinkOptions Nothing Nothing Nothing)
@@ -6768,6 +6909,7 @@ describeVpcClassicLink setOptions =
             JE.null
         )
         describeVpcClassicLinkResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVpcClassicLink request
@@ -6789,7 +6931,7 @@ __Required Parameters__
 -}
 describeVpcClassicLinkDnsSupport :
     (DescribeVpcClassicLinkDnsSupportOptions -> DescribeVpcClassicLinkDnsSupportOptions)
-    -> AWS.Http.UnsignedRequest DescribeVpcClassicLinkDnsSupportResult
+    -> AWS.Request DescribeVpcClassicLinkDnsSupportResult
 describeVpcClassicLinkDnsSupport setOptions =
   let
     options = setOptions (DescribeVpcClassicLinkDnsSupportOptions Nothing Nothing Nothing)
@@ -6802,6 +6944,7 @@ describeVpcClassicLinkDnsSupport setOptions =
             JE.null
         )
         describeVpcClassicLinkDnsSupportResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVpcClassicLinkDnsSupport request
@@ -6823,7 +6966,7 @@ __Required Parameters__
 -}
 describeVpcEndpointServices :
     (DescribeVpcEndpointServicesOptions -> DescribeVpcEndpointServicesOptions)
-    -> AWS.Http.UnsignedRequest DescribeVpcEndpointServicesResult
+    -> AWS.Request DescribeVpcEndpointServicesResult
 describeVpcEndpointServices setOptions =
   let
     options = setOptions (DescribeVpcEndpointServicesOptions Nothing Nothing Nothing)
@@ -6836,6 +6979,7 @@ describeVpcEndpointServices setOptions =
             JE.null
         )
         describeVpcEndpointServicesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVpcEndpointServices request
@@ -6857,7 +7001,7 @@ __Required Parameters__
 -}
 describeVpcEndpoints :
     (DescribeVpcEndpointsOptions -> DescribeVpcEndpointsOptions)
-    -> AWS.Http.UnsignedRequest DescribeVpcEndpointsResult
+    -> AWS.Request DescribeVpcEndpointsResult
 describeVpcEndpoints setOptions =
   let
     options = setOptions (DescribeVpcEndpointsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -6870,6 +7014,7 @@ describeVpcEndpoints setOptions =
             JE.null
         )
         describeVpcEndpointsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVpcEndpoints request
@@ -6893,7 +7038,7 @@ __Required Parameters__
 -}
 describeVpcPeeringConnections :
     (DescribeVpcPeeringConnectionsOptions -> DescribeVpcPeeringConnectionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeVpcPeeringConnectionsResult
+    -> AWS.Request DescribeVpcPeeringConnectionsResult
 describeVpcPeeringConnections setOptions =
   let
     options = setOptions (DescribeVpcPeeringConnectionsOptions Nothing Nothing Nothing)
@@ -6906,6 +7051,7 @@ describeVpcPeeringConnections setOptions =
             JE.null
         )
         describeVpcPeeringConnectionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVpcPeeringConnections request
@@ -6927,7 +7073,7 @@ __Required Parameters__
 -}
 describeVpcs :
     (DescribeVpcsOptions -> DescribeVpcsOptions)
-    -> AWS.Http.UnsignedRequest DescribeVpcsResult
+    -> AWS.Request DescribeVpcsResult
 describeVpcs setOptions =
   let
     options = setOptions (DescribeVpcsOptions Nothing Nothing Nothing)
@@ -6940,6 +7086,7 @@ describeVpcs setOptions =
             JE.null
         )
         describeVpcsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVpcs request
@@ -6961,7 +7108,7 @@ __Required Parameters__
 -}
 describeVpnConnections :
     (DescribeVpnConnectionsOptions -> DescribeVpnConnectionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeVpnConnectionsResult
+    -> AWS.Request DescribeVpnConnectionsResult
 describeVpnConnections setOptions =
   let
     options = setOptions (DescribeVpnConnectionsOptions Nothing Nothing Nothing)
@@ -6974,6 +7121,7 @@ describeVpnConnections setOptions =
             JE.null
         )
         describeVpnConnectionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVpnConnections request
@@ -6995,7 +7143,7 @@ __Required Parameters__
 -}
 describeVpnGateways :
     (DescribeVpnGatewaysOptions -> DescribeVpnGatewaysOptions)
-    -> AWS.Http.UnsignedRequest DescribeVpnGatewaysResult
+    -> AWS.Request DescribeVpnGatewaysResult
 describeVpnGateways setOptions =
   let
     options = setOptions (DescribeVpnGatewaysOptions Nothing Nothing Nothing)
@@ -7008,6 +7156,7 @@ describeVpnGateways setOptions =
             JE.null
         )
         describeVpnGatewaysResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeVpnGateways request
@@ -7033,7 +7182,7 @@ detachClassicLinkVpc :
     String
     -> String
     -> (DetachClassicLinkVpcOptions -> DetachClassicLinkVpcOptions)
-    -> AWS.Http.UnsignedRequest DetachClassicLinkVpcResult
+    -> AWS.Request DetachClassicLinkVpcResult
 detachClassicLinkVpc instanceId vpcId setOptions =
   let
     options = setOptions (DetachClassicLinkVpcOptions Nothing)
@@ -7046,6 +7195,7 @@ detachClassicLinkVpc instanceId vpcId setOptions =
             JE.null
         )
         detachClassicLinkVpcResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a detachClassicLinkVpc request
@@ -7069,7 +7219,7 @@ detachInternetGateway :
     String
     -> String
     -> (DetachInternetGatewayOptions -> DetachInternetGatewayOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 detachInternetGateway internetGatewayId vpcId setOptions =
   let
     options = setOptions (DetachInternetGatewayOptions Nothing)
@@ -7082,6 +7232,7 @@ detachInternetGateway internetGatewayId vpcId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a detachInternetGateway request
@@ -7103,7 +7254,7 @@ __Required Parameters__
 detachNetworkInterface :
     String
     -> (DetachNetworkInterfaceOptions -> DetachNetworkInterfaceOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 detachNetworkInterface attachmentId setOptions =
   let
     options = setOptions (DetachNetworkInterfaceOptions Nothing Nothing)
@@ -7116,6 +7267,7 @@ detachNetworkInterface attachmentId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a detachNetworkInterface request
@@ -7138,7 +7290,7 @@ __Required Parameters__
 detachVolume :
     String
     -> (DetachVolumeOptions -> DetachVolumeOptions)
-    -> AWS.Http.UnsignedRequest VolumeAttachment
+    -> AWS.Request VolumeAttachment
 detachVolume volumeId setOptions =
   let
     options = setOptions (DetachVolumeOptions Nothing Nothing Nothing Nothing)
@@ -7151,6 +7303,7 @@ detachVolume volumeId setOptions =
             JE.null
         )
         volumeAttachmentDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a detachVolume request
@@ -7177,7 +7330,7 @@ detachVpnGateway :
     String
     -> String
     -> (DetachVpnGatewayOptions -> DetachVpnGatewayOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 detachVpnGateway vpnGatewayId vpcId setOptions =
   let
     options = setOptions (DetachVpnGatewayOptions Nothing)
@@ -7190,6 +7343,7 @@ detachVpnGateway vpnGatewayId vpcId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a detachVpnGateway request
@@ -7212,7 +7366,7 @@ __Required Parameters__
 disableVgwRoutePropagation :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disableVgwRoutePropagation routeTableId gatewayId =
     AWS.Http.unsignedRequest
         "DisableVgwRoutePropagation"
@@ -7222,6 +7376,7 @@ disableVgwRoutePropagation routeTableId gatewayId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -7236,7 +7391,7 @@ __Required Parameters__
 disableVpcClassicLink :
     String
     -> (DisableVpcClassicLinkOptions -> DisableVpcClassicLinkOptions)
-    -> AWS.Http.UnsignedRequest DisableVpcClassicLinkResult
+    -> AWS.Request DisableVpcClassicLinkResult
 disableVpcClassicLink vpcId setOptions =
   let
     options = setOptions (DisableVpcClassicLinkOptions Nothing)
@@ -7249,6 +7404,7 @@ disableVpcClassicLink vpcId setOptions =
             JE.null
         )
         disableVpcClassicLinkResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disableVpcClassicLink request
@@ -7268,7 +7424,7 @@ __Required Parameters__
 -}
 disableVpcClassicLinkDnsSupport :
     (DisableVpcClassicLinkDnsSupportOptions -> DisableVpcClassicLinkDnsSupportOptions)
-    -> AWS.Http.UnsignedRequest DisableVpcClassicLinkDnsSupportResult
+    -> AWS.Request DisableVpcClassicLinkDnsSupportResult
 disableVpcClassicLinkDnsSupport setOptions =
   let
     options = setOptions (DisableVpcClassicLinkDnsSupportOptions Nothing)
@@ -7281,6 +7437,7 @@ disableVpcClassicLinkDnsSupport setOptions =
             JE.null
         )
         disableVpcClassicLinkDnsSupportResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disableVpcClassicLinkDnsSupport request
@@ -7300,7 +7457,7 @@ __Required Parameters__
 -}
 disassociateAddress :
     (DisassociateAddressOptions -> DisassociateAddressOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disassociateAddress setOptions =
   let
     options = setOptions (DisassociateAddressOptions Nothing Nothing Nothing)
@@ -7313,6 +7470,7 @@ disassociateAddress setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disassociateAddress request
@@ -7336,7 +7494,7 @@ __Required Parameters__
 disassociateRouteTable :
     String
     -> (DisassociateRouteTableOptions -> DisassociateRouteTableOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disassociateRouteTable associationId setOptions =
   let
     options = setOptions (DisassociateRouteTableOptions Nothing)
@@ -7349,6 +7507,7 @@ disassociateRouteTable associationId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disassociateRouteTable request
@@ -7369,7 +7528,7 @@ __Required Parameters__
 -}
 disassociateSubnetCidrBlock :
     String
-    -> AWS.Http.UnsignedRequest DisassociateSubnetCidrBlockResult
+    -> AWS.Request DisassociateSubnetCidrBlockResult
 disassociateSubnetCidrBlock associationId =
     AWS.Http.unsignedRequest
         "DisassociateSubnetCidrBlock"
@@ -7379,6 +7538,7 @@ disassociateSubnetCidrBlock associationId =
             JE.null
         )
         disassociateSubnetCidrBlockResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -7392,7 +7552,7 @@ __Required Parameters__
 -}
 disassociateVpcCidrBlock :
     String
-    -> AWS.Http.UnsignedRequest DisassociateVpcCidrBlockResult
+    -> AWS.Request DisassociateVpcCidrBlockResult
 disassociateVpcCidrBlock associationId =
     AWS.Http.unsignedRequest
         "DisassociateVpcCidrBlock"
@@ -7402,6 +7562,7 @@ disassociateVpcCidrBlock associationId =
             JE.null
         )
         disassociateVpcCidrBlockResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -7417,7 +7578,7 @@ __Required Parameters__
 enableVgwRoutePropagation :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableVgwRoutePropagation routeTableId gatewayId =
     AWS.Http.unsignedRequest
         "EnableVgwRoutePropagation"
@@ -7427,6 +7588,7 @@ enableVgwRoutePropagation routeTableId gatewayId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -7441,7 +7603,7 @@ __Required Parameters__
 enableVolumeIO :
     String
     -> (EnableVolumeIOOptions -> EnableVolumeIOOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableVolumeIO volumeId setOptions =
   let
     options = setOptions (EnableVolumeIOOptions Nothing)
@@ -7454,6 +7616,7 @@ enableVolumeIO volumeId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a enableVolumeIO request
@@ -7475,7 +7638,7 @@ __Required Parameters__
 enableVpcClassicLink :
     String
     -> (EnableVpcClassicLinkOptions -> EnableVpcClassicLinkOptions)
-    -> AWS.Http.UnsignedRequest EnableVpcClassicLinkResult
+    -> AWS.Request EnableVpcClassicLinkResult
 enableVpcClassicLink vpcId setOptions =
   let
     options = setOptions (EnableVpcClassicLinkOptions Nothing)
@@ -7488,6 +7651,7 @@ enableVpcClassicLink vpcId setOptions =
             JE.null
         )
         enableVpcClassicLinkResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a enableVpcClassicLink request
@@ -7507,7 +7671,7 @@ __Required Parameters__
 -}
 enableVpcClassicLinkDnsSupport :
     (EnableVpcClassicLinkDnsSupportOptions -> EnableVpcClassicLinkDnsSupportOptions)
-    -> AWS.Http.UnsignedRequest EnableVpcClassicLinkDnsSupportResult
+    -> AWS.Request EnableVpcClassicLinkDnsSupportResult
 enableVpcClassicLinkDnsSupport setOptions =
   let
     options = setOptions (EnableVpcClassicLinkDnsSupportOptions Nothing)
@@ -7520,6 +7684,7 @@ enableVpcClassicLinkDnsSupport setOptions =
             JE.null
         )
         enableVpcClassicLinkDnsSupportResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a enableVpcClassicLinkDnsSupport request
@@ -7541,7 +7706,7 @@ __Required Parameters__
 getConsoleOutput :
     String
     -> (GetConsoleOutputOptions -> GetConsoleOutputOptions)
-    -> AWS.Http.UnsignedRequest GetConsoleOutputResult
+    -> AWS.Request GetConsoleOutputResult
 getConsoleOutput instanceId setOptions =
   let
     options = setOptions (GetConsoleOutputOptions Nothing)
@@ -7554,6 +7719,7 @@ getConsoleOutput instanceId setOptions =
             JE.null
         )
         getConsoleOutputResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getConsoleOutput request
@@ -7575,7 +7741,7 @@ __Required Parameters__
 getConsoleScreenshot :
     String
     -> (GetConsoleScreenshotOptions -> GetConsoleScreenshotOptions)
-    -> AWS.Http.UnsignedRequest GetConsoleScreenshotResult
+    -> AWS.Request GetConsoleScreenshotResult
 getConsoleScreenshot instanceId setOptions =
   let
     options = setOptions (GetConsoleScreenshotOptions Nothing Nothing)
@@ -7588,6 +7754,7 @@ getConsoleScreenshot instanceId setOptions =
             JE.null
         )
         getConsoleScreenshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getConsoleScreenshot request
@@ -7611,7 +7778,7 @@ __Required Parameters__
 getHostReservationPurchasePreview :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest GetHostReservationPurchasePreviewResult
+    -> AWS.Request GetHostReservationPurchasePreviewResult
 getHostReservationPurchasePreview offeringId hostIdSet =
     AWS.Http.unsignedRequest
         "GetHostReservationPurchasePreview"
@@ -7621,6 +7788,7 @@ getHostReservationPurchasePreview offeringId hostIdSet =
             JE.null
         )
         getHostReservationPurchasePreviewResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -7635,7 +7803,7 @@ __Required Parameters__
 getPasswordData :
     String
     -> (GetPasswordDataOptions -> GetPasswordDataOptions)
-    -> AWS.Http.UnsignedRequest GetPasswordDataResult
+    -> AWS.Request GetPasswordDataResult
 getPasswordData instanceId setOptions =
   let
     options = setOptions (GetPasswordDataOptions Nothing)
@@ -7648,6 +7816,7 @@ getPasswordData instanceId setOptions =
             JE.null
         )
         getPasswordDataResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getPasswordData request
@@ -7669,7 +7838,7 @@ __Required Parameters__
 getReservedInstancesExchangeQuote :
     (List String)
     -> (GetReservedInstancesExchangeQuoteOptions -> GetReservedInstancesExchangeQuoteOptions)
-    -> AWS.Http.UnsignedRequest GetReservedInstancesExchangeQuoteResult
+    -> AWS.Request GetReservedInstancesExchangeQuoteResult
 getReservedInstancesExchangeQuote reservedInstanceIds setOptions =
   let
     options = setOptions (GetReservedInstancesExchangeQuoteOptions Nothing Nothing)
@@ -7682,6 +7851,7 @@ getReservedInstancesExchangeQuote reservedInstanceIds setOptions =
             JE.null
         )
         getReservedInstancesExchangeQuoteResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getReservedInstancesExchangeQuote request
@@ -7702,7 +7872,7 @@ __Required Parameters__
 -}
 importImage :
     (ImportImageOptions -> ImportImageOptions)
-    -> AWS.Http.UnsignedRequest ImportImageResult
+    -> AWS.Request ImportImageResult
 importImage setOptions =
   let
     options = setOptions (ImportImageOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -7715,6 +7885,7 @@ importImage setOptions =
             JE.null
         )
         importImageResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importImage request
@@ -7745,7 +7916,7 @@ __Required Parameters__
 importInstance :
     PlatformValues
     -> (ImportInstanceOptions -> ImportInstanceOptions)
-    -> AWS.Http.UnsignedRequest ImportInstanceResult
+    -> AWS.Request ImportInstanceResult
 importInstance platform setOptions =
   let
     options = setOptions (ImportInstanceOptions Nothing Nothing Nothing Nothing)
@@ -7758,6 +7929,7 @@ importInstance platform setOptions =
             JE.null
         )
         importInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importInstance request
@@ -7784,7 +7956,7 @@ importKeyPair :
     String
     -> String
     -> (ImportKeyPairOptions -> ImportKeyPairOptions)
-    -> AWS.Http.UnsignedRequest ImportKeyPairResult
+    -> AWS.Request ImportKeyPairResult
 importKeyPair keyName publicKeyMaterial setOptions =
   let
     options = setOptions (ImportKeyPairOptions Nothing)
@@ -7797,6 +7969,7 @@ importKeyPair keyName publicKeyMaterial setOptions =
             JE.null
         )
         importKeyPairResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importKeyPair request
@@ -7816,7 +7989,7 @@ __Required Parameters__
 -}
 importSnapshot :
     (ImportSnapshotOptions -> ImportSnapshotOptions)
-    -> AWS.Http.UnsignedRequest ImportSnapshotResult
+    -> AWS.Request ImportSnapshotResult
 importSnapshot setOptions =
   let
     options = setOptions (ImportSnapshotOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -7829,6 +8002,7 @@ importSnapshot setOptions =
             JE.null
         )
         importSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importSnapshot request
@@ -7859,7 +8033,7 @@ importVolume :
     -> DiskImageDetail
     -> VolumeDetail
     -> (ImportVolumeOptions -> ImportVolumeOptions)
-    -> AWS.Http.UnsignedRequest ImportVolumeResult
+    -> AWS.Request ImportVolumeResult
 importVolume availabilityZone image volume setOptions =
   let
     options = setOptions (ImportVolumeOptions Nothing Nothing)
@@ -7872,6 +8046,7 @@ importVolume availabilityZone image volume setOptions =
             JE.null
         )
         importVolumeResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importVolume request
@@ -7895,7 +8070,7 @@ __Required Parameters__
 modifyHosts :
     (List String)
     -> AutoPlacement
-    -> AWS.Http.UnsignedRequest ModifyHostsResult
+    -> AWS.Request ModifyHostsResult
 modifyHosts hostIds autoPlacement =
     AWS.Http.unsignedRequest
         "ModifyHosts"
@@ -7905,6 +8080,7 @@ modifyHosts hostIds autoPlacement =
             JE.null
         )
         modifyHostsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -7920,7 +8096,7 @@ __Required Parameters__
 modifyIdFormat :
     String
     -> Bool
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifyIdFormat resource useLongIds =
     AWS.Http.unsignedRequest
         "ModifyIdFormat"
@@ -7930,6 +8106,7 @@ modifyIdFormat resource useLongIds =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -7947,7 +8124,7 @@ modifyIdentityIdFormat :
     String
     -> Bool
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifyIdentityIdFormat resource useLongIds principalArn =
     AWS.Http.unsignedRequest
         "ModifyIdentityIdFormat"
@@ -7957,6 +8134,7 @@ modifyIdentityIdFormat resource useLongIds principalArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -7971,7 +8149,7 @@ __Required Parameters__
 modifyImageAttribute :
     String
     -> (ModifyImageAttributeOptions -> ModifyImageAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifyImageAttribute imageId setOptions =
   let
     options = setOptions (ModifyImageAttributeOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -7984,6 +8162,7 @@ modifyImageAttribute imageId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyImageAttribute request
@@ -8013,7 +8192,7 @@ __Required Parameters__
 modifyInstanceAttribute :
     String
     -> (ModifyInstanceAttributeOptions -> ModifyInstanceAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifyInstanceAttribute instanceId setOptions =
   let
     options = setOptions (ModifyInstanceAttributeOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -8026,6 +8205,7 @@ modifyInstanceAttribute instanceId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyInstanceAttribute request
@@ -8061,7 +8241,7 @@ __Required Parameters__
 modifyInstancePlacement :
     String
     -> (ModifyInstancePlacementOptions -> ModifyInstancePlacementOptions)
-    -> AWS.Http.UnsignedRequest ModifyInstancePlacementResult
+    -> AWS.Request ModifyInstancePlacementResult
 modifyInstancePlacement instanceId setOptions =
   let
     options = setOptions (ModifyInstancePlacementOptions Nothing Nothing Nothing)
@@ -8074,6 +8254,7 @@ modifyInstancePlacement instanceId setOptions =
             JE.null
         )
         modifyInstancePlacementResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyInstancePlacement request
@@ -8097,7 +8278,7 @@ __Required Parameters__
 modifyNetworkInterfaceAttribute :
     String
     -> (ModifyNetworkInterfaceAttributeOptions -> ModifyNetworkInterfaceAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifyNetworkInterfaceAttribute networkInterfaceId setOptions =
   let
     options = setOptions (ModifyNetworkInterfaceAttributeOptions Nothing Nothing Nothing Nothing Nothing)
@@ -8110,6 +8291,7 @@ modifyNetworkInterfaceAttribute networkInterfaceId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyNetworkInterfaceAttribute request
@@ -8137,7 +8319,7 @@ modifyReservedInstances :
     (List String)
     -> (List ReservedInstancesConfiguration)
     -> (ModifyReservedInstancesOptions -> ModifyReservedInstancesOptions)
-    -> AWS.Http.UnsignedRequest ModifyReservedInstancesResult
+    -> AWS.Request ModifyReservedInstancesResult
 modifyReservedInstances reservedInstancesIds targetConfigurations setOptions =
   let
     options = setOptions (ModifyReservedInstancesOptions Nothing)
@@ -8150,6 +8332,7 @@ modifyReservedInstances reservedInstancesIds targetConfigurations setOptions =
             JE.null
         )
         modifyReservedInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyReservedInstances request
@@ -8171,7 +8354,7 @@ __Required Parameters__
 modifySnapshotAttribute :
     String
     -> (ModifySnapshotAttributeOptions -> ModifySnapshotAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifySnapshotAttribute snapshotId setOptions =
   let
     options = setOptions (ModifySnapshotAttributeOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -8184,6 +8367,7 @@ modifySnapshotAttribute snapshotId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifySnapshotAttribute request
@@ -8210,7 +8394,7 @@ __Required Parameters__
 modifySpotFleetRequest :
     String
     -> (ModifySpotFleetRequestOptions -> ModifySpotFleetRequestOptions)
-    -> AWS.Http.UnsignedRequest ModifySpotFleetRequestResponse
+    -> AWS.Request ModifySpotFleetRequestResponse
 modifySpotFleetRequest spotFleetRequestId setOptions =
   let
     options = setOptions (ModifySpotFleetRequestOptions Nothing Nothing)
@@ -8223,6 +8407,7 @@ modifySpotFleetRequest spotFleetRequestId setOptions =
             JE.null
         )
         modifySpotFleetRequestResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifySpotFleetRequest request
@@ -8245,7 +8430,7 @@ __Required Parameters__
 modifySubnetAttribute :
     String
     -> (ModifySubnetAttributeOptions -> ModifySubnetAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifySubnetAttribute subnetId setOptions =
   let
     options = setOptions (ModifySubnetAttributeOptions Nothing Nothing)
@@ -8258,6 +8443,7 @@ modifySubnetAttribute subnetId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifySubnetAttribute request
@@ -8280,7 +8466,7 @@ __Required Parameters__
 modifyVolumeAttribute :
     String
     -> (ModifyVolumeAttributeOptions -> ModifyVolumeAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifyVolumeAttribute volumeId setOptions =
   let
     options = setOptions (ModifyVolumeAttributeOptions Nothing Nothing)
@@ -8293,6 +8479,7 @@ modifyVolumeAttribute volumeId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyVolumeAttribute request
@@ -8315,7 +8502,7 @@ __Required Parameters__
 modifyVpcAttribute :
     String
     -> (ModifyVpcAttributeOptions -> ModifyVpcAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifyVpcAttribute vpcId setOptions =
   let
     options = setOptions (ModifyVpcAttributeOptions Nothing Nothing)
@@ -8328,6 +8515,7 @@ modifyVpcAttribute vpcId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyVpcAttribute request
@@ -8350,7 +8538,7 @@ __Required Parameters__
 modifyVpcEndpoint :
     String
     -> (ModifyVpcEndpointOptions -> ModifyVpcEndpointOptions)
-    -> AWS.Http.UnsignedRequest ModifyVpcEndpointResult
+    -> AWS.Request ModifyVpcEndpointResult
 modifyVpcEndpoint vpcEndpointId setOptions =
   let
     options = setOptions (ModifyVpcEndpointOptions Nothing Nothing Nothing Nothing Nothing)
@@ -8363,6 +8551,7 @@ modifyVpcEndpoint vpcEndpointId setOptions =
             JE.null
         )
         modifyVpcEndpointResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyVpcEndpoint request
@@ -8388,7 +8577,7 @@ __Required Parameters__
 modifyVpcPeeringConnectionOptions :
     String
     -> (ModifyVpcPeeringConnectionOptionsOptions -> ModifyVpcPeeringConnectionOptionsOptions)
-    -> AWS.Http.UnsignedRequest ModifyVpcPeeringConnectionOptionsResult
+    -> AWS.Request ModifyVpcPeeringConnectionOptionsResult
 modifyVpcPeeringConnectionOptions vpcPeeringConnectionId setOptions =
   let
     options = setOptions (ModifyVpcPeeringConnectionOptionsOptions Nothing Nothing Nothing)
@@ -8401,6 +8590,7 @@ modifyVpcPeeringConnectionOptions vpcPeeringConnectionId setOptions =
             JE.null
         )
         modifyVpcPeeringConnectionOptionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyVpcPeeringConnectionOptions request
@@ -8424,7 +8614,7 @@ __Required Parameters__
 monitorInstances :
     (List String)
     -> (MonitorInstancesOptions -> MonitorInstancesOptions)
-    -> AWS.Http.UnsignedRequest MonitorInstancesResult
+    -> AWS.Request MonitorInstancesResult
 monitorInstances instanceIds setOptions =
   let
     options = setOptions (MonitorInstancesOptions Nothing)
@@ -8437,6 +8627,7 @@ monitorInstances instanceIds setOptions =
             JE.null
         )
         monitorInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a monitorInstances request
@@ -8458,7 +8649,7 @@ __Required Parameters__
 moveAddressToVpc :
     String
     -> (MoveAddressToVpcOptions -> MoveAddressToVpcOptions)
-    -> AWS.Http.UnsignedRequest MoveAddressToVpcResult
+    -> AWS.Request MoveAddressToVpcResult
 moveAddressToVpc publicIp setOptions =
   let
     options = setOptions (MoveAddressToVpcOptions Nothing)
@@ -8471,6 +8662,7 @@ moveAddressToVpc publicIp setOptions =
             JE.null
         )
         moveAddressToVpcResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a moveAddressToVpc request
@@ -8494,7 +8686,7 @@ purchaseHostReservation :
     String
     -> (List String)
     -> (PurchaseHostReservationOptions -> PurchaseHostReservationOptions)
-    -> AWS.Http.UnsignedRequest PurchaseHostReservationResult
+    -> AWS.Request PurchaseHostReservationResult
 purchaseHostReservation offeringId hostIdSet setOptions =
   let
     options = setOptions (PurchaseHostReservationOptions Nothing Nothing Nothing)
@@ -8507,6 +8699,7 @@ purchaseHostReservation offeringId hostIdSet setOptions =
             JE.null
         )
         purchaseHostReservationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a purchaseHostReservation request
@@ -8532,7 +8725,7 @@ purchaseReservedInstancesOffering :
     String
     -> Int
     -> (PurchaseReservedInstancesOfferingOptions -> PurchaseReservedInstancesOfferingOptions)
-    -> AWS.Http.UnsignedRequest PurchaseReservedInstancesOfferingResult
+    -> AWS.Request PurchaseReservedInstancesOfferingResult
 purchaseReservedInstancesOffering reservedInstancesOfferingId instanceCount setOptions =
   let
     options = setOptions (PurchaseReservedInstancesOfferingOptions Nothing Nothing)
@@ -8545,6 +8738,7 @@ purchaseReservedInstancesOffering reservedInstancesOfferingId instanceCount setO
             JE.null
         )
         purchaseReservedInstancesOfferingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a purchaseReservedInstancesOffering request
@@ -8567,7 +8761,7 @@ __Required Parameters__
 purchaseScheduledInstances :
     (List PurchaseRequest)
     -> (PurchaseScheduledInstancesOptions -> PurchaseScheduledInstancesOptions)
-    -> AWS.Http.UnsignedRequest PurchaseScheduledInstancesResult
+    -> AWS.Request PurchaseScheduledInstancesResult
 purchaseScheduledInstances purchaseRequests setOptions =
   let
     options = setOptions (PurchaseScheduledInstancesOptions Nothing Nothing)
@@ -8580,6 +8774,7 @@ purchaseScheduledInstances purchaseRequests setOptions =
             JE.null
         )
         purchaseScheduledInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a purchaseScheduledInstances request
@@ -8602,7 +8797,7 @@ __Required Parameters__
 rebootInstances :
     (List String)
     -> (RebootInstancesOptions -> RebootInstancesOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 rebootInstances instanceIds setOptions =
   let
     options = setOptions (RebootInstancesOptions Nothing)
@@ -8615,6 +8810,7 @@ rebootInstances instanceIds setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a rebootInstances request
@@ -8636,7 +8832,7 @@ __Required Parameters__
 registerImage :
     String
     -> (RegisterImageOptions -> RegisterImageOptions)
-    -> AWS.Http.UnsignedRequest RegisterImageResult
+    -> AWS.Request RegisterImageResult
 registerImage name setOptions =
   let
     options = setOptions (RegisterImageOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -8649,6 +8845,7 @@ registerImage name setOptions =
             JE.null
         )
         registerImageResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerImage request
@@ -8680,7 +8877,7 @@ __Required Parameters__
 rejectVpcPeeringConnection :
     String
     -> (RejectVpcPeeringConnectionOptions -> RejectVpcPeeringConnectionOptions)
-    -> AWS.Http.UnsignedRequest RejectVpcPeeringConnectionResult
+    -> AWS.Request RejectVpcPeeringConnectionResult
 rejectVpcPeeringConnection vpcPeeringConnectionId setOptions =
   let
     options = setOptions (RejectVpcPeeringConnectionOptions Nothing)
@@ -8693,6 +8890,7 @@ rejectVpcPeeringConnection vpcPeeringConnectionId setOptions =
             JE.null
         )
         rejectVpcPeeringConnectionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a rejectVpcPeeringConnection request
@@ -8712,7 +8910,7 @@ __Required Parameters__
 -}
 releaseAddress :
     (ReleaseAddressOptions -> ReleaseAddressOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 releaseAddress setOptions =
   let
     options = setOptions (ReleaseAddressOptions Nothing Nothing Nothing)
@@ -8725,6 +8923,7 @@ releaseAddress setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a releaseAddress request
@@ -8747,7 +8946,7 @@ __Required Parameters__
 -}
 releaseHosts :
     (List String)
-    -> AWS.Http.UnsignedRequest ReleaseHostsResult
+    -> AWS.Request ReleaseHostsResult
 releaseHosts hostIds =
     AWS.Http.unsignedRequest
         "ReleaseHosts"
@@ -8757,6 +8956,7 @@ releaseHosts hostIds =
             JE.null
         )
         releaseHostsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -8773,7 +8973,7 @@ replaceNetworkAclAssociation :
     String
     -> String
     -> (ReplaceNetworkAclAssociationOptions -> ReplaceNetworkAclAssociationOptions)
-    -> AWS.Http.UnsignedRequest ReplaceNetworkAclAssociationResult
+    -> AWS.Request ReplaceNetworkAclAssociationResult
 replaceNetworkAclAssociation associationId networkAclId setOptions =
   let
     options = setOptions (ReplaceNetworkAclAssociationOptions Nothing)
@@ -8786,6 +8986,7 @@ replaceNetworkAclAssociation associationId networkAclId setOptions =
             JE.null
         )
         replaceNetworkAclAssociationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a replaceNetworkAclAssociation request
@@ -8815,7 +9016,7 @@ replaceNetworkAclEntry :
     -> RuleAction
     -> Bool
     -> (ReplaceNetworkAclEntryOptions -> ReplaceNetworkAclEntryOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 replaceNetworkAclEntry networkAclId ruleNumber protocol ruleAction egress setOptions =
   let
     options = setOptions (ReplaceNetworkAclEntryOptions Nothing Nothing Nothing Nothing Nothing)
@@ -8828,6 +9029,7 @@ replaceNetworkAclEntry networkAclId ruleNumber protocol ruleAction egress setOpt
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a replaceNetworkAclEntry request
@@ -8853,7 +9055,7 @@ __Required Parameters__
 replaceRoute :
     String
     -> (ReplaceRouteOptions -> ReplaceRouteOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 replaceRoute routeTableId setOptions =
   let
     options = setOptions (ReplaceRouteOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -8866,6 +9068,7 @@ replaceRoute routeTableId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a replaceRoute request
@@ -8897,7 +9100,7 @@ replaceRouteTableAssociation :
     String
     -> String
     -> (ReplaceRouteTableAssociationOptions -> ReplaceRouteTableAssociationOptions)
-    -> AWS.Http.UnsignedRequest ReplaceRouteTableAssociationResult
+    -> AWS.Request ReplaceRouteTableAssociationResult
 replaceRouteTableAssociation associationId routeTableId setOptions =
   let
     options = setOptions (ReplaceRouteTableAssociationOptions Nothing)
@@ -8910,6 +9113,7 @@ replaceRouteTableAssociation associationId routeTableId setOptions =
             JE.null
         )
         replaceRouteTableAssociationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a replaceRouteTableAssociation request
@@ -8935,7 +9139,7 @@ reportInstanceStatus :
     -> ReportStatusType
     -> (List ReportInstanceReasonCodes)
     -> (ReportInstanceStatusOptions -> ReportInstanceStatusOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 reportInstanceStatus instances status reasonCodes setOptions =
   let
     options = setOptions (ReportInstanceStatusOptions Nothing Nothing Nothing Nothing)
@@ -8948,6 +9152,7 @@ reportInstanceStatus instances status reasonCodes setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a reportInstanceStatus request
@@ -8972,7 +9177,7 @@ __Required Parameters__
 requestSpotFleet :
     SpotFleetRequestConfigData
     -> (RequestSpotFleetOptions -> RequestSpotFleetOptions)
-    -> AWS.Http.UnsignedRequest RequestSpotFleetResponse
+    -> AWS.Request RequestSpotFleetResponse
 requestSpotFleet spotFleetRequestConfig setOptions =
   let
     options = setOptions (RequestSpotFleetOptions Nothing)
@@ -8985,6 +9190,7 @@ requestSpotFleet spotFleetRequestConfig setOptions =
             JE.null
         )
         requestSpotFleetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a requestSpotFleet request
@@ -9006,7 +9212,7 @@ __Required Parameters__
 requestSpotInstances :
     String
     -> (RequestSpotInstancesOptions -> RequestSpotInstancesOptions)
-    -> AWS.Http.UnsignedRequest RequestSpotInstancesResult
+    -> AWS.Request RequestSpotInstancesResult
 requestSpotInstances spotPrice setOptions =
   let
     options = setOptions (RequestSpotInstancesOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -9019,6 +9225,7 @@ requestSpotInstances spotPrice setOptions =
             JE.null
         )
         requestSpotInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a requestSpotInstances request
@@ -9051,7 +9258,7 @@ resetImageAttribute :
     String
     -> ResetImageAttributeName
     -> (ResetImageAttributeOptions -> ResetImageAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 resetImageAttribute imageId attribute setOptions =
   let
     options = setOptions (ResetImageAttributeOptions Nothing)
@@ -9064,6 +9271,7 @@ resetImageAttribute imageId attribute setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resetImageAttribute request
@@ -9087,7 +9295,7 @@ resetInstanceAttribute :
     String
     -> InstanceAttributeName
     -> (ResetInstanceAttributeOptions -> ResetInstanceAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 resetInstanceAttribute instanceId attribute setOptions =
   let
     options = setOptions (ResetInstanceAttributeOptions Nothing)
@@ -9100,6 +9308,7 @@ resetInstanceAttribute instanceId attribute setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resetInstanceAttribute request
@@ -9121,7 +9330,7 @@ __Required Parameters__
 resetNetworkInterfaceAttribute :
     String
     -> (ResetNetworkInterfaceAttributeOptions -> ResetNetworkInterfaceAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 resetNetworkInterfaceAttribute networkInterfaceId setOptions =
   let
     options = setOptions (ResetNetworkInterfaceAttributeOptions Nothing Nothing)
@@ -9134,6 +9343,7 @@ resetNetworkInterfaceAttribute networkInterfaceId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resetNetworkInterfaceAttribute request
@@ -9158,7 +9368,7 @@ resetSnapshotAttribute :
     String
     -> SnapshotAttributeName
     -> (ResetSnapshotAttributeOptions -> ResetSnapshotAttributeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 resetSnapshotAttribute snapshotId attribute setOptions =
   let
     options = setOptions (ResetSnapshotAttributeOptions Nothing)
@@ -9171,6 +9381,7 @@ resetSnapshotAttribute snapshotId attribute setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resetSnapshotAttribute request
@@ -9192,7 +9403,7 @@ __Required Parameters__
 restoreAddressToClassic :
     String
     -> (RestoreAddressToClassicOptions -> RestoreAddressToClassicOptions)
-    -> AWS.Http.UnsignedRequest RestoreAddressToClassicResult
+    -> AWS.Request RestoreAddressToClassicResult
 restoreAddressToClassic publicIp setOptions =
   let
     options = setOptions (RestoreAddressToClassicOptions Nothing)
@@ -9205,6 +9416,7 @@ restoreAddressToClassic publicIp setOptions =
             JE.null
         )
         restoreAddressToClassicResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreAddressToClassic request
@@ -9226,7 +9438,7 @@ __Required Parameters__
 revokeSecurityGroupEgress :
     String
     -> (RevokeSecurityGroupEgressOptions -> RevokeSecurityGroupEgressOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 revokeSecurityGroupEgress groupId setOptions =
   let
     options = setOptions (RevokeSecurityGroupEgressOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -9239,6 +9451,7 @@ revokeSecurityGroupEgress groupId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a revokeSecurityGroupEgress request
@@ -9265,7 +9478,7 @@ __Required Parameters__
 -}
 revokeSecurityGroupIngress :
     (RevokeSecurityGroupIngressOptions -> RevokeSecurityGroupIngressOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 revokeSecurityGroupIngress setOptions =
   let
     options = setOptions (RevokeSecurityGroupIngressOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -9278,6 +9491,7 @@ revokeSecurityGroupIngress setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a revokeSecurityGroupIngress request
@@ -9312,7 +9526,7 @@ runInstances :
     -> Int
     -> Int
     -> (RunInstancesOptions -> RunInstancesOptions)
-    -> AWS.Http.UnsignedRequest Reservation
+    -> AWS.Request Reservation
 runInstances imageId minCount maxCount setOptions =
   let
     options = setOptions (RunInstancesOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -9325,6 +9539,7 @@ runInstances imageId minCount maxCount setOptions =
             JE.null
         )
         reservationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a runInstances request
@@ -9369,7 +9584,7 @@ runScheduledInstances :
     String
     -> ScheduledInstancesLaunchSpecification
     -> (RunScheduledInstancesOptions -> RunScheduledInstancesOptions)
-    -> AWS.Http.UnsignedRequest RunScheduledInstancesResult
+    -> AWS.Request RunScheduledInstancesResult
 runScheduledInstances scheduledInstanceId launchSpecification setOptions =
   let
     options = setOptions (RunScheduledInstancesOptions Nothing Nothing Nothing)
@@ -9382,6 +9597,7 @@ runScheduledInstances scheduledInstanceId launchSpecification setOptions =
             JE.null
         )
         runScheduledInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a runScheduledInstances request
@@ -9405,7 +9621,7 @@ __Required Parameters__
 startInstances :
     (List String)
     -> (StartInstancesOptions -> StartInstancesOptions)
-    -> AWS.Http.UnsignedRequest StartInstancesResult
+    -> AWS.Request StartInstancesResult
 startInstances instanceIds setOptions =
   let
     options = setOptions (StartInstancesOptions Nothing Nothing)
@@ -9418,6 +9634,7 @@ startInstances instanceIds setOptions =
             JE.null
         )
         startInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startInstances request
@@ -9440,7 +9657,7 @@ __Required Parameters__
 stopInstances :
     (List String)
     -> (StopInstancesOptions -> StopInstancesOptions)
-    -> AWS.Http.UnsignedRequest StopInstancesResult
+    -> AWS.Request StopInstancesResult
 stopInstances instanceIds setOptions =
   let
     options = setOptions (StopInstancesOptions Nothing Nothing)
@@ -9453,6 +9670,7 @@ stopInstances instanceIds setOptions =
             JE.null
         )
         stopInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a stopInstances request
@@ -9475,7 +9693,7 @@ __Required Parameters__
 terminateInstances :
     (List String)
     -> (TerminateInstancesOptions -> TerminateInstancesOptions)
-    -> AWS.Http.UnsignedRequest TerminateInstancesResult
+    -> AWS.Request TerminateInstancesResult
 terminateInstances instanceIds setOptions =
   let
     options = setOptions (TerminateInstancesOptions Nothing)
@@ -9488,6 +9706,7 @@ terminateInstances instanceIds setOptions =
             JE.null
         )
         terminateInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a terminateInstances request
@@ -9510,7 +9729,7 @@ __Required Parameters__
 unassignIpv6Addresses :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest UnassignIpv6AddressesResult
+    -> AWS.Request UnassignIpv6AddressesResult
 unassignIpv6Addresses networkInterfaceId ipv6Addresses =
     AWS.Http.unsignedRequest
         "UnassignIpv6Addresses"
@@ -9520,6 +9739,7 @@ unassignIpv6Addresses networkInterfaceId ipv6Addresses =
             JE.null
         )
         unassignIpv6AddressesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -9535,7 +9755,7 @@ __Required Parameters__
 unassignPrivateIpAddresses :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 unassignPrivateIpAddresses networkInterfaceId privateIpAddresses =
     AWS.Http.unsignedRequest
         "UnassignPrivateIpAddresses"
@@ -9545,6 +9765,7 @@ unassignPrivateIpAddresses networkInterfaceId privateIpAddresses =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -9559,7 +9780,7 @@ __Required Parameters__
 unmonitorInstances :
     (List String)
     -> (UnmonitorInstancesOptions -> UnmonitorInstancesOptions)
-    -> AWS.Http.UnsignedRequest UnmonitorInstancesResult
+    -> AWS.Request UnmonitorInstancesResult
 unmonitorInstances instanceIds setOptions =
   let
     options = setOptions (UnmonitorInstancesOptions Nothing)
@@ -9572,6 +9793,7 @@ unmonitorInstances instanceIds setOptions =
             JE.null
         )
         unmonitorInstancesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a unmonitorInstances request

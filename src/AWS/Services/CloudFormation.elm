@@ -268,6 +268,7 @@ module AWS.Services.CloudFormation
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -278,16 +279,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "cloudformation"
         "2010-05-15"
         "undefined"
         "AWSCLOUDFORMATION_20100515."
         "cloudformation.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -303,7 +304,7 @@ __Required Parameters__
 -}
 cancelUpdateStack :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 cancelUpdateStack stackName =
     AWS.Http.unsignedRequest
         "CancelUpdateStack"
@@ -313,6 +314,7 @@ cancelUpdateStack stackName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -327,7 +329,7 @@ __Required Parameters__
 continueUpdateRollback :
     String
     -> (ContinueUpdateRollbackOptions -> ContinueUpdateRollbackOptions)
-    -> AWS.Http.UnsignedRequest ContinueUpdateRollbackOutput
+    -> AWS.Request ContinueUpdateRollbackOutput
 continueUpdateRollback stackName setOptions =
   let
     options = setOptions (ContinueUpdateRollbackOptions Nothing Nothing)
@@ -340,6 +342,7 @@ continueUpdateRollback stackName setOptions =
             JE.null
         )
         continueUpdateRollbackOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a continueUpdateRollback request
@@ -364,7 +367,7 @@ createChangeSet :
     String
     -> String
     -> (CreateChangeSetOptions -> CreateChangeSetOptions)
-    -> AWS.Http.UnsignedRequest CreateChangeSetOutput
+    -> AWS.Request CreateChangeSetOutput
 createChangeSet stackName changeSetName setOptions =
   let
     options = setOptions (CreateChangeSetOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -377,6 +380,7 @@ createChangeSet stackName changeSetName setOptions =
             JE.null
         )
         createChangeSetOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createChangeSet request
@@ -409,7 +413,7 @@ __Required Parameters__
 createStack :
     String
     -> (CreateStackOptions -> CreateStackOptions)
-    -> AWS.Http.UnsignedRequest CreateStackOutput
+    -> AWS.Request CreateStackOutput
 createStack stackName setOptions =
   let
     options = setOptions (CreateStackOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -422,6 +426,7 @@ createStack stackName setOptions =
             JE.null
         )
         createStackOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createStack request
@@ -455,7 +460,7 @@ __Required Parameters__
 deleteChangeSet :
     String
     -> (DeleteChangeSetOptions -> DeleteChangeSetOptions)
-    -> AWS.Http.UnsignedRequest DeleteChangeSetOutput
+    -> AWS.Request DeleteChangeSetOutput
 deleteChangeSet changeSetName setOptions =
   let
     options = setOptions (DeleteChangeSetOptions Nothing)
@@ -468,6 +473,7 @@ deleteChangeSet changeSetName setOptions =
             JE.null
         )
         deleteChangeSetOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteChangeSet request
@@ -489,7 +495,7 @@ __Required Parameters__
 deleteStack :
     String
     -> (DeleteStackOptions -> DeleteStackOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteStack stackName setOptions =
   let
     options = setOptions (DeleteStackOptions Nothing Nothing)
@@ -502,6 +508,7 @@ deleteStack stackName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteStack request
@@ -522,7 +529,7 @@ __Required Parameters__
 -}
 describeAccountLimits :
     (DescribeAccountLimitsOptions -> DescribeAccountLimitsOptions)
-    -> AWS.Http.UnsignedRequest DescribeAccountLimitsOutput
+    -> AWS.Request DescribeAccountLimitsOutput
 describeAccountLimits setOptions =
   let
     options = setOptions (DescribeAccountLimitsOptions Nothing)
@@ -535,6 +542,7 @@ describeAccountLimits setOptions =
             JE.null
         )
         describeAccountLimitsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAccountLimits request
@@ -556,7 +564,7 @@ __Required Parameters__
 describeChangeSet :
     String
     -> (DescribeChangeSetOptions -> DescribeChangeSetOptions)
-    -> AWS.Http.UnsignedRequest DescribeChangeSetOutput
+    -> AWS.Request DescribeChangeSetOutput
 describeChangeSet changeSetName setOptions =
   let
     options = setOptions (DescribeChangeSetOptions Nothing Nothing)
@@ -569,6 +577,7 @@ describeChangeSet changeSetName setOptions =
             JE.null
         )
         describeChangeSetOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeChangeSet request
@@ -589,7 +598,7 @@ __Required Parameters__
 -}
 describeStackEvents :
     (DescribeStackEventsOptions -> DescribeStackEventsOptions)
-    -> AWS.Http.UnsignedRequest DescribeStackEventsOutput
+    -> AWS.Request DescribeStackEventsOutput
 describeStackEvents setOptions =
   let
     options = setOptions (DescribeStackEventsOptions Nothing Nothing)
@@ -602,6 +611,7 @@ describeStackEvents setOptions =
             JE.null
         )
         describeStackEventsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeStackEvents request
@@ -625,7 +635,7 @@ __Required Parameters__
 describeStackResource :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DescribeStackResourceOutput
+    -> AWS.Request DescribeStackResourceOutput
 describeStackResource stackName logicalResourceId =
     AWS.Http.unsignedRequest
         "DescribeStackResource"
@@ -635,6 +645,7 @@ describeStackResource stackName logicalResourceId =
             JE.null
         )
         describeStackResourceOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -647,7 +658,7 @@ __Required Parameters__
 -}
 describeStackResources :
     (DescribeStackResourcesOptions -> DescribeStackResourcesOptions)
-    -> AWS.Http.UnsignedRequest DescribeStackResourcesOutput
+    -> AWS.Request DescribeStackResourcesOutput
 describeStackResources setOptions =
   let
     options = setOptions (DescribeStackResourcesOptions Nothing Nothing Nothing)
@@ -660,6 +671,7 @@ describeStackResources setOptions =
             JE.null
         )
         describeStackResourcesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeStackResources request
@@ -681,7 +693,7 @@ __Required Parameters__
 -}
 describeStacks :
     (DescribeStacksOptions -> DescribeStacksOptions)
-    -> AWS.Http.UnsignedRequest DescribeStacksOutput
+    -> AWS.Request DescribeStacksOutput
 describeStacks setOptions =
   let
     options = setOptions (DescribeStacksOptions Nothing Nothing)
@@ -694,6 +706,7 @@ describeStacks setOptions =
             JE.null
         )
         describeStacksOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeStacks request
@@ -714,7 +727,7 @@ __Required Parameters__
 -}
 estimateTemplateCost :
     (EstimateTemplateCostOptions -> EstimateTemplateCostOptions)
-    -> AWS.Http.UnsignedRequest EstimateTemplateCostOutput
+    -> AWS.Request EstimateTemplateCostOutput
 estimateTemplateCost setOptions =
   let
     options = setOptions (EstimateTemplateCostOptions Nothing Nothing Nothing)
@@ -727,6 +740,7 @@ estimateTemplateCost setOptions =
             JE.null
         )
         estimateTemplateCostOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a estimateTemplateCost request
@@ -750,7 +764,7 @@ __Required Parameters__
 executeChangeSet :
     String
     -> (ExecuteChangeSetOptions -> ExecuteChangeSetOptions)
-    -> AWS.Http.UnsignedRequest ExecuteChangeSetOutput
+    -> AWS.Request ExecuteChangeSetOutput
 executeChangeSet changeSetName setOptions =
   let
     options = setOptions (ExecuteChangeSetOptions Nothing)
@@ -763,6 +777,7 @@ executeChangeSet changeSetName setOptions =
             JE.null
         )
         executeChangeSetOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a executeChangeSet request
@@ -783,7 +798,7 @@ __Required Parameters__
 -}
 getStackPolicy :
     String
-    -> AWS.Http.UnsignedRequest GetStackPolicyOutput
+    -> AWS.Request GetStackPolicyOutput
 getStackPolicy stackName =
     AWS.Http.unsignedRequest
         "GetStackPolicy"
@@ -793,6 +808,7 @@ getStackPolicy stackName =
             JE.null
         )
         getStackPolicyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -805,7 +821,7 @@ __Required Parameters__
 -}
 getTemplate :
     (GetTemplateOptions -> GetTemplateOptions)
-    -> AWS.Http.UnsignedRequest GetTemplateOutput
+    -> AWS.Request GetTemplateOutput
 getTemplate setOptions =
   let
     options = setOptions (GetTemplateOptions Nothing Nothing Nothing)
@@ -818,6 +834,7 @@ getTemplate setOptions =
             JE.null
         )
         getTemplateOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getTemplate request
@@ -839,7 +856,7 @@ __Required Parameters__
 -}
 getTemplateSummary :
     (GetTemplateSummaryOptions -> GetTemplateSummaryOptions)
-    -> AWS.Http.UnsignedRequest GetTemplateSummaryOutput
+    -> AWS.Request GetTemplateSummaryOutput
 getTemplateSummary setOptions =
   let
     options = setOptions (GetTemplateSummaryOptions Nothing Nothing Nothing)
@@ -852,6 +869,7 @@ getTemplateSummary setOptions =
             JE.null
         )
         getTemplateSummaryOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getTemplateSummary request
@@ -875,7 +893,7 @@ __Required Parameters__
 listChangeSets :
     String
     -> (ListChangeSetsOptions -> ListChangeSetsOptions)
-    -> AWS.Http.UnsignedRequest ListChangeSetsOutput
+    -> AWS.Request ListChangeSetsOutput
 listChangeSets stackName setOptions =
   let
     options = setOptions (ListChangeSetsOptions Nothing)
@@ -888,6 +906,7 @@ listChangeSets stackName setOptions =
             JE.null
         )
         listChangeSetsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listChangeSets request
@@ -907,7 +926,7 @@ __Required Parameters__
 -}
 listExports :
     (ListExportsOptions -> ListExportsOptions)
-    -> AWS.Http.UnsignedRequest ListExportsOutput
+    -> AWS.Request ListExportsOutput
 listExports setOptions =
   let
     options = setOptions (ListExportsOptions Nothing)
@@ -920,6 +939,7 @@ listExports setOptions =
             JE.null
         )
         listExportsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listExports request
@@ -941,7 +961,7 @@ __Required Parameters__
 listImports :
     String
     -> (ListImportsOptions -> ListImportsOptions)
-    -> AWS.Http.UnsignedRequest ListImportsOutput
+    -> AWS.Request ListImportsOutput
 listImports exportName setOptions =
   let
     options = setOptions (ListImportsOptions Nothing)
@@ -954,6 +974,7 @@ listImports exportName setOptions =
             JE.null
         )
         listImportsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listImports request
@@ -975,7 +996,7 @@ __Required Parameters__
 listStackResources :
     String
     -> (ListStackResourcesOptions -> ListStackResourcesOptions)
-    -> AWS.Http.UnsignedRequest ListStackResourcesOutput
+    -> AWS.Request ListStackResourcesOutput
 listStackResources stackName setOptions =
   let
     options = setOptions (ListStackResourcesOptions Nothing)
@@ -988,6 +1009,7 @@ listStackResources stackName setOptions =
             JE.null
         )
         listStackResourcesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listStackResources request
@@ -1007,7 +1029,7 @@ __Required Parameters__
 -}
 listStacks :
     (ListStacksOptions -> ListStacksOptions)
-    -> AWS.Http.UnsignedRequest ListStacksOutput
+    -> AWS.Request ListStacksOutput
 listStacks setOptions =
   let
     options = setOptions (ListStacksOptions Nothing Nothing)
@@ -1020,6 +1042,7 @@ listStacks setOptions =
             JE.null
         )
         listStacksOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listStacks request
@@ -1042,7 +1065,7 @@ __Required Parameters__
 setStackPolicy :
     String
     -> (SetStackPolicyOptions -> SetStackPolicyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setStackPolicy stackName setOptions =
   let
     options = setOptions (SetStackPolicyOptions Nothing Nothing)
@@ -1055,6 +1078,7 @@ setStackPolicy stackName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setStackPolicy request
@@ -1082,7 +1106,7 @@ signalResource :
     -> String
     -> String
     -> ResourceSignalStatus
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 signalResource stackName logicalResourceId uniqueId status =
     AWS.Http.unsignedRequest
         "SignalResource"
@@ -1092,6 +1116,7 @@ signalResource stackName logicalResourceId uniqueId status =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1106,7 +1131,7 @@ __Required Parameters__
 updateStack :
     String
     -> (UpdateStackOptions -> UpdateStackOptions)
-    -> AWS.Http.UnsignedRequest UpdateStackOutput
+    -> AWS.Request UpdateStackOutput
 updateStack stackName setOptions =
   let
     options = setOptions (UpdateStackOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1119,6 +1144,7 @@ updateStack stackName setOptions =
             JE.null
         )
         updateStackOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateStack request
@@ -1150,7 +1176,7 @@ __Required Parameters__
 -}
 validateTemplate :
     (ValidateTemplateOptions -> ValidateTemplateOptions)
-    -> AWS.Http.UnsignedRequest ValidateTemplateOutput
+    -> AWS.Request ValidateTemplateOutput
 validateTemplate setOptions =
   let
     options = setOptions (ValidateTemplateOptions Nothing Nothing)
@@ -1163,6 +1189,7 @@ validateTemplate setOptions =
             JE.null
         )
         validateTemplateOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a validateTemplate request

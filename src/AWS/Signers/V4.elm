@@ -1,11 +1,6 @@
 module AWS.Signers.V4 exposing (sign)
 
-{-| Version V4 AWS Request Signer
-
-@docs sign
--}
-
-import AWS exposing (ServiceConfig)
+import AWS.Config exposing (Credentials)
 import AWS.Signers.Canonical exposing (canonical, signedHeaders)
 import AWS.Http exposing (UnsignedRequest, RequestParams)
 import Date exposing (Date)
@@ -17,31 +12,39 @@ import Regex exposing (HowMany(All), regex)
 -- http://docs.aws.amazon.com/waf/latest/developerguide/authenticating-requests.html
 
 
-{-| Sign an unsigned request, given the current time
--}
 sign :
-    UnsignedRequest a
+    AWS.Config.Service
+    -> AWS.Config.Credentials
     -> Date
-    -> ServiceConfig
-    -> Http.Request a
-sign req date config =
+    -> UnsignedRequest a
+    -> Result String (Http.Request a)
+sign config creds date req =
     Http.request
         { method = req.method
-        , headers = headers date config
+        , headers =
+            headers config
+                |> addAuthorization config creds date
+                |> addSessionToken creds
+                |> List.map (\( key, val ) -> Http.header key val)
         , url = AWS.Http.url config.host req.path req.params
         , body = AWS.Http.body req.params
         , expect = Http.expectJson req.decoder
         , timeout = Nothing
         , withCredentials = False
         }
+        |> Ok
 
 
-headers : Date -> ServiceConfig -> List Http.Header
-headers date config =
-    []
-        |> addAuthorization date config
-        |> addSessionToken config
-        |> List.map (\( key, val ) -> Http.header key val)
+algorithm : String
+algorithm =
+    "AWS4-HMAC-SHA256"
+
+
+headers : AWS.Config.Service -> List ( String, String )
+headers config =
+    [ ( "Host", config.host ++ ":443" )
+    , ( "Content-Type", jsonContentType config )
+    ]
 
 
 formatDate : Date -> String
@@ -53,10 +56,12 @@ formatDate date =
             (\_ -> "")
 
 
-addSessionToken : ServiceConfig -> List ( String, String ) -> List ( String, String )
-addSessionToken config headers =
-    config.credentials
-        |> Maybe.andThen .sessionToken
+addSessionToken :
+    AWS.Config.Credentials
+    -> List ( String, String )
+    -> List ( String, String )
+addSessionToken creds headers =
+    creds.sessionToken
         |> Maybe.map
             (\token ->
                 ( "x-amz-security-token", token ) :: headers
@@ -64,20 +69,20 @@ addSessionToken config headers =
         |> Maybe.withDefault headers
 
 
-addAuthorization : Date -> ServiceConfig -> List ( String, String ) -> List ( String, String )
-addAuthorization date config headers =
-    config.credentials
-        |> Maybe.map
-            (\creds ->
-                [ ( "X-Amz-Date", formatDate date )
-                , ( "Authorization", authorization creds date config headers )
-                ]
-                    |> List.append headers
-            )
-        |> Maybe.withDefault headers
+addAuthorization :
+    AWS.Config.Service
+    -> AWS.Config.Credentials
+    -> Date
+    -> List ( String, String )
+    -> List ( String, String )
+addAuthorization config creds date headers =
+    [ ( "X-Amz-Date", formatDate date )
+    , ( "Authorization", authorization creds date config headers )
+    ]
+        |> List.append headers
 
 
-authorization : AWS.Credentials -> Date -> ServiceConfig -> List ( String, String ) -> String
+authorization : Credentials -> Date -> AWS.Config.Service -> List ( String, String ) -> String
 authorization creds date config headers =
     [ "AWS4-HMAC-SHA256 Credentials="
         ++ creds.accessKeyId
@@ -91,7 +96,7 @@ authorization creds date config headers =
         |> String.join ", "
 
 
-credentialsString : Date -> ServiceConfig -> String
+credentialsString : Date -> AWS.Config.Service -> String
 credentialsString date config =
     [ date |> formatDate |> String.slice 0 8
     , config.region
@@ -101,11 +106,11 @@ credentialsString date config =
         |> String.join "/"
 
 
-signature : AWS.Credentials -> String
+signature : Credentials -> String
 signature creds =
     ""
 
 
-jsonContentType : ServiceConfig -> String
+jsonContentType : AWS.Config.Service -> String
 jsonContentType config =
     "application/x-amz-json-" ++ config.xAmzJsonVersion ++ "; charset=utf-8"

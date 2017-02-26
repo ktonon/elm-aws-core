@@ -252,6 +252,7 @@ module AWS.Services.KMS
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -263,16 +264,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "kms"
         "2014-11-01"
         "1.1"
         "AWSKMS_20141101."
         "kms.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -288,7 +289,7 @@ __Required Parameters__
 -}
 cancelKeyDeletion :
     String
-    -> AWS.Http.UnsignedRequest CancelKeyDeletionResponse
+    -> AWS.Request CancelKeyDeletionResponse
 cancelKeyDeletion keyId =
     AWS.Http.unsignedRequest
         "CancelKeyDeletion"
@@ -298,6 +299,7 @@ cancelKeyDeletion keyId =
             JE.null
         )
         cancelKeyDeletionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -313,7 +315,7 @@ __Required Parameters__
 createAlias :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createAlias aliasName targetKeyId =
     AWS.Http.unsignedRequest
         "CreateAlias"
@@ -323,6 +325,7 @@ createAlias aliasName targetKeyId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -339,7 +342,7 @@ createGrant :
     String
     -> String
     -> (CreateGrantOptions -> CreateGrantOptions)
-    -> AWS.Http.UnsignedRequest CreateGrantResponse
+    -> AWS.Request CreateGrantResponse
 createGrant keyId granteePrincipal setOptions =
   let
     options = setOptions (CreateGrantOptions Nothing Nothing Nothing Nothing Nothing)
@@ -352,6 +355,7 @@ createGrant keyId granteePrincipal setOptions =
             JE.null
         )
         createGrantResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createGrant request
@@ -375,7 +379,7 @@ __Required Parameters__
 -}
 createKey :
     (CreateKeyOptions -> CreateKeyOptions)
-    -> AWS.Http.UnsignedRequest CreateKeyResponse
+    -> AWS.Request CreateKeyResponse
 createKey setOptions =
   let
     options = setOptions (CreateKeyOptions Nothing Nothing Nothing Nothing Nothing)
@@ -388,6 +392,7 @@ createKey setOptions =
             JE.null
         )
         createKeyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createKey request
@@ -413,7 +418,7 @@ __Required Parameters__
 decrypt :
     String
     -> (DecryptOptions -> DecryptOptions)
-    -> AWS.Http.UnsignedRequest DecryptResponse
+    -> AWS.Request DecryptResponse
 decrypt ciphertextBlob setOptions =
   let
     options = setOptions (DecryptOptions Nothing Nothing)
@@ -426,6 +431,7 @@ decrypt ciphertextBlob setOptions =
             JE.null
         )
         decryptResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a decrypt request
@@ -447,7 +453,7 @@ __Required Parameters__
 -}
 deleteAlias :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAlias aliasName =
     AWS.Http.unsignedRequest
         "DeleteAlias"
@@ -457,6 +463,7 @@ deleteAlias aliasName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -470,7 +477,7 @@ __Required Parameters__
 -}
 deleteImportedKeyMaterial :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteImportedKeyMaterial keyId =
     AWS.Http.unsignedRequest
         "DeleteImportedKeyMaterial"
@@ -480,6 +487,7 @@ deleteImportedKeyMaterial keyId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -494,7 +502,7 @@ __Required Parameters__
 describeKey :
     String
     -> (DescribeKeyOptions -> DescribeKeyOptions)
-    -> AWS.Http.UnsignedRequest DescribeKeyResponse
+    -> AWS.Request DescribeKeyResponse
 describeKey keyId setOptions =
   let
     options = setOptions (DescribeKeyOptions Nothing)
@@ -507,6 +515,7 @@ describeKey keyId setOptions =
             JE.null
         )
         describeKeyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeKey request
@@ -527,7 +536,7 @@ __Required Parameters__
 -}
 disableKey :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disableKey keyId =
     AWS.Http.unsignedRequest
         "DisableKey"
@@ -537,6 +546,7 @@ disableKey keyId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -550,7 +560,7 @@ __Required Parameters__
 -}
 disableKeyRotation :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disableKeyRotation keyId =
     AWS.Http.unsignedRequest
         "DisableKeyRotation"
@@ -560,6 +570,7 @@ disableKeyRotation keyId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -573,7 +584,7 @@ __Required Parameters__
 -}
 enableKey :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableKey keyId =
     AWS.Http.unsignedRequest
         "EnableKey"
@@ -583,6 +594,7 @@ enableKey keyId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -596,7 +608,7 @@ __Required Parameters__
 -}
 enableKeyRotation :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableKeyRotation keyId =
     AWS.Http.unsignedRequest
         "EnableKeyRotation"
@@ -606,6 +618,7 @@ enableKeyRotation keyId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -622,7 +635,7 @@ encrypt :
     String
     -> String
     -> (EncryptOptions -> EncryptOptions)
-    -> AWS.Http.UnsignedRequest EncryptResponse
+    -> AWS.Request EncryptResponse
 encrypt keyId plaintext setOptions =
   let
     options = setOptions (EncryptOptions Nothing Nothing)
@@ -635,6 +648,7 @@ encrypt keyId plaintext setOptions =
             JE.null
         )
         encryptResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a encrypt request
@@ -657,7 +671,7 @@ __Required Parameters__
 generateDataKey :
     String
     -> (GenerateDataKeyOptions -> GenerateDataKeyOptions)
-    -> AWS.Http.UnsignedRequest GenerateDataKeyResponse
+    -> AWS.Request GenerateDataKeyResponse
 generateDataKey keyId setOptions =
   let
     options = setOptions (GenerateDataKeyOptions Nothing Nothing Nothing Nothing)
@@ -670,6 +684,7 @@ generateDataKey keyId setOptions =
             JE.null
         )
         generateDataKeyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a generateDataKey request
@@ -694,7 +709,7 @@ __Required Parameters__
 generateDataKeyWithoutPlaintext :
     String
     -> (GenerateDataKeyWithoutPlaintextOptions -> GenerateDataKeyWithoutPlaintextOptions)
-    -> AWS.Http.UnsignedRequest GenerateDataKeyWithoutPlaintextResponse
+    -> AWS.Request GenerateDataKeyWithoutPlaintextResponse
 generateDataKeyWithoutPlaintext keyId setOptions =
   let
     options = setOptions (GenerateDataKeyWithoutPlaintextOptions Nothing Nothing Nothing Nothing)
@@ -707,6 +722,7 @@ generateDataKeyWithoutPlaintext keyId setOptions =
             JE.null
         )
         generateDataKeyWithoutPlaintextResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a generateDataKeyWithoutPlaintext request
@@ -729,7 +745,7 @@ __Required Parameters__
 -}
 generateRandom :
     (GenerateRandomOptions -> GenerateRandomOptions)
-    -> AWS.Http.UnsignedRequest GenerateRandomResponse
+    -> AWS.Request GenerateRandomResponse
 generateRandom setOptions =
   let
     options = setOptions (GenerateRandomOptions Nothing)
@@ -742,6 +758,7 @@ generateRandom setOptions =
             JE.null
         )
         generateRandomResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a generateRandom request
@@ -764,7 +781,7 @@ __Required Parameters__
 getKeyPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetKeyPolicyResponse
+    -> AWS.Request GetKeyPolicyResponse
 getKeyPolicy keyId policyName =
     AWS.Http.unsignedRequest
         "GetKeyPolicy"
@@ -774,6 +791,7 @@ getKeyPolicy keyId policyName =
             JE.null
         )
         getKeyPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -787,7 +805,7 @@ __Required Parameters__
 -}
 getKeyRotationStatus :
     String
-    -> AWS.Http.UnsignedRequest GetKeyRotationStatusResponse
+    -> AWS.Request GetKeyRotationStatusResponse
 getKeyRotationStatus keyId =
     AWS.Http.unsignedRequest
         "GetKeyRotationStatus"
@@ -797,6 +815,7 @@ getKeyRotationStatus keyId =
             JE.null
         )
         getKeyRotationStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -814,7 +833,7 @@ getParametersForImport :
     String
     -> AlgorithmSpec
     -> WrappingKeySpec
-    -> AWS.Http.UnsignedRequest GetParametersForImportResponse
+    -> AWS.Request GetParametersForImportResponse
 getParametersForImport keyId wrappingAlgorithm wrappingKeySpec =
     AWS.Http.unsignedRequest
         "GetParametersForImport"
@@ -824,6 +843,7 @@ getParametersForImport keyId wrappingAlgorithm wrappingKeySpec =
             JE.null
         )
         getParametersForImportResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -842,7 +862,7 @@ importKeyMaterial :
     -> String
     -> String
     -> (ImportKeyMaterialOptions -> ImportKeyMaterialOptions)
-    -> AWS.Http.UnsignedRequest ImportKeyMaterialResponse
+    -> AWS.Request ImportKeyMaterialResponse
 importKeyMaterial keyId importToken encryptedKeyMaterial setOptions =
   let
     options = setOptions (ImportKeyMaterialOptions Nothing Nothing)
@@ -855,6 +875,7 @@ importKeyMaterial keyId importToken encryptedKeyMaterial setOptions =
             JE.null
         )
         importKeyMaterialResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a importKeyMaterial request
@@ -875,7 +896,7 @@ __Required Parameters__
 -}
 listAliases :
     (ListAliasesOptions -> ListAliasesOptions)
-    -> AWS.Http.UnsignedRequest ListAliasesResponse
+    -> AWS.Request ListAliasesResponse
 listAliases setOptions =
   let
     options = setOptions (ListAliasesOptions Nothing Nothing)
@@ -888,6 +909,7 @@ listAliases setOptions =
             JE.null
         )
         listAliasesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAliases request
@@ -910,7 +932,7 @@ __Required Parameters__
 listGrants :
     String
     -> (ListGrantsOptions -> ListGrantsOptions)
-    -> AWS.Http.UnsignedRequest ListGrantsResponse
+    -> AWS.Request ListGrantsResponse
 listGrants keyId setOptions =
   let
     options = setOptions (ListGrantsOptions Nothing Nothing)
@@ -923,6 +945,7 @@ listGrants keyId setOptions =
             JE.null
         )
         listGrantsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listGrants request
@@ -945,7 +968,7 @@ __Required Parameters__
 listKeyPolicies :
     String
     -> (ListKeyPoliciesOptions -> ListKeyPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListKeyPoliciesResponse
+    -> AWS.Request ListKeyPoliciesResponse
 listKeyPolicies keyId setOptions =
   let
     options = setOptions (ListKeyPoliciesOptions Nothing Nothing)
@@ -958,6 +981,7 @@ listKeyPolicies keyId setOptions =
             JE.null
         )
         listKeyPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listKeyPolicies request
@@ -978,7 +1002,7 @@ __Required Parameters__
 -}
 listKeys :
     (ListKeysOptions -> ListKeysOptions)
-    -> AWS.Http.UnsignedRequest ListKeysResponse
+    -> AWS.Request ListKeysResponse
 listKeys setOptions =
   let
     options = setOptions (ListKeysOptions Nothing Nothing)
@@ -991,6 +1015,7 @@ listKeys setOptions =
             JE.null
         )
         listKeysResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listKeys request
@@ -1013,7 +1038,7 @@ __Required Parameters__
 listRetirableGrants :
     String
     -> (ListRetirableGrantsOptions -> ListRetirableGrantsOptions)
-    -> AWS.Http.UnsignedRequest ListGrantsResponse
+    -> AWS.Request ListGrantsResponse
 listRetirableGrants retiringPrincipal setOptions =
   let
     options = setOptions (ListRetirableGrantsOptions Nothing Nothing)
@@ -1026,6 +1051,7 @@ listRetirableGrants retiringPrincipal setOptions =
             JE.null
         )
         listGrantsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRetirableGrants request
@@ -1052,7 +1078,7 @@ putKeyPolicy :
     -> String
     -> String
     -> (PutKeyPolicyOptions -> PutKeyPolicyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putKeyPolicy keyId policyName policy setOptions =
   let
     options = setOptions (PutKeyPolicyOptions Nothing)
@@ -1065,6 +1091,7 @@ putKeyPolicy keyId policyName policy setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putKeyPolicy request
@@ -1088,7 +1115,7 @@ reEncrypt :
     String
     -> String
     -> (ReEncryptOptions -> ReEncryptOptions)
-    -> AWS.Http.UnsignedRequest ReEncryptResponse
+    -> AWS.Request ReEncryptResponse
 reEncrypt ciphertextBlob destinationKeyId setOptions =
   let
     options = setOptions (ReEncryptOptions Nothing Nothing Nothing)
@@ -1101,6 +1128,7 @@ reEncrypt ciphertextBlob destinationKeyId setOptions =
             JE.null
         )
         reEncryptResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a reEncrypt request
@@ -1122,7 +1150,7 @@ __Required Parameters__
 -}
 retireGrant :
     (RetireGrantOptions -> RetireGrantOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 retireGrant setOptions =
   let
     options = setOptions (RetireGrantOptions Nothing Nothing Nothing)
@@ -1135,6 +1163,7 @@ retireGrant setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a retireGrant request
@@ -1159,7 +1188,7 @@ __Required Parameters__
 revokeGrant :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 revokeGrant keyId grantId =
     AWS.Http.unsignedRequest
         "RevokeGrant"
@@ -1169,6 +1198,7 @@ revokeGrant keyId grantId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1183,7 +1213,7 @@ __Required Parameters__
 scheduleKeyDeletion :
     String
     -> (ScheduleKeyDeletionOptions -> ScheduleKeyDeletionOptions)
-    -> AWS.Http.UnsignedRequest ScheduleKeyDeletionResponse
+    -> AWS.Request ScheduleKeyDeletionResponse
 scheduleKeyDeletion keyId setOptions =
   let
     options = setOptions (ScheduleKeyDeletionOptions Nothing)
@@ -1196,6 +1226,7 @@ scheduleKeyDeletion keyId setOptions =
             JE.null
         )
         scheduleKeyDeletionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a scheduleKeyDeletion request
@@ -1218,7 +1249,7 @@ __Required Parameters__
 updateAlias :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateAlias aliasName targetKeyId =
     AWS.Http.unsignedRequest
         "UpdateAlias"
@@ -1228,6 +1259,7 @@ updateAlias aliasName targetKeyId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1243,7 +1275,7 @@ __Required Parameters__
 updateKeyDescription :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateKeyDescription keyId description =
     AWS.Http.unsignedRequest
         "UpdateKeyDescription"
@@ -1253,6 +1285,7 @@ updateKeyDescription keyId description =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 

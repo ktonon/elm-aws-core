@@ -208,6 +208,7 @@ module AWS.Services.Route53Domains
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -218,16 +219,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "route53domains"
         "2014-05-15"
         "1.1"
         "AWSROUTE53DOMAINS_20140515."
         "route53domains.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -244,7 +245,7 @@ __Required Parameters__
 checkDomainAvailability :
     String
     -> (CheckDomainAvailabilityOptions -> CheckDomainAvailabilityOptions)
-    -> AWS.Http.UnsignedRequest CheckDomainAvailabilityResponse
+    -> AWS.Request CheckDomainAvailabilityResponse
 checkDomainAvailability domainName setOptions =
   let
     options = setOptions (CheckDomainAvailabilityOptions Nothing)
@@ -257,6 +258,7 @@ checkDomainAvailability domainName setOptions =
             JE.null
         )
         checkDomainAvailabilityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a checkDomainAvailability request
@@ -279,7 +281,7 @@ __Required Parameters__
 deleteTagsForDomain :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest DeleteTagsForDomainResponse
+    -> AWS.Request DeleteTagsForDomainResponse
 deleteTagsForDomain domainName tagsToDelete =
     AWS.Http.unsignedRequest
         "DeleteTagsForDomain"
@@ -289,6 +291,7 @@ deleteTagsForDomain domainName tagsToDelete =
             JE.null
         )
         deleteTagsForDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -302,7 +305,7 @@ __Required Parameters__
 -}
 disableDomainAutoRenew :
     String
-    -> AWS.Http.UnsignedRequest DisableDomainAutoRenewResponse
+    -> AWS.Request DisableDomainAutoRenewResponse
 disableDomainAutoRenew domainName =
     AWS.Http.unsignedRequest
         "DisableDomainAutoRenew"
@@ -312,6 +315,7 @@ disableDomainAutoRenew domainName =
             JE.null
         )
         disableDomainAutoRenewResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -325,7 +329,7 @@ __Required Parameters__
 -}
 disableDomainTransferLock :
     String
-    -> AWS.Http.UnsignedRequest DisableDomainTransferLockResponse
+    -> AWS.Request DisableDomainTransferLockResponse
 disableDomainTransferLock domainName =
     AWS.Http.unsignedRequest
         "DisableDomainTransferLock"
@@ -335,6 +339,7 @@ disableDomainTransferLock domainName =
             JE.null
         )
         disableDomainTransferLockResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -348,7 +353,7 @@ __Required Parameters__
 -}
 enableDomainAutoRenew :
     String
-    -> AWS.Http.UnsignedRequest EnableDomainAutoRenewResponse
+    -> AWS.Request EnableDomainAutoRenewResponse
 enableDomainAutoRenew domainName =
     AWS.Http.unsignedRequest
         "EnableDomainAutoRenew"
@@ -358,6 +363,7 @@ enableDomainAutoRenew domainName =
             JE.null
         )
         enableDomainAutoRenewResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -371,7 +377,7 @@ __Required Parameters__
 -}
 enableDomainTransferLock :
     String
-    -> AWS.Http.UnsignedRequest EnableDomainTransferLockResponse
+    -> AWS.Request EnableDomainTransferLockResponse
 enableDomainTransferLock domainName =
     AWS.Http.unsignedRequest
         "EnableDomainTransferLock"
@@ -381,6 +387,7 @@ enableDomainTransferLock domainName =
             JE.null
         )
         enableDomainTransferLockResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -393,7 +400,7 @@ __Required Parameters__
 -}
 getContactReachabilityStatus :
     (GetContactReachabilityStatusOptions -> GetContactReachabilityStatusOptions)
-    -> AWS.Http.UnsignedRequest GetContactReachabilityStatusResponse
+    -> AWS.Request GetContactReachabilityStatusResponse
 getContactReachabilityStatus setOptions =
   let
     options = setOptions (GetContactReachabilityStatusOptions Nothing)
@@ -406,6 +413,7 @@ getContactReachabilityStatus setOptions =
             JE.null
         )
         getContactReachabilityStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getContactReachabilityStatus request
@@ -426,7 +434,7 @@ __Required Parameters__
 -}
 getDomainDetail :
     String
-    -> AWS.Http.UnsignedRequest GetDomainDetailResponse
+    -> AWS.Request GetDomainDetailResponse
 getDomainDetail domainName =
     AWS.Http.unsignedRequest
         "GetDomainDetail"
@@ -436,6 +444,7 @@ getDomainDetail domainName =
             JE.null
         )
         getDomainDetailResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -453,7 +462,7 @@ getDomainSuggestions :
     String
     -> Int
     -> Bool
-    -> AWS.Http.UnsignedRequest GetDomainSuggestionsResponse
+    -> AWS.Request GetDomainSuggestionsResponse
 getDomainSuggestions domainName suggestionCount onlyAvailable =
     AWS.Http.unsignedRequest
         "GetDomainSuggestions"
@@ -463,6 +472,7 @@ getDomainSuggestions domainName suggestionCount onlyAvailable =
             JE.null
         )
         getDomainSuggestionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -476,7 +486,7 @@ __Required Parameters__
 -}
 getOperationDetail :
     String
-    -> AWS.Http.UnsignedRequest GetOperationDetailResponse
+    -> AWS.Request GetOperationDetailResponse
 getOperationDetail operationId =
     AWS.Http.unsignedRequest
         "GetOperationDetail"
@@ -486,6 +496,7 @@ getOperationDetail operationId =
             JE.null
         )
         getOperationDetailResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -498,7 +509,7 @@ __Required Parameters__
 -}
 listDomains :
     (ListDomainsOptions -> ListDomainsOptions)
-    -> AWS.Http.UnsignedRequest ListDomainsResponse
+    -> AWS.Request ListDomainsResponse
 listDomains setOptions =
   let
     options = setOptions (ListDomainsOptions Nothing Nothing)
@@ -511,6 +522,7 @@ listDomains setOptions =
             JE.null
         )
         listDomainsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDomains request
@@ -531,7 +543,7 @@ __Required Parameters__
 -}
 listOperations :
     (ListOperationsOptions -> ListOperationsOptions)
-    -> AWS.Http.UnsignedRequest ListOperationsResponse
+    -> AWS.Request ListOperationsResponse
 listOperations setOptions =
   let
     options = setOptions (ListOperationsOptions Nothing Nothing)
@@ -544,6 +556,7 @@ listOperations setOptions =
             JE.null
         )
         listOperationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listOperations request
@@ -565,7 +578,7 @@ __Required Parameters__
 -}
 listTagsForDomain :
     String
-    -> AWS.Http.UnsignedRequest ListTagsForDomainResponse
+    -> AWS.Request ListTagsForDomainResponse
 listTagsForDomain domainName =
     AWS.Http.unsignedRequest
         "ListTagsForDomain"
@@ -575,6 +588,7 @@ listTagsForDomain domainName =
             JE.null
         )
         listTagsForDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -597,7 +611,7 @@ registerDomain :
     -> ContactDetail
     -> ContactDetail
     -> (RegisterDomainOptions -> RegisterDomainOptions)
-    -> AWS.Http.UnsignedRequest RegisterDomainResponse
+    -> AWS.Request RegisterDomainResponse
 registerDomain domainName durationInYears adminContact registrantContact techContact setOptions =
   let
     options = setOptions (RegisterDomainOptions Nothing Nothing Nothing Nothing Nothing)
@@ -610,6 +624,7 @@ registerDomain domainName durationInYears adminContact registrantContact techCon
             JE.null
         )
         registerDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerDomain request
@@ -637,7 +652,7 @@ renewDomain :
     String
     -> Int
     -> (RenewDomainOptions -> RenewDomainOptions)
-    -> AWS.Http.UnsignedRequest RenewDomainResponse
+    -> AWS.Request RenewDomainResponse
 renewDomain domainName currentExpiryYear setOptions =
   let
     options = setOptions (RenewDomainOptions Nothing)
@@ -650,6 +665,7 @@ renewDomain domainName currentExpiryYear setOptions =
             JE.null
         )
         renewDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a renewDomain request
@@ -669,7 +685,7 @@ __Required Parameters__
 -}
 resendContactReachabilityEmail :
     (ResendContactReachabilityEmailOptions -> ResendContactReachabilityEmailOptions)
-    -> AWS.Http.UnsignedRequest ResendContactReachabilityEmailResponse
+    -> AWS.Request ResendContactReachabilityEmailResponse
 resendContactReachabilityEmail setOptions =
   let
     options = setOptions (ResendContactReachabilityEmailOptions Nothing)
@@ -682,6 +698,7 @@ resendContactReachabilityEmail setOptions =
             JE.null
         )
         resendContactReachabilityEmailResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resendContactReachabilityEmail request
@@ -702,7 +719,7 @@ __Required Parameters__
 -}
 retrieveDomainAuthCode :
     String
-    -> AWS.Http.UnsignedRequest RetrieveDomainAuthCodeResponse
+    -> AWS.Request RetrieveDomainAuthCodeResponse
 retrieveDomainAuthCode domainName =
     AWS.Http.unsignedRequest
         "RetrieveDomainAuthCode"
@@ -712,6 +729,7 @@ retrieveDomainAuthCode domainName =
             JE.null
         )
         retrieveDomainAuthCodeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -734,7 +752,7 @@ transferDomain :
     -> ContactDetail
     -> ContactDetail
     -> (TransferDomainOptions -> TransferDomainOptions)
-    -> AWS.Http.UnsignedRequest TransferDomainResponse
+    -> AWS.Request TransferDomainResponse
 transferDomain domainName durationInYears adminContact registrantContact techContact setOptions =
   let
     options = setOptions (TransferDomainOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -747,6 +765,7 @@ transferDomain domainName durationInYears adminContact registrantContact techCon
             JE.null
         )
         transferDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a transferDomain request
@@ -774,7 +793,7 @@ __Required Parameters__
 updateDomainContact :
     String
     -> (UpdateDomainContactOptions -> UpdateDomainContactOptions)
-    -> AWS.Http.UnsignedRequest UpdateDomainContactResponse
+    -> AWS.Request UpdateDomainContactResponse
 updateDomainContact domainName setOptions =
   let
     options = setOptions (UpdateDomainContactOptions Nothing Nothing Nothing)
@@ -787,6 +806,7 @@ updateDomainContact domainName setOptions =
             JE.null
         )
         updateDomainContactResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDomainContact request
@@ -810,7 +830,7 @@ __Required Parameters__
 updateDomainContactPrivacy :
     String
     -> (UpdateDomainContactPrivacyOptions -> UpdateDomainContactPrivacyOptions)
-    -> AWS.Http.UnsignedRequest UpdateDomainContactPrivacyResponse
+    -> AWS.Request UpdateDomainContactPrivacyResponse
 updateDomainContactPrivacy domainName setOptions =
   let
     options = setOptions (UpdateDomainContactPrivacyOptions Nothing Nothing Nothing)
@@ -823,6 +843,7 @@ updateDomainContactPrivacy domainName setOptions =
             JE.null
         )
         updateDomainContactPrivacyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDomainContactPrivacy request
@@ -848,7 +869,7 @@ updateDomainNameservers :
     String
     -> (List Nameserver)
     -> (UpdateDomainNameserversOptions -> UpdateDomainNameserversOptions)
-    -> AWS.Http.UnsignedRequest UpdateDomainNameserversResponse
+    -> AWS.Request UpdateDomainNameserversResponse
 updateDomainNameservers domainName nameservers setOptions =
   let
     options = setOptions (UpdateDomainNameserversOptions Nothing)
@@ -861,6 +882,7 @@ updateDomainNameservers domainName nameservers setOptions =
             JE.null
         )
         updateDomainNameserversResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDomainNameservers request
@@ -882,7 +904,7 @@ __Required Parameters__
 updateTagsForDomain :
     String
     -> (UpdateTagsForDomainOptions -> UpdateTagsForDomainOptions)
-    -> AWS.Http.UnsignedRequest UpdateTagsForDomainResponse
+    -> AWS.Request UpdateTagsForDomainResponse
 updateTagsForDomain domainName setOptions =
   let
     options = setOptions (UpdateTagsForDomainOptions Nothing)
@@ -895,6 +917,7 @@ updateTagsForDomain domainName setOptions =
             JE.null
         )
         updateTagsForDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateTagsForDomain request
@@ -914,7 +937,7 @@ __Required Parameters__
 -}
 viewBilling :
     (ViewBillingOptions -> ViewBillingOptions)
-    -> AWS.Http.UnsignedRequest ViewBillingResponse
+    -> AWS.Request ViewBillingResponse
 viewBilling setOptions =
   let
     options = setOptions (ViewBillingOptions Nothing Nothing Nothing Nothing)
@@ -927,6 +950,7 @@ viewBilling setOptions =
             JE.null
         )
         viewBillingResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a viewBilling request

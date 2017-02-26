@@ -328,6 +328,7 @@ module AWS.Services.DirectoryService
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -338,16 +339,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "ds"
         "2015-04-16"
         "1.1"
         "AWSDS_20150416."
         "ds.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -366,7 +367,7 @@ addIpRoutes :
     String
     -> (List IpRoute)
     -> (AddIpRoutesOptions -> AddIpRoutesOptions)
-    -> AWS.Http.UnsignedRequest AddIpRoutesResult
+    -> AWS.Request AddIpRoutesResult
 addIpRoutes directoryId ipRoutes setOptions =
   let
     options = setOptions (AddIpRoutesOptions Nothing)
@@ -379,6 +380,7 @@ addIpRoutes directoryId ipRoutes setOptions =
             JE.null
         )
         addIpRoutesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a addIpRoutes request
@@ -401,7 +403,7 @@ __Required Parameters__
 addTagsToResource :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest AddTagsToResourceResult
+    -> AWS.Request AddTagsToResourceResult
 addTagsToResource resourceId tags =
     AWS.Http.unsignedRequest
         "AddTagsToResource"
@@ -411,6 +413,7 @@ addTagsToResource resourceId tags =
             JE.null
         )
         addTagsToResourceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -426,7 +429,7 @@ __Required Parameters__
 cancelSchemaExtension :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CancelSchemaExtensionResult
+    -> AWS.Request CancelSchemaExtensionResult
 cancelSchemaExtension directoryId schemaExtensionId =
     AWS.Http.unsignedRequest
         "CancelSchemaExtension"
@@ -436,6 +439,7 @@ cancelSchemaExtension directoryId schemaExtensionId =
             JE.null
         )
         cancelSchemaExtensionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -456,7 +460,7 @@ connectDirectory :
     -> DirectorySize
     -> DirectoryConnectSettings
     -> (ConnectDirectoryOptions -> ConnectDirectoryOptions)
-    -> AWS.Http.UnsignedRequest ConnectDirectoryResult
+    -> AWS.Request ConnectDirectoryResult
 connectDirectory name password size connectSettings setOptions =
   let
     options = setOptions (ConnectDirectoryOptions Nothing Nothing)
@@ -469,6 +473,7 @@ connectDirectory name password size connectSettings setOptions =
             JE.null
         )
         connectDirectoryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a connectDirectory request
@@ -492,7 +497,7 @@ __Required Parameters__
 createAlias :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateAliasResult
+    -> AWS.Request CreateAliasResult
 createAlias directoryId alias =
     AWS.Http.unsignedRequest
         "CreateAlias"
@@ -502,6 +507,7 @@ createAlias directoryId alias =
             JE.null
         )
         createAliasResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -520,7 +526,7 @@ createComputer :
     -> String
     -> String
     -> (CreateComputerOptions -> CreateComputerOptions)
-    -> AWS.Http.UnsignedRequest CreateComputerResult
+    -> AWS.Request CreateComputerResult
 createComputer directoryId computerName password setOptions =
   let
     options = setOptions (CreateComputerOptions Nothing Nothing)
@@ -533,6 +539,7 @@ createComputer directoryId computerName password setOptions =
             JE.null
         )
         createComputerResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createComputer request
@@ -558,7 +565,7 @@ createConditionalForwarder :
     String
     -> String
     -> (List String)
-    -> AWS.Http.UnsignedRequest CreateConditionalForwarderResult
+    -> AWS.Request CreateConditionalForwarderResult
 createConditionalForwarder directoryId remoteDomainName dnsIpAddrs =
     AWS.Http.unsignedRequest
         "CreateConditionalForwarder"
@@ -568,6 +575,7 @@ createConditionalForwarder directoryId remoteDomainName dnsIpAddrs =
             JE.null
         )
         createConditionalForwarderResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -586,7 +594,7 @@ createDirectory :
     -> String
     -> DirectorySize
     -> (CreateDirectoryOptions -> CreateDirectoryOptions)
-    -> AWS.Http.UnsignedRequest CreateDirectoryResult
+    -> AWS.Request CreateDirectoryResult
 createDirectory name password size setOptions =
   let
     options = setOptions (CreateDirectoryOptions Nothing Nothing Nothing)
@@ -599,6 +607,7 @@ createDirectory name password size setOptions =
             JE.null
         )
         createDirectoryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDirectory request
@@ -626,7 +635,7 @@ createMicrosoftAD :
     -> String
     -> DirectoryVpcSettings
     -> (CreateMicrosoftADOptions -> CreateMicrosoftADOptions)
-    -> AWS.Http.UnsignedRequest CreateMicrosoftADResult
+    -> AWS.Request CreateMicrosoftADResult
 createMicrosoftAD name password vpcSettings setOptions =
   let
     options = setOptions (CreateMicrosoftADOptions Nothing Nothing)
@@ -639,6 +648,7 @@ createMicrosoftAD name password vpcSettings setOptions =
             JE.null
         )
         createMicrosoftADResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createMicrosoftAD request
@@ -661,7 +671,7 @@ __Required Parameters__
 createSnapshot :
     String
     -> (CreateSnapshotOptions -> CreateSnapshotOptions)
-    -> AWS.Http.UnsignedRequest CreateSnapshotResult
+    -> AWS.Request CreateSnapshotResult
 createSnapshot directoryId setOptions =
   let
     options = setOptions (CreateSnapshotOptions Nothing)
@@ -674,6 +684,7 @@ createSnapshot directoryId setOptions =
             JE.null
         )
         createSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createSnapshot request
@@ -701,7 +712,7 @@ createTrust :
     -> String
     -> TrustDirection
     -> (CreateTrustOptions -> CreateTrustOptions)
-    -> AWS.Http.UnsignedRequest CreateTrustResult
+    -> AWS.Request CreateTrustResult
 createTrust directoryId remoteDomainName trustPassword trustDirection setOptions =
   let
     options = setOptions (CreateTrustOptions Nothing Nothing)
@@ -714,6 +725,7 @@ createTrust directoryId remoteDomainName trustPassword trustDirection setOptions
             JE.null
         )
         createTrustResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createTrust request
@@ -737,7 +749,7 @@ __Required Parameters__
 deleteConditionalForwarder :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteConditionalForwarderResult
+    -> AWS.Request DeleteConditionalForwarderResult
 deleteConditionalForwarder directoryId remoteDomainName =
     AWS.Http.unsignedRequest
         "DeleteConditionalForwarder"
@@ -747,6 +759,7 @@ deleteConditionalForwarder directoryId remoteDomainName =
             JE.null
         )
         deleteConditionalForwarderResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -760,7 +773,7 @@ __Required Parameters__
 -}
 deleteDirectory :
     String
-    -> AWS.Http.UnsignedRequest DeleteDirectoryResult
+    -> AWS.Request DeleteDirectoryResult
 deleteDirectory directoryId =
     AWS.Http.unsignedRequest
         "DeleteDirectory"
@@ -770,6 +783,7 @@ deleteDirectory directoryId =
             JE.null
         )
         deleteDirectoryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -783,7 +797,7 @@ __Required Parameters__
 -}
 deleteSnapshot :
     String
-    -> AWS.Http.UnsignedRequest DeleteSnapshotResult
+    -> AWS.Request DeleteSnapshotResult
 deleteSnapshot snapshotId =
     AWS.Http.unsignedRequest
         "DeleteSnapshot"
@@ -793,6 +807,7 @@ deleteSnapshot snapshotId =
             JE.null
         )
         deleteSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -807,7 +822,7 @@ __Required Parameters__
 deleteTrust :
     String
     -> (DeleteTrustOptions -> DeleteTrustOptions)
-    -> AWS.Http.UnsignedRequest DeleteTrustResult
+    -> AWS.Request DeleteTrustResult
 deleteTrust trustId setOptions =
   let
     options = setOptions (DeleteTrustOptions Nothing)
@@ -820,6 +835,7 @@ deleteTrust trustId setOptions =
             JE.null
         )
         deleteTrustResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteTrust request
@@ -842,7 +858,7 @@ __Required Parameters__
 deregisterEventTopic :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeregisterEventTopicResult
+    -> AWS.Request DeregisterEventTopicResult
 deregisterEventTopic directoryId topicName =
     AWS.Http.unsignedRequest
         "DeregisterEventTopic"
@@ -852,6 +868,7 @@ deregisterEventTopic directoryId topicName =
             JE.null
         )
         deregisterEventTopicResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -866,7 +883,7 @@ __Required Parameters__
 describeConditionalForwarders :
     String
     -> (DescribeConditionalForwardersOptions -> DescribeConditionalForwardersOptions)
-    -> AWS.Http.UnsignedRequest DescribeConditionalForwardersResult
+    -> AWS.Request DescribeConditionalForwardersResult
 describeConditionalForwarders directoryId setOptions =
   let
     options = setOptions (DescribeConditionalForwardersOptions Nothing)
@@ -879,6 +896,7 @@ describeConditionalForwarders directoryId setOptions =
             JE.null
         )
         describeConditionalForwardersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConditionalForwarders request
@@ -898,7 +916,7 @@ __Required Parameters__
 -}
 describeDirectories :
     (DescribeDirectoriesOptions -> DescribeDirectoriesOptions)
-    -> AWS.Http.UnsignedRequest DescribeDirectoriesResult
+    -> AWS.Request DescribeDirectoriesResult
 describeDirectories setOptions =
   let
     options = setOptions (DescribeDirectoriesOptions Nothing Nothing Nothing)
@@ -911,6 +929,7 @@ describeDirectories setOptions =
             JE.null
         )
         describeDirectoriesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDirectories request
@@ -932,7 +951,7 @@ __Required Parameters__
 -}
 describeEventTopics :
     (DescribeEventTopicsOptions -> DescribeEventTopicsOptions)
-    -> AWS.Http.UnsignedRequest DescribeEventTopicsResult
+    -> AWS.Request DescribeEventTopicsResult
 describeEventTopics setOptions =
   let
     options = setOptions (DescribeEventTopicsOptions Nothing Nothing)
@@ -945,6 +964,7 @@ describeEventTopics setOptions =
             JE.null
         )
         describeEventTopicsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEventTopics request
@@ -965,7 +985,7 @@ __Required Parameters__
 -}
 describeSnapshots :
     (DescribeSnapshotsOptions -> DescribeSnapshotsOptions)
-    -> AWS.Http.UnsignedRequest DescribeSnapshotsResult
+    -> AWS.Request DescribeSnapshotsResult
 describeSnapshots setOptions =
   let
     options = setOptions (DescribeSnapshotsOptions Nothing Nothing Nothing Nothing)
@@ -978,6 +998,7 @@ describeSnapshots setOptions =
             JE.null
         )
         describeSnapshotsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSnapshots request
@@ -1000,7 +1021,7 @@ __Required Parameters__
 -}
 describeTrusts :
     (DescribeTrustsOptions -> DescribeTrustsOptions)
-    -> AWS.Http.UnsignedRequest DescribeTrustsResult
+    -> AWS.Request DescribeTrustsResult
 describeTrusts setOptions =
   let
     options = setOptions (DescribeTrustsOptions Nothing Nothing Nothing Nothing)
@@ -1013,6 +1034,7 @@ describeTrusts setOptions =
             JE.null
         )
         describeTrustsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTrusts request
@@ -1036,7 +1058,7 @@ __Required Parameters__
 -}
 disableRadius :
     String
-    -> AWS.Http.UnsignedRequest DisableRadiusResult
+    -> AWS.Request DisableRadiusResult
 disableRadius directoryId =
     AWS.Http.unsignedRequest
         "DisableRadius"
@@ -1046,6 +1068,7 @@ disableRadius directoryId =
             JE.null
         )
         disableRadiusResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1060,7 +1083,7 @@ __Required Parameters__
 disableSso :
     String
     -> (DisableSsoOptions -> DisableSsoOptions)
-    -> AWS.Http.UnsignedRequest DisableSsoResult
+    -> AWS.Request DisableSsoResult
 disableSso directoryId setOptions =
   let
     options = setOptions (DisableSsoOptions Nothing Nothing)
@@ -1073,6 +1096,7 @@ disableSso directoryId setOptions =
             JE.null
         )
         disableSsoResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disableSso request
@@ -1096,7 +1120,7 @@ __Required Parameters__
 enableRadius :
     String
     -> RadiusSettings
-    -> AWS.Http.UnsignedRequest EnableRadiusResult
+    -> AWS.Request EnableRadiusResult
 enableRadius directoryId radiusSettings =
     AWS.Http.unsignedRequest
         "EnableRadius"
@@ -1106,6 +1130,7 @@ enableRadius directoryId radiusSettings =
             JE.null
         )
         enableRadiusResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1120,7 +1145,7 @@ __Required Parameters__
 enableSso :
     String
     -> (EnableSsoOptions -> EnableSsoOptions)
-    -> AWS.Http.UnsignedRequest EnableSsoResult
+    -> AWS.Request EnableSsoResult
 enableSso directoryId setOptions =
   let
     options = setOptions (EnableSsoOptions Nothing Nothing)
@@ -1133,6 +1158,7 @@ enableSso directoryId setOptions =
             JE.null
         )
         enableSsoResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a enableSso request
@@ -1152,7 +1178,7 @@ __Required Parameters__
 
 -}
 getDirectoryLimits :
-    AWS.Http.UnsignedRequest GetDirectoryLimitsResult
+    AWS.Request GetDirectoryLimitsResult
 getDirectoryLimits =
     AWS.Http.unsignedRequest
         "GetDirectoryLimits"
@@ -1162,6 +1188,7 @@ getDirectoryLimits =
             JE.null
         )
         getDirectoryLimitsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1175,7 +1202,7 @@ __Required Parameters__
 -}
 getSnapshotLimits :
     String
-    -> AWS.Http.UnsignedRequest GetSnapshotLimitsResult
+    -> AWS.Request GetSnapshotLimitsResult
 getSnapshotLimits directoryId =
     AWS.Http.unsignedRequest
         "GetSnapshotLimits"
@@ -1185,6 +1212,7 @@ getSnapshotLimits directoryId =
             JE.null
         )
         getSnapshotLimitsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1199,7 +1227,7 @@ __Required Parameters__
 listIpRoutes :
     String
     -> (ListIpRoutesOptions -> ListIpRoutesOptions)
-    -> AWS.Http.UnsignedRequest ListIpRoutesResult
+    -> AWS.Request ListIpRoutesResult
 listIpRoutes directoryId setOptions =
   let
     options = setOptions (ListIpRoutesOptions Nothing Nothing)
@@ -1212,6 +1240,7 @@ listIpRoutes directoryId setOptions =
             JE.null
         )
         listIpRoutesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listIpRoutes request
@@ -1234,7 +1263,7 @@ __Required Parameters__
 listSchemaExtensions :
     String
     -> (ListSchemaExtensionsOptions -> ListSchemaExtensionsOptions)
-    -> AWS.Http.UnsignedRequest ListSchemaExtensionsResult
+    -> AWS.Request ListSchemaExtensionsResult
 listSchemaExtensions directoryId setOptions =
   let
     options = setOptions (ListSchemaExtensionsOptions Nothing Nothing)
@@ -1247,6 +1276,7 @@ listSchemaExtensions directoryId setOptions =
             JE.null
         )
         listSchemaExtensionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listSchemaExtensions request
@@ -1269,7 +1299,7 @@ __Required Parameters__
 listTagsForResource :
     String
     -> (ListTagsForResourceOptions -> ListTagsForResourceOptions)
-    -> AWS.Http.UnsignedRequest ListTagsForResourceResult
+    -> AWS.Request ListTagsForResourceResult
 listTagsForResource resourceId setOptions =
   let
     options = setOptions (ListTagsForResourceOptions Nothing Nothing)
@@ -1282,6 +1312,7 @@ listTagsForResource resourceId setOptions =
             JE.null
         )
         listTagsForResourceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTagsForResource request
@@ -1305,7 +1336,7 @@ __Required Parameters__
 registerEventTopic :
     String
     -> String
-    -> AWS.Http.UnsignedRequest RegisterEventTopicResult
+    -> AWS.Request RegisterEventTopicResult
 registerEventTopic directoryId topicName =
     AWS.Http.unsignedRequest
         "RegisterEventTopic"
@@ -1315,6 +1346,7 @@ registerEventTopic directoryId topicName =
             JE.null
         )
         registerEventTopicResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1330,7 +1362,7 @@ __Required Parameters__
 removeIpRoutes :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveIpRoutesResult
+    -> AWS.Request RemoveIpRoutesResult
 removeIpRoutes directoryId cidrIps =
     AWS.Http.unsignedRequest
         "RemoveIpRoutes"
@@ -1340,6 +1372,7 @@ removeIpRoutes directoryId cidrIps =
             JE.null
         )
         removeIpRoutesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1355,7 +1388,7 @@ __Required Parameters__
 removeTagsFromResource :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveTagsFromResourceResult
+    -> AWS.Request RemoveTagsFromResourceResult
 removeTagsFromResource resourceId tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTagsFromResource"
@@ -1365,6 +1398,7 @@ removeTagsFromResource resourceId tagKeys =
             JE.null
         )
         removeTagsFromResourceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1378,7 +1412,7 @@ __Required Parameters__
 -}
 restoreFromSnapshot :
     String
-    -> AWS.Http.UnsignedRequest RestoreFromSnapshotResult
+    -> AWS.Request RestoreFromSnapshotResult
 restoreFromSnapshot snapshotId =
     AWS.Http.unsignedRequest
         "RestoreFromSnapshot"
@@ -1388,6 +1422,7 @@ restoreFromSnapshot snapshotId =
             JE.null
         )
         restoreFromSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1407,7 +1442,7 @@ startSchemaExtension :
     -> Bool
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest StartSchemaExtensionResult
+    -> AWS.Request StartSchemaExtensionResult
 startSchemaExtension directoryId createSnapshotBeforeSchemaExtension ldifContent description =
     AWS.Http.unsignedRequest
         "StartSchemaExtension"
@@ -1417,6 +1452,7 @@ startSchemaExtension directoryId createSnapshotBeforeSchemaExtension ldifContent
             JE.null
         )
         startSchemaExtensionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1434,7 +1470,7 @@ updateConditionalForwarder :
     String
     -> String
     -> (List String)
-    -> AWS.Http.UnsignedRequest UpdateConditionalForwarderResult
+    -> AWS.Request UpdateConditionalForwarderResult
 updateConditionalForwarder directoryId remoteDomainName dnsIpAddrs =
     AWS.Http.unsignedRequest
         "UpdateConditionalForwarder"
@@ -1444,6 +1480,7 @@ updateConditionalForwarder directoryId remoteDomainName dnsIpAddrs =
             JE.null
         )
         updateConditionalForwarderResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1459,7 +1496,7 @@ __Required Parameters__
 updateRadius :
     String
     -> RadiusSettings
-    -> AWS.Http.UnsignedRequest UpdateRadiusResult
+    -> AWS.Request UpdateRadiusResult
 updateRadius directoryId radiusSettings =
     AWS.Http.unsignedRequest
         "UpdateRadius"
@@ -1469,6 +1506,7 @@ updateRadius directoryId radiusSettings =
             JE.null
         )
         updateRadiusResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1482,7 +1520,7 @@ __Required Parameters__
 -}
 verifyTrust :
     String
-    -> AWS.Http.UnsignedRequest VerifyTrustResult
+    -> AWS.Request VerifyTrustResult
 verifyTrust trustId =
     AWS.Http.unsignedRequest
         "VerifyTrust"
@@ -1492,6 +1530,7 @@ verifyTrust trustId =
             JE.null
         )
         verifyTrustResultDecoder
+        |> AWS.UnsignedRequest
 
 
 

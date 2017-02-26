@@ -174,6 +174,7 @@ module AWS.Services.WorkSpaces
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -184,16 +185,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "workspaces"
         "2015-04-08"
         "1.1"
         "AWSWORKSPACES_20150408."
         "workspaces.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -211,7 +212,7 @@ __Required Parameters__
 createTags :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest CreateTagsResult
+    -> AWS.Request CreateTagsResult
 createTags resourceId tags =
     AWS.Http.unsignedRequest
         "CreateTags"
@@ -221,6 +222,7 @@ createTags resourceId tags =
             JE.null
         )
         createTagsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -234,7 +236,7 @@ __Required Parameters__
 -}
 createWorkspaces :
     (List WorkspaceRequest)
-    -> AWS.Http.UnsignedRequest CreateWorkspacesResult
+    -> AWS.Request CreateWorkspacesResult
 createWorkspaces workspaces =
     AWS.Http.unsignedRequest
         "CreateWorkspaces"
@@ -244,6 +246,7 @@ createWorkspaces workspaces =
             JE.null
         )
         createWorkspacesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -259,7 +262,7 @@ __Required Parameters__
 deleteTags :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest DeleteTagsResult
+    -> AWS.Request DeleteTagsResult
 deleteTags resourceId tagKeys =
     AWS.Http.unsignedRequest
         "DeleteTags"
@@ -269,6 +272,7 @@ deleteTags resourceId tagKeys =
             JE.null
         )
         deleteTagsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -282,7 +286,7 @@ __Required Parameters__
 -}
 describeTags :
     String
-    -> AWS.Http.UnsignedRequest DescribeTagsResult
+    -> AWS.Request DescribeTagsResult
 describeTags resourceId =
     AWS.Http.unsignedRequest
         "DescribeTags"
@@ -292,6 +296,7 @@ describeTags resourceId =
             JE.null
         )
         describeTagsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -304,7 +309,7 @@ __Required Parameters__
 -}
 describeWorkspaceBundles :
     (DescribeWorkspaceBundlesOptions -> DescribeWorkspaceBundlesOptions)
-    -> AWS.Http.UnsignedRequest DescribeWorkspaceBundlesResult
+    -> AWS.Request DescribeWorkspaceBundlesResult
 describeWorkspaceBundles setOptions =
   let
     options = setOptions (DescribeWorkspaceBundlesOptions Nothing Nothing Nothing)
@@ -317,6 +322,7 @@ describeWorkspaceBundles setOptions =
             JE.null
         )
         describeWorkspaceBundlesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeWorkspaceBundles request
@@ -338,7 +344,7 @@ __Required Parameters__
 -}
 describeWorkspaceDirectories :
     (DescribeWorkspaceDirectoriesOptions -> DescribeWorkspaceDirectoriesOptions)
-    -> AWS.Http.UnsignedRequest DescribeWorkspaceDirectoriesResult
+    -> AWS.Request DescribeWorkspaceDirectoriesResult
 describeWorkspaceDirectories setOptions =
   let
     options = setOptions (DescribeWorkspaceDirectoriesOptions Nothing Nothing)
@@ -351,6 +357,7 @@ describeWorkspaceDirectories setOptions =
             JE.null
         )
         describeWorkspaceDirectoriesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeWorkspaceDirectories request
@@ -371,7 +378,7 @@ __Required Parameters__
 -}
 describeWorkspaces :
     (DescribeWorkspacesOptions -> DescribeWorkspacesOptions)
-    -> AWS.Http.UnsignedRequest DescribeWorkspacesResult
+    -> AWS.Request DescribeWorkspacesResult
 describeWorkspaces setOptions =
   let
     options = setOptions (DescribeWorkspacesOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -384,6 +391,7 @@ describeWorkspaces setOptions =
             JE.null
         )
         describeWorkspacesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeWorkspaces request
@@ -408,7 +416,7 @@ __Required Parameters__
 -}
 describeWorkspacesConnectionStatus :
     (DescribeWorkspacesConnectionStatusOptions -> DescribeWorkspacesConnectionStatusOptions)
-    -> AWS.Http.UnsignedRequest DescribeWorkspacesConnectionStatusResult
+    -> AWS.Request DescribeWorkspacesConnectionStatusResult
 describeWorkspacesConnectionStatus setOptions =
   let
     options = setOptions (DescribeWorkspacesConnectionStatusOptions Nothing Nothing)
@@ -421,6 +429,7 @@ describeWorkspacesConnectionStatus setOptions =
             JE.null
         )
         describeWorkspacesConnectionStatusResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeWorkspacesConnectionStatus request
@@ -444,7 +453,7 @@ __Required Parameters__
 modifyWorkspaceProperties :
     String
     -> WorkspaceProperties
-    -> AWS.Http.UnsignedRequest ModifyWorkspacePropertiesResult
+    -> AWS.Request ModifyWorkspacePropertiesResult
 modifyWorkspaceProperties workspaceId workspaceProperties =
     AWS.Http.unsignedRequest
         "ModifyWorkspaceProperties"
@@ -454,6 +463,7 @@ modifyWorkspaceProperties workspaceId workspaceProperties =
             JE.null
         )
         modifyWorkspacePropertiesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -467,7 +477,7 @@ __Required Parameters__
 -}
 rebootWorkspaces :
     (List RebootRequest)
-    -> AWS.Http.UnsignedRequest RebootWorkspacesResult
+    -> AWS.Request RebootWorkspacesResult
 rebootWorkspaces rebootWorkspaceRequests =
     AWS.Http.unsignedRequest
         "RebootWorkspaces"
@@ -477,6 +487,7 @@ rebootWorkspaces rebootWorkspaceRequests =
             JE.null
         )
         rebootWorkspacesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -490,7 +501,7 @@ __Required Parameters__
 -}
 rebuildWorkspaces :
     (List RebuildRequest)
-    -> AWS.Http.UnsignedRequest RebuildWorkspacesResult
+    -> AWS.Request RebuildWorkspacesResult
 rebuildWorkspaces rebuildWorkspaceRequests =
     AWS.Http.unsignedRequest
         "RebuildWorkspaces"
@@ -500,6 +511,7 @@ rebuildWorkspaces rebuildWorkspaceRequests =
             JE.null
         )
         rebuildWorkspacesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -513,7 +525,7 @@ __Required Parameters__
 -}
 startWorkspaces :
     (List StartRequest)
-    -> AWS.Http.UnsignedRequest StartWorkspacesResult
+    -> AWS.Request StartWorkspacesResult
 startWorkspaces startWorkspaceRequests =
     AWS.Http.unsignedRequest
         "StartWorkspaces"
@@ -523,6 +535,7 @@ startWorkspaces startWorkspaceRequests =
             JE.null
         )
         startWorkspacesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -536,7 +549,7 @@ __Required Parameters__
 -}
 stopWorkspaces :
     (List StopRequest)
-    -> AWS.Http.UnsignedRequest StopWorkspacesResult
+    -> AWS.Request StopWorkspacesResult
 stopWorkspaces stopWorkspaceRequests =
     AWS.Http.unsignedRequest
         "StopWorkspaces"
@@ -546,6 +559,7 @@ stopWorkspaces stopWorkspaceRequests =
             JE.null
         )
         stopWorkspacesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -559,7 +573,7 @@ __Required Parameters__
 -}
 terminateWorkspaces :
     (List TerminateRequest)
-    -> AWS.Http.UnsignedRequest TerminateWorkspacesResult
+    -> AWS.Request TerminateWorkspacesResult
 terminateWorkspaces terminateWorkspaceRequests =
     AWS.Http.unsignedRequest
         "TerminateWorkspaces"
@@ -569,6 +583,7 @@ terminateWorkspaces terminateWorkspaceRequests =
             JE.null
         )
         terminateWorkspacesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 

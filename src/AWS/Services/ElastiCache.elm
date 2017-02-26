@@ -396,6 +396,7 @@ module AWS.Services.ElastiCache
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -406,16 +407,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "elasticache"
         "2015-02-02"
         "undefined"
         "AWSELASTICACHE_20150202."
         "elasticache.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -433,7 +434,7 @@ __Required Parameters__
 addTagsToResource :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest TagListMessage
+    -> AWS.Request TagListMessage
 addTagsToResource resourceName tags =
     AWS.Http.unsignedRequest
         "AddTagsToResource"
@@ -443,6 +444,7 @@ addTagsToResource resourceName tags =
             JE.null
         )
         tagListMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -460,7 +462,7 @@ authorizeCacheSecurityGroupIngress :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest AuthorizeCacheSecurityGroupIngressResult
+    -> AWS.Request AuthorizeCacheSecurityGroupIngressResult
 authorizeCacheSecurityGroupIngress cacheSecurityGroupName eC2SecurityGroupName eC2SecurityGroupOwnerId =
     AWS.Http.unsignedRequest
         "AuthorizeCacheSecurityGroupIngress"
@@ -470,6 +472,7 @@ authorizeCacheSecurityGroupIngress cacheSecurityGroupName eC2SecurityGroupName e
             JE.null
         )
         authorizeCacheSecurityGroupIngressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -486,7 +489,7 @@ copySnapshot :
     String
     -> String
     -> (CopySnapshotOptions -> CopySnapshotOptions)
-    -> AWS.Http.UnsignedRequest CopySnapshotResult
+    -> AWS.Request CopySnapshotResult
 copySnapshot sourceSnapshotName targetSnapshotName setOptions =
   let
     options = setOptions (CopySnapshotOptions Nothing)
@@ -499,6 +502,7 @@ copySnapshot sourceSnapshotName targetSnapshotName setOptions =
             JE.null
         )
         copySnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copySnapshot request
@@ -520,7 +524,7 @@ __Required Parameters__
 createCacheCluster :
     String
     -> (CreateCacheClusterOptions -> CreateCacheClusterOptions)
-    -> AWS.Http.UnsignedRequest CreateCacheClusterResult
+    -> AWS.Request CreateCacheClusterResult
 createCacheCluster cacheClusterId setOptions =
   let
     options = setOptions (CreateCacheClusterOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -533,6 +537,7 @@ createCacheCluster cacheClusterId setOptions =
             JE.null
         )
         createCacheClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createCacheCluster request
@@ -578,7 +583,7 @@ createCacheParameterGroup :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest CreateCacheParameterGroupResult
+    -> AWS.Request CreateCacheParameterGroupResult
 createCacheParameterGroup cacheParameterGroupName cacheParameterGroupFamily description =
     AWS.Http.unsignedRequest
         "CreateCacheParameterGroup"
@@ -588,6 +593,7 @@ createCacheParameterGroup cacheParameterGroupName cacheParameterGroupFamily desc
             JE.null
         )
         createCacheParameterGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -603,7 +609,7 @@ __Required Parameters__
 createCacheSecurityGroup :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateCacheSecurityGroupResult
+    -> AWS.Request CreateCacheSecurityGroupResult
 createCacheSecurityGroup cacheSecurityGroupName description =
     AWS.Http.unsignedRequest
         "CreateCacheSecurityGroup"
@@ -613,6 +619,7 @@ createCacheSecurityGroup cacheSecurityGroupName description =
             JE.null
         )
         createCacheSecurityGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -630,7 +637,7 @@ createCacheSubnetGroup :
     String
     -> String
     -> (List String)
-    -> AWS.Http.UnsignedRequest CreateCacheSubnetGroupResult
+    -> AWS.Request CreateCacheSubnetGroupResult
 createCacheSubnetGroup cacheSubnetGroupName cacheSubnetGroupDescription subnetIds =
     AWS.Http.unsignedRequest
         "CreateCacheSubnetGroup"
@@ -640,6 +647,7 @@ createCacheSubnetGroup cacheSubnetGroupName cacheSubnetGroupDescription subnetId
             JE.null
         )
         createCacheSubnetGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -656,7 +664,7 @@ createReplicationGroup :
     String
     -> String
     -> (CreateReplicationGroupOptions -> CreateReplicationGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateReplicationGroupResult
+    -> AWS.Request CreateReplicationGroupResult
 createReplicationGroup replicationGroupId replicationGroupDescription setOptions =
   let
     options = setOptions (CreateReplicationGroupOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -669,6 +677,7 @@ createReplicationGroup replicationGroupId replicationGroupDescription setOptions
             JE.null
         )
         createReplicationGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createReplicationGroup request
@@ -713,7 +722,7 @@ __Required Parameters__
 createSnapshot :
     String
     -> (CreateSnapshotOptions -> CreateSnapshotOptions)
-    -> AWS.Http.UnsignedRequest CreateSnapshotResult
+    -> AWS.Request CreateSnapshotResult
 createSnapshot snapshotName setOptions =
   let
     options = setOptions (CreateSnapshotOptions Nothing Nothing)
@@ -726,6 +735,7 @@ createSnapshot snapshotName setOptions =
             JE.null
         )
         createSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createSnapshot request
@@ -748,7 +758,7 @@ __Required Parameters__
 deleteCacheCluster :
     String
     -> (DeleteCacheClusterOptions -> DeleteCacheClusterOptions)
-    -> AWS.Http.UnsignedRequest DeleteCacheClusterResult
+    -> AWS.Request DeleteCacheClusterResult
 deleteCacheCluster cacheClusterId setOptions =
   let
     options = setOptions (DeleteCacheClusterOptions Nothing)
@@ -761,6 +771,7 @@ deleteCacheCluster cacheClusterId setOptions =
             JE.null
         )
         deleteCacheClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteCacheCluster request
@@ -781,7 +792,7 @@ __Required Parameters__
 -}
 deleteCacheParameterGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteCacheParameterGroup cacheParameterGroupName =
     AWS.Http.unsignedRequest
         "DeleteCacheParameterGroup"
@@ -791,6 +802,7 @@ deleteCacheParameterGroup cacheParameterGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -804,7 +816,7 @@ __Required Parameters__
 -}
 deleteCacheSecurityGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteCacheSecurityGroup cacheSecurityGroupName =
     AWS.Http.unsignedRequest
         "DeleteCacheSecurityGroup"
@@ -814,6 +826,7 @@ deleteCacheSecurityGroup cacheSecurityGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -827,7 +840,7 @@ __Required Parameters__
 -}
 deleteCacheSubnetGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteCacheSubnetGroup cacheSubnetGroupName =
     AWS.Http.unsignedRequest
         "DeleteCacheSubnetGroup"
@@ -837,6 +850,7 @@ deleteCacheSubnetGroup cacheSubnetGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -851,7 +865,7 @@ __Required Parameters__
 deleteReplicationGroup :
     String
     -> (DeleteReplicationGroupOptions -> DeleteReplicationGroupOptions)
-    -> AWS.Http.UnsignedRequest DeleteReplicationGroupResult
+    -> AWS.Request DeleteReplicationGroupResult
 deleteReplicationGroup replicationGroupId setOptions =
   let
     options = setOptions (DeleteReplicationGroupOptions Nothing Nothing)
@@ -864,6 +878,7 @@ deleteReplicationGroup replicationGroupId setOptions =
             JE.null
         )
         deleteReplicationGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteReplicationGroup request
@@ -885,7 +900,7 @@ __Required Parameters__
 -}
 deleteSnapshot :
     String
-    -> AWS.Http.UnsignedRequest DeleteSnapshotResult
+    -> AWS.Request DeleteSnapshotResult
 deleteSnapshot snapshotName =
     AWS.Http.unsignedRequest
         "DeleteSnapshot"
@@ -895,6 +910,7 @@ deleteSnapshot snapshotName =
             JE.null
         )
         deleteSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -907,7 +923,7 @@ __Required Parameters__
 -}
 describeCacheClusters :
     (DescribeCacheClustersOptions -> DescribeCacheClustersOptions)
-    -> AWS.Http.UnsignedRequest CacheClusterMessage
+    -> AWS.Request CacheClusterMessage
 describeCacheClusters setOptions =
   let
     options = setOptions (DescribeCacheClustersOptions Nothing Nothing Nothing Nothing)
@@ -920,6 +936,7 @@ describeCacheClusters setOptions =
             JE.null
         )
         cacheClusterMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCacheClusters request
@@ -942,7 +959,7 @@ __Required Parameters__
 -}
 describeCacheEngineVersions :
     (DescribeCacheEngineVersionsOptions -> DescribeCacheEngineVersionsOptions)
-    -> AWS.Http.UnsignedRequest CacheEngineVersionMessage
+    -> AWS.Request CacheEngineVersionMessage
 describeCacheEngineVersions setOptions =
   let
     options = setOptions (DescribeCacheEngineVersionsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -955,6 +972,7 @@ describeCacheEngineVersions setOptions =
             JE.null
         )
         cacheEngineVersionMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCacheEngineVersions request
@@ -979,7 +997,7 @@ __Required Parameters__
 -}
 describeCacheParameterGroups :
     (DescribeCacheParameterGroupsOptions -> DescribeCacheParameterGroupsOptions)
-    -> AWS.Http.UnsignedRequest CacheParameterGroupsMessage
+    -> AWS.Request CacheParameterGroupsMessage
 describeCacheParameterGroups setOptions =
   let
     options = setOptions (DescribeCacheParameterGroupsOptions Nothing Nothing Nothing)
@@ -992,6 +1010,7 @@ describeCacheParameterGroups setOptions =
             JE.null
         )
         cacheParameterGroupsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCacheParameterGroups request
@@ -1015,7 +1034,7 @@ __Required Parameters__
 describeCacheParameters :
     String
     -> (DescribeCacheParametersOptions -> DescribeCacheParametersOptions)
-    -> AWS.Http.UnsignedRequest CacheParameterGroupDetails
+    -> AWS.Request CacheParameterGroupDetails
 describeCacheParameters cacheParameterGroupName setOptions =
   let
     options = setOptions (DescribeCacheParametersOptions Nothing Nothing Nothing)
@@ -1028,6 +1047,7 @@ describeCacheParameters cacheParameterGroupName setOptions =
             JE.null
         )
         cacheParameterGroupDetailsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCacheParameters request
@@ -1049,7 +1069,7 @@ __Required Parameters__
 -}
 describeCacheSecurityGroups :
     (DescribeCacheSecurityGroupsOptions -> DescribeCacheSecurityGroupsOptions)
-    -> AWS.Http.UnsignedRequest CacheSecurityGroupMessage
+    -> AWS.Request CacheSecurityGroupMessage
 describeCacheSecurityGroups setOptions =
   let
     options = setOptions (DescribeCacheSecurityGroupsOptions Nothing Nothing Nothing)
@@ -1062,6 +1082,7 @@ describeCacheSecurityGroups setOptions =
             JE.null
         )
         cacheSecurityGroupMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCacheSecurityGroups request
@@ -1083,7 +1104,7 @@ __Required Parameters__
 -}
 describeCacheSubnetGroups :
     (DescribeCacheSubnetGroupsOptions -> DescribeCacheSubnetGroupsOptions)
-    -> AWS.Http.UnsignedRequest CacheSubnetGroupMessage
+    -> AWS.Request CacheSubnetGroupMessage
 describeCacheSubnetGroups setOptions =
   let
     options = setOptions (DescribeCacheSubnetGroupsOptions Nothing Nothing Nothing)
@@ -1096,6 +1117,7 @@ describeCacheSubnetGroups setOptions =
             JE.null
         )
         cacheSubnetGroupMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeCacheSubnetGroups request
@@ -1119,7 +1141,7 @@ __Required Parameters__
 describeEngineDefaultParameters :
     String
     -> (DescribeEngineDefaultParametersOptions -> DescribeEngineDefaultParametersOptions)
-    -> AWS.Http.UnsignedRequest DescribeEngineDefaultParametersResult
+    -> AWS.Request DescribeEngineDefaultParametersResult
 describeEngineDefaultParameters cacheParameterGroupFamily setOptions =
   let
     options = setOptions (DescribeEngineDefaultParametersOptions Nothing Nothing)
@@ -1132,6 +1154,7 @@ describeEngineDefaultParameters cacheParameterGroupFamily setOptions =
             JE.null
         )
         describeEngineDefaultParametersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEngineDefaultParameters request
@@ -1152,7 +1175,7 @@ __Required Parameters__
 -}
 describeEvents :
     (DescribeEventsOptions -> DescribeEventsOptions)
-    -> AWS.Http.UnsignedRequest EventsMessage
+    -> AWS.Request EventsMessage
 describeEvents setOptions =
   let
     options = setOptions (DescribeEventsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1165,6 +1188,7 @@ describeEvents setOptions =
             JE.null
         )
         eventsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEvents request
@@ -1190,7 +1214,7 @@ __Required Parameters__
 -}
 describeReplicationGroups :
     (DescribeReplicationGroupsOptions -> DescribeReplicationGroupsOptions)
-    -> AWS.Http.UnsignedRequest ReplicationGroupMessage
+    -> AWS.Request ReplicationGroupMessage
 describeReplicationGroups setOptions =
   let
     options = setOptions (DescribeReplicationGroupsOptions Nothing Nothing Nothing)
@@ -1203,6 +1227,7 @@ describeReplicationGroups setOptions =
             JE.null
         )
         replicationGroupMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReplicationGroups request
@@ -1224,7 +1249,7 @@ __Required Parameters__
 -}
 describeReservedCacheNodes :
     (DescribeReservedCacheNodesOptions -> DescribeReservedCacheNodesOptions)
-    -> AWS.Http.UnsignedRequest ReservedCacheNodeMessage
+    -> AWS.Request ReservedCacheNodeMessage
 describeReservedCacheNodes setOptions =
   let
     options = setOptions (DescribeReservedCacheNodesOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1237,6 +1262,7 @@ describeReservedCacheNodes setOptions =
             JE.null
         )
         reservedCacheNodeMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedCacheNodes request
@@ -1263,7 +1289,7 @@ __Required Parameters__
 -}
 describeReservedCacheNodesOfferings :
     (DescribeReservedCacheNodesOfferingsOptions -> DescribeReservedCacheNodesOfferingsOptions)
-    -> AWS.Http.UnsignedRequest ReservedCacheNodesOfferingMessage
+    -> AWS.Request ReservedCacheNodesOfferingMessage
 describeReservedCacheNodesOfferings setOptions =
   let
     options = setOptions (DescribeReservedCacheNodesOfferingsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1276,6 +1302,7 @@ describeReservedCacheNodesOfferings setOptions =
             JE.null
         )
         reservedCacheNodesOfferingMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedCacheNodesOfferings request
@@ -1301,7 +1328,7 @@ __Required Parameters__
 -}
 describeSnapshots :
     (DescribeSnapshotsOptions -> DescribeSnapshotsOptions)
-    -> AWS.Http.UnsignedRequest DescribeSnapshotsListMessage
+    -> AWS.Request DescribeSnapshotsListMessage
 describeSnapshots setOptions =
   let
     options = setOptions (DescribeSnapshotsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1314,6 +1341,7 @@ describeSnapshots setOptions =
             JE.null
         )
         describeSnapshotsListMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSnapshots request
@@ -1339,7 +1367,7 @@ __Required Parameters__
 -}
 listAllowedNodeTypeModifications :
     (ListAllowedNodeTypeModificationsOptions -> ListAllowedNodeTypeModificationsOptions)
-    -> AWS.Http.UnsignedRequest AllowedNodeTypeModificationsMessage
+    -> AWS.Request AllowedNodeTypeModificationsMessage
 listAllowedNodeTypeModifications setOptions =
   let
     options = setOptions (ListAllowedNodeTypeModificationsOptions Nothing Nothing)
@@ -1352,6 +1380,7 @@ listAllowedNodeTypeModifications setOptions =
             JE.null
         )
         allowedNodeTypeModificationsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAllowedNodeTypeModifications request
@@ -1373,7 +1402,7 @@ __Required Parameters__
 -}
 listTagsForResource :
     String
-    -> AWS.Http.UnsignedRequest TagListMessage
+    -> AWS.Request TagListMessage
 listTagsForResource resourceName =
     AWS.Http.unsignedRequest
         "ListTagsForResource"
@@ -1383,6 +1412,7 @@ listTagsForResource resourceName =
             JE.null
         )
         tagListMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1397,7 +1427,7 @@ __Required Parameters__
 modifyCacheCluster :
     String
     -> (ModifyCacheClusterOptions -> ModifyCacheClusterOptions)
-    -> AWS.Http.UnsignedRequest ModifyCacheClusterResult
+    -> AWS.Request ModifyCacheClusterResult
 modifyCacheCluster cacheClusterId setOptions =
   let
     options = setOptions (ModifyCacheClusterOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1410,6 +1440,7 @@ modifyCacheCluster cacheClusterId setOptions =
             JE.null
         )
         modifyCacheClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyCacheCluster request
@@ -1447,7 +1478,7 @@ __Required Parameters__
 modifyCacheParameterGroup :
     String
     -> (List ParameterNameValue)
-    -> AWS.Http.UnsignedRequest CacheParameterGroupNameMessage
+    -> AWS.Request CacheParameterGroupNameMessage
 modifyCacheParameterGroup cacheParameterGroupName parameterNameValues =
     AWS.Http.unsignedRequest
         "ModifyCacheParameterGroup"
@@ -1457,6 +1488,7 @@ modifyCacheParameterGroup cacheParameterGroupName parameterNameValues =
             JE.null
         )
         cacheParameterGroupNameMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1471,7 +1503,7 @@ __Required Parameters__
 modifyCacheSubnetGroup :
     String
     -> (ModifyCacheSubnetGroupOptions -> ModifyCacheSubnetGroupOptions)
-    -> AWS.Http.UnsignedRequest ModifyCacheSubnetGroupResult
+    -> AWS.Request ModifyCacheSubnetGroupResult
 modifyCacheSubnetGroup cacheSubnetGroupName setOptions =
   let
     options = setOptions (ModifyCacheSubnetGroupOptions Nothing Nothing)
@@ -1484,6 +1516,7 @@ modifyCacheSubnetGroup cacheSubnetGroupName setOptions =
             JE.null
         )
         modifyCacheSubnetGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyCacheSubnetGroup request
@@ -1506,7 +1539,7 @@ __Required Parameters__
 modifyReplicationGroup :
     String
     -> (ModifyReplicationGroupOptions -> ModifyReplicationGroupOptions)
-    -> AWS.Http.UnsignedRequest ModifyReplicationGroupResult
+    -> AWS.Request ModifyReplicationGroupResult
 modifyReplicationGroup replicationGroupId setOptions =
   let
     options = setOptions (ModifyReplicationGroupOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1519,6 +1552,7 @@ modifyReplicationGroup replicationGroupId setOptions =
             JE.null
         )
         modifyReplicationGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyReplicationGroup request
@@ -1555,7 +1589,7 @@ __Required Parameters__
 purchaseReservedCacheNodesOffering :
     String
     -> (PurchaseReservedCacheNodesOfferingOptions -> PurchaseReservedCacheNodesOfferingOptions)
-    -> AWS.Http.UnsignedRequest PurchaseReservedCacheNodesOfferingResult
+    -> AWS.Request PurchaseReservedCacheNodesOfferingResult
 purchaseReservedCacheNodesOffering reservedCacheNodesOfferingId setOptions =
   let
     options = setOptions (PurchaseReservedCacheNodesOfferingOptions Nothing Nothing)
@@ -1568,6 +1602,7 @@ purchaseReservedCacheNodesOffering reservedCacheNodesOfferingId setOptions =
             JE.null
         )
         purchaseReservedCacheNodesOfferingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a purchaseReservedCacheNodesOffering request
@@ -1591,7 +1626,7 @@ __Required Parameters__
 rebootCacheCluster :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RebootCacheClusterResult
+    -> AWS.Request RebootCacheClusterResult
 rebootCacheCluster cacheClusterId cacheNodeIdsToReboot =
     AWS.Http.unsignedRequest
         "RebootCacheCluster"
@@ -1601,6 +1636,7 @@ rebootCacheCluster cacheClusterId cacheNodeIdsToReboot =
             JE.null
         )
         rebootCacheClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1616,7 +1652,7 @@ __Required Parameters__
 removeTagsFromResource :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest TagListMessage
+    -> AWS.Request TagListMessage
 removeTagsFromResource resourceName tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTagsFromResource"
@@ -1626,6 +1662,7 @@ removeTagsFromResource resourceName tagKeys =
             JE.null
         )
         tagListMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1640,7 +1677,7 @@ __Required Parameters__
 resetCacheParameterGroup :
     String
     -> (ResetCacheParameterGroupOptions -> ResetCacheParameterGroupOptions)
-    -> AWS.Http.UnsignedRequest CacheParameterGroupNameMessage
+    -> AWS.Request CacheParameterGroupNameMessage
 resetCacheParameterGroup cacheParameterGroupName setOptions =
   let
     options = setOptions (ResetCacheParameterGroupOptions Nothing Nothing)
@@ -1653,6 +1690,7 @@ resetCacheParameterGroup cacheParameterGroupName setOptions =
             JE.null
         )
         cacheParameterGroupNameMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resetCacheParameterGroup request
@@ -1678,7 +1716,7 @@ revokeCacheSecurityGroupIngress :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest RevokeCacheSecurityGroupIngressResult
+    -> AWS.Request RevokeCacheSecurityGroupIngressResult
 revokeCacheSecurityGroupIngress cacheSecurityGroupName eC2SecurityGroupName eC2SecurityGroupOwnerId =
     AWS.Http.unsignedRequest
         "RevokeCacheSecurityGroupIngress"
@@ -1688,6 +1726,7 @@ revokeCacheSecurityGroupIngress cacheSecurityGroupName eC2SecurityGroupName eC2S
             JE.null
         )
         revokeCacheSecurityGroupIngressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 

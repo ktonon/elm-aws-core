@@ -168,6 +168,7 @@ module AWS.Services.CodeBuild
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -178,16 +179,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "codebuild"
         "2016-10-06"
         "1.1"
         "AWSCODEBUILD_20161006."
         "codebuild.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -203,7 +204,7 @@ __Required Parameters__
 -}
 batchGetBuilds :
     (List String)
-    -> AWS.Http.UnsignedRequest BatchGetBuildsOutput
+    -> AWS.Request BatchGetBuildsOutput
 batchGetBuilds ids =
     AWS.Http.unsignedRequest
         "BatchGetBuilds"
@@ -213,6 +214,7 @@ batchGetBuilds ids =
             JE.null
         )
         batchGetBuildsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -226,7 +228,7 @@ __Required Parameters__
 -}
 batchGetProjects :
     (List String)
-    -> AWS.Http.UnsignedRequest BatchGetProjectsOutput
+    -> AWS.Request BatchGetProjectsOutput
 batchGetProjects names =
     AWS.Http.unsignedRequest
         "BatchGetProjects"
@@ -236,6 +238,7 @@ batchGetProjects names =
             JE.null
         )
         batchGetProjectsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -256,7 +259,7 @@ createProject :
     -> ProjectArtifacts
     -> ProjectEnvironment
     -> (CreateProjectOptions -> CreateProjectOptions)
-    -> AWS.Http.UnsignedRequest CreateProjectOutput
+    -> AWS.Request CreateProjectOutput
 createProject name source artifacts environment setOptions =
   let
     options = setOptions (CreateProjectOptions Nothing Nothing Nothing Nothing Nothing)
@@ -269,6 +272,7 @@ createProject name source artifacts environment setOptions =
             JE.null
         )
         createProjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createProject request
@@ -293,7 +297,7 @@ __Required Parameters__
 -}
 deleteProject :
     String
-    -> AWS.Http.UnsignedRequest DeleteProjectOutput
+    -> AWS.Request DeleteProjectOutput
 deleteProject name =
     AWS.Http.unsignedRequest
         "DeleteProject"
@@ -303,6 +307,7 @@ deleteProject name =
             JE.null
         )
         deleteProjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -315,7 +320,7 @@ __Required Parameters__
 -}
 listBuilds :
     (ListBuildsOptions -> ListBuildsOptions)
-    -> AWS.Http.UnsignedRequest ListBuildsOutput
+    -> AWS.Request ListBuildsOutput
 listBuilds setOptions =
   let
     options = setOptions (ListBuildsOptions Nothing Nothing)
@@ -328,6 +333,7 @@ listBuilds setOptions =
             JE.null
         )
         listBuildsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listBuilds request
@@ -350,7 +356,7 @@ __Required Parameters__
 listBuildsForProject :
     String
     -> (ListBuildsForProjectOptions -> ListBuildsForProjectOptions)
-    -> AWS.Http.UnsignedRequest ListBuildsForProjectOutput
+    -> AWS.Request ListBuildsForProjectOutput
 listBuildsForProject projectName setOptions =
   let
     options = setOptions (ListBuildsForProjectOptions Nothing Nothing)
@@ -363,6 +369,7 @@ listBuildsForProject projectName setOptions =
             JE.null
         )
         listBuildsForProjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listBuildsForProject request
@@ -382,7 +389,7 @@ __Required Parameters__
 
 -}
 listCuratedEnvironmentImages :
-    AWS.Http.UnsignedRequest ListCuratedEnvironmentImagesOutput
+    AWS.Request ListCuratedEnvironmentImagesOutput
 listCuratedEnvironmentImages =
     AWS.Http.unsignedRequest
         "ListCuratedEnvironmentImages"
@@ -392,6 +399,7 @@ listCuratedEnvironmentImages =
             JE.null
         )
         listCuratedEnvironmentImagesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -404,7 +412,7 @@ __Required Parameters__
 -}
 listProjects :
     (ListProjectsOptions -> ListProjectsOptions)
-    -> AWS.Http.UnsignedRequest ListProjectsOutput
+    -> AWS.Request ListProjectsOutput
 listProjects setOptions =
   let
     options = setOptions (ListProjectsOptions Nothing Nothing Nothing)
@@ -417,6 +425,7 @@ listProjects setOptions =
             JE.null
         )
         listProjectsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listProjects request
@@ -440,7 +449,7 @@ __Required Parameters__
 startBuild :
     String
     -> (StartBuildOptions -> StartBuildOptions)
-    -> AWS.Http.UnsignedRequest StartBuildOutput
+    -> AWS.Request StartBuildOutput
 startBuild projectName setOptions =
   let
     options = setOptions (StartBuildOptions Nothing Nothing Nothing Nothing Nothing)
@@ -453,6 +462,7 @@ startBuild projectName setOptions =
             JE.null
         )
         startBuildOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startBuild request
@@ -477,7 +487,7 @@ __Required Parameters__
 -}
 stopBuild :
     String
-    -> AWS.Http.UnsignedRequest StopBuildOutput
+    -> AWS.Request StopBuildOutput
 stopBuild id =
     AWS.Http.unsignedRequest
         "StopBuild"
@@ -487,6 +497,7 @@ stopBuild id =
             JE.null
         )
         stopBuildOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -501,7 +512,7 @@ __Required Parameters__
 updateProject :
     String
     -> (UpdateProjectOptions -> UpdateProjectOptions)
-    -> AWS.Http.UnsignedRequest UpdateProjectOutput
+    -> AWS.Request UpdateProjectOutput
 updateProject name setOptions =
   let
     options = setOptions (UpdateProjectOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -514,6 +525,7 @@ updateProject name setOptions =
             JE.null
         )
         updateProjectOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateProject request

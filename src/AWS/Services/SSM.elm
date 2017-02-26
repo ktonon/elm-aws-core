@@ -808,6 +808,7 @@ module AWS.Services.SSM
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -819,16 +820,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "ssm"
         "2014-11-06"
         "1.1"
         "AWSSSM_20141106."
         "ssm.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -848,7 +849,7 @@ addTagsToResource :
     ResourceTypeForTagging
     -> String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest AddTagsToResourceResult
+    -> AWS.Request AddTagsToResourceResult
 addTagsToResource resourceType resourceId tags =
     AWS.Http.unsignedRequest
         "AddTagsToResource"
@@ -858,6 +859,7 @@ addTagsToResource resourceType resourceId tags =
             JE.null
         )
         addTagsToResourceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -872,7 +874,7 @@ __Required Parameters__
 cancelCommand :
     String
     -> (CancelCommandOptions -> CancelCommandOptions)
-    -> AWS.Http.UnsignedRequest CancelCommandResult
+    -> AWS.Request CancelCommandResult
 cancelCommand commandId setOptions =
   let
     options = setOptions (CancelCommandOptions Nothing)
@@ -885,6 +887,7 @@ cancelCommand commandId setOptions =
             JE.null
         )
         cancelCommandResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a cancelCommand request
@@ -906,7 +909,7 @@ __Required Parameters__
 createActivation :
     String
     -> (CreateActivationOptions -> CreateActivationOptions)
-    -> AWS.Http.UnsignedRequest CreateActivationResult
+    -> AWS.Request CreateActivationResult
 createActivation iamRole setOptions =
   let
     options = setOptions (CreateActivationOptions Nothing Nothing Nothing Nothing)
@@ -919,6 +922,7 @@ createActivation iamRole setOptions =
             JE.null
         )
         createActivationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createActivation request
@@ -943,7 +947,7 @@ __Required Parameters__
 createAssociation :
     String
     -> (CreateAssociationOptions -> CreateAssociationOptions)
-    -> AWS.Http.UnsignedRequest CreateAssociationResult
+    -> AWS.Request CreateAssociationResult
 createAssociation name setOptions =
   let
     options = setOptions (CreateAssociationOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -956,6 +960,7 @@ createAssociation name setOptions =
             JE.null
         )
         createAssociationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createAssociation request
@@ -981,7 +986,7 @@ __Required Parameters__
 -}
 createAssociationBatch :
     (List CreateAssociationBatchRequestEntry)
-    -> AWS.Http.UnsignedRequest CreateAssociationBatchResult
+    -> AWS.Request CreateAssociationBatchResult
 createAssociationBatch entries =
     AWS.Http.unsignedRequest
         "CreateAssociationBatch"
@@ -991,6 +996,7 @@ createAssociationBatch entries =
             JE.null
         )
         createAssociationBatchResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1007,7 +1013,7 @@ createDocument :
     String
     -> String
     -> (CreateDocumentOptions -> CreateDocumentOptions)
-    -> AWS.Http.UnsignedRequest CreateDocumentResult
+    -> AWS.Request CreateDocumentResult
 createDocument content name setOptions =
   let
     options = setOptions (CreateDocumentOptions Nothing)
@@ -1020,6 +1026,7 @@ createDocument content name setOptions =
             JE.null
         )
         createDocumentResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDocument request
@@ -1049,7 +1056,7 @@ createMaintenanceWindow :
     -> Int
     -> Bool
     -> (CreateMaintenanceWindowOptions -> CreateMaintenanceWindowOptions)
-    -> AWS.Http.UnsignedRequest CreateMaintenanceWindowResult
+    -> AWS.Request CreateMaintenanceWindowResult
 createMaintenanceWindow name schedule duration cutoff allowUnassociatedTargets setOptions =
   let
     options = setOptions (CreateMaintenanceWindowOptions Nothing)
@@ -1062,6 +1069,7 @@ createMaintenanceWindow name schedule duration cutoff allowUnassociatedTargets s
             JE.null
         )
         createMaintenanceWindowResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createMaintenanceWindow request
@@ -1083,7 +1091,7 @@ __Required Parameters__
 createPatchBaseline :
     String
     -> (CreatePatchBaselineOptions -> CreatePatchBaselineOptions)
-    -> AWS.Http.UnsignedRequest CreatePatchBaselineResult
+    -> AWS.Request CreatePatchBaselineResult
 createPatchBaseline name setOptions =
   let
     options = setOptions (CreatePatchBaselineOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1096,6 +1104,7 @@ createPatchBaseline name setOptions =
             JE.null
         )
         createPatchBaselineResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPatchBaseline request
@@ -1121,7 +1130,7 @@ __Required Parameters__
 -}
 deleteActivation :
     String
-    -> AWS.Http.UnsignedRequest DeleteActivationResult
+    -> AWS.Request DeleteActivationResult
 deleteActivation activationId =
     AWS.Http.unsignedRequest
         "DeleteActivation"
@@ -1131,6 +1140,7 @@ deleteActivation activationId =
             JE.null
         )
         deleteActivationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1143,7 +1153,7 @@ __Required Parameters__
 -}
 deleteAssociation :
     (DeleteAssociationOptions -> DeleteAssociationOptions)
-    -> AWS.Http.UnsignedRequest DeleteAssociationResult
+    -> AWS.Request DeleteAssociationResult
 deleteAssociation setOptions =
   let
     options = setOptions (DeleteAssociationOptions Nothing Nothing Nothing)
@@ -1156,6 +1166,7 @@ deleteAssociation setOptions =
             JE.null
         )
         deleteAssociationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteAssociation request
@@ -1178,7 +1189,7 @@ __Required Parameters__
 -}
 deleteDocument :
     String
-    -> AWS.Http.UnsignedRequest DeleteDocumentResult
+    -> AWS.Request DeleteDocumentResult
 deleteDocument name =
     AWS.Http.unsignedRequest
         "DeleteDocument"
@@ -1188,6 +1199,7 @@ deleteDocument name =
             JE.null
         )
         deleteDocumentResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1201,7 +1213,7 @@ __Required Parameters__
 -}
 deleteMaintenanceWindow :
     String
-    -> AWS.Http.UnsignedRequest DeleteMaintenanceWindowResult
+    -> AWS.Request DeleteMaintenanceWindowResult
 deleteMaintenanceWindow windowId =
     AWS.Http.unsignedRequest
         "DeleteMaintenanceWindow"
@@ -1211,6 +1223,7 @@ deleteMaintenanceWindow windowId =
             JE.null
         )
         deleteMaintenanceWindowResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1224,7 +1237,7 @@ __Required Parameters__
 -}
 deleteParameter :
     String
-    -> AWS.Http.UnsignedRequest DeleteParameterResult
+    -> AWS.Request DeleteParameterResult
 deleteParameter name =
     AWS.Http.unsignedRequest
         "DeleteParameter"
@@ -1234,6 +1247,7 @@ deleteParameter name =
             JE.null
         )
         deleteParameterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1247,7 +1261,7 @@ __Required Parameters__
 -}
 deletePatchBaseline :
     String
-    -> AWS.Http.UnsignedRequest DeletePatchBaselineResult
+    -> AWS.Request DeletePatchBaselineResult
 deletePatchBaseline baselineId =
     AWS.Http.unsignedRequest
         "DeletePatchBaseline"
@@ -1257,6 +1271,7 @@ deletePatchBaseline baselineId =
             JE.null
         )
         deletePatchBaselineResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1270,7 +1285,7 @@ __Required Parameters__
 -}
 deregisterManagedInstance :
     String
-    -> AWS.Http.UnsignedRequest DeregisterManagedInstanceResult
+    -> AWS.Request DeregisterManagedInstanceResult
 deregisterManagedInstance instanceId =
     AWS.Http.unsignedRequest
         "DeregisterManagedInstance"
@@ -1280,6 +1295,7 @@ deregisterManagedInstance instanceId =
             JE.null
         )
         deregisterManagedInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1295,7 +1311,7 @@ __Required Parameters__
 deregisterPatchBaselineForPatchGroup :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeregisterPatchBaselineForPatchGroupResult
+    -> AWS.Request DeregisterPatchBaselineForPatchGroupResult
 deregisterPatchBaselineForPatchGroup baselineId patchGroup =
     AWS.Http.unsignedRequest
         "DeregisterPatchBaselineForPatchGroup"
@@ -1305,6 +1321,7 @@ deregisterPatchBaselineForPatchGroup baselineId patchGroup =
             JE.null
         )
         deregisterPatchBaselineForPatchGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1320,7 +1337,7 @@ __Required Parameters__
 deregisterTargetFromMaintenanceWindow :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeregisterTargetFromMaintenanceWindowResult
+    -> AWS.Request DeregisterTargetFromMaintenanceWindowResult
 deregisterTargetFromMaintenanceWindow windowId windowTargetId =
     AWS.Http.unsignedRequest
         "DeregisterTargetFromMaintenanceWindow"
@@ -1330,6 +1347,7 @@ deregisterTargetFromMaintenanceWindow windowId windowTargetId =
             JE.null
         )
         deregisterTargetFromMaintenanceWindowResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1345,7 +1363,7 @@ __Required Parameters__
 deregisterTaskFromMaintenanceWindow :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeregisterTaskFromMaintenanceWindowResult
+    -> AWS.Request DeregisterTaskFromMaintenanceWindowResult
 deregisterTaskFromMaintenanceWindow windowId windowTaskId =
     AWS.Http.unsignedRequest
         "DeregisterTaskFromMaintenanceWindow"
@@ -1355,6 +1373,7 @@ deregisterTaskFromMaintenanceWindow windowId windowTaskId =
             JE.null
         )
         deregisterTaskFromMaintenanceWindowResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1367,7 +1386,7 @@ __Required Parameters__
 -}
 describeActivations :
     (DescribeActivationsOptions -> DescribeActivationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeActivationsResult
+    -> AWS.Request DescribeActivationsResult
 describeActivations setOptions =
   let
     options = setOptions (DescribeActivationsOptions Nothing Nothing Nothing)
@@ -1380,6 +1399,7 @@ describeActivations setOptions =
             JE.null
         )
         describeActivationsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeActivations request
@@ -1401,7 +1421,7 @@ __Required Parameters__
 -}
 describeAssociation :
     (DescribeAssociationOptions -> DescribeAssociationOptions)
-    -> AWS.Http.UnsignedRequest DescribeAssociationResult
+    -> AWS.Request DescribeAssociationResult
 describeAssociation setOptions =
   let
     options = setOptions (DescribeAssociationOptions Nothing Nothing Nothing)
@@ -1414,6 +1434,7 @@ describeAssociation setOptions =
             JE.null
         )
         describeAssociationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAssociation request
@@ -1435,7 +1456,7 @@ __Required Parameters__
 -}
 describeAutomationExecutions :
     (DescribeAutomationExecutionsOptions -> DescribeAutomationExecutionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeAutomationExecutionsResult
+    -> AWS.Request DescribeAutomationExecutionsResult
 describeAutomationExecutions setOptions =
   let
     options = setOptions (DescribeAutomationExecutionsOptions Nothing Nothing Nothing)
@@ -1448,6 +1469,7 @@ describeAutomationExecutions setOptions =
             JE.null
         )
         describeAutomationExecutionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAutomationExecutions request
@@ -1469,7 +1491,7 @@ __Required Parameters__
 -}
 describeAvailablePatches :
     (DescribeAvailablePatchesOptions -> DescribeAvailablePatchesOptions)
-    -> AWS.Http.UnsignedRequest DescribeAvailablePatchesResult
+    -> AWS.Request DescribeAvailablePatchesResult
 describeAvailablePatches setOptions =
   let
     options = setOptions (DescribeAvailablePatchesOptions Nothing Nothing Nothing)
@@ -1482,6 +1504,7 @@ describeAvailablePatches setOptions =
             JE.null
         )
         describeAvailablePatchesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAvailablePatches request
@@ -1505,7 +1528,7 @@ __Required Parameters__
 describeDocument :
     String
     -> (DescribeDocumentOptions -> DescribeDocumentOptions)
-    -> AWS.Http.UnsignedRequest DescribeDocumentResult
+    -> AWS.Request DescribeDocumentResult
 describeDocument name setOptions =
   let
     options = setOptions (DescribeDocumentOptions Nothing)
@@ -1518,6 +1541,7 @@ describeDocument name setOptions =
             JE.null
         )
         describeDocumentResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDocument request
@@ -1540,7 +1564,7 @@ __Required Parameters__
 describeDocumentPermission :
     String
     -> DocumentPermissionType
-    -> AWS.Http.UnsignedRequest DescribeDocumentPermissionResponse
+    -> AWS.Request DescribeDocumentPermissionResponse
 describeDocumentPermission name permissionType =
     AWS.Http.unsignedRequest
         "DescribeDocumentPermission"
@@ -1550,6 +1574,7 @@ describeDocumentPermission name permissionType =
             JE.null
         )
         describeDocumentPermissionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1564,7 +1589,7 @@ __Required Parameters__
 describeEffectiveInstanceAssociations :
     String
     -> (DescribeEffectiveInstanceAssociationsOptions -> DescribeEffectiveInstanceAssociationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeEffectiveInstanceAssociationsResult
+    -> AWS.Request DescribeEffectiveInstanceAssociationsResult
 describeEffectiveInstanceAssociations instanceId setOptions =
   let
     options = setOptions (DescribeEffectiveInstanceAssociationsOptions Nothing Nothing)
@@ -1577,6 +1602,7 @@ describeEffectiveInstanceAssociations instanceId setOptions =
             JE.null
         )
         describeEffectiveInstanceAssociationsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEffectiveInstanceAssociations request
@@ -1599,7 +1625,7 @@ __Required Parameters__
 describeEffectivePatchesForPatchBaseline :
     String
     -> (DescribeEffectivePatchesForPatchBaselineOptions -> DescribeEffectivePatchesForPatchBaselineOptions)
-    -> AWS.Http.UnsignedRequest DescribeEffectivePatchesForPatchBaselineResult
+    -> AWS.Request DescribeEffectivePatchesForPatchBaselineResult
 describeEffectivePatchesForPatchBaseline baselineId setOptions =
   let
     options = setOptions (DescribeEffectivePatchesForPatchBaselineOptions Nothing Nothing)
@@ -1612,6 +1638,7 @@ describeEffectivePatchesForPatchBaseline baselineId setOptions =
             JE.null
         )
         describeEffectivePatchesForPatchBaselineResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEffectivePatchesForPatchBaseline request
@@ -1634,7 +1661,7 @@ __Required Parameters__
 describeInstanceAssociationsStatus :
     String
     -> (DescribeInstanceAssociationsStatusOptions -> DescribeInstanceAssociationsStatusOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstanceAssociationsStatusResult
+    -> AWS.Request DescribeInstanceAssociationsStatusResult
 describeInstanceAssociationsStatus instanceId setOptions =
   let
     options = setOptions (DescribeInstanceAssociationsStatusOptions Nothing Nothing)
@@ -1647,6 +1674,7 @@ describeInstanceAssociationsStatus instanceId setOptions =
             JE.null
         )
         describeInstanceAssociationsStatusResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstanceAssociationsStatus request
@@ -1667,7 +1695,7 @@ __Required Parameters__
 -}
 describeInstanceInformation :
     (DescribeInstanceInformationOptions -> DescribeInstanceInformationOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstanceInformationResult
+    -> AWS.Request DescribeInstanceInformationResult
 describeInstanceInformation setOptions =
   let
     options = setOptions (DescribeInstanceInformationOptions Nothing Nothing Nothing Nothing)
@@ -1680,6 +1708,7 @@ describeInstanceInformation setOptions =
             JE.null
         )
         describeInstanceInformationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstanceInformation request
@@ -1704,7 +1733,7 @@ __Required Parameters__
 describeInstancePatchStates :
     (List String)
     -> (DescribeInstancePatchStatesOptions -> DescribeInstancePatchStatesOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstancePatchStatesResult
+    -> AWS.Request DescribeInstancePatchStatesResult
 describeInstancePatchStates instanceIds setOptions =
   let
     options = setOptions (DescribeInstancePatchStatesOptions Nothing Nothing)
@@ -1717,6 +1746,7 @@ describeInstancePatchStates instanceIds setOptions =
             JE.null
         )
         describeInstancePatchStatesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstancePatchStates request
@@ -1739,7 +1769,7 @@ __Required Parameters__
 describeInstancePatchStatesForPatchGroup :
     String
     -> (DescribeInstancePatchStatesForPatchGroupOptions -> DescribeInstancePatchStatesForPatchGroupOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstancePatchStatesForPatchGroupResult
+    -> AWS.Request DescribeInstancePatchStatesForPatchGroupResult
 describeInstancePatchStatesForPatchGroup patchGroup setOptions =
   let
     options = setOptions (DescribeInstancePatchStatesForPatchGroupOptions Nothing Nothing Nothing)
@@ -1752,6 +1782,7 @@ describeInstancePatchStatesForPatchGroup patchGroup setOptions =
             JE.null
         )
         describeInstancePatchStatesForPatchGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstancePatchStatesForPatchGroup request
@@ -1775,7 +1806,7 @@ __Required Parameters__
 describeInstancePatches :
     String
     -> (DescribeInstancePatchesOptions -> DescribeInstancePatchesOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstancePatchesResult
+    -> AWS.Request DescribeInstancePatchesResult
 describeInstancePatches instanceId setOptions =
   let
     options = setOptions (DescribeInstancePatchesOptions Nothing Nothing Nothing)
@@ -1788,6 +1819,7 @@ describeInstancePatches instanceId setOptions =
             JE.null
         )
         describeInstancePatchesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstancePatches request
@@ -1813,7 +1845,7 @@ describeMaintenanceWindowExecutionTaskInvocations :
     String
     -> String
     -> (DescribeMaintenanceWindowExecutionTaskInvocationsOptions -> DescribeMaintenanceWindowExecutionTaskInvocationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeMaintenanceWindowExecutionTaskInvocationsResult
+    -> AWS.Request DescribeMaintenanceWindowExecutionTaskInvocationsResult
 describeMaintenanceWindowExecutionTaskInvocations windowExecutionId taskId setOptions =
   let
     options = setOptions (DescribeMaintenanceWindowExecutionTaskInvocationsOptions Nothing Nothing Nothing)
@@ -1826,6 +1858,7 @@ describeMaintenanceWindowExecutionTaskInvocations windowExecutionId taskId setOp
             JE.null
         )
         describeMaintenanceWindowExecutionTaskInvocationsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMaintenanceWindowExecutionTaskInvocations request
@@ -1849,7 +1882,7 @@ __Required Parameters__
 describeMaintenanceWindowExecutionTasks :
     String
     -> (DescribeMaintenanceWindowExecutionTasksOptions -> DescribeMaintenanceWindowExecutionTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeMaintenanceWindowExecutionTasksResult
+    -> AWS.Request DescribeMaintenanceWindowExecutionTasksResult
 describeMaintenanceWindowExecutionTasks windowExecutionId setOptions =
   let
     options = setOptions (DescribeMaintenanceWindowExecutionTasksOptions Nothing Nothing Nothing)
@@ -1862,6 +1895,7 @@ describeMaintenanceWindowExecutionTasks windowExecutionId setOptions =
             JE.null
         )
         describeMaintenanceWindowExecutionTasksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMaintenanceWindowExecutionTasks request
@@ -1885,7 +1919,7 @@ __Required Parameters__
 describeMaintenanceWindowExecutions :
     String
     -> (DescribeMaintenanceWindowExecutionsOptions -> DescribeMaintenanceWindowExecutionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeMaintenanceWindowExecutionsResult
+    -> AWS.Request DescribeMaintenanceWindowExecutionsResult
 describeMaintenanceWindowExecutions windowId setOptions =
   let
     options = setOptions (DescribeMaintenanceWindowExecutionsOptions Nothing Nothing Nothing)
@@ -1898,6 +1932,7 @@ describeMaintenanceWindowExecutions windowId setOptions =
             JE.null
         )
         describeMaintenanceWindowExecutionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMaintenanceWindowExecutions request
@@ -1921,7 +1956,7 @@ __Required Parameters__
 describeMaintenanceWindowTargets :
     String
     -> (DescribeMaintenanceWindowTargetsOptions -> DescribeMaintenanceWindowTargetsOptions)
-    -> AWS.Http.UnsignedRequest DescribeMaintenanceWindowTargetsResult
+    -> AWS.Request DescribeMaintenanceWindowTargetsResult
 describeMaintenanceWindowTargets windowId setOptions =
   let
     options = setOptions (DescribeMaintenanceWindowTargetsOptions Nothing Nothing Nothing)
@@ -1934,6 +1969,7 @@ describeMaintenanceWindowTargets windowId setOptions =
             JE.null
         )
         describeMaintenanceWindowTargetsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMaintenanceWindowTargets request
@@ -1957,7 +1993,7 @@ __Required Parameters__
 describeMaintenanceWindowTasks :
     String
     -> (DescribeMaintenanceWindowTasksOptions -> DescribeMaintenanceWindowTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeMaintenanceWindowTasksResult
+    -> AWS.Request DescribeMaintenanceWindowTasksResult
 describeMaintenanceWindowTasks windowId setOptions =
   let
     options = setOptions (DescribeMaintenanceWindowTasksOptions Nothing Nothing Nothing)
@@ -1970,6 +2006,7 @@ describeMaintenanceWindowTasks windowId setOptions =
             JE.null
         )
         describeMaintenanceWindowTasksResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMaintenanceWindowTasks request
@@ -1991,7 +2028,7 @@ __Required Parameters__
 -}
 describeMaintenanceWindows :
     (DescribeMaintenanceWindowsOptions -> DescribeMaintenanceWindowsOptions)
-    -> AWS.Http.UnsignedRequest DescribeMaintenanceWindowsResult
+    -> AWS.Request DescribeMaintenanceWindowsResult
 describeMaintenanceWindows setOptions =
   let
     options = setOptions (DescribeMaintenanceWindowsOptions Nothing Nothing Nothing)
@@ -2004,6 +2041,7 @@ describeMaintenanceWindows setOptions =
             JE.null
         )
         describeMaintenanceWindowsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMaintenanceWindows request
@@ -2025,7 +2063,7 @@ __Required Parameters__
 -}
 describeParameters :
     (DescribeParametersOptions -> DescribeParametersOptions)
-    -> AWS.Http.UnsignedRequest DescribeParametersResult
+    -> AWS.Request DescribeParametersResult
 describeParameters setOptions =
   let
     options = setOptions (DescribeParametersOptions Nothing Nothing Nothing)
@@ -2038,6 +2076,7 @@ describeParameters setOptions =
             JE.null
         )
         describeParametersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeParameters request
@@ -2059,7 +2098,7 @@ __Required Parameters__
 -}
 describePatchBaselines :
     (DescribePatchBaselinesOptions -> DescribePatchBaselinesOptions)
-    -> AWS.Http.UnsignedRequest DescribePatchBaselinesResult
+    -> AWS.Request DescribePatchBaselinesResult
 describePatchBaselines setOptions =
   let
     options = setOptions (DescribePatchBaselinesOptions Nothing Nothing Nothing)
@@ -2072,6 +2111,7 @@ describePatchBaselines setOptions =
             JE.null
         )
         describePatchBaselinesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describePatchBaselines request
@@ -2094,7 +2134,7 @@ __Required Parameters__
 -}
 describePatchGroupState :
     String
-    -> AWS.Http.UnsignedRequest DescribePatchGroupStateResult
+    -> AWS.Request DescribePatchGroupStateResult
 describePatchGroupState patchGroup =
     AWS.Http.unsignedRequest
         "DescribePatchGroupState"
@@ -2104,6 +2144,7 @@ describePatchGroupState patchGroup =
             JE.null
         )
         describePatchGroupStateResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2116,7 +2157,7 @@ __Required Parameters__
 -}
 describePatchGroups :
     (DescribePatchGroupsOptions -> DescribePatchGroupsOptions)
-    -> AWS.Http.UnsignedRequest DescribePatchGroupsResult
+    -> AWS.Request DescribePatchGroupsResult
 describePatchGroups setOptions =
   let
     options = setOptions (DescribePatchGroupsOptions Nothing Nothing)
@@ -2129,6 +2170,7 @@ describePatchGroups setOptions =
             JE.null
         )
         describePatchGroupsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describePatchGroups request
@@ -2150,7 +2192,7 @@ __Required Parameters__
 -}
 getAutomationExecution :
     String
-    -> AWS.Http.UnsignedRequest GetAutomationExecutionResult
+    -> AWS.Request GetAutomationExecutionResult
 getAutomationExecution automationExecutionId =
     AWS.Http.unsignedRequest
         "GetAutomationExecution"
@@ -2160,6 +2202,7 @@ getAutomationExecution automationExecutionId =
             JE.null
         )
         getAutomationExecutionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2176,7 +2219,7 @@ getCommandInvocation :
     String
     -> String
     -> (GetCommandInvocationOptions -> GetCommandInvocationOptions)
-    -> AWS.Http.UnsignedRequest GetCommandInvocationResult
+    -> AWS.Request GetCommandInvocationResult
 getCommandInvocation commandId instanceId setOptions =
   let
     options = setOptions (GetCommandInvocationOptions Nothing)
@@ -2189,6 +2232,7 @@ getCommandInvocation commandId instanceId setOptions =
             JE.null
         )
         getCommandInvocationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getCommandInvocation request
@@ -2207,7 +2251,7 @@ __Required Parameters__
 
 -}
 getDefaultPatchBaseline :
-    AWS.Http.UnsignedRequest GetDefaultPatchBaselineResult
+    AWS.Request GetDefaultPatchBaselineResult
 getDefaultPatchBaseline =
     AWS.Http.unsignedRequest
         "GetDefaultPatchBaseline"
@@ -2217,6 +2261,7 @@ getDefaultPatchBaseline =
             JE.null
         )
         getDefaultPatchBaselineResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2232,7 +2277,7 @@ __Required Parameters__
 getDeployablePatchSnapshotForInstance :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetDeployablePatchSnapshotForInstanceResult
+    -> AWS.Request GetDeployablePatchSnapshotForInstanceResult
 getDeployablePatchSnapshotForInstance instanceId snapshotId =
     AWS.Http.unsignedRequest
         "GetDeployablePatchSnapshotForInstance"
@@ -2242,6 +2287,7 @@ getDeployablePatchSnapshotForInstance instanceId snapshotId =
             JE.null
         )
         getDeployablePatchSnapshotForInstanceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2256,7 +2302,7 @@ __Required Parameters__
 getDocument :
     String
     -> (GetDocumentOptions -> GetDocumentOptions)
-    -> AWS.Http.UnsignedRequest GetDocumentResult
+    -> AWS.Request GetDocumentResult
 getDocument name setOptions =
   let
     options = setOptions (GetDocumentOptions Nothing)
@@ -2269,6 +2315,7 @@ getDocument name setOptions =
             JE.null
         )
         getDocumentResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDocument request
@@ -2288,7 +2335,7 @@ __Required Parameters__
 -}
 getInventory :
     (GetInventoryOptions -> GetInventoryOptions)
-    -> AWS.Http.UnsignedRequest GetInventoryResult
+    -> AWS.Request GetInventoryResult
 getInventory setOptions =
   let
     options = setOptions (GetInventoryOptions Nothing Nothing Nothing Nothing)
@@ -2301,6 +2348,7 @@ getInventory setOptions =
             JE.null
         )
         getInventoryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getInventory request
@@ -2323,7 +2371,7 @@ __Required Parameters__
 -}
 getInventorySchema :
     (GetInventorySchemaOptions -> GetInventorySchemaOptions)
-    -> AWS.Http.UnsignedRequest GetInventorySchemaResult
+    -> AWS.Request GetInventorySchemaResult
 getInventorySchema setOptions =
   let
     options = setOptions (GetInventorySchemaOptions Nothing Nothing Nothing)
@@ -2336,6 +2384,7 @@ getInventorySchema setOptions =
             JE.null
         )
         getInventorySchemaResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getInventorySchema request
@@ -2358,7 +2407,7 @@ __Required Parameters__
 -}
 getMaintenanceWindow :
     String
-    -> AWS.Http.UnsignedRequest GetMaintenanceWindowResult
+    -> AWS.Request GetMaintenanceWindowResult
 getMaintenanceWindow windowId =
     AWS.Http.unsignedRequest
         "GetMaintenanceWindow"
@@ -2368,6 +2417,7 @@ getMaintenanceWindow windowId =
             JE.null
         )
         getMaintenanceWindowResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2381,7 +2431,7 @@ __Required Parameters__
 -}
 getMaintenanceWindowExecution :
     String
-    -> AWS.Http.UnsignedRequest GetMaintenanceWindowExecutionResult
+    -> AWS.Request GetMaintenanceWindowExecutionResult
 getMaintenanceWindowExecution windowExecutionId =
     AWS.Http.unsignedRequest
         "GetMaintenanceWindowExecution"
@@ -2391,6 +2441,7 @@ getMaintenanceWindowExecution windowExecutionId =
             JE.null
         )
         getMaintenanceWindowExecutionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2406,7 +2457,7 @@ __Required Parameters__
 getMaintenanceWindowExecutionTask :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetMaintenanceWindowExecutionTaskResult
+    -> AWS.Request GetMaintenanceWindowExecutionTaskResult
 getMaintenanceWindowExecutionTask windowExecutionId taskId =
     AWS.Http.unsignedRequest
         "GetMaintenanceWindowExecutionTask"
@@ -2416,6 +2467,7 @@ getMaintenanceWindowExecutionTask windowExecutionId taskId =
             JE.null
         )
         getMaintenanceWindowExecutionTaskResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2430,7 +2482,7 @@ __Required Parameters__
 getParameterHistory :
     String
     -> (GetParameterHistoryOptions -> GetParameterHistoryOptions)
-    -> AWS.Http.UnsignedRequest GetParameterHistoryResult
+    -> AWS.Request GetParameterHistoryResult
 getParameterHistory name setOptions =
   let
     options = setOptions (GetParameterHistoryOptions Nothing Nothing Nothing)
@@ -2443,6 +2495,7 @@ getParameterHistory name setOptions =
             JE.null
         )
         getParameterHistoryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getParameterHistory request
@@ -2466,7 +2519,7 @@ __Required Parameters__
 getParameters :
     (List String)
     -> (GetParametersOptions -> GetParametersOptions)
-    -> AWS.Http.UnsignedRequest GetParametersResult
+    -> AWS.Request GetParametersResult
 getParameters names setOptions =
   let
     options = setOptions (GetParametersOptions Nothing)
@@ -2479,6 +2532,7 @@ getParameters names setOptions =
             JE.null
         )
         getParametersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getParameters request
@@ -2499,7 +2553,7 @@ __Required Parameters__
 -}
 getPatchBaseline :
     String
-    -> AWS.Http.UnsignedRequest GetPatchBaselineResult
+    -> AWS.Request GetPatchBaselineResult
 getPatchBaseline baselineId =
     AWS.Http.unsignedRequest
         "GetPatchBaseline"
@@ -2509,6 +2563,7 @@ getPatchBaseline baselineId =
             JE.null
         )
         getPatchBaselineResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2522,7 +2577,7 @@ __Required Parameters__
 -}
 getPatchBaselineForPatchGroup :
     String
-    -> AWS.Http.UnsignedRequest GetPatchBaselineForPatchGroupResult
+    -> AWS.Request GetPatchBaselineForPatchGroupResult
 getPatchBaselineForPatchGroup patchGroup =
     AWS.Http.unsignedRequest
         "GetPatchBaselineForPatchGroup"
@@ -2532,6 +2587,7 @@ getPatchBaselineForPatchGroup patchGroup =
             JE.null
         )
         getPatchBaselineForPatchGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2544,7 +2600,7 @@ __Required Parameters__
 -}
 listAssociations :
     (ListAssociationsOptions -> ListAssociationsOptions)
-    -> AWS.Http.UnsignedRequest ListAssociationsResult
+    -> AWS.Request ListAssociationsResult
 listAssociations setOptions =
   let
     options = setOptions (ListAssociationsOptions Nothing Nothing Nothing)
@@ -2557,6 +2613,7 @@ listAssociations setOptions =
             JE.null
         )
         listAssociationsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAssociations request
@@ -2578,7 +2635,7 @@ __Required Parameters__
 -}
 listCommandInvocations :
     (ListCommandInvocationsOptions -> ListCommandInvocationsOptions)
-    -> AWS.Http.UnsignedRequest ListCommandInvocationsResult
+    -> AWS.Request ListCommandInvocationsResult
 listCommandInvocations setOptions =
   let
     options = setOptions (ListCommandInvocationsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2591,6 +2648,7 @@ listCommandInvocations setOptions =
             JE.null
         )
         listCommandInvocationsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listCommandInvocations request
@@ -2615,7 +2673,7 @@ __Required Parameters__
 -}
 listCommands :
     (ListCommandsOptions -> ListCommandsOptions)
-    -> AWS.Http.UnsignedRequest ListCommandsResult
+    -> AWS.Request ListCommandsResult
 listCommands setOptions =
   let
     options = setOptions (ListCommandsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -2628,6 +2686,7 @@ listCommands setOptions =
             JE.null
         )
         listCommandsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listCommands request
@@ -2653,7 +2712,7 @@ __Required Parameters__
 listDocumentVersions :
     String
     -> (ListDocumentVersionsOptions -> ListDocumentVersionsOptions)
-    -> AWS.Http.UnsignedRequest ListDocumentVersionsResult
+    -> AWS.Request ListDocumentVersionsResult
 listDocumentVersions name setOptions =
   let
     options = setOptions (ListDocumentVersionsOptions Nothing Nothing)
@@ -2666,6 +2725,7 @@ listDocumentVersions name setOptions =
             JE.null
         )
         listDocumentVersionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDocumentVersions request
@@ -2686,7 +2746,7 @@ __Required Parameters__
 -}
 listDocuments :
     (ListDocumentsOptions -> ListDocumentsOptions)
-    -> AWS.Http.UnsignedRequest ListDocumentsResult
+    -> AWS.Request ListDocumentsResult
 listDocuments setOptions =
   let
     options = setOptions (ListDocumentsOptions Nothing Nothing Nothing)
@@ -2699,6 +2759,7 @@ listDocuments setOptions =
             JE.null
         )
         listDocumentsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDocuments request
@@ -2724,7 +2785,7 @@ listInventoryEntries :
     String
     -> String
     -> (ListInventoryEntriesOptions -> ListInventoryEntriesOptions)
-    -> AWS.Http.UnsignedRequest ListInventoryEntriesResult
+    -> AWS.Request ListInventoryEntriesResult
 listInventoryEntries instanceId typeName setOptions =
   let
     options = setOptions (ListInventoryEntriesOptions Nothing Nothing Nothing)
@@ -2737,6 +2798,7 @@ listInventoryEntries instanceId typeName setOptions =
             JE.null
         )
         listInventoryEntriesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listInventoryEntries request
@@ -2761,7 +2823,7 @@ __Required Parameters__
 listTagsForResource :
     ResourceTypeForTagging
     -> String
-    -> AWS.Http.UnsignedRequest ListTagsForResourceResult
+    -> AWS.Request ListTagsForResourceResult
 listTagsForResource resourceType resourceId =
     AWS.Http.unsignedRequest
         "ListTagsForResource"
@@ -2771,6 +2833,7 @@ listTagsForResource resourceType resourceId =
             JE.null
         )
         listTagsForResourceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2787,7 +2850,7 @@ modifyDocumentPermission :
     String
     -> DocumentPermissionType
     -> (ModifyDocumentPermissionOptions -> ModifyDocumentPermissionOptions)
-    -> AWS.Http.UnsignedRequest ModifyDocumentPermissionResponse
+    -> AWS.Request ModifyDocumentPermissionResponse
 modifyDocumentPermission name permissionType setOptions =
   let
     options = setOptions (ModifyDocumentPermissionOptions Nothing Nothing)
@@ -2800,6 +2863,7 @@ modifyDocumentPermission name permissionType setOptions =
             JE.null
         )
         modifyDocumentPermissionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyDocumentPermission request
@@ -2823,7 +2887,7 @@ __Required Parameters__
 putInventory :
     String
     -> (List InventoryItem)
-    -> AWS.Http.UnsignedRequest PutInventoryResult
+    -> AWS.Request PutInventoryResult
 putInventory instanceId items =
     AWS.Http.unsignedRequest
         "PutInventory"
@@ -2833,6 +2897,7 @@ putInventory instanceId items =
             JE.null
         )
         putInventoryResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2851,7 +2916,7 @@ putParameter :
     -> String
     -> ParameterType
     -> (PutParameterOptions -> PutParameterOptions)
-    -> AWS.Http.UnsignedRequest PutParameterResult
+    -> AWS.Request PutParameterResult
 putParameter name value type_ setOptions =
   let
     options = setOptions (PutParameterOptions Nothing Nothing Nothing)
@@ -2864,6 +2929,7 @@ putParameter name value type_ setOptions =
             JE.null
         )
         putParameterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putParameter request
@@ -2886,7 +2952,7 @@ __Required Parameters__
 -}
 registerDefaultPatchBaseline :
     String
-    -> AWS.Http.UnsignedRequest RegisterDefaultPatchBaselineResult
+    -> AWS.Request RegisterDefaultPatchBaselineResult
 registerDefaultPatchBaseline baselineId =
     AWS.Http.unsignedRequest
         "RegisterDefaultPatchBaseline"
@@ -2896,6 +2962,7 @@ registerDefaultPatchBaseline baselineId =
             JE.null
         )
         registerDefaultPatchBaselineResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2911,7 +2978,7 @@ __Required Parameters__
 registerPatchBaselineForPatchGroup :
     String
     -> String
-    -> AWS.Http.UnsignedRequest RegisterPatchBaselineForPatchGroupResult
+    -> AWS.Request RegisterPatchBaselineForPatchGroupResult
 registerPatchBaselineForPatchGroup baselineId patchGroup =
     AWS.Http.unsignedRequest
         "RegisterPatchBaselineForPatchGroup"
@@ -2921,6 +2988,7 @@ registerPatchBaselineForPatchGroup baselineId patchGroup =
             JE.null
         )
         registerPatchBaselineForPatchGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2939,7 +3007,7 @@ registerTargetWithMaintenanceWindow :
     -> MaintenanceWindowResourceType
     -> (List Target)
     -> (RegisterTargetWithMaintenanceWindowOptions -> RegisterTargetWithMaintenanceWindowOptions)
-    -> AWS.Http.UnsignedRequest RegisterTargetWithMaintenanceWindowResult
+    -> AWS.Request RegisterTargetWithMaintenanceWindowResult
 registerTargetWithMaintenanceWindow windowId resourceType targets setOptions =
   let
     options = setOptions (RegisterTargetWithMaintenanceWindowOptions Nothing Nothing)
@@ -2952,6 +3020,7 @@ registerTargetWithMaintenanceWindow windowId resourceType targets setOptions =
             JE.null
         )
         registerTargetWithMaintenanceWindowResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerTargetWithMaintenanceWindow request
@@ -2986,7 +3055,7 @@ registerTaskWithMaintenanceWindow :
     -> String
     -> String
     -> (RegisterTaskWithMaintenanceWindowOptions -> RegisterTaskWithMaintenanceWindowOptions)
-    -> AWS.Http.UnsignedRequest RegisterTaskWithMaintenanceWindowResult
+    -> AWS.Request RegisterTaskWithMaintenanceWindowResult
 registerTaskWithMaintenanceWindow windowId targets taskArn serviceRoleArn taskType maxConcurrency maxErrors setOptions =
   let
     options = setOptions (RegisterTaskWithMaintenanceWindowOptions Nothing Nothing Nothing Nothing)
@@ -2999,6 +3068,7 @@ registerTaskWithMaintenanceWindow windowId targets taskArn serviceRoleArn taskTy
             JE.null
         )
         registerTaskWithMaintenanceWindowResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerTaskWithMaintenanceWindow request
@@ -3026,7 +3096,7 @@ removeTagsFromResource :
     ResourceTypeForTagging
     -> String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveTagsFromResourceResult
+    -> AWS.Request RemoveTagsFromResourceResult
 removeTagsFromResource resourceType resourceId tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTagsFromResource"
@@ -3036,6 +3106,7 @@ removeTagsFromResource resourceType resourceId tagKeys =
             JE.null
         )
         removeTagsFromResourceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3050,7 +3121,7 @@ __Required Parameters__
 sendCommand :
     String
     -> (SendCommandOptions -> SendCommandOptions)
-    -> AWS.Http.UnsignedRequest SendCommandResult
+    -> AWS.Request SendCommandResult
 sendCommand documentName setOptions =
   let
     options = setOptions (SendCommandOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3063,6 +3134,7 @@ sendCommand documentName setOptions =
             JE.null
         )
         sendCommandResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a sendCommand request
@@ -3097,7 +3169,7 @@ __Required Parameters__
 startAutomationExecution :
     String
     -> (StartAutomationExecutionOptions -> StartAutomationExecutionOptions)
-    -> AWS.Http.UnsignedRequest StartAutomationExecutionResult
+    -> AWS.Request StartAutomationExecutionResult
 startAutomationExecution documentName setOptions =
   let
     options = setOptions (StartAutomationExecutionOptions Nothing Nothing)
@@ -3110,6 +3182,7 @@ startAutomationExecution documentName setOptions =
             JE.null
         )
         startAutomationExecutionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startAutomationExecution request
@@ -3131,7 +3204,7 @@ __Required Parameters__
 -}
 stopAutomationExecution :
     String
-    -> AWS.Http.UnsignedRequest StopAutomationExecutionResult
+    -> AWS.Request StopAutomationExecutionResult
 stopAutomationExecution automationExecutionId =
     AWS.Http.unsignedRequest
         "StopAutomationExecution"
@@ -3141,6 +3214,7 @@ stopAutomationExecution automationExecutionId =
             JE.null
         )
         stopAutomationExecutionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3155,7 +3229,7 @@ __Required Parameters__
 updateAssociation :
     String
     -> (UpdateAssociationOptions -> UpdateAssociationOptions)
-    -> AWS.Http.UnsignedRequest UpdateAssociationResult
+    -> AWS.Request UpdateAssociationResult
 updateAssociation associationId setOptions =
   let
     options = setOptions (UpdateAssociationOptions Nothing Nothing Nothing Nothing)
@@ -3168,6 +3242,7 @@ updateAssociation associationId setOptions =
             JE.null
         )
         updateAssociationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateAssociation request
@@ -3195,7 +3270,7 @@ updateAssociationStatus :
     String
     -> String
     -> AssociationStatus
-    -> AWS.Http.UnsignedRequest UpdateAssociationStatusResult
+    -> AWS.Request UpdateAssociationStatusResult
 updateAssociationStatus name instanceId associationStatus =
     AWS.Http.unsignedRequest
         "UpdateAssociationStatus"
@@ -3205,6 +3280,7 @@ updateAssociationStatus name instanceId associationStatus =
             JE.null
         )
         updateAssociationStatusResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3221,7 +3297,7 @@ updateDocument :
     String
     -> String
     -> (UpdateDocumentOptions -> UpdateDocumentOptions)
-    -> AWS.Http.UnsignedRequest UpdateDocumentResult
+    -> AWS.Request UpdateDocumentResult
 updateDocument content name setOptions =
   let
     options = setOptions (UpdateDocumentOptions Nothing)
@@ -3234,6 +3310,7 @@ updateDocument content name setOptions =
             JE.null
         )
         updateDocumentResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDocument request
@@ -3256,7 +3333,7 @@ __Required Parameters__
 updateDocumentDefaultVersion :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateDocumentDefaultVersionResult
+    -> AWS.Request UpdateDocumentDefaultVersionResult
 updateDocumentDefaultVersion name documentVersion =
     AWS.Http.unsignedRequest
         "UpdateDocumentDefaultVersion"
@@ -3266,6 +3343,7 @@ updateDocumentDefaultVersion name documentVersion =
             JE.null
         )
         updateDocumentDefaultVersionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3280,7 +3358,7 @@ __Required Parameters__
 updateMaintenanceWindow :
     String
     -> (UpdateMaintenanceWindowOptions -> UpdateMaintenanceWindowOptions)
-    -> AWS.Http.UnsignedRequest UpdateMaintenanceWindowResult
+    -> AWS.Request UpdateMaintenanceWindowResult
 updateMaintenanceWindow windowId setOptions =
   let
     options = setOptions (UpdateMaintenanceWindowOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3293,6 +3371,7 @@ updateMaintenanceWindow windowId setOptions =
             JE.null
         )
         updateMaintenanceWindowResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateMaintenanceWindow request
@@ -3320,7 +3399,7 @@ __Required Parameters__
 updateManagedInstanceRole :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateManagedInstanceRoleResult
+    -> AWS.Request UpdateManagedInstanceRoleResult
 updateManagedInstanceRole instanceId iamRole =
     AWS.Http.unsignedRequest
         "UpdateManagedInstanceRole"
@@ -3330,6 +3409,7 @@ updateManagedInstanceRole instanceId iamRole =
             JE.null
         )
         updateManagedInstanceRoleResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -3344,7 +3424,7 @@ __Required Parameters__
 updatePatchBaseline :
     String
     -> (UpdatePatchBaselineOptions -> UpdatePatchBaselineOptions)
-    -> AWS.Http.UnsignedRequest UpdatePatchBaselineResult
+    -> AWS.Request UpdatePatchBaselineResult
 updatePatchBaseline baselineId setOptions =
   let
     options = setOptions (UpdatePatchBaselineOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -3357,6 +3437,7 @@ updatePatchBaseline baselineId setOptions =
             JE.null
         )
         updatePatchBaselineResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updatePatchBaseline request

@@ -168,6 +168,7 @@ module AWS.Services.SQS
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -177,16 +178,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "sqs"
         "2012-11-05"
         "undefined"
         "AWSSQS_20121105."
         "sqs.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -208,7 +209,7 @@ addPermission :
     -> String
     -> (List String)
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addPermission queueUrl label aWSAccountIds actions =
     AWS.Http.unsignedRequest
         "AddPermission"
@@ -218,6 +219,7 @@ addPermission queueUrl label aWSAccountIds actions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -235,7 +237,7 @@ changeMessageVisibility :
     String
     -> String
     -> Int
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 changeMessageVisibility queueUrl receiptHandle visibilityTimeout =
     AWS.Http.unsignedRequest
         "ChangeMessageVisibility"
@@ -245,6 +247,7 @@ changeMessageVisibility queueUrl receiptHandle visibilityTimeout =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -260,7 +263,7 @@ __Required Parameters__
 changeMessageVisibilityBatch :
     String
     -> (List ChangeMessageVisibilityBatchRequestEntry)
-    -> AWS.Http.UnsignedRequest ChangeMessageVisibilityBatchResult
+    -> AWS.Request ChangeMessageVisibilityBatchResult
 changeMessageVisibilityBatch queueUrl entries =
     AWS.Http.unsignedRequest
         "ChangeMessageVisibilityBatch"
@@ -270,6 +273,7 @@ changeMessageVisibilityBatch queueUrl entries =
             JE.null
         )
         changeMessageVisibilityBatchResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -284,7 +288,7 @@ __Required Parameters__
 createQueue :
     String
     -> (CreateQueueOptions -> CreateQueueOptions)
-    -> AWS.Http.UnsignedRequest CreateQueueResult
+    -> AWS.Request CreateQueueResult
 createQueue queueName setOptions =
   let
     options = setOptions (CreateQueueOptions Nothing)
@@ -297,6 +301,7 @@ createQueue queueName setOptions =
             JE.null
         )
         createQueueResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createQueue request
@@ -319,7 +324,7 @@ __Required Parameters__
 deleteMessage :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteMessage queueUrl receiptHandle =
     AWS.Http.unsignedRequest
         "DeleteMessage"
@@ -329,6 +334,7 @@ deleteMessage queueUrl receiptHandle =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -344,7 +350,7 @@ __Required Parameters__
 deleteMessageBatch :
     String
     -> (List DeleteMessageBatchRequestEntry)
-    -> AWS.Http.UnsignedRequest DeleteMessageBatchResult
+    -> AWS.Request DeleteMessageBatchResult
 deleteMessageBatch queueUrl entries =
     AWS.Http.unsignedRequest
         "DeleteMessageBatch"
@@ -354,6 +360,7 @@ deleteMessageBatch queueUrl entries =
             JE.null
         )
         deleteMessageBatchResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -367,7 +374,7 @@ __Required Parameters__
 -}
 deleteQueue :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteQueue queueUrl =
     AWS.Http.unsignedRequest
         "DeleteQueue"
@@ -377,6 +384,7 @@ deleteQueue queueUrl =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -391,7 +399,7 @@ __Required Parameters__
 getQueueAttributes :
     String
     -> (GetQueueAttributesOptions -> GetQueueAttributesOptions)
-    -> AWS.Http.UnsignedRequest GetQueueAttributesResult
+    -> AWS.Request GetQueueAttributesResult
 getQueueAttributes queueUrl setOptions =
   let
     options = setOptions (GetQueueAttributesOptions Nothing)
@@ -404,6 +412,7 @@ getQueueAttributes queueUrl setOptions =
             JE.null
         )
         getQueueAttributesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getQueueAttributes request
@@ -425,7 +434,7 @@ __Required Parameters__
 getQueueUrl :
     String
     -> (GetQueueUrlOptions -> GetQueueUrlOptions)
-    -> AWS.Http.UnsignedRequest GetQueueUrlResult
+    -> AWS.Request GetQueueUrlResult
 getQueueUrl queueName setOptions =
   let
     options = setOptions (GetQueueUrlOptions Nothing)
@@ -438,6 +447,7 @@ getQueueUrl queueName setOptions =
             JE.null
         )
         getQueueUrlResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getQueueUrl request
@@ -458,7 +468,7 @@ __Required Parameters__
 -}
 listDeadLetterSourceQueues :
     String
-    -> AWS.Http.UnsignedRequest ListDeadLetterSourceQueuesResult
+    -> AWS.Request ListDeadLetterSourceQueuesResult
 listDeadLetterSourceQueues queueUrl =
     AWS.Http.unsignedRequest
         "ListDeadLetterSourceQueues"
@@ -468,6 +478,7 @@ listDeadLetterSourceQueues queueUrl =
             JE.null
         )
         listDeadLetterSourceQueuesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -480,7 +491,7 @@ __Required Parameters__
 -}
 listQueues :
     (ListQueuesOptions -> ListQueuesOptions)
-    -> AWS.Http.UnsignedRequest ListQueuesResult
+    -> AWS.Request ListQueuesResult
 listQueues setOptions =
   let
     options = setOptions (ListQueuesOptions Nothing)
@@ -493,6 +504,7 @@ listQueues setOptions =
             JE.null
         )
         listQueuesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listQueues request
@@ -513,7 +525,7 @@ __Required Parameters__
 -}
 purgeQueue :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 purgeQueue queueUrl =
     AWS.Http.unsignedRequest
         "PurgeQueue"
@@ -523,6 +535,7 @@ purgeQueue queueUrl =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -537,7 +550,7 @@ __Required Parameters__
 receiveMessage :
     String
     -> (ReceiveMessageOptions -> ReceiveMessageOptions)
-    -> AWS.Http.UnsignedRequest ReceiveMessageResult
+    -> AWS.Request ReceiveMessageResult
 receiveMessage queueUrl setOptions =
   let
     options = setOptions (ReceiveMessageOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -550,6 +563,7 @@ receiveMessage queueUrl setOptions =
             JE.null
         )
         receiveMessageResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a receiveMessage request
@@ -577,7 +591,7 @@ __Required Parameters__
 removePermission :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removePermission queueUrl label =
     AWS.Http.unsignedRequest
         "RemovePermission"
@@ -587,6 +601,7 @@ removePermission queueUrl label =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -603,7 +618,7 @@ sendMessage :
     String
     -> String
     -> (SendMessageOptions -> SendMessageOptions)
-    -> AWS.Http.UnsignedRequest SendMessageResult
+    -> AWS.Request SendMessageResult
 sendMessage queueUrl messageBody setOptions =
   let
     options = setOptions (SendMessageOptions Nothing Nothing Nothing Nothing)
@@ -616,6 +631,7 @@ sendMessage queueUrl messageBody setOptions =
             JE.null
         )
         sendMessageResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a sendMessage request
@@ -641,7 +657,7 @@ __Required Parameters__
 sendMessageBatch :
     String
     -> (List SendMessageBatchRequestEntry)
-    -> AWS.Http.UnsignedRequest SendMessageBatchResult
+    -> AWS.Request SendMessageBatchResult
 sendMessageBatch queueUrl entries =
     AWS.Http.unsignedRequest
         "SendMessageBatch"
@@ -651,6 +667,7 @@ sendMessageBatch queueUrl entries =
             JE.null
         )
         sendMessageBatchResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -666,7 +683,7 @@ __Required Parameters__
 setQueueAttributes :
     String
     -> (Dict String String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setQueueAttributes queueUrl attributes =
     AWS.Http.unsignedRequest
         "SetQueueAttributes"
@@ -676,6 +693,7 @@ setQueueAttributes queueUrl attributes =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 

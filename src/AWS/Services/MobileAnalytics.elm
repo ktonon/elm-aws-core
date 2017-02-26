@@ -44,6 +44,7 @@ module AWS.Services.MobileAnalytics
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -53,16 +54,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "mobileanalytics"
         "2014-06-05"
         "undefined"
         "AWSMOBILEANALYTICS_20140605."
         "mobileanalytics.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -81,7 +82,7 @@ putEvents :
     (List Event)
     -> String
     -> (PutEventsOptions -> PutEventsOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putEvents events clientContext setOptions =
   let
     options = setOptions (PutEventsOptions Nothing)
@@ -94,6 +95,7 @@ putEvents events clientContext setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putEvents request

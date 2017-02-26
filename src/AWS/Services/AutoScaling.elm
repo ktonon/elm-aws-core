@@ -346,6 +346,7 @@ module AWS.Services.AutoScaling
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -356,16 +357,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "autoscaling"
         "2011-01-01"
         "undefined"
         "AWSAUTOSCALING_20110101."
         "autoscaling.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -382,7 +383,7 @@ __Required Parameters__
 attachInstances :
     String
     -> (AttachInstancesOptions -> AttachInstancesOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 attachInstances autoScalingGroupName setOptions =
   let
     options = setOptions (AttachInstancesOptions Nothing)
@@ -395,6 +396,7 @@ attachInstances autoScalingGroupName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a attachInstances request
@@ -417,7 +419,7 @@ __Required Parameters__
 attachLoadBalancerTargetGroups :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest AttachLoadBalancerTargetGroupsResultType
+    -> AWS.Request AttachLoadBalancerTargetGroupsResultType
 attachLoadBalancerTargetGroups autoScalingGroupName targetGroupARNs =
     AWS.Http.unsignedRequest
         "AttachLoadBalancerTargetGroups"
@@ -427,6 +429,7 @@ attachLoadBalancerTargetGroups autoScalingGroupName targetGroupARNs =
             JE.null
         )
         attachLoadBalancerTargetGroupsResultTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -442,7 +445,7 @@ __Required Parameters__
 attachLoadBalancers :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest AttachLoadBalancersResultType
+    -> AWS.Request AttachLoadBalancersResultType
 attachLoadBalancers autoScalingGroupName loadBalancerNames =
     AWS.Http.unsignedRequest
         "AttachLoadBalancers"
@@ -452,6 +455,7 @@ attachLoadBalancers autoScalingGroupName loadBalancerNames =
             JE.null
         )
         attachLoadBalancersResultTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -470,7 +474,7 @@ completeLifecycleAction :
     -> String
     -> String
     -> (CompleteLifecycleActionOptions -> CompleteLifecycleActionOptions)
-    -> AWS.Http.UnsignedRequest CompleteLifecycleActionAnswer
+    -> AWS.Request CompleteLifecycleActionAnswer
 completeLifecycleAction lifecycleHookName autoScalingGroupName lifecycleActionResult setOptions =
   let
     options = setOptions (CompleteLifecycleActionOptions Nothing Nothing)
@@ -483,6 +487,7 @@ completeLifecycleAction lifecycleHookName autoScalingGroupName lifecycleActionRe
             JE.null
         )
         completeLifecycleActionAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a completeLifecycleAction request
@@ -509,7 +514,7 @@ createAutoScalingGroup :
     -> Int
     -> Int
     -> (CreateAutoScalingGroupOptions -> CreateAutoScalingGroupOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createAutoScalingGroup autoScalingGroupName minSize maxSize setOptions =
   let
     options = setOptions (CreateAutoScalingGroupOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -522,6 +527,7 @@ createAutoScalingGroup autoScalingGroupName minSize maxSize setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createAutoScalingGroup request
@@ -556,7 +562,7 @@ __Required Parameters__
 createLaunchConfiguration :
     String
     -> (CreateLaunchConfigurationOptions -> CreateLaunchConfigurationOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createLaunchConfiguration launchConfigurationName setOptions =
   let
     options = setOptions (CreateLaunchConfigurationOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -569,6 +575,7 @@ createLaunchConfiguration launchConfigurationName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createLaunchConfiguration request
@@ -605,7 +612,7 @@ __Required Parameters__
 -}
 createOrUpdateTags :
     (List Tag)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createOrUpdateTags tags =
     AWS.Http.unsignedRequest
         "CreateOrUpdateTags"
@@ -615,6 +622,7 @@ createOrUpdateTags tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -629,7 +637,7 @@ __Required Parameters__
 deleteAutoScalingGroup :
     String
     -> (DeleteAutoScalingGroupOptions -> DeleteAutoScalingGroupOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAutoScalingGroup autoScalingGroupName setOptions =
   let
     options = setOptions (DeleteAutoScalingGroupOptions Nothing)
@@ -642,6 +650,7 @@ deleteAutoScalingGroup autoScalingGroupName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteAutoScalingGroup request
@@ -662,7 +671,7 @@ __Required Parameters__
 -}
 deleteLaunchConfiguration :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteLaunchConfiguration launchConfigurationName =
     AWS.Http.unsignedRequest
         "DeleteLaunchConfiguration"
@@ -672,6 +681,7 @@ deleteLaunchConfiguration launchConfigurationName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -687,7 +697,7 @@ __Required Parameters__
 deleteLifecycleHook :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteLifecycleHookAnswer
+    -> AWS.Request DeleteLifecycleHookAnswer
 deleteLifecycleHook lifecycleHookName autoScalingGroupName =
     AWS.Http.unsignedRequest
         "DeleteLifecycleHook"
@@ -697,6 +707,7 @@ deleteLifecycleHook lifecycleHookName autoScalingGroupName =
             JE.null
         )
         deleteLifecycleHookAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -712,7 +723,7 @@ __Required Parameters__
 deleteNotificationConfiguration :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteNotificationConfiguration autoScalingGroupName topicARN =
     AWS.Http.unsignedRequest
         "DeleteNotificationConfiguration"
@@ -722,6 +733,7 @@ deleteNotificationConfiguration autoScalingGroupName topicARN =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -736,7 +748,7 @@ __Required Parameters__
 deletePolicy :
     String
     -> (DeletePolicyOptions -> DeletePolicyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deletePolicy policyName setOptions =
   let
     options = setOptions (DeletePolicyOptions Nothing)
@@ -749,6 +761,7 @@ deletePolicy policyName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deletePolicy request
@@ -771,7 +784,7 @@ __Required Parameters__
 deleteScheduledAction :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteScheduledAction autoScalingGroupName scheduledActionName =
     AWS.Http.unsignedRequest
         "DeleteScheduledAction"
@@ -781,6 +794,7 @@ deleteScheduledAction autoScalingGroupName scheduledActionName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -794,7 +808,7 @@ __Required Parameters__
 -}
 deleteTags :
     (List Tag)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteTags tags =
     AWS.Http.unsignedRequest
         "DeleteTags"
@@ -804,6 +818,7 @@ deleteTags tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -815,7 +830,7 @@ __Required Parameters__
 
 -}
 describeAccountLimits :
-    AWS.Http.UnsignedRequest DescribeAccountLimitsAnswer
+    AWS.Request DescribeAccountLimitsAnswer
 describeAccountLimits =
     AWS.Http.unsignedRequest
         "DescribeAccountLimits"
@@ -825,6 +840,7 @@ describeAccountLimits =
             JE.null
         )
         describeAccountLimitsAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -836,7 +852,7 @@ __Required Parameters__
 
 -}
 describeAdjustmentTypes :
-    AWS.Http.UnsignedRequest DescribeAdjustmentTypesAnswer
+    AWS.Request DescribeAdjustmentTypesAnswer
 describeAdjustmentTypes =
     AWS.Http.unsignedRequest
         "DescribeAdjustmentTypes"
@@ -846,6 +862,7 @@ describeAdjustmentTypes =
             JE.null
         )
         describeAdjustmentTypesAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -858,7 +875,7 @@ __Required Parameters__
 -}
 describeAutoScalingGroups :
     (DescribeAutoScalingGroupsOptions -> DescribeAutoScalingGroupsOptions)
-    -> AWS.Http.UnsignedRequest AutoScalingGroupsType
+    -> AWS.Request AutoScalingGroupsType
 describeAutoScalingGroups setOptions =
   let
     options = setOptions (DescribeAutoScalingGroupsOptions Nothing Nothing Nothing)
@@ -871,6 +888,7 @@ describeAutoScalingGroups setOptions =
             JE.null
         )
         autoScalingGroupsTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAutoScalingGroups request
@@ -892,7 +910,7 @@ __Required Parameters__
 -}
 describeAutoScalingInstances :
     (DescribeAutoScalingInstancesOptions -> DescribeAutoScalingInstancesOptions)
-    -> AWS.Http.UnsignedRequest AutoScalingInstancesType
+    -> AWS.Request AutoScalingInstancesType
 describeAutoScalingInstances setOptions =
   let
     options = setOptions (DescribeAutoScalingInstancesOptions Nothing Nothing Nothing)
@@ -905,6 +923,7 @@ describeAutoScalingInstances setOptions =
             JE.null
         )
         autoScalingInstancesTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAutoScalingInstances request
@@ -925,7 +944,7 @@ __Required Parameters__
 
 -}
 describeAutoScalingNotificationTypes :
-    AWS.Http.UnsignedRequest DescribeAutoScalingNotificationTypesAnswer
+    AWS.Request DescribeAutoScalingNotificationTypesAnswer
 describeAutoScalingNotificationTypes =
     AWS.Http.unsignedRequest
         "DescribeAutoScalingNotificationTypes"
@@ -935,6 +954,7 @@ describeAutoScalingNotificationTypes =
             JE.null
         )
         describeAutoScalingNotificationTypesAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -947,7 +967,7 @@ __Required Parameters__
 -}
 describeLaunchConfigurations :
     (DescribeLaunchConfigurationsOptions -> DescribeLaunchConfigurationsOptions)
-    -> AWS.Http.UnsignedRequest LaunchConfigurationsType
+    -> AWS.Request LaunchConfigurationsType
 describeLaunchConfigurations setOptions =
   let
     options = setOptions (DescribeLaunchConfigurationsOptions Nothing Nothing Nothing)
@@ -960,6 +980,7 @@ describeLaunchConfigurations setOptions =
             JE.null
         )
         launchConfigurationsTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLaunchConfigurations request
@@ -980,7 +1001,7 @@ __Required Parameters__
 
 -}
 describeLifecycleHookTypes :
-    AWS.Http.UnsignedRequest DescribeLifecycleHookTypesAnswer
+    AWS.Request DescribeLifecycleHookTypesAnswer
 describeLifecycleHookTypes =
     AWS.Http.unsignedRequest
         "DescribeLifecycleHookTypes"
@@ -990,6 +1011,7 @@ describeLifecycleHookTypes =
             JE.null
         )
         describeLifecycleHookTypesAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1004,7 +1026,7 @@ __Required Parameters__
 describeLifecycleHooks :
     String
     -> (DescribeLifecycleHooksOptions -> DescribeLifecycleHooksOptions)
-    -> AWS.Http.UnsignedRequest DescribeLifecycleHooksAnswer
+    -> AWS.Request DescribeLifecycleHooksAnswer
 describeLifecycleHooks autoScalingGroupName setOptions =
   let
     options = setOptions (DescribeLifecycleHooksOptions Nothing)
@@ -1017,6 +1039,7 @@ describeLifecycleHooks autoScalingGroupName setOptions =
             JE.null
         )
         describeLifecycleHooksAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLifecycleHooks request
@@ -1038,7 +1061,7 @@ __Required Parameters__
 describeLoadBalancerTargetGroups :
     String
     -> (DescribeLoadBalancerTargetGroupsOptions -> DescribeLoadBalancerTargetGroupsOptions)
-    -> AWS.Http.UnsignedRequest DescribeLoadBalancerTargetGroupsResponse
+    -> AWS.Request DescribeLoadBalancerTargetGroupsResponse
 describeLoadBalancerTargetGroups autoScalingGroupName setOptions =
   let
     options = setOptions (DescribeLoadBalancerTargetGroupsOptions Nothing Nothing)
@@ -1051,6 +1074,7 @@ describeLoadBalancerTargetGroups autoScalingGroupName setOptions =
             JE.null
         )
         describeLoadBalancerTargetGroupsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLoadBalancerTargetGroups request
@@ -1073,7 +1097,7 @@ __Required Parameters__
 describeLoadBalancers :
     String
     -> (DescribeLoadBalancersOptions -> DescribeLoadBalancersOptions)
-    -> AWS.Http.UnsignedRequest DescribeLoadBalancersResponse
+    -> AWS.Request DescribeLoadBalancersResponse
 describeLoadBalancers autoScalingGroupName setOptions =
   let
     options = setOptions (DescribeLoadBalancersOptions Nothing Nothing)
@@ -1086,6 +1110,7 @@ describeLoadBalancers autoScalingGroupName setOptions =
             JE.null
         )
         describeLoadBalancersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLoadBalancers request
@@ -1105,7 +1130,7 @@ __Required Parameters__
 
 -}
 describeMetricCollectionTypes :
-    AWS.Http.UnsignedRequest DescribeMetricCollectionTypesAnswer
+    AWS.Request DescribeMetricCollectionTypesAnswer
 describeMetricCollectionTypes =
     AWS.Http.unsignedRequest
         "DescribeMetricCollectionTypes"
@@ -1115,6 +1140,7 @@ describeMetricCollectionTypes =
             JE.null
         )
         describeMetricCollectionTypesAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1127,7 +1153,7 @@ __Required Parameters__
 -}
 describeNotificationConfigurations :
     (DescribeNotificationConfigurationsOptions -> DescribeNotificationConfigurationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeNotificationConfigurationsAnswer
+    -> AWS.Request DescribeNotificationConfigurationsAnswer
 describeNotificationConfigurations setOptions =
   let
     options = setOptions (DescribeNotificationConfigurationsOptions Nothing Nothing Nothing)
@@ -1140,6 +1166,7 @@ describeNotificationConfigurations setOptions =
             JE.null
         )
         describeNotificationConfigurationsAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeNotificationConfigurations request
@@ -1161,7 +1188,7 @@ __Required Parameters__
 -}
 describePolicies :
     (DescribePoliciesOptions -> DescribePoliciesOptions)
-    -> AWS.Http.UnsignedRequest PoliciesType
+    -> AWS.Request PoliciesType
 describePolicies setOptions =
   let
     options = setOptions (DescribePoliciesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1174,6 +1201,7 @@ describePolicies setOptions =
             JE.null
         )
         policiesTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describePolicies request
@@ -1197,7 +1225,7 @@ __Required Parameters__
 -}
 describeScalingActivities :
     (DescribeScalingActivitiesOptions -> DescribeScalingActivitiesOptions)
-    -> AWS.Http.UnsignedRequest ActivitiesType
+    -> AWS.Request ActivitiesType
 describeScalingActivities setOptions =
   let
     options = setOptions (DescribeScalingActivitiesOptions Nothing Nothing Nothing Nothing)
@@ -1210,6 +1238,7 @@ describeScalingActivities setOptions =
             JE.null
         )
         activitiesTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeScalingActivities request
@@ -1231,7 +1260,7 @@ __Required Parameters__
 
 -}
 describeScalingProcessTypes :
-    AWS.Http.UnsignedRequest ProcessesType
+    AWS.Request ProcessesType
 describeScalingProcessTypes =
     AWS.Http.unsignedRequest
         "DescribeScalingProcessTypes"
@@ -1241,6 +1270,7 @@ describeScalingProcessTypes =
             JE.null
         )
         processesTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1253,7 +1283,7 @@ __Required Parameters__
 -}
 describeScheduledActions :
     (DescribeScheduledActionsOptions -> DescribeScheduledActionsOptions)
-    -> AWS.Http.UnsignedRequest ScheduledActionsType
+    -> AWS.Request ScheduledActionsType
 describeScheduledActions setOptions =
   let
     options = setOptions (DescribeScheduledActionsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1266,6 +1296,7 @@ describeScheduledActions setOptions =
             JE.null
         )
         scheduledActionsTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeScheduledActions request
@@ -1290,7 +1321,7 @@ __Required Parameters__
 -}
 describeTags :
     (DescribeTagsOptions -> DescribeTagsOptions)
-    -> AWS.Http.UnsignedRequest TagsType
+    -> AWS.Request TagsType
 describeTags setOptions =
   let
     options = setOptions (DescribeTagsOptions Nothing Nothing Nothing)
@@ -1303,6 +1334,7 @@ describeTags setOptions =
             JE.null
         )
         tagsTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTags request
@@ -1323,7 +1355,7 @@ __Required Parameters__
 
 -}
 describeTerminationPolicyTypes :
-    AWS.Http.UnsignedRequest DescribeTerminationPolicyTypesAnswer
+    AWS.Request DescribeTerminationPolicyTypesAnswer
 describeTerminationPolicyTypes =
     AWS.Http.unsignedRequest
         "DescribeTerminationPolicyTypes"
@@ -1333,6 +1365,7 @@ describeTerminationPolicyTypes =
             JE.null
         )
         describeTerminationPolicyTypesAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1349,7 +1382,7 @@ detachInstances :
     String
     -> Bool
     -> (DetachInstancesOptions -> DetachInstancesOptions)
-    -> AWS.Http.UnsignedRequest DetachInstancesAnswer
+    -> AWS.Request DetachInstancesAnswer
 detachInstances autoScalingGroupName shouldDecrementDesiredCapacity setOptions =
   let
     options = setOptions (DetachInstancesOptions Nothing)
@@ -1362,6 +1395,7 @@ detachInstances autoScalingGroupName shouldDecrementDesiredCapacity setOptions =
             JE.null
         )
         detachInstancesAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a detachInstances request
@@ -1384,7 +1418,7 @@ __Required Parameters__
 detachLoadBalancerTargetGroups :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest DetachLoadBalancerTargetGroupsResultType
+    -> AWS.Request DetachLoadBalancerTargetGroupsResultType
 detachLoadBalancerTargetGroups autoScalingGroupName targetGroupARNs =
     AWS.Http.unsignedRequest
         "DetachLoadBalancerTargetGroups"
@@ -1394,6 +1428,7 @@ detachLoadBalancerTargetGroups autoScalingGroupName targetGroupARNs =
             JE.null
         )
         detachLoadBalancerTargetGroupsResultTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1409,7 +1444,7 @@ __Required Parameters__
 detachLoadBalancers :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest DetachLoadBalancersResultType
+    -> AWS.Request DetachLoadBalancersResultType
 detachLoadBalancers autoScalingGroupName loadBalancerNames =
     AWS.Http.unsignedRequest
         "DetachLoadBalancers"
@@ -1419,6 +1454,7 @@ detachLoadBalancers autoScalingGroupName loadBalancerNames =
             JE.null
         )
         detachLoadBalancersResultTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1433,7 +1469,7 @@ __Required Parameters__
 disableMetricsCollection :
     String
     -> (DisableMetricsCollectionOptions -> DisableMetricsCollectionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disableMetricsCollection autoScalingGroupName setOptions =
   let
     options = setOptions (DisableMetricsCollectionOptions Nothing)
@@ -1446,6 +1482,7 @@ disableMetricsCollection autoScalingGroupName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a disableMetricsCollection request
@@ -1469,7 +1506,7 @@ enableMetricsCollection :
     String
     -> String
     -> (EnableMetricsCollectionOptions -> EnableMetricsCollectionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableMetricsCollection autoScalingGroupName granularity setOptions =
   let
     options = setOptions (EnableMetricsCollectionOptions Nothing)
@@ -1482,6 +1519,7 @@ enableMetricsCollection autoScalingGroupName granularity setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a enableMetricsCollection request
@@ -1505,7 +1543,7 @@ enterStandby :
     String
     -> Bool
     -> (EnterStandbyOptions -> EnterStandbyOptions)
-    -> AWS.Http.UnsignedRequest EnterStandbyAnswer
+    -> AWS.Request EnterStandbyAnswer
 enterStandby autoScalingGroupName shouldDecrementDesiredCapacity setOptions =
   let
     options = setOptions (EnterStandbyOptions Nothing)
@@ -1518,6 +1556,7 @@ enterStandby autoScalingGroupName shouldDecrementDesiredCapacity setOptions =
             JE.null
         )
         enterStandbyAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a enterStandby request
@@ -1539,7 +1578,7 @@ __Required Parameters__
 executePolicy :
     String
     -> (ExecutePolicyOptions -> ExecutePolicyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 executePolicy policyName setOptions =
   let
     options = setOptions (ExecutePolicyOptions Nothing Nothing Nothing Nothing)
@@ -1552,6 +1591,7 @@ executePolicy policyName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a executePolicy request
@@ -1576,7 +1616,7 @@ __Required Parameters__
 exitStandby :
     String
     -> (ExitStandbyOptions -> ExitStandbyOptions)
-    -> AWS.Http.UnsignedRequest ExitStandbyAnswer
+    -> AWS.Request ExitStandbyAnswer
 exitStandby autoScalingGroupName setOptions =
   let
     options = setOptions (ExitStandbyOptions Nothing)
@@ -1589,6 +1629,7 @@ exitStandby autoScalingGroupName setOptions =
             JE.null
         )
         exitStandbyAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a exitStandby request
@@ -1612,7 +1653,7 @@ putLifecycleHook :
     String
     -> String
     -> (PutLifecycleHookOptions -> PutLifecycleHookOptions)
-    -> AWS.Http.UnsignedRequest PutLifecycleHookAnswer
+    -> AWS.Request PutLifecycleHookAnswer
 putLifecycleHook lifecycleHookName autoScalingGroupName setOptions =
   let
     options = setOptions (PutLifecycleHookOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1625,6 +1666,7 @@ putLifecycleHook lifecycleHookName autoScalingGroupName setOptions =
             JE.null
         )
         putLifecycleHookAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putLifecycleHook request
@@ -1654,7 +1696,7 @@ putNotificationConfiguration :
     String
     -> String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putNotificationConfiguration autoScalingGroupName topicARN notificationTypes =
     AWS.Http.unsignedRequest
         "PutNotificationConfiguration"
@@ -1664,6 +1706,7 @@ putNotificationConfiguration autoScalingGroupName topicARN notificationTypes =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1682,7 +1725,7 @@ putScalingPolicy :
     -> String
     -> String
     -> (PutScalingPolicyOptions -> PutScalingPolicyOptions)
-    -> AWS.Http.UnsignedRequest PolicyARNType
+    -> AWS.Request PolicyARNType
 putScalingPolicy autoScalingGroupName policyName adjustmentType setOptions =
   let
     options = setOptions (PutScalingPolicyOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1695,6 +1738,7 @@ putScalingPolicy autoScalingGroupName policyName adjustmentType setOptions =
             JE.null
         )
         policyARNTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putScalingPolicy request
@@ -1725,7 +1769,7 @@ putScheduledUpdateGroupAction :
     String
     -> String
     -> (PutScheduledUpdateGroupActionOptions -> PutScheduledUpdateGroupActionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putScheduledUpdateGroupAction autoScalingGroupName scheduledActionName setOptions =
   let
     options = setOptions (PutScheduledUpdateGroupActionOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1738,6 +1782,7 @@ putScheduledUpdateGroupAction autoScalingGroupName scheduledActionName setOption
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putScheduledUpdateGroupAction request
@@ -1767,7 +1812,7 @@ recordLifecycleActionHeartbeat :
     String
     -> String
     -> (RecordLifecycleActionHeartbeatOptions -> RecordLifecycleActionHeartbeatOptions)
-    -> AWS.Http.UnsignedRequest RecordLifecycleActionHeartbeatAnswer
+    -> AWS.Request RecordLifecycleActionHeartbeatAnswer
 recordLifecycleActionHeartbeat lifecycleHookName autoScalingGroupName setOptions =
   let
     options = setOptions (RecordLifecycleActionHeartbeatOptions Nothing Nothing)
@@ -1780,6 +1825,7 @@ recordLifecycleActionHeartbeat lifecycleHookName autoScalingGroupName setOptions
             JE.null
         )
         recordLifecycleActionHeartbeatAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a recordLifecycleActionHeartbeat request
@@ -1802,7 +1848,7 @@ __Required Parameters__
 resumeProcesses :
     String
     -> (ResumeProcessesOptions -> ResumeProcessesOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 resumeProcesses autoScalingGroupName setOptions =
   let
     options = setOptions (ResumeProcessesOptions Nothing)
@@ -1815,6 +1861,7 @@ resumeProcesses autoScalingGroupName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resumeProcesses request
@@ -1838,7 +1885,7 @@ setDesiredCapacity :
     String
     -> Int
     -> (SetDesiredCapacityOptions -> SetDesiredCapacityOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setDesiredCapacity autoScalingGroupName desiredCapacity setOptions =
   let
     options = setOptions (SetDesiredCapacityOptions Nothing)
@@ -1851,6 +1898,7 @@ setDesiredCapacity autoScalingGroupName desiredCapacity setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setDesiredCapacity request
@@ -1874,7 +1922,7 @@ setInstanceHealth :
     String
     -> String
     -> (SetInstanceHealthOptions -> SetInstanceHealthOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setInstanceHealth instanceId healthStatus setOptions =
   let
     options = setOptions (SetInstanceHealthOptions Nothing)
@@ -1887,6 +1935,7 @@ setInstanceHealth instanceId healthStatus setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setInstanceHealth request
@@ -1911,7 +1960,7 @@ setInstanceProtection :
     (List String)
     -> String
     -> Bool
-    -> AWS.Http.UnsignedRequest SetInstanceProtectionAnswer
+    -> AWS.Request SetInstanceProtectionAnswer
 setInstanceProtection instanceIds autoScalingGroupName protectedFromScaleIn =
     AWS.Http.unsignedRequest
         "SetInstanceProtection"
@@ -1921,6 +1970,7 @@ setInstanceProtection instanceIds autoScalingGroupName protectedFromScaleIn =
             JE.null
         )
         setInstanceProtectionAnswerDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1935,7 +1985,7 @@ __Required Parameters__
 suspendProcesses :
     String
     -> (SuspendProcessesOptions -> SuspendProcessesOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 suspendProcesses autoScalingGroupName setOptions =
   let
     options = setOptions (SuspendProcessesOptions Nothing)
@@ -1948,6 +1998,7 @@ suspendProcesses autoScalingGroupName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a suspendProcesses request
@@ -1970,7 +2021,7 @@ __Required Parameters__
 terminateInstanceInAutoScalingGroup :
     String
     -> Bool
-    -> AWS.Http.UnsignedRequest ActivityType
+    -> AWS.Request ActivityType
 terminateInstanceInAutoScalingGroup instanceId shouldDecrementDesiredCapacity =
     AWS.Http.unsignedRequest
         "TerminateInstanceInAutoScalingGroup"
@@ -1980,6 +2031,7 @@ terminateInstanceInAutoScalingGroup instanceId shouldDecrementDesiredCapacity =
             JE.null
         )
         activityTypeDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1994,7 +2046,7 @@ __Required Parameters__
 updateAutoScalingGroup :
     String
     -> (UpdateAutoScalingGroupOptions -> UpdateAutoScalingGroupOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateAutoScalingGroup autoScalingGroupName setOptions =
   let
     options = setOptions (UpdateAutoScalingGroupOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2007,6 +2059,7 @@ updateAutoScalingGroup autoScalingGroupName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateAutoScalingGroup request

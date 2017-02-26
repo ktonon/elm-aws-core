@@ -259,6 +259,7 @@ module AWS.Services.ElasticLoadBalancing
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -269,16 +270,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "elasticloadbalancing"
         "2012-06-01"
         "undefined"
         "AWSELASTICLOADBALANCING_20120601."
         "elasticloadbalancing.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -296,7 +297,7 @@ __Required Parameters__
 addTags :
     (List String)
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest AddTagsOutput
+    -> AWS.Request AddTagsOutput
 addTags loadBalancerNames tags =
     AWS.Http.unsignedRequest
         "AddTags"
@@ -306,6 +307,7 @@ addTags loadBalancerNames tags =
             JE.null
         )
         addTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -321,7 +323,7 @@ __Required Parameters__
 applySecurityGroupsToLoadBalancer :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ApplySecurityGroupsToLoadBalancerOutput
+    -> AWS.Request ApplySecurityGroupsToLoadBalancerOutput
 applySecurityGroupsToLoadBalancer loadBalancerName securityGroups =
     AWS.Http.unsignedRequest
         "ApplySecurityGroupsToLoadBalancer"
@@ -331,6 +333,7 @@ applySecurityGroupsToLoadBalancer loadBalancerName securityGroups =
             JE.null
         )
         applySecurityGroupsToLoadBalancerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -346,7 +349,7 @@ __Required Parameters__
 attachLoadBalancerToSubnets :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest AttachLoadBalancerToSubnetsOutput
+    -> AWS.Request AttachLoadBalancerToSubnetsOutput
 attachLoadBalancerToSubnets loadBalancerName subnets =
     AWS.Http.unsignedRequest
         "AttachLoadBalancerToSubnets"
@@ -356,6 +359,7 @@ attachLoadBalancerToSubnets loadBalancerName subnets =
             JE.null
         )
         attachLoadBalancerToSubnetsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -371,7 +375,7 @@ __Required Parameters__
 configureHealthCheck :
     String
     -> HealthCheck
-    -> AWS.Http.UnsignedRequest ConfigureHealthCheckOutput
+    -> AWS.Request ConfigureHealthCheckOutput
 configureHealthCheck loadBalancerName healthCheck =
     AWS.Http.unsignedRequest
         "ConfigureHealthCheck"
@@ -381,6 +385,7 @@ configureHealthCheck loadBalancerName healthCheck =
             JE.null
         )
         configureHealthCheckOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -398,7 +403,7 @@ createAppCookieStickinessPolicy :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest CreateAppCookieStickinessPolicyOutput
+    -> AWS.Request CreateAppCookieStickinessPolicyOutput
 createAppCookieStickinessPolicy loadBalancerName policyName cookieName =
     AWS.Http.unsignedRequest
         "CreateAppCookieStickinessPolicy"
@@ -408,6 +413,7 @@ createAppCookieStickinessPolicy loadBalancerName policyName cookieName =
             JE.null
         )
         createAppCookieStickinessPolicyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -424,7 +430,7 @@ createLBCookieStickinessPolicy :
     String
     -> String
     -> (CreateLBCookieStickinessPolicyOptions -> CreateLBCookieStickinessPolicyOptions)
-    -> AWS.Http.UnsignedRequest CreateLBCookieStickinessPolicyOutput
+    -> AWS.Request CreateLBCookieStickinessPolicyOutput
 createLBCookieStickinessPolicy loadBalancerName policyName setOptions =
   let
     options = setOptions (CreateLBCookieStickinessPolicyOptions Nothing)
@@ -437,6 +443,7 @@ createLBCookieStickinessPolicy loadBalancerName policyName setOptions =
             JE.null
         )
         createLBCookieStickinessPolicyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createLBCookieStickinessPolicy request
@@ -460,7 +467,7 @@ createLoadBalancer :
     String
     -> (List Listener)
     -> (CreateLoadBalancerOptions -> CreateLoadBalancerOptions)
-    -> AWS.Http.UnsignedRequest CreateAccessPointOutput
+    -> AWS.Request CreateAccessPointOutput
 createLoadBalancer loadBalancerName listeners setOptions =
   let
     options = setOptions (CreateLoadBalancerOptions Nothing Nothing Nothing Nothing Nothing)
@@ -473,6 +480,7 @@ createLoadBalancer loadBalancerName listeners setOptions =
             JE.null
         )
         createAccessPointOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createLoadBalancer request
@@ -499,7 +507,7 @@ __Required Parameters__
 createLoadBalancerListeners :
     String
     -> (List Listener)
-    -> AWS.Http.UnsignedRequest CreateLoadBalancerListenerOutput
+    -> AWS.Request CreateLoadBalancerListenerOutput
 createLoadBalancerListeners loadBalancerName listeners =
     AWS.Http.unsignedRequest
         "CreateLoadBalancerListeners"
@@ -509,6 +517,7 @@ createLoadBalancerListeners loadBalancerName listeners =
             JE.null
         )
         createLoadBalancerListenerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -527,7 +536,7 @@ createLoadBalancerPolicy :
     -> String
     -> String
     -> (CreateLoadBalancerPolicyOptions -> CreateLoadBalancerPolicyOptions)
-    -> AWS.Http.UnsignedRequest CreateLoadBalancerPolicyOutput
+    -> AWS.Request CreateLoadBalancerPolicyOutput
 createLoadBalancerPolicy loadBalancerName policyName policyTypeName setOptions =
   let
     options = setOptions (CreateLoadBalancerPolicyOptions Nothing)
@@ -540,6 +549,7 @@ createLoadBalancerPolicy loadBalancerName policyName policyTypeName setOptions =
             JE.null
         )
         createLoadBalancerPolicyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createLoadBalancerPolicy request
@@ -560,7 +570,7 @@ __Required Parameters__
 -}
 deleteLoadBalancer :
     String
-    -> AWS.Http.UnsignedRequest DeleteAccessPointOutput
+    -> AWS.Request DeleteAccessPointOutput
 deleteLoadBalancer loadBalancerName =
     AWS.Http.unsignedRequest
         "DeleteLoadBalancer"
@@ -570,6 +580,7 @@ deleteLoadBalancer loadBalancerName =
             JE.null
         )
         deleteAccessPointOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -585,7 +596,7 @@ __Required Parameters__
 deleteLoadBalancerListeners :
     String
     -> (List Int)
-    -> AWS.Http.UnsignedRequest DeleteLoadBalancerListenerOutput
+    -> AWS.Request DeleteLoadBalancerListenerOutput
 deleteLoadBalancerListeners loadBalancerName loadBalancerPorts =
     AWS.Http.unsignedRequest
         "DeleteLoadBalancerListeners"
@@ -595,6 +606,7 @@ deleteLoadBalancerListeners loadBalancerName loadBalancerPorts =
             JE.null
         )
         deleteLoadBalancerListenerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -610,7 +622,7 @@ __Required Parameters__
 deleteLoadBalancerPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteLoadBalancerPolicyOutput
+    -> AWS.Request DeleteLoadBalancerPolicyOutput
 deleteLoadBalancerPolicy loadBalancerName policyName =
     AWS.Http.unsignedRequest
         "DeleteLoadBalancerPolicy"
@@ -620,6 +632,7 @@ deleteLoadBalancerPolicy loadBalancerName policyName =
             JE.null
         )
         deleteLoadBalancerPolicyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -635,7 +648,7 @@ __Required Parameters__
 deregisterInstancesFromLoadBalancer :
     String
     -> (List Instance)
-    -> AWS.Http.UnsignedRequest DeregisterEndPointsOutput
+    -> AWS.Request DeregisterEndPointsOutput
 deregisterInstancesFromLoadBalancer loadBalancerName instances =
     AWS.Http.unsignedRequest
         "DeregisterInstancesFromLoadBalancer"
@@ -645,6 +658,7 @@ deregisterInstancesFromLoadBalancer loadBalancerName instances =
             JE.null
         )
         deregisterEndPointsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -659,7 +673,7 @@ __Required Parameters__
 describeInstanceHealth :
     String
     -> (DescribeInstanceHealthOptions -> DescribeInstanceHealthOptions)
-    -> AWS.Http.UnsignedRequest DescribeEndPointStateOutput
+    -> AWS.Request DescribeEndPointStateOutput
 describeInstanceHealth loadBalancerName setOptions =
   let
     options = setOptions (DescribeInstanceHealthOptions Nothing)
@@ -672,6 +686,7 @@ describeInstanceHealth loadBalancerName setOptions =
             JE.null
         )
         describeEndPointStateOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstanceHealth request
@@ -692,7 +707,7 @@ __Required Parameters__
 -}
 describeLoadBalancerAttributes :
     String
-    -> AWS.Http.UnsignedRequest DescribeLoadBalancerAttributesOutput
+    -> AWS.Request DescribeLoadBalancerAttributesOutput
 describeLoadBalancerAttributes loadBalancerName =
     AWS.Http.unsignedRequest
         "DescribeLoadBalancerAttributes"
@@ -702,6 +717,7 @@ describeLoadBalancerAttributes loadBalancerName =
             JE.null
         )
         describeLoadBalancerAttributesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -714,7 +730,7 @@ __Required Parameters__
 -}
 describeLoadBalancerPolicies :
     (DescribeLoadBalancerPoliciesOptions -> DescribeLoadBalancerPoliciesOptions)
-    -> AWS.Http.UnsignedRequest DescribeLoadBalancerPoliciesOutput
+    -> AWS.Request DescribeLoadBalancerPoliciesOutput
 describeLoadBalancerPolicies setOptions =
   let
     options = setOptions (DescribeLoadBalancerPoliciesOptions Nothing Nothing)
@@ -727,6 +743,7 @@ describeLoadBalancerPolicies setOptions =
             JE.null
         )
         describeLoadBalancerPoliciesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLoadBalancerPolicies request
@@ -747,7 +764,7 @@ __Required Parameters__
 -}
 describeLoadBalancerPolicyTypes :
     (DescribeLoadBalancerPolicyTypesOptions -> DescribeLoadBalancerPolicyTypesOptions)
-    -> AWS.Http.UnsignedRequest DescribeLoadBalancerPolicyTypesOutput
+    -> AWS.Request DescribeLoadBalancerPolicyTypesOutput
 describeLoadBalancerPolicyTypes setOptions =
   let
     options = setOptions (DescribeLoadBalancerPolicyTypesOptions Nothing)
@@ -760,6 +777,7 @@ describeLoadBalancerPolicyTypes setOptions =
             JE.null
         )
         describeLoadBalancerPolicyTypesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLoadBalancerPolicyTypes request
@@ -779,7 +797,7 @@ __Required Parameters__
 -}
 describeLoadBalancers :
     (DescribeLoadBalancersOptions -> DescribeLoadBalancersOptions)
-    -> AWS.Http.UnsignedRequest DescribeAccessPointsOutput
+    -> AWS.Request DescribeAccessPointsOutput
 describeLoadBalancers setOptions =
   let
     options = setOptions (DescribeLoadBalancersOptions Nothing Nothing Nothing)
@@ -792,6 +810,7 @@ describeLoadBalancers setOptions =
             JE.null
         )
         describeAccessPointsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLoadBalancers request
@@ -814,7 +833,7 @@ __Required Parameters__
 -}
 describeTags :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribeTagsOutput
+    -> AWS.Request DescribeTagsOutput
 describeTags loadBalancerNames =
     AWS.Http.unsignedRequest
         "DescribeTags"
@@ -824,6 +843,7 @@ describeTags loadBalancerNames =
             JE.null
         )
         describeTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -839,7 +859,7 @@ __Required Parameters__
 detachLoadBalancerFromSubnets :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest DetachLoadBalancerFromSubnetsOutput
+    -> AWS.Request DetachLoadBalancerFromSubnetsOutput
 detachLoadBalancerFromSubnets loadBalancerName subnets =
     AWS.Http.unsignedRequest
         "DetachLoadBalancerFromSubnets"
@@ -849,6 +869,7 @@ detachLoadBalancerFromSubnets loadBalancerName subnets =
             JE.null
         )
         detachLoadBalancerFromSubnetsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -864,7 +885,7 @@ __Required Parameters__
 disableAvailabilityZonesForLoadBalancer :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveAvailabilityZonesOutput
+    -> AWS.Request RemoveAvailabilityZonesOutput
 disableAvailabilityZonesForLoadBalancer loadBalancerName availabilityZones =
     AWS.Http.unsignedRequest
         "DisableAvailabilityZonesForLoadBalancer"
@@ -874,6 +895,7 @@ disableAvailabilityZonesForLoadBalancer loadBalancerName availabilityZones =
             JE.null
         )
         removeAvailabilityZonesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -889,7 +911,7 @@ __Required Parameters__
 enableAvailabilityZonesForLoadBalancer :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest AddAvailabilityZonesOutput
+    -> AWS.Request AddAvailabilityZonesOutput
 enableAvailabilityZonesForLoadBalancer loadBalancerName availabilityZones =
     AWS.Http.unsignedRequest
         "EnableAvailabilityZonesForLoadBalancer"
@@ -899,6 +921,7 @@ enableAvailabilityZonesForLoadBalancer loadBalancerName availabilityZones =
             JE.null
         )
         addAvailabilityZonesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -914,7 +937,7 @@ __Required Parameters__
 modifyLoadBalancerAttributes :
     String
     -> LoadBalancerAttributes
-    -> AWS.Http.UnsignedRequest ModifyLoadBalancerAttributesOutput
+    -> AWS.Request ModifyLoadBalancerAttributesOutput
 modifyLoadBalancerAttributes loadBalancerName loadBalancerAttributes =
     AWS.Http.unsignedRequest
         "ModifyLoadBalancerAttributes"
@@ -924,6 +947,7 @@ modifyLoadBalancerAttributes loadBalancerName loadBalancerAttributes =
             JE.null
         )
         modifyLoadBalancerAttributesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -939,7 +963,7 @@ __Required Parameters__
 registerInstancesWithLoadBalancer :
     String
     -> (List Instance)
-    -> AWS.Http.UnsignedRequest RegisterEndPointsOutput
+    -> AWS.Request RegisterEndPointsOutput
 registerInstancesWithLoadBalancer loadBalancerName instances =
     AWS.Http.unsignedRequest
         "RegisterInstancesWithLoadBalancer"
@@ -949,6 +973,7 @@ registerInstancesWithLoadBalancer loadBalancerName instances =
             JE.null
         )
         registerEndPointsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -964,7 +989,7 @@ __Required Parameters__
 removeTags :
     (List String)
     -> (List TagKeyOnly)
-    -> AWS.Http.UnsignedRequest RemoveTagsOutput
+    -> AWS.Request RemoveTagsOutput
 removeTags loadBalancerNames tags =
     AWS.Http.unsignedRequest
         "RemoveTags"
@@ -974,6 +999,7 @@ removeTags loadBalancerNames tags =
             JE.null
         )
         removeTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -991,7 +1017,7 @@ setLoadBalancerListenerSSLCertificate :
     String
     -> Int
     -> String
-    -> AWS.Http.UnsignedRequest SetLoadBalancerListenerSSLCertificateOutput
+    -> AWS.Request SetLoadBalancerListenerSSLCertificateOutput
 setLoadBalancerListenerSSLCertificate loadBalancerName loadBalancerPort sSLCertificateId =
     AWS.Http.unsignedRequest
         "SetLoadBalancerListenerSSLCertificate"
@@ -1001,6 +1027,7 @@ setLoadBalancerListenerSSLCertificate loadBalancerName loadBalancerPort sSLCerti
             JE.null
         )
         setLoadBalancerListenerSSLCertificateOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1018,7 +1045,7 @@ setLoadBalancerPoliciesForBackendServer :
     String
     -> Int
     -> (List String)
-    -> AWS.Http.UnsignedRequest SetLoadBalancerPoliciesForBackendServerOutput
+    -> AWS.Request SetLoadBalancerPoliciesForBackendServerOutput
 setLoadBalancerPoliciesForBackendServer loadBalancerName instancePort policyNames =
     AWS.Http.unsignedRequest
         "SetLoadBalancerPoliciesForBackendServer"
@@ -1028,6 +1055,7 @@ setLoadBalancerPoliciesForBackendServer loadBalancerName instancePort policyName
             JE.null
         )
         setLoadBalancerPoliciesForBackendServerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1045,7 +1073,7 @@ setLoadBalancerPoliciesOfListener :
     String
     -> Int
     -> (List String)
-    -> AWS.Http.UnsignedRequest SetLoadBalancerPoliciesOfListenerOutput
+    -> AWS.Request SetLoadBalancerPoliciesOfListenerOutput
 setLoadBalancerPoliciesOfListener loadBalancerName loadBalancerPort policyNames =
     AWS.Http.unsignedRequest
         "SetLoadBalancerPoliciesOfListener"
@@ -1055,6 +1083,7 @@ setLoadBalancerPoliciesOfListener loadBalancerName loadBalancerPort policyNames 
             JE.null
         )
         setLoadBalancerPoliciesOfListenerOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 

@@ -190,6 +190,7 @@ module AWS.Services.DataPipeline
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -201,16 +202,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "datapipeline"
         "2012-10-29"
         "1.1"
         "AWSDATAPIPELINE_20121029."
         "datapipeline.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -227,7 +228,7 @@ __Required Parameters__
 activatePipeline :
     String
     -> (ActivatePipelineOptions -> ActivatePipelineOptions)
-    -> AWS.Http.UnsignedRequest ActivatePipelineOutput
+    -> AWS.Request ActivatePipelineOutput
 activatePipeline pipelineId setOptions =
   let
     options = setOptions (ActivatePipelineOptions Nothing Nothing)
@@ -240,6 +241,7 @@ activatePipeline pipelineId setOptions =
             JE.null
         )
         activatePipelineOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a activatePipeline request
@@ -263,7 +265,7 @@ __Required Parameters__
 addTags :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest AddTagsOutput
+    -> AWS.Request AddTagsOutput
 addTags pipelineId tags =
     AWS.Http.unsignedRequest
         "AddTags"
@@ -273,6 +275,7 @@ addTags pipelineId tags =
             JE.null
         )
         addTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -289,7 +292,7 @@ createPipeline :
     String
     -> String
     -> (CreatePipelineOptions -> CreatePipelineOptions)
-    -> AWS.Http.UnsignedRequest CreatePipelineOutput
+    -> AWS.Request CreatePipelineOutput
 createPipeline name uniqueId setOptions =
   let
     options = setOptions (CreatePipelineOptions Nothing Nothing)
@@ -302,6 +305,7 @@ createPipeline name uniqueId setOptions =
             JE.null
         )
         createPipelineOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPipeline request
@@ -324,7 +328,7 @@ __Required Parameters__
 deactivatePipeline :
     String
     -> (DeactivatePipelineOptions -> DeactivatePipelineOptions)
-    -> AWS.Http.UnsignedRequest DeactivatePipelineOutput
+    -> AWS.Request DeactivatePipelineOutput
 deactivatePipeline pipelineId setOptions =
   let
     options = setOptions (DeactivatePipelineOptions Nothing)
@@ -337,6 +341,7 @@ deactivatePipeline pipelineId setOptions =
             JE.null
         )
         deactivatePipelineOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deactivatePipeline request
@@ -357,7 +362,7 @@ __Required Parameters__
 -}
 deletePipeline :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deletePipeline pipelineId =
     AWS.Http.unsignedRequest
         "DeletePipeline"
@@ -367,6 +372,7 @@ deletePipeline pipelineId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -383,7 +389,7 @@ describeObjects :
     String
     -> (List String)
     -> (DescribeObjectsOptions -> DescribeObjectsOptions)
-    -> AWS.Http.UnsignedRequest DescribeObjectsOutput
+    -> AWS.Request DescribeObjectsOutput
 describeObjects pipelineId objectIds setOptions =
   let
     options = setOptions (DescribeObjectsOptions Nothing Nothing)
@@ -396,6 +402,7 @@ describeObjects pipelineId objectIds setOptions =
             JE.null
         )
         describeObjectsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeObjects request
@@ -417,7 +424,7 @@ __Required Parameters__
 -}
 describePipelines :
     (List String)
-    -> AWS.Http.UnsignedRequest DescribePipelinesOutput
+    -> AWS.Request DescribePipelinesOutput
 describePipelines pipelineIds =
     AWS.Http.unsignedRequest
         "DescribePipelines"
@@ -427,6 +434,7 @@ describePipelines pipelineIds =
             JE.null
         )
         describePipelinesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -444,7 +452,7 @@ evaluateExpression :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest EvaluateExpressionOutput
+    -> AWS.Request EvaluateExpressionOutput
 evaluateExpression pipelineId objectId expression =
     AWS.Http.unsignedRequest
         "EvaluateExpression"
@@ -454,6 +462,7 @@ evaluateExpression pipelineId objectId expression =
             JE.null
         )
         evaluateExpressionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -468,7 +477,7 @@ __Required Parameters__
 getPipelineDefinition :
     String
     -> (GetPipelineDefinitionOptions -> GetPipelineDefinitionOptions)
-    -> AWS.Http.UnsignedRequest GetPipelineDefinitionOutput
+    -> AWS.Request GetPipelineDefinitionOutput
 getPipelineDefinition pipelineId setOptions =
   let
     options = setOptions (GetPipelineDefinitionOptions Nothing)
@@ -481,6 +490,7 @@ getPipelineDefinition pipelineId setOptions =
             JE.null
         )
         getPipelineDefinitionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getPipelineDefinition request
@@ -500,7 +510,7 @@ __Required Parameters__
 -}
 listPipelines :
     (ListPipelinesOptions -> ListPipelinesOptions)
-    -> AWS.Http.UnsignedRequest ListPipelinesOutput
+    -> AWS.Request ListPipelinesOutput
 listPipelines setOptions =
   let
     options = setOptions (ListPipelinesOptions Nothing)
@@ -513,6 +523,7 @@ listPipelines setOptions =
             JE.null
         )
         listPipelinesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPipelines request
@@ -534,7 +545,7 @@ __Required Parameters__
 pollForTask :
     String
     -> (PollForTaskOptions -> PollForTaskOptions)
-    -> AWS.Http.UnsignedRequest PollForTaskOutput
+    -> AWS.Request PollForTaskOutput
 pollForTask workerGroup setOptions =
   let
     options = setOptions (PollForTaskOptions Nothing Nothing)
@@ -547,6 +558,7 @@ pollForTask workerGroup setOptions =
             JE.null
         )
         pollForTaskOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a pollForTask request
@@ -571,7 +583,7 @@ putPipelineDefinition :
     String
     -> (List PipelineObject)
     -> (PutPipelineDefinitionOptions -> PutPipelineDefinitionOptions)
-    -> AWS.Http.UnsignedRequest PutPipelineDefinitionOutput
+    -> AWS.Request PutPipelineDefinitionOutput
 putPipelineDefinition pipelineId pipelineObjects setOptions =
   let
     options = setOptions (PutPipelineDefinitionOptions Nothing Nothing)
@@ -584,6 +596,7 @@ putPipelineDefinition pipelineId pipelineObjects setOptions =
             JE.null
         )
         putPipelineDefinitionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putPipelineDefinition request
@@ -608,7 +621,7 @@ queryObjects :
     String
     -> String
     -> (QueryObjectsOptions -> QueryObjectsOptions)
-    -> AWS.Http.UnsignedRequest QueryObjectsOutput
+    -> AWS.Request QueryObjectsOutput
 queryObjects pipelineId sphere setOptions =
   let
     options = setOptions (QueryObjectsOptions Nothing Nothing Nothing)
@@ -621,6 +634,7 @@ queryObjects pipelineId sphere setOptions =
             JE.null
         )
         queryObjectsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a queryObjects request
@@ -645,7 +659,7 @@ __Required Parameters__
 removeTags :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveTagsOutput
+    -> AWS.Request RemoveTagsOutput
 removeTags pipelineId tagKeys =
     AWS.Http.unsignedRequest
         "RemoveTags"
@@ -655,6 +669,7 @@ removeTags pipelineId tagKeys =
             JE.null
         )
         removeTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -669,7 +684,7 @@ __Required Parameters__
 reportTaskProgress :
     String
     -> (ReportTaskProgressOptions -> ReportTaskProgressOptions)
-    -> AWS.Http.UnsignedRequest ReportTaskProgressOutput
+    -> AWS.Request ReportTaskProgressOutput
 reportTaskProgress taskId setOptions =
   let
     options = setOptions (ReportTaskProgressOptions Nothing)
@@ -682,6 +697,7 @@ reportTaskProgress taskId setOptions =
             JE.null
         )
         reportTaskProgressOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a reportTaskProgress request
@@ -703,7 +719,7 @@ __Required Parameters__
 reportTaskRunnerHeartbeat :
     String
     -> (ReportTaskRunnerHeartbeatOptions -> ReportTaskRunnerHeartbeatOptions)
-    -> AWS.Http.UnsignedRequest ReportTaskRunnerHeartbeatOutput
+    -> AWS.Request ReportTaskRunnerHeartbeatOutput
 reportTaskRunnerHeartbeat taskrunnerId setOptions =
   let
     options = setOptions (ReportTaskRunnerHeartbeatOptions Nothing Nothing)
@@ -716,6 +732,7 @@ reportTaskRunnerHeartbeat taskrunnerId setOptions =
             JE.null
         )
         reportTaskRunnerHeartbeatOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a reportTaskRunnerHeartbeat request
@@ -741,7 +758,7 @@ setStatus :
     String
     -> (List String)
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setStatus pipelineId objectIds status =
     AWS.Http.unsignedRequest
         "SetStatus"
@@ -751,6 +768,7 @@ setStatus pipelineId objectIds status =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -767,7 +785,7 @@ setTaskStatus :
     String
     -> TaskStatus
     -> (SetTaskStatusOptions -> SetTaskStatusOptions)
-    -> AWS.Http.UnsignedRequest SetTaskStatusOutput
+    -> AWS.Request SetTaskStatusOutput
 setTaskStatus taskId taskStatus setOptions =
   let
     options = setOptions (SetTaskStatusOptions Nothing Nothing Nothing)
@@ -780,6 +798,7 @@ setTaskStatus taskId taskStatus setOptions =
             JE.null
         )
         setTaskStatusOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setTaskStatus request
@@ -805,7 +824,7 @@ validatePipelineDefinition :
     String
     -> (List PipelineObject)
     -> (ValidatePipelineDefinitionOptions -> ValidatePipelineDefinitionOptions)
-    -> AWS.Http.UnsignedRequest ValidatePipelineDefinitionOutput
+    -> AWS.Request ValidatePipelineDefinitionOutput
 validatePipelineDefinition pipelineId pipelineObjects setOptions =
   let
     options = setOptions (ValidatePipelineDefinitionOptions Nothing Nothing)
@@ -818,6 +837,7 @@ validatePipelineDefinition pipelineId pipelineObjects setOptions =
             JE.null
         )
         validatePipelineDefinitionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a validatePipelineDefinition request

@@ -130,6 +130,7 @@ module AWS.Services.ImportExport
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -140,16 +141,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "importexport"
         "2010-06-01"
         "undefined"
         "AWSIMPORTEXPORT_20100601."
         "importexport.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -166,7 +167,7 @@ __Required Parameters__
 cancelJob :
     String
     -> (CancelJobOptions -> CancelJobOptions)
-    -> AWS.Http.UnsignedRequest CancelJobOutput
+    -> AWS.Request CancelJobOutput
 cancelJob jobId setOptions =
   let
     options = setOptions (CancelJobOptions Nothing)
@@ -179,6 +180,7 @@ cancelJob jobId setOptions =
             JE.null
         )
         cancelJobOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a cancelJob request
@@ -204,7 +206,7 @@ createJob :
     -> String
     -> Bool
     -> (CreateJobOptions -> CreateJobOptions)
-    -> AWS.Http.UnsignedRequest CreateJobOutput
+    -> AWS.Request CreateJobOutput
 createJob jobType manifest validateOnly setOptions =
   let
     options = setOptions (CreateJobOptions Nothing Nothing)
@@ -217,6 +219,7 @@ createJob jobType manifest validateOnly setOptions =
             JE.null
         )
         createJobOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createJob request
@@ -239,7 +242,7 @@ __Required Parameters__
 getShippingLabel :
     (List String)
     -> (GetShippingLabelOptions -> GetShippingLabelOptions)
-    -> AWS.Http.UnsignedRequest GetShippingLabelOutput
+    -> AWS.Request GetShippingLabelOutput
 getShippingLabel jobIds setOptions =
   let
     options = setOptions (GetShippingLabelOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -252,6 +255,7 @@ getShippingLabel jobIds setOptions =
             JE.null
         )
         getShippingLabelOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getShippingLabel request
@@ -283,7 +287,7 @@ __Required Parameters__
 getStatus :
     String
     -> (GetStatusOptions -> GetStatusOptions)
-    -> AWS.Http.UnsignedRequest GetStatusOutput
+    -> AWS.Request GetStatusOutput
 getStatus jobId setOptions =
   let
     options = setOptions (GetStatusOptions Nothing)
@@ -296,6 +300,7 @@ getStatus jobId setOptions =
             JE.null
         )
         getStatusOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getStatus request
@@ -315,7 +320,7 @@ __Required Parameters__
 -}
 listJobs :
     (ListJobsOptions -> ListJobsOptions)
-    -> AWS.Http.UnsignedRequest ListJobsOutput
+    -> AWS.Request ListJobsOutput
 listJobs setOptions =
   let
     options = setOptions (ListJobsOptions Nothing Nothing Nothing)
@@ -328,6 +333,7 @@ listJobs setOptions =
             JE.null
         )
         listJobsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listJobs request
@@ -357,7 +363,7 @@ updateJob :
     -> JobType
     -> Bool
     -> (UpdateJobOptions -> UpdateJobOptions)
-    -> AWS.Http.UnsignedRequest UpdateJobOutput
+    -> AWS.Request UpdateJobOutput
 updateJob jobId manifest jobType validateOnly setOptions =
   let
     options = setOptions (UpdateJobOptions Nothing)
@@ -370,6 +376,7 @@ updateJob jobId manifest jobType validateOnly setOptions =
             JE.null
         )
         updateJobOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateJob request

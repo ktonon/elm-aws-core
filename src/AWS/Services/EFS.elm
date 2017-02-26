@@ -138,6 +138,7 @@ module AWS.Services.EFS
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -148,16 +149,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "elasticfilesystem"
         "2015-02-01"
         "undefined"
         "AWSELASTICFILESYSTEM_20150201."
         "elasticfilesystem.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -174,7 +175,7 @@ __Required Parameters__
 createFileSystem :
     String
     -> (CreateFileSystemOptions -> CreateFileSystemOptions)
-    -> AWS.Http.UnsignedRequest FileSystemDescription
+    -> AWS.Request FileSystemDescription
 createFileSystem creationToken setOptions =
   let
     options = setOptions (CreateFileSystemOptions Nothing)
@@ -187,6 +188,7 @@ createFileSystem creationToken setOptions =
             JE.null
         )
         fileSystemDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createFileSystem request
@@ -210,7 +212,7 @@ createMountTarget :
     String
     -> String
     -> (CreateMountTargetOptions -> CreateMountTargetOptions)
-    -> AWS.Http.UnsignedRequest MountTargetDescription
+    -> AWS.Request MountTargetDescription
 createMountTarget fileSystemId subnetId setOptions =
   let
     options = setOptions (CreateMountTargetOptions Nothing Nothing)
@@ -223,6 +225,7 @@ createMountTarget fileSystemId subnetId setOptions =
             JE.null
         )
         mountTargetDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createMountTarget request
@@ -246,7 +249,7 @@ __Required Parameters__
 createTags :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createTags fileSystemId tags =
     AWS.Http.unsignedRequest
         "CreateTags"
@@ -256,6 +259,7 @@ createTags fileSystemId tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -269,7 +273,7 @@ __Required Parameters__
 -}
 deleteFileSystem :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteFileSystem fileSystemId =
     AWS.Http.unsignedRequest
         "DeleteFileSystem"
@@ -279,6 +283,7 @@ deleteFileSystem fileSystemId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -292,7 +297,7 @@ __Required Parameters__
 -}
 deleteMountTarget :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteMountTarget mountTargetId =
     AWS.Http.unsignedRequest
         "DeleteMountTarget"
@@ -302,6 +307,7 @@ deleteMountTarget mountTargetId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -317,7 +323,7 @@ __Required Parameters__
 deleteTags :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteTags fileSystemId tagKeys =
     AWS.Http.unsignedRequest
         "DeleteTags"
@@ -327,6 +333,7 @@ deleteTags fileSystemId tagKeys =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -339,7 +346,7 @@ __Required Parameters__
 -}
 describeFileSystems :
     (DescribeFileSystemsOptions -> DescribeFileSystemsOptions)
-    -> AWS.Http.UnsignedRequest DescribeFileSystemsResponse
+    -> AWS.Request DescribeFileSystemsResponse
 describeFileSystems setOptions =
   let
     options = setOptions (DescribeFileSystemsOptions Nothing Nothing Nothing Nothing)
@@ -353,6 +360,7 @@ describeFileSystems setOptions =
             ]
         )
         describeFileSystemsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeFileSystems request
@@ -376,7 +384,7 @@ __Required Parameters__
 -}
 describeMountTargetSecurityGroups :
     String
-    -> AWS.Http.UnsignedRequest DescribeMountTargetSecurityGroupsResponse
+    -> AWS.Request DescribeMountTargetSecurityGroupsResponse
 describeMountTargetSecurityGroups mountTargetId =
     AWS.Http.unsignedRequest
         "DescribeMountTargetSecurityGroups"
@@ -387,6 +395,7 @@ describeMountTargetSecurityGroups mountTargetId =
             ]
         )
         describeMountTargetSecurityGroupsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -399,7 +408,7 @@ __Required Parameters__
 -}
 describeMountTargets :
     (DescribeMountTargetsOptions -> DescribeMountTargetsOptions)
-    -> AWS.Http.UnsignedRequest DescribeMountTargetsResponse
+    -> AWS.Request DescribeMountTargetsResponse
 describeMountTargets setOptions =
   let
     options = setOptions (DescribeMountTargetsOptions Nothing Nothing Nothing Nothing)
@@ -413,6 +422,7 @@ describeMountTargets setOptions =
             ]
         )
         describeMountTargetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMountTargets request
@@ -437,7 +447,7 @@ __Required Parameters__
 describeTags :
     String
     -> (DescribeTagsOptions -> DescribeTagsOptions)
-    -> AWS.Http.UnsignedRequest DescribeTagsResponse
+    -> AWS.Request DescribeTagsResponse
 describeTags fileSystemId setOptions =
   let
     options = setOptions (DescribeTagsOptions Nothing Nothing)
@@ -451,6 +461,7 @@ describeTags fileSystemId setOptions =
             ]
         )
         describeTagsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTags request
@@ -473,7 +484,7 @@ __Required Parameters__
 modifyMountTargetSecurityGroups :
     String
     -> (ModifyMountTargetSecurityGroupsOptions -> ModifyMountTargetSecurityGroupsOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 modifyMountTargetSecurityGroups mountTargetId setOptions =
   let
     options = setOptions (ModifyMountTargetSecurityGroupsOptions Nothing)
@@ -486,6 +497,7 @@ modifyMountTargetSecurityGroups mountTargetId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyMountTargetSecurityGroups request

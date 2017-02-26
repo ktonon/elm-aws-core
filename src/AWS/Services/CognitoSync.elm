@@ -172,6 +172,7 @@ module AWS.Services.CognitoSync
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -183,16 +184,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "cognito-sync"
         "2014-06-30"
         "1.1"
         "AWSCOGNITO-SYNC_20140630."
         "cognito-sync.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -208,7 +209,7 @@ __Required Parameters__
 -}
 bulkPublish :
     String
-    -> AWS.Http.UnsignedRequest BulkPublishResponse
+    -> AWS.Request BulkPublishResponse
 bulkPublish identityPoolId =
     AWS.Http.unsignedRequest
         "BulkPublish"
@@ -218,6 +219,7 @@ bulkPublish identityPoolId =
             JE.null
         )
         bulkPublishResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -235,7 +237,7 @@ deleteDataset :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteDatasetResponse
+    -> AWS.Request DeleteDatasetResponse
 deleteDataset identityPoolId identityId datasetName =
     AWS.Http.unsignedRequest
         "DeleteDataset"
@@ -245,6 +247,7 @@ deleteDataset identityPoolId identityId datasetName =
             JE.null
         )
         deleteDatasetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -262,7 +265,7 @@ describeDataset :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest DescribeDatasetResponse
+    -> AWS.Request DescribeDatasetResponse
 describeDataset identityPoolId identityId datasetName =
     AWS.Http.unsignedRequest
         "DescribeDataset"
@@ -273,6 +276,7 @@ describeDataset identityPoolId identityId datasetName =
             ]
         )
         describeDatasetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -286,7 +290,7 @@ __Required Parameters__
 -}
 describeIdentityPoolUsage :
     String
-    -> AWS.Http.UnsignedRequest DescribeIdentityPoolUsageResponse
+    -> AWS.Request DescribeIdentityPoolUsageResponse
 describeIdentityPoolUsage identityPoolId =
     AWS.Http.unsignedRequest
         "DescribeIdentityPoolUsage"
@@ -297,6 +301,7 @@ describeIdentityPoolUsage identityPoolId =
             ]
         )
         describeIdentityPoolUsageResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -312,7 +317,7 @@ __Required Parameters__
 describeIdentityUsage :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DescribeIdentityUsageResponse
+    -> AWS.Request DescribeIdentityUsageResponse
 describeIdentityUsage identityPoolId identityId =
     AWS.Http.unsignedRequest
         "DescribeIdentityUsage"
@@ -323,6 +328,7 @@ describeIdentityUsage identityPoolId identityId =
             ]
         )
         describeIdentityUsageResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -336,7 +342,7 @@ __Required Parameters__
 -}
 getBulkPublishDetails :
     String
-    -> AWS.Http.UnsignedRequest GetBulkPublishDetailsResponse
+    -> AWS.Request GetBulkPublishDetailsResponse
 getBulkPublishDetails identityPoolId =
     AWS.Http.unsignedRequest
         "GetBulkPublishDetails"
@@ -346,6 +352,7 @@ getBulkPublishDetails identityPoolId =
             JE.null
         )
         getBulkPublishDetailsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -359,7 +366,7 @@ __Required Parameters__
 -}
 getCognitoEvents :
     String
-    -> AWS.Http.UnsignedRequest GetCognitoEventsResponse
+    -> AWS.Request GetCognitoEventsResponse
 getCognitoEvents identityPoolId =
     AWS.Http.unsignedRequest
         "GetCognitoEvents"
@@ -370,6 +377,7 @@ getCognitoEvents identityPoolId =
             ]
         )
         getCognitoEventsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -383,7 +391,7 @@ __Required Parameters__
 -}
 getIdentityPoolConfiguration :
     String
-    -> AWS.Http.UnsignedRequest GetIdentityPoolConfigurationResponse
+    -> AWS.Request GetIdentityPoolConfigurationResponse
 getIdentityPoolConfiguration identityPoolId =
     AWS.Http.unsignedRequest
         "GetIdentityPoolConfiguration"
@@ -394,6 +402,7 @@ getIdentityPoolConfiguration identityPoolId =
             ]
         )
         getIdentityPoolConfigurationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -410,7 +419,7 @@ listDatasets :
     String
     -> String
     -> (ListDatasetsOptions -> ListDatasetsOptions)
-    -> AWS.Http.UnsignedRequest ListDatasetsResponse
+    -> AWS.Request ListDatasetsResponse
 listDatasets identityPoolId identityId setOptions =
   let
     options = setOptions (ListDatasetsOptions Nothing Nothing)
@@ -424,6 +433,7 @@ listDatasets identityPoolId identityId setOptions =
             ]
         )
         listDatasetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDatasets request
@@ -444,7 +454,7 @@ __Required Parameters__
 -}
 listIdentityPoolUsage :
     (ListIdentityPoolUsageOptions -> ListIdentityPoolUsageOptions)
-    -> AWS.Http.UnsignedRequest ListIdentityPoolUsageResponse
+    -> AWS.Request ListIdentityPoolUsageResponse
 listIdentityPoolUsage setOptions =
   let
     options = setOptions (ListIdentityPoolUsageOptions Nothing Nothing)
@@ -458,6 +468,7 @@ listIdentityPoolUsage setOptions =
             ]
         )
         listIdentityPoolUsageResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listIdentityPoolUsage request
@@ -484,7 +495,7 @@ listRecords :
     -> String
     -> String
     -> (ListRecordsOptions -> ListRecordsOptions)
-    -> AWS.Http.UnsignedRequest ListRecordsResponse
+    -> AWS.Request ListRecordsResponse
 listRecords identityPoolId identityId datasetName setOptions =
   let
     options = setOptions (ListRecordsOptions Nothing Nothing Nothing Nothing)
@@ -498,6 +509,7 @@ listRecords identityPoolId identityId datasetName setOptions =
             ]
         )
         listRecordsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRecords request
@@ -527,7 +539,7 @@ registerDevice :
     -> String
     -> Platform
     -> String
-    -> AWS.Http.UnsignedRequest RegisterDeviceResponse
+    -> AWS.Request RegisterDeviceResponse
 registerDevice identityPoolId identityId platform token =
     AWS.Http.unsignedRequest
         "RegisterDevice"
@@ -537,6 +549,7 @@ registerDevice identityPoolId identityId platform token =
             JE.null
         )
         registerDeviceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -552,7 +565,7 @@ __Required Parameters__
 setCognitoEvents :
     String
     -> (Dict String String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setCognitoEvents identityPoolId events =
     AWS.Http.unsignedRequest
         "SetCognitoEvents"
@@ -562,6 +575,7 @@ setCognitoEvents identityPoolId events =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -576,7 +590,7 @@ __Required Parameters__
 setIdentityPoolConfiguration :
     String
     -> (SetIdentityPoolConfigurationOptions -> SetIdentityPoolConfigurationOptions)
-    -> AWS.Http.UnsignedRequest SetIdentityPoolConfigurationResponse
+    -> AWS.Request SetIdentityPoolConfigurationResponse
 setIdentityPoolConfiguration identityPoolId setOptions =
   let
     options = setOptions (SetIdentityPoolConfigurationOptions Nothing Nothing)
@@ -589,6 +603,7 @@ setIdentityPoolConfiguration identityPoolId setOptions =
             JE.null
         )
         setIdentityPoolConfigurationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setIdentityPoolConfiguration request
@@ -616,7 +631,7 @@ subscribeToDataset :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest SubscribeToDatasetResponse
+    -> AWS.Request SubscribeToDatasetResponse
 subscribeToDataset identityPoolId identityId datasetName deviceId =
     AWS.Http.unsignedRequest
         "SubscribeToDataset"
@@ -626,6 +641,7 @@ subscribeToDataset identityPoolId identityId datasetName deviceId =
             JE.null
         )
         subscribeToDatasetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -645,7 +661,7 @@ unsubscribeFromDataset :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest UnsubscribeFromDatasetResponse
+    -> AWS.Request UnsubscribeFromDatasetResponse
 unsubscribeFromDataset identityPoolId identityId datasetName deviceId =
     AWS.Http.unsignedRequest
         "UnsubscribeFromDataset"
@@ -655,6 +671,7 @@ unsubscribeFromDataset identityPoolId identityId datasetName deviceId =
             JE.null
         )
         unsubscribeFromDatasetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -675,7 +692,7 @@ updateRecords :
     -> String
     -> String
     -> (UpdateRecordsOptions -> UpdateRecordsOptions)
-    -> AWS.Http.UnsignedRequest UpdateRecordsResponse
+    -> AWS.Request UpdateRecordsResponse
 updateRecords identityPoolId identityId datasetName syncSessionToken setOptions =
   let
     options = setOptions (UpdateRecordsOptions Nothing Nothing Nothing)
@@ -688,6 +705,7 @@ updateRecords identityPoolId identityId datasetName syncSessionToken setOptions 
             JE.null
         )
         updateRecordsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateRecords request

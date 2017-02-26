@@ -612,6 +612,7 @@ module AWS.Services.Redshift
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -622,16 +623,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "redshift"
         "2012-12-01"
         "undefined"
         "AWSREDSHIFT_20121201."
         "redshift.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -648,7 +649,7 @@ __Required Parameters__
 authorizeClusterSecurityGroupIngress :
     String
     -> (AuthorizeClusterSecurityGroupIngressOptions -> AuthorizeClusterSecurityGroupIngressOptions)
-    -> AWS.Http.UnsignedRequest AuthorizeClusterSecurityGroupIngressResult
+    -> AWS.Request AuthorizeClusterSecurityGroupIngressResult
 authorizeClusterSecurityGroupIngress clusterSecurityGroupName setOptions =
   let
     options = setOptions (AuthorizeClusterSecurityGroupIngressOptions Nothing Nothing Nothing)
@@ -661,6 +662,7 @@ authorizeClusterSecurityGroupIngress clusterSecurityGroupName setOptions =
             JE.null
         )
         authorizeClusterSecurityGroupIngressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a authorizeClusterSecurityGroupIngress request
@@ -686,7 +688,7 @@ authorizeSnapshotAccess :
     String
     -> String
     -> (AuthorizeSnapshotAccessOptions -> AuthorizeSnapshotAccessOptions)
-    -> AWS.Http.UnsignedRequest AuthorizeSnapshotAccessResult
+    -> AWS.Request AuthorizeSnapshotAccessResult
 authorizeSnapshotAccess snapshotIdentifier accountWithRestoreAccess setOptions =
   let
     options = setOptions (AuthorizeSnapshotAccessOptions Nothing)
@@ -699,6 +701,7 @@ authorizeSnapshotAccess snapshotIdentifier accountWithRestoreAccess setOptions =
             JE.null
         )
         authorizeSnapshotAccessResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a authorizeSnapshotAccess request
@@ -722,7 +725,7 @@ copyClusterSnapshot :
     String
     -> String
     -> (CopyClusterSnapshotOptions -> CopyClusterSnapshotOptions)
-    -> AWS.Http.UnsignedRequest CopyClusterSnapshotResult
+    -> AWS.Request CopyClusterSnapshotResult
 copyClusterSnapshot sourceSnapshotIdentifier targetSnapshotIdentifier setOptions =
   let
     options = setOptions (CopyClusterSnapshotOptions Nothing)
@@ -735,6 +738,7 @@ copyClusterSnapshot sourceSnapshotIdentifier targetSnapshotIdentifier setOptions
             JE.null
         )
         copyClusterSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a copyClusterSnapshot request
@@ -762,7 +766,7 @@ createCluster :
     -> String
     -> String
     -> (CreateClusterOptions -> CreateClusterOptions)
-    -> AWS.Http.UnsignedRequest CreateClusterResult
+    -> AWS.Request CreateClusterResult
 createCluster clusterIdentifier nodeType masterUsername masterUserPassword setOptions =
   let
     options = setOptions (CreateClusterOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -775,6 +779,7 @@ createCluster clusterIdentifier nodeType masterUsername masterUserPassword setOp
             JE.null
         )
         createClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createCluster request
@@ -822,7 +827,7 @@ createClusterParameterGroup :
     -> String
     -> String
     -> (CreateClusterParameterGroupOptions -> CreateClusterParameterGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateClusterParameterGroupResult
+    -> AWS.Request CreateClusterParameterGroupResult
 createClusterParameterGroup parameterGroupName parameterGroupFamily description setOptions =
   let
     options = setOptions (CreateClusterParameterGroupOptions Nothing)
@@ -835,6 +840,7 @@ createClusterParameterGroup parameterGroupName parameterGroupFamily description 
             JE.null
         )
         createClusterParameterGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createClusterParameterGroup request
@@ -858,7 +864,7 @@ createClusterSecurityGroup :
     String
     -> String
     -> (CreateClusterSecurityGroupOptions -> CreateClusterSecurityGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateClusterSecurityGroupResult
+    -> AWS.Request CreateClusterSecurityGroupResult
 createClusterSecurityGroup clusterSecurityGroupName description setOptions =
   let
     options = setOptions (CreateClusterSecurityGroupOptions Nothing)
@@ -871,6 +877,7 @@ createClusterSecurityGroup clusterSecurityGroupName description setOptions =
             JE.null
         )
         createClusterSecurityGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createClusterSecurityGroup request
@@ -894,7 +901,7 @@ createClusterSnapshot :
     String
     -> String
     -> (CreateClusterSnapshotOptions -> CreateClusterSnapshotOptions)
-    -> AWS.Http.UnsignedRequest CreateClusterSnapshotResult
+    -> AWS.Request CreateClusterSnapshotResult
 createClusterSnapshot snapshotIdentifier clusterIdentifier setOptions =
   let
     options = setOptions (CreateClusterSnapshotOptions Nothing)
@@ -907,6 +914,7 @@ createClusterSnapshot snapshotIdentifier clusterIdentifier setOptions =
             JE.null
         )
         createClusterSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createClusterSnapshot request
@@ -932,7 +940,7 @@ createClusterSubnetGroup :
     -> String
     -> (List String)
     -> (CreateClusterSubnetGroupOptions -> CreateClusterSubnetGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateClusterSubnetGroupResult
+    -> AWS.Request CreateClusterSubnetGroupResult
 createClusterSubnetGroup clusterSubnetGroupName description subnetIds setOptions =
   let
     options = setOptions (CreateClusterSubnetGroupOptions Nothing)
@@ -945,6 +953,7 @@ createClusterSubnetGroup clusterSubnetGroupName description subnetIds setOptions
             JE.null
         )
         createClusterSubnetGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createClusterSubnetGroup request
@@ -968,7 +977,7 @@ createEventSubscription :
     String
     -> String
     -> (CreateEventSubscriptionOptions -> CreateEventSubscriptionOptions)
-    -> AWS.Http.UnsignedRequest CreateEventSubscriptionResult
+    -> AWS.Request CreateEventSubscriptionResult
 createEventSubscription subscriptionName snsTopicArn setOptions =
   let
     options = setOptions (CreateEventSubscriptionOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -981,6 +990,7 @@ createEventSubscription subscriptionName snsTopicArn setOptions =
             JE.null
         )
         createEventSubscriptionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createEventSubscription request
@@ -1007,7 +1017,7 @@ __Required Parameters__
 createHsmClientCertificate :
     String
     -> (CreateHsmClientCertificateOptions -> CreateHsmClientCertificateOptions)
-    -> AWS.Http.UnsignedRequest CreateHsmClientCertificateResult
+    -> AWS.Request CreateHsmClientCertificateResult
 createHsmClientCertificate hsmClientCertificateIdentifier setOptions =
   let
     options = setOptions (CreateHsmClientCertificateOptions Nothing)
@@ -1020,6 +1030,7 @@ createHsmClientCertificate hsmClientCertificateIdentifier setOptions =
             JE.null
         )
         createHsmClientCertificateResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createHsmClientCertificate request
@@ -1051,7 +1062,7 @@ createHsmConfiguration :
     -> String
     -> String
     -> (CreateHsmConfigurationOptions -> CreateHsmConfigurationOptions)
-    -> AWS.Http.UnsignedRequest CreateHsmConfigurationResult
+    -> AWS.Request CreateHsmConfigurationResult
 createHsmConfiguration hsmConfigurationIdentifier description hsmIpAddress hsmPartitionName hsmPartitionPassword hsmServerPublicCertificate setOptions =
   let
     options = setOptions (CreateHsmConfigurationOptions Nothing)
@@ -1064,6 +1075,7 @@ createHsmConfiguration hsmConfigurationIdentifier description hsmIpAddress hsmPa
             JE.null
         )
         createHsmConfigurationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createHsmConfiguration request
@@ -1085,7 +1097,7 @@ __Required Parameters__
 createSnapshotCopyGrant :
     String
     -> (CreateSnapshotCopyGrantOptions -> CreateSnapshotCopyGrantOptions)
-    -> AWS.Http.UnsignedRequest CreateSnapshotCopyGrantResult
+    -> AWS.Request CreateSnapshotCopyGrantResult
 createSnapshotCopyGrant snapshotCopyGrantName setOptions =
   let
     options = setOptions (CreateSnapshotCopyGrantOptions Nothing Nothing)
@@ -1098,6 +1110,7 @@ createSnapshotCopyGrant snapshotCopyGrantName setOptions =
             JE.null
         )
         createSnapshotCopyGrantResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createSnapshotCopyGrant request
@@ -1121,7 +1134,7 @@ __Required Parameters__
 createTags :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createTags resourceName tags =
     AWS.Http.unsignedRequest
         "CreateTags"
@@ -1131,6 +1144,7 @@ createTags resourceName tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1145,7 +1159,7 @@ __Required Parameters__
 deleteCluster :
     String
     -> (DeleteClusterOptions -> DeleteClusterOptions)
-    -> AWS.Http.UnsignedRequest DeleteClusterResult
+    -> AWS.Request DeleteClusterResult
 deleteCluster clusterIdentifier setOptions =
   let
     options = setOptions (DeleteClusterOptions Nothing Nothing)
@@ -1158,6 +1172,7 @@ deleteCluster clusterIdentifier setOptions =
             JE.null
         )
         deleteClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteCluster request
@@ -1179,7 +1194,7 @@ __Required Parameters__
 -}
 deleteClusterParameterGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteClusterParameterGroup parameterGroupName =
     AWS.Http.unsignedRequest
         "DeleteClusterParameterGroup"
@@ -1189,6 +1204,7 @@ deleteClusterParameterGroup parameterGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1202,7 +1218,7 @@ __Required Parameters__
 -}
 deleteClusterSecurityGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteClusterSecurityGroup clusterSecurityGroupName =
     AWS.Http.unsignedRequest
         "DeleteClusterSecurityGroup"
@@ -1212,6 +1228,7 @@ deleteClusterSecurityGroup clusterSecurityGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1226,7 +1243,7 @@ __Required Parameters__
 deleteClusterSnapshot :
     String
     -> (DeleteClusterSnapshotOptions -> DeleteClusterSnapshotOptions)
-    -> AWS.Http.UnsignedRequest DeleteClusterSnapshotResult
+    -> AWS.Request DeleteClusterSnapshotResult
 deleteClusterSnapshot snapshotIdentifier setOptions =
   let
     options = setOptions (DeleteClusterSnapshotOptions Nothing)
@@ -1239,6 +1256,7 @@ deleteClusterSnapshot snapshotIdentifier setOptions =
             JE.null
         )
         deleteClusterSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteClusterSnapshot request
@@ -1259,7 +1277,7 @@ __Required Parameters__
 -}
 deleteClusterSubnetGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteClusterSubnetGroup clusterSubnetGroupName =
     AWS.Http.unsignedRequest
         "DeleteClusterSubnetGroup"
@@ -1269,6 +1287,7 @@ deleteClusterSubnetGroup clusterSubnetGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1282,7 +1301,7 @@ __Required Parameters__
 -}
 deleteEventSubscription :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteEventSubscription subscriptionName =
     AWS.Http.unsignedRequest
         "DeleteEventSubscription"
@@ -1292,6 +1311,7 @@ deleteEventSubscription subscriptionName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1305,7 +1325,7 @@ __Required Parameters__
 -}
 deleteHsmClientCertificate :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteHsmClientCertificate hsmClientCertificateIdentifier =
     AWS.Http.unsignedRequest
         "DeleteHsmClientCertificate"
@@ -1315,6 +1335,7 @@ deleteHsmClientCertificate hsmClientCertificateIdentifier =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1328,7 +1349,7 @@ __Required Parameters__
 -}
 deleteHsmConfiguration :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteHsmConfiguration hsmConfigurationIdentifier =
     AWS.Http.unsignedRequest
         "DeleteHsmConfiguration"
@@ -1338,6 +1359,7 @@ deleteHsmConfiguration hsmConfigurationIdentifier =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1351,7 +1373,7 @@ __Required Parameters__
 -}
 deleteSnapshotCopyGrant :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteSnapshotCopyGrant snapshotCopyGrantName =
     AWS.Http.unsignedRequest
         "DeleteSnapshotCopyGrant"
@@ -1361,6 +1383,7 @@ deleteSnapshotCopyGrant snapshotCopyGrantName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1376,7 +1399,7 @@ __Required Parameters__
 deleteTags :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteTags resourceName tagKeys =
     AWS.Http.unsignedRequest
         "DeleteTags"
@@ -1386,6 +1409,7 @@ deleteTags resourceName tagKeys =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1398,7 +1422,7 @@ __Required Parameters__
 -}
 describeClusterParameterGroups :
     (DescribeClusterParameterGroupsOptions -> DescribeClusterParameterGroupsOptions)
-    -> AWS.Http.UnsignedRequest ClusterParameterGroupsMessage
+    -> AWS.Request ClusterParameterGroupsMessage
 describeClusterParameterGroups setOptions =
   let
     options = setOptions (DescribeClusterParameterGroupsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1411,6 +1435,7 @@ describeClusterParameterGroups setOptions =
             JE.null
         )
         clusterParameterGroupsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeClusterParameterGroups request
@@ -1436,7 +1461,7 @@ __Required Parameters__
 describeClusterParameters :
     String
     -> (DescribeClusterParametersOptions -> DescribeClusterParametersOptions)
-    -> AWS.Http.UnsignedRequest ClusterParameterGroupDetails
+    -> AWS.Request ClusterParameterGroupDetails
 describeClusterParameters parameterGroupName setOptions =
   let
     options = setOptions (DescribeClusterParametersOptions Nothing Nothing Nothing)
@@ -1449,6 +1474,7 @@ describeClusterParameters parameterGroupName setOptions =
             JE.null
         )
         clusterParameterGroupDetailsDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeClusterParameters request
@@ -1470,7 +1496,7 @@ __Required Parameters__
 -}
 describeClusterSecurityGroups :
     (DescribeClusterSecurityGroupsOptions -> DescribeClusterSecurityGroupsOptions)
-    -> AWS.Http.UnsignedRequest ClusterSecurityGroupMessage
+    -> AWS.Request ClusterSecurityGroupMessage
 describeClusterSecurityGroups setOptions =
   let
     options = setOptions (DescribeClusterSecurityGroupsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1483,6 +1509,7 @@ describeClusterSecurityGroups setOptions =
             JE.null
         )
         clusterSecurityGroupMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeClusterSecurityGroups request
@@ -1506,7 +1533,7 @@ __Required Parameters__
 -}
 describeClusterSnapshots :
     (DescribeClusterSnapshotsOptions -> DescribeClusterSnapshotsOptions)
-    -> AWS.Http.UnsignedRequest SnapshotMessage
+    -> AWS.Request SnapshotMessage
 describeClusterSnapshots setOptions =
   let
     options = setOptions (DescribeClusterSnapshotsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1519,6 +1546,7 @@ describeClusterSnapshots setOptions =
             JE.null
         )
         snapshotMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeClusterSnapshots request
@@ -1547,7 +1575,7 @@ __Required Parameters__
 -}
 describeClusterSubnetGroups :
     (DescribeClusterSubnetGroupsOptions -> DescribeClusterSubnetGroupsOptions)
-    -> AWS.Http.UnsignedRequest ClusterSubnetGroupMessage
+    -> AWS.Request ClusterSubnetGroupMessage
 describeClusterSubnetGroups setOptions =
   let
     options = setOptions (DescribeClusterSubnetGroupsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1560,6 +1588,7 @@ describeClusterSubnetGroups setOptions =
             JE.null
         )
         clusterSubnetGroupMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeClusterSubnetGroups request
@@ -1583,7 +1612,7 @@ __Required Parameters__
 -}
 describeClusterVersions :
     (DescribeClusterVersionsOptions -> DescribeClusterVersionsOptions)
-    -> AWS.Http.UnsignedRequest ClusterVersionsMessage
+    -> AWS.Request ClusterVersionsMessage
 describeClusterVersions setOptions =
   let
     options = setOptions (DescribeClusterVersionsOptions Nothing Nothing Nothing Nothing)
@@ -1596,6 +1625,7 @@ describeClusterVersions setOptions =
             JE.null
         )
         clusterVersionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeClusterVersions request
@@ -1618,7 +1648,7 @@ __Required Parameters__
 -}
 describeClusters :
     (DescribeClustersOptions -> DescribeClustersOptions)
-    -> AWS.Http.UnsignedRequest ClustersMessage
+    -> AWS.Request ClustersMessage
 describeClusters setOptions =
   let
     options = setOptions (DescribeClustersOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1631,6 +1661,7 @@ describeClusters setOptions =
             JE.null
         )
         clustersMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeClusters request
@@ -1656,7 +1687,7 @@ __Required Parameters__
 describeDefaultClusterParameters :
     String
     -> (DescribeDefaultClusterParametersOptions -> DescribeDefaultClusterParametersOptions)
-    -> AWS.Http.UnsignedRequest DescribeDefaultClusterParametersResult
+    -> AWS.Request DescribeDefaultClusterParametersResult
 describeDefaultClusterParameters parameterGroupFamily setOptions =
   let
     options = setOptions (DescribeDefaultClusterParametersOptions Nothing Nothing)
@@ -1669,6 +1700,7 @@ describeDefaultClusterParameters parameterGroupFamily setOptions =
             JE.null
         )
         describeDefaultClusterParametersResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDefaultClusterParameters request
@@ -1689,7 +1721,7 @@ __Required Parameters__
 -}
 describeEventCategories :
     (DescribeEventCategoriesOptions -> DescribeEventCategoriesOptions)
-    -> AWS.Http.UnsignedRequest EventCategoriesMessage
+    -> AWS.Request EventCategoriesMessage
 describeEventCategories setOptions =
   let
     options = setOptions (DescribeEventCategoriesOptions Nothing)
@@ -1702,6 +1734,7 @@ describeEventCategories setOptions =
             JE.null
         )
         eventCategoriesMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEventCategories request
@@ -1721,7 +1754,7 @@ __Required Parameters__
 -}
 describeEventSubscriptions :
     (DescribeEventSubscriptionsOptions -> DescribeEventSubscriptionsOptions)
-    -> AWS.Http.UnsignedRequest EventSubscriptionsMessage
+    -> AWS.Request EventSubscriptionsMessage
 describeEventSubscriptions setOptions =
   let
     options = setOptions (DescribeEventSubscriptionsOptions Nothing Nothing Nothing)
@@ -1734,6 +1767,7 @@ describeEventSubscriptions setOptions =
             JE.null
         )
         eventSubscriptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEventSubscriptions request
@@ -1755,7 +1789,7 @@ __Required Parameters__
 -}
 describeEvents :
     (DescribeEventsOptions -> DescribeEventsOptions)
-    -> AWS.Http.UnsignedRequest EventsMessage
+    -> AWS.Request EventsMessage
 describeEvents setOptions =
   let
     options = setOptions (DescribeEventsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1768,6 +1802,7 @@ describeEvents setOptions =
             JE.null
         )
         eventsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEvents request
@@ -1793,7 +1828,7 @@ __Required Parameters__
 -}
 describeHsmClientCertificates :
     (DescribeHsmClientCertificatesOptions -> DescribeHsmClientCertificatesOptions)
-    -> AWS.Http.UnsignedRequest HsmClientCertificateMessage
+    -> AWS.Request HsmClientCertificateMessage
 describeHsmClientCertificates setOptions =
   let
     options = setOptions (DescribeHsmClientCertificatesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1806,6 +1841,7 @@ describeHsmClientCertificates setOptions =
             JE.null
         )
         hsmClientCertificateMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeHsmClientCertificates request
@@ -1829,7 +1865,7 @@ __Required Parameters__
 -}
 describeHsmConfigurations :
     (DescribeHsmConfigurationsOptions -> DescribeHsmConfigurationsOptions)
-    -> AWS.Http.UnsignedRequest HsmConfigurationMessage
+    -> AWS.Request HsmConfigurationMessage
 describeHsmConfigurations setOptions =
   let
     options = setOptions (DescribeHsmConfigurationsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1842,6 +1878,7 @@ describeHsmConfigurations setOptions =
             JE.null
         )
         hsmConfigurationMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeHsmConfigurations request
@@ -1866,7 +1903,7 @@ __Required Parameters__
 -}
 describeLoggingStatus :
     String
-    -> AWS.Http.UnsignedRequest LoggingStatus
+    -> AWS.Request LoggingStatus
 describeLoggingStatus clusterIdentifier =
     AWS.Http.unsignedRequest
         "DescribeLoggingStatus"
@@ -1876,6 +1913,7 @@ describeLoggingStatus clusterIdentifier =
             JE.null
         )
         loggingStatusDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1888,7 +1926,7 @@ __Required Parameters__
 -}
 describeOrderableClusterOptions :
     (DescribeOrderableClusterOptionsOptions -> DescribeOrderableClusterOptionsOptions)
-    -> AWS.Http.UnsignedRequest OrderableClusterOptionsMessage
+    -> AWS.Request OrderableClusterOptionsMessage
 describeOrderableClusterOptions setOptions =
   let
     options = setOptions (DescribeOrderableClusterOptionsOptions Nothing Nothing Nothing Nothing)
@@ -1901,6 +1939,7 @@ describeOrderableClusterOptions setOptions =
             JE.null
         )
         orderableClusterOptionsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeOrderableClusterOptions request
@@ -1923,7 +1962,7 @@ __Required Parameters__
 -}
 describeReservedNodeOfferings :
     (DescribeReservedNodeOfferingsOptions -> DescribeReservedNodeOfferingsOptions)
-    -> AWS.Http.UnsignedRequest ReservedNodeOfferingsMessage
+    -> AWS.Request ReservedNodeOfferingsMessage
 describeReservedNodeOfferings setOptions =
   let
     options = setOptions (DescribeReservedNodeOfferingsOptions Nothing Nothing Nothing)
@@ -1936,6 +1975,7 @@ describeReservedNodeOfferings setOptions =
             JE.null
         )
         reservedNodeOfferingsMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedNodeOfferings request
@@ -1957,7 +1997,7 @@ __Required Parameters__
 -}
 describeReservedNodes :
     (DescribeReservedNodesOptions -> DescribeReservedNodesOptions)
-    -> AWS.Http.UnsignedRequest ReservedNodesMessage
+    -> AWS.Request ReservedNodesMessage
 describeReservedNodes setOptions =
   let
     options = setOptions (DescribeReservedNodesOptions Nothing Nothing Nothing)
@@ -1970,6 +2010,7 @@ describeReservedNodes setOptions =
             JE.null
         )
         reservedNodesMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeReservedNodes request
@@ -1992,7 +2033,7 @@ __Required Parameters__
 -}
 describeResize :
     String
-    -> AWS.Http.UnsignedRequest ResizeProgressMessage
+    -> AWS.Request ResizeProgressMessage
 describeResize clusterIdentifier =
     AWS.Http.unsignedRequest
         "DescribeResize"
@@ -2002,6 +2043,7 @@ describeResize clusterIdentifier =
             JE.null
         )
         resizeProgressMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2014,7 +2056,7 @@ __Required Parameters__
 -}
 describeSnapshotCopyGrants :
     (DescribeSnapshotCopyGrantsOptions -> DescribeSnapshotCopyGrantsOptions)
-    -> AWS.Http.UnsignedRequest SnapshotCopyGrantMessage
+    -> AWS.Request SnapshotCopyGrantMessage
 describeSnapshotCopyGrants setOptions =
   let
     options = setOptions (DescribeSnapshotCopyGrantsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -2027,6 +2069,7 @@ describeSnapshotCopyGrants setOptions =
             JE.null
         )
         snapshotCopyGrantMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSnapshotCopyGrants request
@@ -2050,7 +2093,7 @@ __Required Parameters__
 -}
 describeTableRestoreStatus :
     (DescribeTableRestoreStatusOptions -> DescribeTableRestoreStatusOptions)
-    -> AWS.Http.UnsignedRequest TableRestoreStatusMessage
+    -> AWS.Request TableRestoreStatusMessage
 describeTableRestoreStatus setOptions =
   let
     options = setOptions (DescribeTableRestoreStatusOptions Nothing Nothing Nothing Nothing)
@@ -2063,6 +2106,7 @@ describeTableRestoreStatus setOptions =
             JE.null
         )
         tableRestoreStatusMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTableRestoreStatus request
@@ -2085,7 +2129,7 @@ __Required Parameters__
 -}
 describeTags :
     (DescribeTagsOptions -> DescribeTagsOptions)
-    -> AWS.Http.UnsignedRequest TaggedResourceListMessage
+    -> AWS.Request TaggedResourceListMessage
 describeTags setOptions =
   let
     options = setOptions (DescribeTagsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2098,6 +2142,7 @@ describeTags setOptions =
             JE.null
         )
         taggedResourceListMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeTags request
@@ -2123,7 +2168,7 @@ __Required Parameters__
 -}
 disableLogging :
     String
-    -> AWS.Http.UnsignedRequest LoggingStatus
+    -> AWS.Request LoggingStatus
 disableLogging clusterIdentifier =
     AWS.Http.unsignedRequest
         "DisableLogging"
@@ -2133,6 +2178,7 @@ disableLogging clusterIdentifier =
             JE.null
         )
         loggingStatusDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2146,7 +2192,7 @@ __Required Parameters__
 -}
 disableSnapshotCopy :
     String
-    -> AWS.Http.UnsignedRequest DisableSnapshotCopyResult
+    -> AWS.Request DisableSnapshotCopyResult
 disableSnapshotCopy clusterIdentifier =
     AWS.Http.unsignedRequest
         "DisableSnapshotCopy"
@@ -2156,6 +2202,7 @@ disableSnapshotCopy clusterIdentifier =
             JE.null
         )
         disableSnapshotCopyResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2172,7 +2219,7 @@ enableLogging :
     String
     -> String
     -> (EnableLoggingOptions -> EnableLoggingOptions)
-    -> AWS.Http.UnsignedRequest LoggingStatus
+    -> AWS.Request LoggingStatus
 enableLogging clusterIdentifier bucketName setOptions =
   let
     options = setOptions (EnableLoggingOptions Nothing)
@@ -2185,6 +2232,7 @@ enableLogging clusterIdentifier bucketName setOptions =
             JE.null
         )
         loggingStatusDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a enableLogging request
@@ -2208,7 +2256,7 @@ enableSnapshotCopy :
     String
     -> String
     -> (EnableSnapshotCopyOptions -> EnableSnapshotCopyOptions)
-    -> AWS.Http.UnsignedRequest EnableSnapshotCopyResult
+    -> AWS.Request EnableSnapshotCopyResult
 enableSnapshotCopy clusterIdentifier destinationRegion setOptions =
   let
     options = setOptions (EnableSnapshotCopyOptions Nothing Nothing)
@@ -2221,6 +2269,7 @@ enableSnapshotCopy clusterIdentifier destinationRegion setOptions =
             JE.null
         )
         enableSnapshotCopyResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a enableSnapshotCopy request
@@ -2243,7 +2292,7 @@ __Required Parameters__
 modifyCluster :
     String
     -> (ModifyClusterOptions -> ModifyClusterOptions)
-    -> AWS.Http.UnsignedRequest ModifyClusterResult
+    -> AWS.Request ModifyClusterResult
 modifyCluster clusterIdentifier setOptions =
   let
     options = setOptions (ModifyClusterOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2256,6 +2305,7 @@ modifyCluster clusterIdentifier setOptions =
             JE.null
         )
         modifyClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyCluster request
@@ -2293,7 +2343,7 @@ __Required Parameters__
 modifyClusterIamRoles :
     String
     -> (ModifyClusterIamRolesOptions -> ModifyClusterIamRolesOptions)
-    -> AWS.Http.UnsignedRequest ModifyClusterIamRolesResult
+    -> AWS.Request ModifyClusterIamRolesResult
 modifyClusterIamRoles clusterIdentifier setOptions =
   let
     options = setOptions (ModifyClusterIamRolesOptions Nothing Nothing)
@@ -2306,6 +2356,7 @@ modifyClusterIamRoles clusterIdentifier setOptions =
             JE.null
         )
         modifyClusterIamRolesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyClusterIamRoles request
@@ -2329,7 +2380,7 @@ __Required Parameters__
 modifyClusterParameterGroup :
     String
     -> (List Parameter)
-    -> AWS.Http.UnsignedRequest ClusterParameterGroupNameMessage
+    -> AWS.Request ClusterParameterGroupNameMessage
 modifyClusterParameterGroup parameterGroupName parameters =
     AWS.Http.unsignedRequest
         "ModifyClusterParameterGroup"
@@ -2339,6 +2390,7 @@ modifyClusterParameterGroup parameterGroupName parameters =
             JE.null
         )
         clusterParameterGroupNameMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2355,7 +2407,7 @@ modifyClusterSubnetGroup :
     String
     -> (List String)
     -> (ModifyClusterSubnetGroupOptions -> ModifyClusterSubnetGroupOptions)
-    -> AWS.Http.UnsignedRequest ModifyClusterSubnetGroupResult
+    -> AWS.Request ModifyClusterSubnetGroupResult
 modifyClusterSubnetGroup clusterSubnetGroupName subnetIds setOptions =
   let
     options = setOptions (ModifyClusterSubnetGroupOptions Nothing)
@@ -2368,6 +2420,7 @@ modifyClusterSubnetGroup clusterSubnetGroupName subnetIds setOptions =
             JE.null
         )
         modifyClusterSubnetGroupResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyClusterSubnetGroup request
@@ -2389,7 +2442,7 @@ __Required Parameters__
 modifyEventSubscription :
     String
     -> (ModifyEventSubscriptionOptions -> ModifyEventSubscriptionOptions)
-    -> AWS.Http.UnsignedRequest ModifyEventSubscriptionResult
+    -> AWS.Request ModifyEventSubscriptionResult
 modifyEventSubscription subscriptionName setOptions =
   let
     options = setOptions (ModifyEventSubscriptionOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2402,6 +2455,7 @@ modifyEventSubscription subscriptionName setOptions =
             JE.null
         )
         modifyEventSubscriptionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a modifyEventSubscription request
@@ -2429,7 +2483,7 @@ __Required Parameters__
 modifySnapshotCopyRetentionPeriod :
     String
     -> Int
-    -> AWS.Http.UnsignedRequest ModifySnapshotCopyRetentionPeriodResult
+    -> AWS.Request ModifySnapshotCopyRetentionPeriodResult
 modifySnapshotCopyRetentionPeriod clusterIdentifier retentionPeriod =
     AWS.Http.unsignedRequest
         "ModifySnapshotCopyRetentionPeriod"
@@ -2439,6 +2493,7 @@ modifySnapshotCopyRetentionPeriod clusterIdentifier retentionPeriod =
             JE.null
         )
         modifySnapshotCopyRetentionPeriodResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2453,7 +2508,7 @@ __Required Parameters__
 purchaseReservedNodeOffering :
     String
     -> (PurchaseReservedNodeOfferingOptions -> PurchaseReservedNodeOfferingOptions)
-    -> AWS.Http.UnsignedRequest PurchaseReservedNodeOfferingResult
+    -> AWS.Request PurchaseReservedNodeOfferingResult
 purchaseReservedNodeOffering reservedNodeOfferingId setOptions =
   let
     options = setOptions (PurchaseReservedNodeOfferingOptions Nothing)
@@ -2466,6 +2521,7 @@ purchaseReservedNodeOffering reservedNodeOfferingId setOptions =
             JE.null
         )
         purchaseReservedNodeOfferingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a purchaseReservedNodeOffering request
@@ -2486,7 +2542,7 @@ __Required Parameters__
 -}
 rebootCluster :
     String
-    -> AWS.Http.UnsignedRequest RebootClusterResult
+    -> AWS.Request RebootClusterResult
 rebootCluster clusterIdentifier =
     AWS.Http.unsignedRequest
         "RebootCluster"
@@ -2496,6 +2552,7 @@ rebootCluster clusterIdentifier =
             JE.null
         )
         rebootClusterResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -2510,7 +2567,7 @@ __Required Parameters__
 resetClusterParameterGroup :
     String
     -> (ResetClusterParameterGroupOptions -> ResetClusterParameterGroupOptions)
-    -> AWS.Http.UnsignedRequest ClusterParameterGroupNameMessage
+    -> AWS.Request ClusterParameterGroupNameMessage
 resetClusterParameterGroup parameterGroupName setOptions =
   let
     options = setOptions (ResetClusterParameterGroupOptions Nothing Nothing)
@@ -2523,6 +2580,7 @@ resetClusterParameterGroup parameterGroupName setOptions =
             JE.null
         )
         clusterParameterGroupNameMessageDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a resetClusterParameterGroup request
@@ -2547,7 +2605,7 @@ restoreFromClusterSnapshot :
     String
     -> String
     -> (RestoreFromClusterSnapshotOptions -> RestoreFromClusterSnapshotOptions)
-    -> AWS.Http.UnsignedRequest RestoreFromClusterSnapshotResult
+    -> AWS.Request RestoreFromClusterSnapshotResult
 restoreFromClusterSnapshot clusterIdentifier snapshotIdentifier setOptions =
   let
     options = setOptions (RestoreFromClusterSnapshotOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -2560,6 +2618,7 @@ restoreFromClusterSnapshot clusterIdentifier snapshotIdentifier setOptions =
             JE.null
         )
         restoreFromClusterSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreFromClusterSnapshot request
@@ -2608,7 +2667,7 @@ restoreTableFromClusterSnapshot :
     -> String
     -> String
     -> (RestoreTableFromClusterSnapshotOptions -> RestoreTableFromClusterSnapshotOptions)
-    -> AWS.Http.UnsignedRequest RestoreTableFromClusterSnapshotResult
+    -> AWS.Request RestoreTableFromClusterSnapshotResult
 restoreTableFromClusterSnapshot clusterIdentifier snapshotIdentifier sourceDatabaseName sourceTableName newTableName setOptions =
   let
     options = setOptions (RestoreTableFromClusterSnapshotOptions Nothing Nothing Nothing)
@@ -2621,6 +2680,7 @@ restoreTableFromClusterSnapshot clusterIdentifier snapshotIdentifier sourceDatab
             JE.null
         )
         restoreTableFromClusterSnapshotResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a restoreTableFromClusterSnapshot request
@@ -2644,7 +2704,7 @@ __Required Parameters__
 revokeClusterSecurityGroupIngress :
     String
     -> (RevokeClusterSecurityGroupIngressOptions -> RevokeClusterSecurityGroupIngressOptions)
-    -> AWS.Http.UnsignedRequest RevokeClusterSecurityGroupIngressResult
+    -> AWS.Request RevokeClusterSecurityGroupIngressResult
 revokeClusterSecurityGroupIngress clusterSecurityGroupName setOptions =
   let
     options = setOptions (RevokeClusterSecurityGroupIngressOptions Nothing Nothing Nothing)
@@ -2657,6 +2717,7 @@ revokeClusterSecurityGroupIngress clusterSecurityGroupName setOptions =
             JE.null
         )
         revokeClusterSecurityGroupIngressResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a revokeClusterSecurityGroupIngress request
@@ -2682,7 +2743,7 @@ revokeSnapshotAccess :
     String
     -> String
     -> (RevokeSnapshotAccessOptions -> RevokeSnapshotAccessOptions)
-    -> AWS.Http.UnsignedRequest RevokeSnapshotAccessResult
+    -> AWS.Request RevokeSnapshotAccessResult
 revokeSnapshotAccess snapshotIdentifier accountWithRestoreAccess setOptions =
   let
     options = setOptions (RevokeSnapshotAccessOptions Nothing)
@@ -2695,6 +2756,7 @@ revokeSnapshotAccess snapshotIdentifier accountWithRestoreAccess setOptions =
             JE.null
         )
         revokeSnapshotAccessResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a revokeSnapshotAccess request
@@ -2715,7 +2777,7 @@ __Required Parameters__
 -}
 rotateEncryptionKey :
     String
-    -> AWS.Http.UnsignedRequest RotateEncryptionKeyResult
+    -> AWS.Request RotateEncryptionKeyResult
 rotateEncryptionKey clusterIdentifier =
     AWS.Http.unsignedRequest
         "RotateEncryptionKey"
@@ -2725,6 +2787,7 @@ rotateEncryptionKey clusterIdentifier =
             JE.null
         )
         rotateEncryptionKeyResultDecoder
+        |> AWS.UnsignedRequest
 
 
 

@@ -197,6 +197,7 @@ module AWS.Services.SNS
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -206,16 +207,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "sns"
         "2010-03-31"
         "undefined"
         "AWSSNS_20100331."
         "sns.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -237,7 +238,7 @@ addPermission :
     -> String
     -> (List String)
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addPermission topicArn label aWSAccountId actionName =
     AWS.Http.unsignedRequest
         "AddPermission"
@@ -247,6 +248,7 @@ addPermission topicArn label aWSAccountId actionName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -260,7 +262,7 @@ __Required Parameters__
 -}
 checkIfPhoneNumberIsOptedOut :
     String
-    -> AWS.Http.UnsignedRequest CheckIfPhoneNumberIsOptedOutResponse
+    -> AWS.Request CheckIfPhoneNumberIsOptedOutResponse
 checkIfPhoneNumberIsOptedOut phoneNumber =
     AWS.Http.unsignedRequest
         "CheckIfPhoneNumberIsOptedOut"
@@ -270,6 +272,7 @@ checkIfPhoneNumberIsOptedOut phoneNumber =
             JE.null
         )
         checkIfPhoneNumberIsOptedOutResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -286,7 +289,7 @@ confirmSubscription :
     String
     -> String
     -> (ConfirmSubscriptionOptions -> ConfirmSubscriptionOptions)
-    -> AWS.Http.UnsignedRequest ConfirmSubscriptionResponse
+    -> AWS.Request ConfirmSubscriptionResponse
 confirmSubscription topicArn token setOptions =
   let
     options = setOptions (ConfirmSubscriptionOptions Nothing)
@@ -299,6 +302,7 @@ confirmSubscription topicArn token setOptions =
             JE.null
         )
         confirmSubscriptionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a confirmSubscription request
@@ -323,7 +327,7 @@ createPlatformApplication :
     String
     -> String
     -> (Dict String String)
-    -> AWS.Http.UnsignedRequest CreatePlatformApplicationResponse
+    -> AWS.Request CreatePlatformApplicationResponse
 createPlatformApplication name platform attributes =
     AWS.Http.unsignedRequest
         "CreatePlatformApplication"
@@ -333,6 +337,7 @@ createPlatformApplication name platform attributes =
             JE.null
         )
         createPlatformApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -349,7 +354,7 @@ createPlatformEndpoint :
     String
     -> String
     -> (CreatePlatformEndpointOptions -> CreatePlatformEndpointOptions)
-    -> AWS.Http.UnsignedRequest CreateEndpointResponse
+    -> AWS.Request CreateEndpointResponse
 createPlatformEndpoint platformApplicationArn token setOptions =
   let
     options = setOptions (CreatePlatformEndpointOptions Nothing Nothing)
@@ -362,6 +367,7 @@ createPlatformEndpoint platformApplicationArn token setOptions =
             JE.null
         )
         createEndpointResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createPlatformEndpoint request
@@ -383,7 +389,7 @@ __Required Parameters__
 -}
 createTopic :
     String
-    -> AWS.Http.UnsignedRequest CreateTopicResponse
+    -> AWS.Request CreateTopicResponse
 createTopic name =
     AWS.Http.unsignedRequest
         "CreateTopic"
@@ -393,6 +399,7 @@ createTopic name =
             JE.null
         )
         createTopicResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -406,7 +413,7 @@ __Required Parameters__
 -}
 deleteEndpoint :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteEndpoint endpointArn =
     AWS.Http.unsignedRequest
         "DeleteEndpoint"
@@ -416,6 +423,7 @@ deleteEndpoint endpointArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -429,7 +437,7 @@ __Required Parameters__
 -}
 deletePlatformApplication :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deletePlatformApplication platformApplicationArn =
     AWS.Http.unsignedRequest
         "DeletePlatformApplication"
@@ -439,6 +447,7 @@ deletePlatformApplication platformApplicationArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -452,7 +461,7 @@ __Required Parameters__
 -}
 deleteTopic :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteTopic topicArn =
     AWS.Http.unsignedRequest
         "DeleteTopic"
@@ -462,6 +471,7 @@ deleteTopic topicArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -475,7 +485,7 @@ __Required Parameters__
 -}
 getEndpointAttributes :
     String
-    -> AWS.Http.UnsignedRequest GetEndpointAttributesResponse
+    -> AWS.Request GetEndpointAttributesResponse
 getEndpointAttributes endpointArn =
     AWS.Http.unsignedRequest
         "GetEndpointAttributes"
@@ -485,6 +495,7 @@ getEndpointAttributes endpointArn =
             JE.null
         )
         getEndpointAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -498,7 +509,7 @@ __Required Parameters__
 -}
 getPlatformApplicationAttributes :
     String
-    -> AWS.Http.UnsignedRequest GetPlatformApplicationAttributesResponse
+    -> AWS.Request GetPlatformApplicationAttributesResponse
 getPlatformApplicationAttributes platformApplicationArn =
     AWS.Http.unsignedRequest
         "GetPlatformApplicationAttributes"
@@ -508,6 +519,7 @@ getPlatformApplicationAttributes platformApplicationArn =
             JE.null
         )
         getPlatformApplicationAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -520,7 +532,7 @@ __Required Parameters__
 -}
 getSMSAttributes :
     (GetSMSAttributesOptions -> GetSMSAttributesOptions)
-    -> AWS.Http.UnsignedRequest GetSMSAttributesResponse
+    -> AWS.Request GetSMSAttributesResponse
 getSMSAttributes setOptions =
   let
     options = setOptions (GetSMSAttributesOptions Nothing)
@@ -533,6 +545,7 @@ getSMSAttributes setOptions =
             JE.null
         )
         getSMSAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getSMSAttributes request
@@ -553,7 +566,7 @@ __Required Parameters__
 -}
 getSubscriptionAttributes :
     String
-    -> AWS.Http.UnsignedRequest GetSubscriptionAttributesResponse
+    -> AWS.Request GetSubscriptionAttributesResponse
 getSubscriptionAttributes subscriptionArn =
     AWS.Http.unsignedRequest
         "GetSubscriptionAttributes"
@@ -563,6 +576,7 @@ getSubscriptionAttributes subscriptionArn =
             JE.null
         )
         getSubscriptionAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -576,7 +590,7 @@ __Required Parameters__
 -}
 getTopicAttributes :
     String
-    -> AWS.Http.UnsignedRequest GetTopicAttributesResponse
+    -> AWS.Request GetTopicAttributesResponse
 getTopicAttributes topicArn =
     AWS.Http.unsignedRequest
         "GetTopicAttributes"
@@ -586,6 +600,7 @@ getTopicAttributes topicArn =
             JE.null
         )
         getTopicAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -600,7 +615,7 @@ __Required Parameters__
 listEndpointsByPlatformApplication :
     String
     -> (ListEndpointsByPlatformApplicationOptions -> ListEndpointsByPlatformApplicationOptions)
-    -> AWS.Http.UnsignedRequest ListEndpointsByPlatformApplicationResponse
+    -> AWS.Request ListEndpointsByPlatformApplicationResponse
 listEndpointsByPlatformApplication platformApplicationArn setOptions =
   let
     options = setOptions (ListEndpointsByPlatformApplicationOptions Nothing)
@@ -613,6 +628,7 @@ listEndpointsByPlatformApplication platformApplicationArn setOptions =
             JE.null
         )
         listEndpointsByPlatformApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listEndpointsByPlatformApplication request
@@ -632,7 +648,7 @@ __Required Parameters__
 -}
 listPhoneNumbersOptedOut :
     (ListPhoneNumbersOptedOutOptions -> ListPhoneNumbersOptedOutOptions)
-    -> AWS.Http.UnsignedRequest ListPhoneNumbersOptedOutResponse
+    -> AWS.Request ListPhoneNumbersOptedOutResponse
 listPhoneNumbersOptedOut setOptions =
   let
     options = setOptions (ListPhoneNumbersOptedOutOptions Nothing)
@@ -645,6 +661,7 @@ listPhoneNumbersOptedOut setOptions =
             JE.null
         )
         listPhoneNumbersOptedOutResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPhoneNumbersOptedOut request
@@ -664,7 +681,7 @@ __Required Parameters__
 -}
 listPlatformApplications :
     (ListPlatformApplicationsOptions -> ListPlatformApplicationsOptions)
-    -> AWS.Http.UnsignedRequest ListPlatformApplicationsResponse
+    -> AWS.Request ListPlatformApplicationsResponse
 listPlatformApplications setOptions =
   let
     options = setOptions (ListPlatformApplicationsOptions Nothing)
@@ -677,6 +694,7 @@ listPlatformApplications setOptions =
             JE.null
         )
         listPlatformApplicationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPlatformApplications request
@@ -696,7 +714,7 @@ __Required Parameters__
 -}
 listSubscriptions :
     (ListSubscriptionsOptions -> ListSubscriptionsOptions)
-    -> AWS.Http.UnsignedRequest ListSubscriptionsResponse
+    -> AWS.Request ListSubscriptionsResponse
 listSubscriptions setOptions =
   let
     options = setOptions (ListSubscriptionsOptions Nothing)
@@ -709,6 +727,7 @@ listSubscriptions setOptions =
             JE.null
         )
         listSubscriptionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listSubscriptions request
@@ -730,7 +749,7 @@ __Required Parameters__
 listSubscriptionsByTopic :
     String
     -> (ListSubscriptionsByTopicOptions -> ListSubscriptionsByTopicOptions)
-    -> AWS.Http.UnsignedRequest ListSubscriptionsByTopicResponse
+    -> AWS.Request ListSubscriptionsByTopicResponse
 listSubscriptionsByTopic topicArn setOptions =
   let
     options = setOptions (ListSubscriptionsByTopicOptions Nothing)
@@ -743,6 +762,7 @@ listSubscriptionsByTopic topicArn setOptions =
             JE.null
         )
         listSubscriptionsByTopicResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listSubscriptionsByTopic request
@@ -762,7 +782,7 @@ __Required Parameters__
 -}
 listTopics :
     (ListTopicsOptions -> ListTopicsOptions)
-    -> AWS.Http.UnsignedRequest ListTopicsResponse
+    -> AWS.Request ListTopicsResponse
 listTopics setOptions =
   let
     options = setOptions (ListTopicsOptions Nothing)
@@ -775,6 +795,7 @@ listTopics setOptions =
             JE.null
         )
         listTopicsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTopics request
@@ -795,7 +816,7 @@ __Required Parameters__
 -}
 optInPhoneNumber :
     String
-    -> AWS.Http.UnsignedRequest OptInPhoneNumberResponse
+    -> AWS.Request OptInPhoneNumberResponse
 optInPhoneNumber phoneNumber =
     AWS.Http.unsignedRequest
         "OptInPhoneNumber"
@@ -805,6 +826,7 @@ optInPhoneNumber phoneNumber =
             JE.null
         )
         optInPhoneNumberResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -819,7 +841,7 @@ __Required Parameters__
 publish :
     String
     -> (PublishOptions -> PublishOptions)
-    -> AWS.Http.UnsignedRequest PublishResponse
+    -> AWS.Request PublishResponse
 publish message setOptions =
   let
     options = setOptions (PublishOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -832,6 +854,7 @@ publish message setOptions =
             JE.null
         )
         publishResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a publish request
@@ -859,7 +882,7 @@ __Required Parameters__
 removePermission :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removePermission topicArn label =
     AWS.Http.unsignedRequest
         "RemovePermission"
@@ -869,6 +892,7 @@ removePermission topicArn label =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -884,7 +908,7 @@ __Required Parameters__
 setEndpointAttributes :
     String
     -> (Dict String String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setEndpointAttributes endpointArn attributes =
     AWS.Http.unsignedRequest
         "SetEndpointAttributes"
@@ -894,6 +918,7 @@ setEndpointAttributes endpointArn attributes =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -909,7 +934,7 @@ __Required Parameters__
 setPlatformApplicationAttributes :
     String
     -> (Dict String String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setPlatformApplicationAttributes platformApplicationArn attributes =
     AWS.Http.unsignedRequest
         "SetPlatformApplicationAttributes"
@@ -919,6 +944,7 @@ setPlatformApplicationAttributes platformApplicationArn attributes =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -932,7 +958,7 @@ __Required Parameters__
 -}
 setSMSAttributes :
     (Dict String String)
-    -> AWS.Http.UnsignedRequest SetSMSAttributesResponse
+    -> AWS.Request SetSMSAttributesResponse
 setSMSAttributes attributes =
     AWS.Http.unsignedRequest
         "SetSMSAttributes"
@@ -942,6 +968,7 @@ setSMSAttributes attributes =
             JE.null
         )
         setSMSAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -958,7 +985,7 @@ setSubscriptionAttributes :
     String
     -> String
     -> (SetSubscriptionAttributesOptions -> SetSubscriptionAttributesOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setSubscriptionAttributes subscriptionArn attributeName setOptions =
   let
     options = setOptions (SetSubscriptionAttributesOptions Nothing)
@@ -971,6 +998,7 @@ setSubscriptionAttributes subscriptionArn attributeName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setSubscriptionAttributes request
@@ -994,7 +1022,7 @@ setTopicAttributes :
     String
     -> String
     -> (SetTopicAttributesOptions -> SetTopicAttributesOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setTopicAttributes topicArn attributeName setOptions =
   let
     options = setOptions (SetTopicAttributesOptions Nothing)
@@ -1007,6 +1035,7 @@ setTopicAttributes topicArn attributeName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setTopicAttributes request
@@ -1030,7 +1059,7 @@ subscribe :
     String
     -> String
     -> (SubscribeOptions -> SubscribeOptions)
-    -> AWS.Http.UnsignedRequest SubscribeResponse
+    -> AWS.Request SubscribeResponse
 subscribe topicArn protocol setOptions =
   let
     options = setOptions (SubscribeOptions Nothing)
@@ -1043,6 +1072,7 @@ subscribe topicArn protocol setOptions =
             JE.null
         )
         subscribeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a subscribe request
@@ -1063,7 +1093,7 @@ __Required Parameters__
 -}
 unsubscribe :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 unsubscribe subscriptionArn =
     AWS.Http.unsignedRequest
         "Unsubscribe"
@@ -1073,6 +1103,7 @@ unsubscribe subscriptionArn =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 

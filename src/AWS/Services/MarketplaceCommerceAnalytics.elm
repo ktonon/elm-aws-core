@@ -59,6 +59,7 @@ module AWS.Services.MarketplaceCommerceAnalytics
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -70,16 +71,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "marketplacecommerceanalytics"
         "2015-07-01"
         "1.1"
         "AWSMARKETPLACECOMMERCEANALYTICS_20150701."
         "marketplacecommerceanalytics.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -104,7 +105,7 @@ generateDataSet :
     -> String
     -> String
     -> (GenerateDataSetOptions -> GenerateDataSetOptions)
-    -> AWS.Http.UnsignedRequest GenerateDataSetResult
+    -> AWS.Request GenerateDataSetResult
 generateDataSet dataSetType dataSetPublicationDate roleNameArn destinationS3BucketName snsTopicArn setOptions =
   let
     options = setOptions (GenerateDataSetOptions Nothing Nothing)
@@ -117,6 +118,7 @@ generateDataSet dataSetType dataSetPublicationDate roleNameArn destinationS3Buck
             JE.null
         )
         generateDataSetResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a generateDataSet request
@@ -147,7 +149,7 @@ startSupportDataExport :
     -> String
     -> String
     -> (StartSupportDataExportOptions -> StartSupportDataExportOptions)
-    -> AWS.Http.UnsignedRequest StartSupportDataExportResult
+    -> AWS.Request StartSupportDataExportResult
 startSupportDataExport dataSetType fromDate roleNameArn destinationS3BucketName snsTopicArn setOptions =
   let
     options = setOptions (StartSupportDataExportOptions Nothing Nothing)
@@ -160,6 +162,7 @@ startSupportDataExport dataSetType fromDate roleNameArn destinationS3BucketName 
             JE.null
         )
         startSupportDataExportResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startSupportDataExport request

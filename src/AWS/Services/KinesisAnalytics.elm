@@ -206,6 +206,7 @@ module AWS.Services.KinesisAnalytics
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -216,16 +217,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "kinesisanalytics"
         "2015-08-14"
         "1.1"
         "AWSKINESISANALYTICS_20150814."
         "kinesisanalytics.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -245,7 +246,7 @@ addApplicationInput :
     String
     -> Int
     -> Input
-    -> AWS.Http.UnsignedRequest AddApplicationInputResponse
+    -> AWS.Request AddApplicationInputResponse
 addApplicationInput applicationName currentApplicationVersionId input =
     AWS.Http.unsignedRequest
         "AddApplicationInput"
@@ -255,6 +256,7 @@ addApplicationInput applicationName currentApplicationVersionId input =
             JE.null
         )
         addApplicationInputResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -272,7 +274,7 @@ addApplicationOutput :
     String
     -> Int
     -> Output
-    -> AWS.Http.UnsignedRequest AddApplicationOutputResponse
+    -> AWS.Request AddApplicationOutputResponse
 addApplicationOutput applicationName currentApplicationVersionId output =
     AWS.Http.unsignedRequest
         "AddApplicationOutput"
@@ -282,6 +284,7 @@ addApplicationOutput applicationName currentApplicationVersionId output =
             JE.null
         )
         addApplicationOutputResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -299,7 +302,7 @@ addApplicationReferenceDataSource :
     String
     -> Int
     -> ReferenceDataSource
-    -> AWS.Http.UnsignedRequest AddApplicationReferenceDataSourceResponse
+    -> AWS.Request AddApplicationReferenceDataSourceResponse
 addApplicationReferenceDataSource applicationName currentApplicationVersionId referenceDataSource =
     AWS.Http.unsignedRequest
         "AddApplicationReferenceDataSource"
@@ -309,6 +312,7 @@ addApplicationReferenceDataSource applicationName currentApplicationVersionId re
             JE.null
         )
         addApplicationReferenceDataSourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -323,7 +327,7 @@ __Required Parameters__
 createApplication :
     String
     -> (CreateApplicationOptions -> CreateApplicationOptions)
-    -> AWS.Http.UnsignedRequest CreateApplicationResponse
+    -> AWS.Request CreateApplicationResponse
 createApplication applicationName setOptions =
   let
     options = setOptions (CreateApplicationOptions Nothing Nothing Nothing Nothing)
@@ -336,6 +340,7 @@ createApplication applicationName setOptions =
             JE.null
         )
         createApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createApplication request
@@ -361,7 +366,7 @@ __Required Parameters__
 deleteApplication :
     String
     -> Date
-    -> AWS.Http.UnsignedRequest DeleteApplicationResponse
+    -> AWS.Request DeleteApplicationResponse
 deleteApplication applicationName createTimestamp =
     AWS.Http.unsignedRequest
         "DeleteApplication"
@@ -371,6 +376,7 @@ deleteApplication applicationName createTimestamp =
             JE.null
         )
         deleteApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -388,7 +394,7 @@ deleteApplicationOutput :
     String
     -> Int
     -> String
-    -> AWS.Http.UnsignedRequest DeleteApplicationOutputResponse
+    -> AWS.Request DeleteApplicationOutputResponse
 deleteApplicationOutput applicationName currentApplicationVersionId outputId =
     AWS.Http.unsignedRequest
         "DeleteApplicationOutput"
@@ -398,6 +404,7 @@ deleteApplicationOutput applicationName currentApplicationVersionId outputId =
             JE.null
         )
         deleteApplicationOutputResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -415,7 +422,7 @@ deleteApplicationReferenceDataSource :
     String
     -> Int
     -> String
-    -> AWS.Http.UnsignedRequest DeleteApplicationReferenceDataSourceResponse
+    -> AWS.Request DeleteApplicationReferenceDataSourceResponse
 deleteApplicationReferenceDataSource applicationName currentApplicationVersionId referenceId =
     AWS.Http.unsignedRequest
         "DeleteApplicationReferenceDataSource"
@@ -425,6 +432,7 @@ deleteApplicationReferenceDataSource applicationName currentApplicationVersionId
             JE.null
         )
         deleteApplicationReferenceDataSourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -438,7 +446,7 @@ __Required Parameters__
 -}
 describeApplication :
     String
-    -> AWS.Http.UnsignedRequest DescribeApplicationResponse
+    -> AWS.Request DescribeApplicationResponse
 describeApplication applicationName =
     AWS.Http.unsignedRequest
         "DescribeApplication"
@@ -448,6 +456,7 @@ describeApplication applicationName =
             JE.null
         )
         describeApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -465,7 +474,7 @@ discoverInputSchema :
     String
     -> String
     -> InputStartingPositionConfiguration
-    -> AWS.Http.UnsignedRequest DiscoverInputSchemaResponse
+    -> AWS.Request DiscoverInputSchemaResponse
 discoverInputSchema resourceARN roleARN inputStartingPositionConfiguration =
     AWS.Http.unsignedRequest
         "DiscoverInputSchema"
@@ -475,6 +484,7 @@ discoverInputSchema resourceARN roleARN inputStartingPositionConfiguration =
             JE.null
         )
         discoverInputSchemaResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -487,7 +497,7 @@ __Required Parameters__
 -}
 listApplications :
     (ListApplicationsOptions -> ListApplicationsOptions)
-    -> AWS.Http.UnsignedRequest ListApplicationsResponse
+    -> AWS.Request ListApplicationsResponse
 listApplications setOptions =
   let
     options = setOptions (ListApplicationsOptions Nothing Nothing)
@@ -500,6 +510,7 @@ listApplications setOptions =
             JE.null
         )
         listApplicationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listApplications request
@@ -523,7 +534,7 @@ __Required Parameters__
 startApplication :
     String
     -> (List InputConfiguration)
-    -> AWS.Http.UnsignedRequest StartApplicationResponse
+    -> AWS.Request StartApplicationResponse
 startApplication applicationName inputConfigurations =
     AWS.Http.unsignedRequest
         "StartApplication"
@@ -533,6 +544,7 @@ startApplication applicationName inputConfigurations =
             JE.null
         )
         startApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -546,7 +558,7 @@ __Required Parameters__
 -}
 stopApplication :
     String
-    -> AWS.Http.UnsignedRequest StopApplicationResponse
+    -> AWS.Request StopApplicationResponse
 stopApplication applicationName =
     AWS.Http.unsignedRequest
         "StopApplication"
@@ -556,6 +568,7 @@ stopApplication applicationName =
             JE.null
         )
         stopApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -573,7 +586,7 @@ updateApplication :
     String
     -> Int
     -> ApplicationUpdate
-    -> AWS.Http.UnsignedRequest UpdateApplicationResponse
+    -> AWS.Request UpdateApplicationResponse
 updateApplication applicationName currentApplicationVersionId applicationUpdate =
     AWS.Http.unsignedRequest
         "UpdateApplication"
@@ -583,6 +596,7 @@ updateApplication applicationName currentApplicationVersionId applicationUpdate 
             JE.null
         )
         updateApplicationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

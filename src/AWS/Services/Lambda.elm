@@ -236,6 +236,7 @@ module AWS.Services.Lambda
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -247,16 +248,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "lambda"
         "2015-03-31"
         "undefined"
         "AWSLAMBDA_20150331."
         "lambda.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -279,7 +280,7 @@ addPermission :
     -> String
     -> String
     -> (AddPermissionOptions -> AddPermissionOptions)
-    -> AWS.Http.UnsignedRequest AddPermissionResponse
+    -> AWS.Request AddPermissionResponse
 addPermission functionName statementId action principal setOptions =
   let
     options = setOptions (AddPermissionOptions Nothing Nothing Nothing Nothing)
@@ -292,6 +293,7 @@ addPermission functionName statementId action principal setOptions =
             JE.null
         )
         addPermissionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a addPermission request
@@ -320,7 +322,7 @@ createAlias :
     -> String
     -> String
     -> (CreateAliasOptions -> CreateAliasOptions)
-    -> AWS.Http.UnsignedRequest AliasConfiguration
+    -> AWS.Request AliasConfiguration
 createAlias functionName name functionVersion setOptions =
   let
     options = setOptions (CreateAliasOptions Nothing)
@@ -333,6 +335,7 @@ createAlias functionName name functionVersion setOptions =
             JE.null
         )
         aliasConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createAlias request
@@ -358,7 +361,7 @@ createEventSourceMapping :
     -> String
     -> EventSourcePosition
     -> (CreateEventSourceMappingOptions -> CreateEventSourceMappingOptions)
-    -> AWS.Http.UnsignedRequest EventSourceMappingConfiguration
+    -> AWS.Request EventSourceMappingConfiguration
 createEventSourceMapping eventSourceArn functionName startingPosition setOptions =
   let
     options = setOptions (CreateEventSourceMappingOptions Nothing Nothing Nothing)
@@ -371,6 +374,7 @@ createEventSourceMapping eventSourceArn functionName startingPosition setOptions
             JE.null
         )
         eventSourceMappingConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createEventSourceMapping request
@@ -402,7 +406,7 @@ createFunction :
     -> String
     -> FunctionCode
     -> (CreateFunctionOptions -> CreateFunctionOptions)
-    -> AWS.Http.UnsignedRequest FunctionConfiguration
+    -> AWS.Request FunctionConfiguration
 createFunction functionName runtime role handler code setOptions =
   let
     options = setOptions (CreateFunctionOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -415,6 +419,7 @@ createFunction functionName runtime role handler code setOptions =
             JE.null
         )
         functionConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createFunction request
@@ -444,7 +449,7 @@ __Required Parameters__
 deleteAlias :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAlias functionName name =
     AWS.Http.unsignedRequest
         "DeleteAlias"
@@ -454,6 +459,7 @@ deleteAlias functionName name =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -467,7 +473,7 @@ __Required Parameters__
 -}
 deleteEventSourceMapping :
     String
-    -> AWS.Http.UnsignedRequest EventSourceMappingConfiguration
+    -> AWS.Request EventSourceMappingConfiguration
 deleteEventSourceMapping uUID =
     AWS.Http.unsignedRequest
         "DeleteEventSourceMapping"
@@ -477,6 +483,7 @@ deleteEventSourceMapping uUID =
             JE.null
         )
         eventSourceMappingConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -491,7 +498,7 @@ __Required Parameters__
 deleteFunction :
     String
     -> (DeleteFunctionOptions -> DeleteFunctionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteFunction functionName setOptions =
   let
     options = setOptions (DeleteFunctionOptions Nothing)
@@ -504,6 +511,7 @@ deleteFunction functionName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteFunction request
@@ -522,7 +530,7 @@ __Required Parameters__
 
 -}
 getAccountSettings :
-    AWS.Http.UnsignedRequest GetAccountSettingsResponse
+    AWS.Request GetAccountSettingsResponse
 getAccountSettings =
     AWS.Http.unsignedRequest
         "GetAccountSettings"
@@ -533,6 +541,7 @@ getAccountSettings =
             ]
         )
         getAccountSettingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -548,7 +557,7 @@ __Required Parameters__
 getAlias :
     String
     -> String
-    -> AWS.Http.UnsignedRequest AliasConfiguration
+    -> AWS.Request AliasConfiguration
 getAlias functionName name =
     AWS.Http.unsignedRequest
         "GetAlias"
@@ -559,6 +568,7 @@ getAlias functionName name =
             ]
         )
         aliasConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -572,7 +582,7 @@ __Required Parameters__
 -}
 getEventSourceMapping :
     String
-    -> AWS.Http.UnsignedRequest EventSourceMappingConfiguration
+    -> AWS.Request EventSourceMappingConfiguration
 getEventSourceMapping uUID =
     AWS.Http.unsignedRequest
         "GetEventSourceMapping"
@@ -583,6 +593,7 @@ getEventSourceMapping uUID =
             ]
         )
         eventSourceMappingConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -597,7 +608,7 @@ __Required Parameters__
 getFunction :
     String
     -> (GetFunctionOptions -> GetFunctionOptions)
-    -> AWS.Http.UnsignedRequest GetFunctionResponse
+    -> AWS.Request GetFunctionResponse
 getFunction functionName setOptions =
   let
     options = setOptions (GetFunctionOptions Nothing)
@@ -611,6 +622,7 @@ getFunction functionName setOptions =
             ]
         )
         getFunctionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getFunction request
@@ -632,7 +644,7 @@ __Required Parameters__
 getFunctionConfiguration :
     String
     -> (GetFunctionConfigurationOptions -> GetFunctionConfigurationOptions)
-    -> AWS.Http.UnsignedRequest FunctionConfiguration
+    -> AWS.Request FunctionConfiguration
 getFunctionConfiguration functionName setOptions =
   let
     options = setOptions (GetFunctionConfigurationOptions Nothing)
@@ -646,6 +658,7 @@ getFunctionConfiguration functionName setOptions =
             ]
         )
         functionConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getFunctionConfiguration request
@@ -667,7 +680,7 @@ __Required Parameters__
 getPolicy :
     String
     -> (GetPolicyOptions -> GetPolicyOptions)
-    -> AWS.Http.UnsignedRequest GetPolicyResponse
+    -> AWS.Request GetPolicyResponse
 getPolicy functionName setOptions =
   let
     options = setOptions (GetPolicyOptions Nothing)
@@ -681,6 +694,7 @@ getPolicy functionName setOptions =
             ]
         )
         getPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getPolicy request
@@ -702,7 +716,7 @@ __Required Parameters__
 invoke :
     String
     -> (InvokeOptions -> InvokeOptions)
-    -> AWS.Http.UnsignedRequest InvocationResponse
+    -> AWS.Request InvocationResponse
 invoke functionName setOptions =
   let
     options = setOptions (InvokeOptions Nothing Nothing Nothing Nothing Nothing)
@@ -715,6 +729,7 @@ invoke functionName setOptions =
             JE.null
         )
         invocationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a invoke request
@@ -741,7 +756,7 @@ __Required Parameters__
 invokeAsync :
     String
     -> String
-    -> AWS.Http.UnsignedRequest InvokeAsyncResponse
+    -> AWS.Request InvokeAsyncResponse
 invokeAsync functionName invokeArgs =
     AWS.Http.unsignedRequest
         "InvokeAsync"
@@ -751,6 +766,7 @@ invokeAsync functionName invokeArgs =
             JE.null
         )
         invokeAsyncResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -765,7 +781,7 @@ __Required Parameters__
 listAliases :
     String
     -> (ListAliasesOptions -> ListAliasesOptions)
-    -> AWS.Http.UnsignedRequest ListAliasesResponse
+    -> AWS.Request ListAliasesResponse
 listAliases functionName setOptions =
   let
     options = setOptions (ListAliasesOptions Nothing Nothing Nothing)
@@ -779,6 +795,7 @@ listAliases functionName setOptions =
             ]
         )
         listAliasesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAliases request
@@ -800,7 +817,7 @@ __Required Parameters__
 -}
 listEventSourceMappings :
     (ListEventSourceMappingsOptions -> ListEventSourceMappingsOptions)
-    -> AWS.Http.UnsignedRequest ListEventSourceMappingsResponse
+    -> AWS.Request ListEventSourceMappingsResponse
 listEventSourceMappings setOptions =
   let
     options = setOptions (ListEventSourceMappingsOptions Nothing Nothing Nothing Nothing)
@@ -814,6 +831,7 @@ listEventSourceMappings setOptions =
             ]
         )
         listEventSourceMappingsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listEventSourceMappings request
@@ -836,7 +854,7 @@ __Required Parameters__
 -}
 listFunctions :
     (ListFunctionsOptions -> ListFunctionsOptions)
-    -> AWS.Http.UnsignedRequest ListFunctionsResponse
+    -> AWS.Request ListFunctionsResponse
 listFunctions setOptions =
   let
     options = setOptions (ListFunctionsOptions Nothing Nothing)
@@ -850,6 +868,7 @@ listFunctions setOptions =
             ]
         )
         listFunctionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listFunctions request
@@ -872,7 +891,7 @@ __Required Parameters__
 listVersionsByFunction :
     String
     -> (ListVersionsByFunctionOptions -> ListVersionsByFunctionOptions)
-    -> AWS.Http.UnsignedRequest ListVersionsByFunctionResponse
+    -> AWS.Request ListVersionsByFunctionResponse
 listVersionsByFunction functionName setOptions =
   let
     options = setOptions (ListVersionsByFunctionOptions Nothing Nothing)
@@ -886,6 +905,7 @@ listVersionsByFunction functionName setOptions =
             ]
         )
         listVersionsByFunctionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listVersionsByFunction request
@@ -908,7 +928,7 @@ __Required Parameters__
 publishVersion :
     String
     -> (PublishVersionOptions -> PublishVersionOptions)
-    -> AWS.Http.UnsignedRequest FunctionConfiguration
+    -> AWS.Request FunctionConfiguration
 publishVersion functionName setOptions =
   let
     options = setOptions (PublishVersionOptions Nothing Nothing)
@@ -921,6 +941,7 @@ publishVersion functionName setOptions =
             JE.null
         )
         functionConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a publishVersion request
@@ -945,7 +966,7 @@ removePermission :
     String
     -> String
     -> (RemovePermissionOptions -> RemovePermissionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removePermission functionName statementId setOptions =
   let
     options = setOptions (RemovePermissionOptions Nothing)
@@ -958,6 +979,7 @@ removePermission functionName statementId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a removePermission request
@@ -981,7 +1003,7 @@ updateAlias :
     String
     -> String
     -> (UpdateAliasOptions -> UpdateAliasOptions)
-    -> AWS.Http.UnsignedRequest AliasConfiguration
+    -> AWS.Request AliasConfiguration
 updateAlias functionName name setOptions =
   let
     options = setOptions (UpdateAliasOptions Nothing Nothing)
@@ -994,6 +1016,7 @@ updateAlias functionName name setOptions =
             JE.null
         )
         aliasConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateAlias request
@@ -1016,7 +1039,7 @@ __Required Parameters__
 updateEventSourceMapping :
     String
     -> (UpdateEventSourceMappingOptions -> UpdateEventSourceMappingOptions)
-    -> AWS.Http.UnsignedRequest EventSourceMappingConfiguration
+    -> AWS.Request EventSourceMappingConfiguration
 updateEventSourceMapping uUID setOptions =
   let
     options = setOptions (UpdateEventSourceMappingOptions Nothing Nothing Nothing)
@@ -1029,6 +1052,7 @@ updateEventSourceMapping uUID setOptions =
             JE.null
         )
         eventSourceMappingConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateEventSourceMapping request
@@ -1052,7 +1076,7 @@ __Required Parameters__
 updateFunctionCode :
     String
     -> (UpdateFunctionCodeOptions -> UpdateFunctionCodeOptions)
-    -> AWS.Http.UnsignedRequest FunctionConfiguration
+    -> AWS.Request FunctionConfiguration
 updateFunctionCode functionName setOptions =
   let
     options = setOptions (UpdateFunctionCodeOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1065,6 +1089,7 @@ updateFunctionCode functionName setOptions =
             JE.null
         )
         functionConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateFunctionCode request
@@ -1090,7 +1115,7 @@ __Required Parameters__
 updateFunctionConfiguration :
     String
     -> (UpdateFunctionConfigurationOptions -> UpdateFunctionConfigurationOptions)
-    -> AWS.Http.UnsignedRequest FunctionConfiguration
+    -> AWS.Request FunctionConfiguration
 updateFunctionConfiguration functionName setOptions =
   let
     options = setOptions (UpdateFunctionConfigurationOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1103,6 +1128,7 @@ updateFunctionConfiguration functionName setOptions =
             JE.null
         )
         functionConfigurationDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateFunctionConfiguration request

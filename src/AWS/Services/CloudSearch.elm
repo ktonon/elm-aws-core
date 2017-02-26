@@ -240,6 +240,7 @@ module AWS.Services.CloudSearch
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -251,16 +252,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "cloudsearch"
         "2013-01-01"
         "undefined"
         "AWSCLOUDSEARCH_20130101."
         "cloudsearch.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -276,7 +277,7 @@ __Required Parameters__
 -}
 buildSuggesters :
     String
-    -> AWS.Http.UnsignedRequest BuildSuggestersResponse
+    -> AWS.Request BuildSuggestersResponse
 buildSuggesters domainName =
     AWS.Http.unsignedRequest
         "BuildSuggesters"
@@ -286,6 +287,7 @@ buildSuggesters domainName =
             JE.null
         )
         buildSuggestersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -299,7 +301,7 @@ __Required Parameters__
 -}
 createDomain :
     String
-    -> AWS.Http.UnsignedRequest CreateDomainResponse
+    -> AWS.Request CreateDomainResponse
 createDomain domainName =
     AWS.Http.unsignedRequest
         "CreateDomain"
@@ -309,6 +311,7 @@ createDomain domainName =
             JE.null
         )
         createDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -324,7 +327,7 @@ __Required Parameters__
 defineAnalysisScheme :
     String
     -> AnalysisScheme
-    -> AWS.Http.UnsignedRequest DefineAnalysisSchemeResponse
+    -> AWS.Request DefineAnalysisSchemeResponse
 defineAnalysisScheme domainName analysisScheme =
     AWS.Http.unsignedRequest
         "DefineAnalysisScheme"
@@ -334,6 +337,7 @@ defineAnalysisScheme domainName analysisScheme =
             JE.null
         )
         defineAnalysisSchemeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -349,7 +353,7 @@ __Required Parameters__
 defineExpression :
     String
     -> Expression
-    -> AWS.Http.UnsignedRequest DefineExpressionResponse
+    -> AWS.Request DefineExpressionResponse
 defineExpression domainName expression =
     AWS.Http.unsignedRequest
         "DefineExpression"
@@ -359,6 +363,7 @@ defineExpression domainName expression =
             JE.null
         )
         defineExpressionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -374,7 +379,7 @@ __Required Parameters__
 defineIndexField :
     String
     -> IndexField
-    -> AWS.Http.UnsignedRequest DefineIndexFieldResponse
+    -> AWS.Request DefineIndexFieldResponse
 defineIndexField domainName indexField =
     AWS.Http.unsignedRequest
         "DefineIndexField"
@@ -384,6 +389,7 @@ defineIndexField domainName indexField =
             JE.null
         )
         defineIndexFieldResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -399,7 +405,7 @@ __Required Parameters__
 defineSuggester :
     String
     -> Suggester
-    -> AWS.Http.UnsignedRequest DefineSuggesterResponse
+    -> AWS.Request DefineSuggesterResponse
 defineSuggester domainName suggester =
     AWS.Http.unsignedRequest
         "DefineSuggester"
@@ -409,6 +415,7 @@ defineSuggester domainName suggester =
             JE.null
         )
         defineSuggesterResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -424,7 +431,7 @@ __Required Parameters__
 deleteAnalysisScheme :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteAnalysisSchemeResponse
+    -> AWS.Request DeleteAnalysisSchemeResponse
 deleteAnalysisScheme domainName analysisSchemeName =
     AWS.Http.unsignedRequest
         "DeleteAnalysisScheme"
@@ -434,6 +441,7 @@ deleteAnalysisScheme domainName analysisSchemeName =
             JE.null
         )
         deleteAnalysisSchemeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -447,7 +455,7 @@ __Required Parameters__
 -}
 deleteDomain :
     String
-    -> AWS.Http.UnsignedRequest DeleteDomainResponse
+    -> AWS.Request DeleteDomainResponse
 deleteDomain domainName =
     AWS.Http.unsignedRequest
         "DeleteDomain"
@@ -457,6 +465,7 @@ deleteDomain domainName =
             JE.null
         )
         deleteDomainResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -472,7 +481,7 @@ __Required Parameters__
 deleteExpression :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteExpressionResponse
+    -> AWS.Request DeleteExpressionResponse
 deleteExpression domainName expressionName =
     AWS.Http.unsignedRequest
         "DeleteExpression"
@@ -482,6 +491,7 @@ deleteExpression domainName expressionName =
             JE.null
         )
         deleteExpressionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -497,7 +507,7 @@ __Required Parameters__
 deleteIndexField :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteIndexFieldResponse
+    -> AWS.Request DeleteIndexFieldResponse
 deleteIndexField domainName indexFieldName =
     AWS.Http.unsignedRequest
         "DeleteIndexField"
@@ -507,6 +517,7 @@ deleteIndexField domainName indexFieldName =
             JE.null
         )
         deleteIndexFieldResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -522,7 +533,7 @@ __Required Parameters__
 deleteSuggester :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteSuggesterResponse
+    -> AWS.Request DeleteSuggesterResponse
 deleteSuggester domainName suggesterName =
     AWS.Http.unsignedRequest
         "DeleteSuggester"
@@ -532,6 +543,7 @@ deleteSuggester domainName suggesterName =
             JE.null
         )
         deleteSuggesterResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -546,7 +558,7 @@ __Required Parameters__
 describeAnalysisSchemes :
     String
     -> (DescribeAnalysisSchemesOptions -> DescribeAnalysisSchemesOptions)
-    -> AWS.Http.UnsignedRequest DescribeAnalysisSchemesResponse
+    -> AWS.Request DescribeAnalysisSchemesResponse
 describeAnalysisSchemes domainName setOptions =
   let
     options = setOptions (DescribeAnalysisSchemesOptions Nothing Nothing)
@@ -559,6 +571,7 @@ describeAnalysisSchemes domainName setOptions =
             JE.null
         )
         describeAnalysisSchemesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAnalysisSchemes request
@@ -581,7 +594,7 @@ __Required Parameters__
 describeAvailabilityOptions :
     String
     -> (DescribeAvailabilityOptionsOptions -> DescribeAvailabilityOptionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeAvailabilityOptionsResponse
+    -> AWS.Request DescribeAvailabilityOptionsResponse
 describeAvailabilityOptions domainName setOptions =
   let
     options = setOptions (DescribeAvailabilityOptionsOptions Nothing)
@@ -594,6 +607,7 @@ describeAvailabilityOptions domainName setOptions =
             JE.null
         )
         describeAvailabilityOptionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeAvailabilityOptions request
@@ -613,7 +627,7 @@ __Required Parameters__
 -}
 describeDomains :
     (DescribeDomainsOptions -> DescribeDomainsOptions)
-    -> AWS.Http.UnsignedRequest DescribeDomainsResponse
+    -> AWS.Request DescribeDomainsResponse
 describeDomains setOptions =
   let
     options = setOptions (DescribeDomainsOptions Nothing)
@@ -626,6 +640,7 @@ describeDomains setOptions =
             JE.null
         )
         describeDomainsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDomains request
@@ -647,7 +662,7 @@ __Required Parameters__
 describeExpressions :
     String
     -> (DescribeExpressionsOptions -> DescribeExpressionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeExpressionsResponse
+    -> AWS.Request DescribeExpressionsResponse
 describeExpressions domainName setOptions =
   let
     options = setOptions (DescribeExpressionsOptions Nothing Nothing)
@@ -660,6 +675,7 @@ describeExpressions domainName setOptions =
             JE.null
         )
         describeExpressionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeExpressions request
@@ -682,7 +698,7 @@ __Required Parameters__
 describeIndexFields :
     String
     -> (DescribeIndexFieldsOptions -> DescribeIndexFieldsOptions)
-    -> AWS.Http.UnsignedRequest DescribeIndexFieldsResponse
+    -> AWS.Request DescribeIndexFieldsResponse
 describeIndexFields domainName setOptions =
   let
     options = setOptions (DescribeIndexFieldsOptions Nothing Nothing)
@@ -695,6 +711,7 @@ describeIndexFields domainName setOptions =
             JE.null
         )
         describeIndexFieldsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeIndexFields request
@@ -716,7 +733,7 @@ __Required Parameters__
 -}
 describeScalingParameters :
     String
-    -> AWS.Http.UnsignedRequest DescribeScalingParametersResponse
+    -> AWS.Request DescribeScalingParametersResponse
 describeScalingParameters domainName =
     AWS.Http.unsignedRequest
         "DescribeScalingParameters"
@@ -726,6 +743,7 @@ describeScalingParameters domainName =
             JE.null
         )
         describeScalingParametersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -740,7 +758,7 @@ __Required Parameters__
 describeServiceAccessPolicies :
     String
     -> (DescribeServiceAccessPoliciesOptions -> DescribeServiceAccessPoliciesOptions)
-    -> AWS.Http.UnsignedRequest DescribeServiceAccessPoliciesResponse
+    -> AWS.Request DescribeServiceAccessPoliciesResponse
 describeServiceAccessPolicies domainName setOptions =
   let
     options = setOptions (DescribeServiceAccessPoliciesOptions Nothing)
@@ -753,6 +771,7 @@ describeServiceAccessPolicies domainName setOptions =
             JE.null
         )
         describeServiceAccessPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeServiceAccessPolicies request
@@ -774,7 +793,7 @@ __Required Parameters__
 describeSuggesters :
     String
     -> (DescribeSuggestersOptions -> DescribeSuggestersOptions)
-    -> AWS.Http.UnsignedRequest DescribeSuggestersResponse
+    -> AWS.Request DescribeSuggestersResponse
 describeSuggesters domainName setOptions =
   let
     options = setOptions (DescribeSuggestersOptions Nothing Nothing)
@@ -787,6 +806,7 @@ describeSuggesters domainName setOptions =
             JE.null
         )
         describeSuggestersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSuggesters request
@@ -808,7 +828,7 @@ __Required Parameters__
 -}
 indexDocuments :
     String
-    -> AWS.Http.UnsignedRequest IndexDocumentsResponse
+    -> AWS.Request IndexDocumentsResponse
 indexDocuments domainName =
     AWS.Http.unsignedRequest
         "IndexDocuments"
@@ -818,6 +838,7 @@ indexDocuments domainName =
             JE.null
         )
         indexDocumentsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -829,7 +850,7 @@ __Required Parameters__
 
 -}
 listDomainNames :
-    AWS.Http.UnsignedRequest ListDomainNamesResponse
+    AWS.Request ListDomainNamesResponse
 listDomainNames =
     AWS.Http.unsignedRequest
         "ListDomainNames"
@@ -839,6 +860,7 @@ listDomainNames =
             JE.null
         )
         listDomainNamesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -854,7 +876,7 @@ __Required Parameters__
 updateAvailabilityOptions :
     String
     -> Bool
-    -> AWS.Http.UnsignedRequest UpdateAvailabilityOptionsResponse
+    -> AWS.Request UpdateAvailabilityOptionsResponse
 updateAvailabilityOptions domainName multiAZ =
     AWS.Http.unsignedRequest
         "UpdateAvailabilityOptions"
@@ -864,6 +886,7 @@ updateAvailabilityOptions domainName multiAZ =
             JE.null
         )
         updateAvailabilityOptionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -879,7 +902,7 @@ __Required Parameters__
 updateScalingParameters :
     String
     -> ScalingParameters
-    -> AWS.Http.UnsignedRequest UpdateScalingParametersResponse
+    -> AWS.Request UpdateScalingParametersResponse
 updateScalingParameters domainName scalingParameters =
     AWS.Http.unsignedRequest
         "UpdateScalingParameters"
@@ -889,6 +912,7 @@ updateScalingParameters domainName scalingParameters =
             JE.null
         )
         updateScalingParametersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -904,7 +928,7 @@ __Required Parameters__
 updateServiceAccessPolicies :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateServiceAccessPoliciesResponse
+    -> AWS.Request UpdateServiceAccessPoliciesResponse
 updateServiceAccessPolicies domainName accessPolicies =
     AWS.Http.unsignedRequest
         "UpdateServiceAccessPolicies"
@@ -914,6 +938,7 @@ updateServiceAccessPolicies domainName accessPolicies =
             JE.null
         )
         updateServiceAccessPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

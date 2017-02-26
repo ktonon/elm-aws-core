@@ -156,6 +156,7 @@ module AWS.Services.SMS
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -166,16 +167,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "sms"
         "2016-10-24"
         "1.1"
         "AWSSMS_20161024."
         "sms.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -196,7 +197,7 @@ createReplicationJob :
     -> Date
     -> Int
     -> (CreateReplicationJobOptions -> CreateReplicationJobOptions)
-    -> AWS.Http.UnsignedRequest CreateReplicationJobResponse
+    -> AWS.Request CreateReplicationJobResponse
 createReplicationJob serverId seedReplicationTime frequency setOptions =
   let
     options = setOptions (CreateReplicationJobOptions Nothing Nothing Nothing)
@@ -209,6 +210,7 @@ createReplicationJob serverId seedReplicationTime frequency setOptions =
             JE.null
         )
         createReplicationJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createReplicationJob request
@@ -231,7 +233,7 @@ __Required Parameters__
 -}
 deleteReplicationJob :
     String
-    -> AWS.Http.UnsignedRequest DeleteReplicationJobResponse
+    -> AWS.Request DeleteReplicationJobResponse
 deleteReplicationJob replicationJobId =
     AWS.Http.unsignedRequest
         "DeleteReplicationJob"
@@ -241,6 +243,7 @@ deleteReplicationJob replicationJobId =
             JE.null
         )
         deleteReplicationJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -252,7 +255,7 @@ __Required Parameters__
 
 -}
 deleteServerCatalog :
-    AWS.Http.UnsignedRequest DeleteServerCatalogResponse
+    AWS.Request DeleteServerCatalogResponse
 deleteServerCatalog =
     AWS.Http.unsignedRequest
         "DeleteServerCatalog"
@@ -262,6 +265,7 @@ deleteServerCatalog =
             JE.null
         )
         deleteServerCatalogResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -275,7 +279,7 @@ __Required Parameters__
 -}
 disassociateConnector :
     String
-    -> AWS.Http.UnsignedRequest DisassociateConnectorResponse
+    -> AWS.Request DisassociateConnectorResponse
 disassociateConnector connectorId =
     AWS.Http.unsignedRequest
         "DisassociateConnector"
@@ -285,6 +289,7 @@ disassociateConnector connectorId =
             JE.null
         )
         disassociateConnectorResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -297,7 +302,7 @@ __Required Parameters__
 -}
 getConnectors :
     (GetConnectorsOptions -> GetConnectorsOptions)
-    -> AWS.Http.UnsignedRequest GetConnectorsResponse
+    -> AWS.Request GetConnectorsResponse
 getConnectors setOptions =
   let
     options = setOptions (GetConnectorsOptions Nothing Nothing)
@@ -310,6 +315,7 @@ getConnectors setOptions =
             JE.null
         )
         getConnectorsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getConnectors request
@@ -330,7 +336,7 @@ __Required Parameters__
 -}
 getReplicationJobs :
     (GetReplicationJobsOptions -> GetReplicationJobsOptions)
-    -> AWS.Http.UnsignedRequest GetReplicationJobsResponse
+    -> AWS.Request GetReplicationJobsResponse
 getReplicationJobs setOptions =
   let
     options = setOptions (GetReplicationJobsOptions Nothing Nothing Nothing)
@@ -343,6 +349,7 @@ getReplicationJobs setOptions =
             JE.null
         )
         getReplicationJobsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getReplicationJobs request
@@ -366,7 +373,7 @@ __Required Parameters__
 getReplicationRuns :
     String
     -> (GetReplicationRunsOptions -> GetReplicationRunsOptions)
-    -> AWS.Http.UnsignedRequest GetReplicationRunsResponse
+    -> AWS.Request GetReplicationRunsResponse
 getReplicationRuns replicationJobId setOptions =
   let
     options = setOptions (GetReplicationRunsOptions Nothing Nothing)
@@ -379,6 +386,7 @@ getReplicationRuns replicationJobId setOptions =
             JE.null
         )
         getReplicationRunsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getReplicationRuns request
@@ -399,7 +407,7 @@ __Required Parameters__
 -}
 getServers :
     (GetServersOptions -> GetServersOptions)
-    -> AWS.Http.UnsignedRequest GetServersResponse
+    -> AWS.Request GetServersResponse
 getServers setOptions =
   let
     options = setOptions (GetServersOptions Nothing Nothing)
@@ -412,6 +420,7 @@ getServers setOptions =
             JE.null
         )
         getServersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getServers request
@@ -431,7 +440,7 @@ __Required Parameters__
 
 -}
 importServerCatalog :
-    AWS.Http.UnsignedRequest ImportServerCatalogResponse
+    AWS.Request ImportServerCatalogResponse
 importServerCatalog =
     AWS.Http.unsignedRequest
         "ImportServerCatalog"
@@ -441,6 +450,7 @@ importServerCatalog =
             JE.null
         )
         importServerCatalogResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -455,7 +465,7 @@ __Required Parameters__
 startOnDemandReplicationRun :
     String
     -> (StartOnDemandReplicationRunOptions -> StartOnDemandReplicationRunOptions)
-    -> AWS.Http.UnsignedRequest StartOnDemandReplicationRunResponse
+    -> AWS.Request StartOnDemandReplicationRunResponse
 startOnDemandReplicationRun replicationJobId setOptions =
   let
     options = setOptions (StartOnDemandReplicationRunOptions Nothing)
@@ -468,6 +478,7 @@ startOnDemandReplicationRun replicationJobId setOptions =
             JE.null
         )
         startOnDemandReplicationRunResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startOnDemandReplicationRun request
@@ -489,7 +500,7 @@ __Required Parameters__
 updateReplicationJob :
     String
     -> (UpdateReplicationJobOptions -> UpdateReplicationJobOptions)
-    -> AWS.Http.UnsignedRequest UpdateReplicationJobResponse
+    -> AWS.Request UpdateReplicationJobResponse
 updateReplicationJob replicationJobId setOptions =
   let
     options = setOptions (UpdateReplicationJobOptions Nothing Nothing Nothing Nothing Nothing)
@@ -502,6 +513,7 @@ updateReplicationJob replicationJobId setOptions =
             JE.null
         )
         updateReplicationJobResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateReplicationJob request

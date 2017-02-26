@@ -482,6 +482,7 @@ module AWS.Services.CodeDeploy
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -492,16 +493,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "codedeploy"
         "2014-10-06"
         "1.1"
         "AWSCODEDEPLOY_20141006."
         "codedeploy.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -519,7 +520,7 @@ __Required Parameters__
 addTagsToOnPremisesInstances :
     (List Tag)
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addTagsToOnPremisesInstances tags instanceNames =
     AWS.Http.unsignedRequest
         "AddTagsToOnPremisesInstances"
@@ -529,6 +530,7 @@ addTagsToOnPremisesInstances tags instanceNames =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -544,7 +546,7 @@ __Required Parameters__
 batchGetApplicationRevisions :
     String
     -> (List RevisionLocation)
-    -> AWS.Http.UnsignedRequest BatchGetApplicationRevisionsOutput
+    -> AWS.Request BatchGetApplicationRevisionsOutput
 batchGetApplicationRevisions applicationName revisions =
     AWS.Http.unsignedRequest
         "BatchGetApplicationRevisions"
@@ -554,6 +556,7 @@ batchGetApplicationRevisions applicationName revisions =
             JE.null
         )
         batchGetApplicationRevisionsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -566,7 +569,7 @@ __Required Parameters__
 -}
 batchGetApplications :
     (BatchGetApplicationsOptions -> BatchGetApplicationsOptions)
-    -> AWS.Http.UnsignedRequest BatchGetApplicationsOutput
+    -> AWS.Request BatchGetApplicationsOutput
 batchGetApplications setOptions =
   let
     options = setOptions (BatchGetApplicationsOptions Nothing)
@@ -579,6 +582,7 @@ batchGetApplications setOptions =
             JE.null
         )
         batchGetApplicationsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a batchGetApplications request
@@ -601,7 +605,7 @@ __Required Parameters__
 batchGetDeploymentGroups :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest BatchGetDeploymentGroupsOutput
+    -> AWS.Request BatchGetDeploymentGroupsOutput
 batchGetDeploymentGroups applicationName deploymentGroupNames =
     AWS.Http.unsignedRequest
         "BatchGetDeploymentGroups"
@@ -611,6 +615,7 @@ batchGetDeploymentGroups applicationName deploymentGroupNames =
             JE.null
         )
         batchGetDeploymentGroupsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -626,7 +631,7 @@ __Required Parameters__
 batchGetDeploymentInstances :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest BatchGetDeploymentInstancesOutput
+    -> AWS.Request BatchGetDeploymentInstancesOutput
 batchGetDeploymentInstances deploymentId instanceIds =
     AWS.Http.unsignedRequest
         "BatchGetDeploymentInstances"
@@ -636,6 +641,7 @@ batchGetDeploymentInstances deploymentId instanceIds =
             JE.null
         )
         batchGetDeploymentInstancesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -648,7 +654,7 @@ __Required Parameters__
 -}
 batchGetDeployments :
     (BatchGetDeploymentsOptions -> BatchGetDeploymentsOptions)
-    -> AWS.Http.UnsignedRequest BatchGetDeploymentsOutput
+    -> AWS.Request BatchGetDeploymentsOutput
 batchGetDeployments setOptions =
   let
     options = setOptions (BatchGetDeploymentsOptions Nothing)
@@ -661,6 +667,7 @@ batchGetDeployments setOptions =
             JE.null
         )
         batchGetDeploymentsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a batchGetDeployments request
@@ -680,7 +687,7 @@ __Required Parameters__
 -}
 batchGetOnPremisesInstances :
     (BatchGetOnPremisesInstancesOptions -> BatchGetOnPremisesInstancesOptions)
-    -> AWS.Http.UnsignedRequest BatchGetOnPremisesInstancesOutput
+    -> AWS.Request BatchGetOnPremisesInstancesOutput
 batchGetOnPremisesInstances setOptions =
   let
     options = setOptions (BatchGetOnPremisesInstancesOptions Nothing)
@@ -693,6 +700,7 @@ batchGetOnPremisesInstances setOptions =
             JE.null
         )
         batchGetOnPremisesInstancesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a batchGetOnPremisesInstances request
@@ -712,7 +720,7 @@ __Required Parameters__
 -}
 continueDeployment :
     (ContinueDeploymentOptions -> ContinueDeploymentOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 continueDeployment setOptions =
   let
     options = setOptions (ContinueDeploymentOptions Nothing)
@@ -725,6 +733,7 @@ continueDeployment setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a continueDeployment request
@@ -745,7 +754,7 @@ __Required Parameters__
 -}
 createApplication :
     String
-    -> AWS.Http.UnsignedRequest CreateApplicationOutput
+    -> AWS.Request CreateApplicationOutput
 createApplication applicationName =
     AWS.Http.unsignedRequest
         "CreateApplication"
@@ -755,6 +764,7 @@ createApplication applicationName =
             JE.null
         )
         createApplicationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -769,7 +779,7 @@ __Required Parameters__
 createDeployment :
     String
     -> (CreateDeploymentOptions -> CreateDeploymentOptions)
-    -> AWS.Http.UnsignedRequest CreateDeploymentOutput
+    -> AWS.Request CreateDeploymentOutput
 createDeployment applicationName setOptions =
   let
     options = setOptions (CreateDeploymentOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -782,6 +792,7 @@ createDeployment applicationName setOptions =
             JE.null
         )
         createDeploymentOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDeployment request
@@ -810,7 +821,7 @@ __Required Parameters__
 createDeploymentConfig :
     String
     -> (CreateDeploymentConfigOptions -> CreateDeploymentConfigOptions)
-    -> AWS.Http.UnsignedRequest CreateDeploymentConfigOutput
+    -> AWS.Request CreateDeploymentConfigOutput
 createDeploymentConfig deploymentConfigName setOptions =
   let
     options = setOptions (CreateDeploymentConfigOptions Nothing)
@@ -823,6 +834,7 @@ createDeploymentConfig deploymentConfigName setOptions =
             JE.null
         )
         createDeploymentConfigOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDeploymentConfig request
@@ -848,7 +860,7 @@ createDeploymentGroup :
     -> String
     -> String
     -> (CreateDeploymentGroupOptions -> CreateDeploymentGroupOptions)
-    -> AWS.Http.UnsignedRequest CreateDeploymentGroupOutput
+    -> AWS.Request CreateDeploymentGroupOutput
 createDeploymentGroup applicationName deploymentGroupName serviceRoleArn setOptions =
   let
     options = setOptions (CreateDeploymentGroupOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -861,6 +873,7 @@ createDeploymentGroup applicationName deploymentGroupName serviceRoleArn setOpti
             JE.null
         )
         createDeploymentGroupOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDeploymentGroup request
@@ -890,7 +903,7 @@ __Required Parameters__
 -}
 deleteApplication :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteApplication applicationName =
     AWS.Http.unsignedRequest
         "DeleteApplication"
@@ -900,6 +913,7 @@ deleteApplication applicationName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -913,7 +927,7 @@ __Required Parameters__
 -}
 deleteDeploymentConfig :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDeploymentConfig deploymentConfigName =
     AWS.Http.unsignedRequest
         "DeleteDeploymentConfig"
@@ -923,6 +937,7 @@ deleteDeploymentConfig deploymentConfigName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -938,7 +953,7 @@ __Required Parameters__
 deleteDeploymentGroup :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteDeploymentGroupOutput
+    -> AWS.Request DeleteDeploymentGroupOutput
 deleteDeploymentGroup applicationName deploymentGroupName =
     AWS.Http.unsignedRequest
         "DeleteDeploymentGroup"
@@ -948,6 +963,7 @@ deleteDeploymentGroup applicationName deploymentGroupName =
             JE.null
         )
         deleteDeploymentGroupOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -961,7 +977,7 @@ __Required Parameters__
 -}
 deregisterOnPremisesInstance :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deregisterOnPremisesInstance instanceName =
     AWS.Http.unsignedRequest
         "DeregisterOnPremisesInstance"
@@ -971,6 +987,7 @@ deregisterOnPremisesInstance instanceName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -984,7 +1001,7 @@ __Required Parameters__
 -}
 getApplication :
     String
-    -> AWS.Http.UnsignedRequest GetApplicationOutput
+    -> AWS.Request GetApplicationOutput
 getApplication applicationName =
     AWS.Http.unsignedRequest
         "GetApplication"
@@ -994,6 +1011,7 @@ getApplication applicationName =
             JE.null
         )
         getApplicationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1009,7 +1027,7 @@ __Required Parameters__
 getApplicationRevision :
     String
     -> RevisionLocation
-    -> AWS.Http.UnsignedRequest GetApplicationRevisionOutput
+    -> AWS.Request GetApplicationRevisionOutput
 getApplicationRevision applicationName revision =
     AWS.Http.unsignedRequest
         "GetApplicationRevision"
@@ -1019,6 +1037,7 @@ getApplicationRevision applicationName revision =
             JE.null
         )
         getApplicationRevisionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1032,7 +1051,7 @@ __Required Parameters__
 -}
 getDeployment :
     String
-    -> AWS.Http.UnsignedRequest GetDeploymentOutput
+    -> AWS.Request GetDeploymentOutput
 getDeployment deploymentId =
     AWS.Http.unsignedRequest
         "GetDeployment"
@@ -1042,6 +1061,7 @@ getDeployment deploymentId =
             JE.null
         )
         getDeploymentOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1055,7 +1075,7 @@ __Required Parameters__
 -}
 getDeploymentConfig :
     String
-    -> AWS.Http.UnsignedRequest GetDeploymentConfigOutput
+    -> AWS.Request GetDeploymentConfigOutput
 getDeploymentConfig deploymentConfigName =
     AWS.Http.unsignedRequest
         "GetDeploymentConfig"
@@ -1065,6 +1085,7 @@ getDeploymentConfig deploymentConfigName =
             JE.null
         )
         getDeploymentConfigOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1080,7 +1101,7 @@ __Required Parameters__
 getDeploymentGroup :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetDeploymentGroupOutput
+    -> AWS.Request GetDeploymentGroupOutput
 getDeploymentGroup applicationName deploymentGroupName =
     AWS.Http.unsignedRequest
         "GetDeploymentGroup"
@@ -1090,6 +1111,7 @@ getDeploymentGroup applicationName deploymentGroupName =
             JE.null
         )
         getDeploymentGroupOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1105,7 +1127,7 @@ __Required Parameters__
 getDeploymentInstance :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetDeploymentInstanceOutput
+    -> AWS.Request GetDeploymentInstanceOutput
 getDeploymentInstance deploymentId instanceId =
     AWS.Http.unsignedRequest
         "GetDeploymentInstance"
@@ -1115,6 +1137,7 @@ getDeploymentInstance deploymentId instanceId =
             JE.null
         )
         getDeploymentInstanceOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1128,7 +1151,7 @@ __Required Parameters__
 -}
 getOnPremisesInstance :
     String
-    -> AWS.Http.UnsignedRequest GetOnPremisesInstanceOutput
+    -> AWS.Request GetOnPremisesInstanceOutput
 getOnPremisesInstance instanceName =
     AWS.Http.unsignedRequest
         "GetOnPremisesInstance"
@@ -1138,6 +1161,7 @@ getOnPremisesInstance instanceName =
             JE.null
         )
         getOnPremisesInstanceOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1152,7 +1176,7 @@ __Required Parameters__
 listApplicationRevisions :
     String
     -> (ListApplicationRevisionsOptions -> ListApplicationRevisionsOptions)
-    -> AWS.Http.UnsignedRequest ListApplicationRevisionsOutput
+    -> AWS.Request ListApplicationRevisionsOutput
 listApplicationRevisions applicationName setOptions =
   let
     options = setOptions (ListApplicationRevisionsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1165,6 +1189,7 @@ listApplicationRevisions applicationName setOptions =
             JE.null
         )
         listApplicationRevisionsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listApplicationRevisions request
@@ -1189,7 +1214,7 @@ __Required Parameters__
 -}
 listApplications :
     (ListApplicationsOptions -> ListApplicationsOptions)
-    -> AWS.Http.UnsignedRequest ListApplicationsOutput
+    -> AWS.Request ListApplicationsOutput
 listApplications setOptions =
   let
     options = setOptions (ListApplicationsOptions Nothing)
@@ -1202,6 +1227,7 @@ listApplications setOptions =
             JE.null
         )
         listApplicationsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listApplications request
@@ -1221,7 +1247,7 @@ __Required Parameters__
 -}
 listDeploymentConfigs :
     (ListDeploymentConfigsOptions -> ListDeploymentConfigsOptions)
-    -> AWS.Http.UnsignedRequest ListDeploymentConfigsOutput
+    -> AWS.Request ListDeploymentConfigsOutput
 listDeploymentConfigs setOptions =
   let
     options = setOptions (ListDeploymentConfigsOptions Nothing)
@@ -1234,6 +1260,7 @@ listDeploymentConfigs setOptions =
             JE.null
         )
         listDeploymentConfigsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDeploymentConfigs request
@@ -1255,7 +1282,7 @@ __Required Parameters__
 listDeploymentGroups :
     String
     -> (ListDeploymentGroupsOptions -> ListDeploymentGroupsOptions)
-    -> AWS.Http.UnsignedRequest ListDeploymentGroupsOutput
+    -> AWS.Request ListDeploymentGroupsOutput
 listDeploymentGroups applicationName setOptions =
   let
     options = setOptions (ListDeploymentGroupsOptions Nothing)
@@ -1268,6 +1295,7 @@ listDeploymentGroups applicationName setOptions =
             JE.null
         )
         listDeploymentGroupsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDeploymentGroups request
@@ -1289,7 +1317,7 @@ __Required Parameters__
 listDeploymentInstances :
     String
     -> (ListDeploymentInstancesOptions -> ListDeploymentInstancesOptions)
-    -> AWS.Http.UnsignedRequest ListDeploymentInstancesOutput
+    -> AWS.Request ListDeploymentInstancesOutput
 listDeploymentInstances deploymentId setOptions =
   let
     options = setOptions (ListDeploymentInstancesOptions Nothing Nothing Nothing)
@@ -1302,6 +1330,7 @@ listDeploymentInstances deploymentId setOptions =
             JE.null
         )
         listDeploymentInstancesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDeploymentInstances request
@@ -1323,7 +1352,7 @@ __Required Parameters__
 -}
 listDeployments :
     (ListDeploymentsOptions -> ListDeploymentsOptions)
-    -> AWS.Http.UnsignedRequest ListDeploymentsOutput
+    -> AWS.Request ListDeploymentsOutput
 listDeployments setOptions =
   let
     options = setOptions (ListDeploymentsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -1336,6 +1365,7 @@ listDeployments setOptions =
             JE.null
         )
         listDeploymentsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDeployments request
@@ -1359,7 +1389,7 @@ __Required Parameters__
 -}
 listOnPremisesInstances :
     (ListOnPremisesInstancesOptions -> ListOnPremisesInstancesOptions)
-    -> AWS.Http.UnsignedRequest ListOnPremisesInstancesOutput
+    -> AWS.Request ListOnPremisesInstancesOutput
 listOnPremisesInstances setOptions =
   let
     options = setOptions (ListOnPremisesInstancesOptions Nothing Nothing Nothing)
@@ -1372,6 +1402,7 @@ listOnPremisesInstances setOptions =
             JE.null
         )
         listOnPremisesInstancesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listOnPremisesInstances request
@@ -1397,7 +1428,7 @@ registerApplicationRevision :
     String
     -> RevisionLocation
     -> (RegisterApplicationRevisionOptions -> RegisterApplicationRevisionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 registerApplicationRevision applicationName revision setOptions =
   let
     options = setOptions (RegisterApplicationRevisionOptions Nothing)
@@ -1410,6 +1441,7 @@ registerApplicationRevision applicationName revision setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerApplicationRevision request
@@ -1431,7 +1463,7 @@ __Required Parameters__
 registerOnPremisesInstance :
     String
     -> (RegisterOnPremisesInstanceOptions -> RegisterOnPremisesInstanceOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 registerOnPremisesInstance instanceName setOptions =
   let
     options = setOptions (RegisterOnPremisesInstanceOptions Nothing Nothing)
@@ -1444,6 +1476,7 @@ registerOnPremisesInstance instanceName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerOnPremisesInstance request
@@ -1467,7 +1500,7 @@ __Required Parameters__
 removeTagsFromOnPremisesInstances :
     (List Tag)
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeTagsFromOnPremisesInstances tags instanceNames =
     AWS.Http.unsignedRequest
         "RemoveTagsFromOnPremisesInstances"
@@ -1477,6 +1510,7 @@ removeTagsFromOnPremisesInstances tags instanceNames =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1489,7 +1523,7 @@ __Required Parameters__
 -}
 skipWaitTimeForInstanceTermination :
     (SkipWaitTimeForInstanceTerminationOptions -> SkipWaitTimeForInstanceTerminationOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 skipWaitTimeForInstanceTermination setOptions =
   let
     options = setOptions (SkipWaitTimeForInstanceTerminationOptions Nothing)
@@ -1502,6 +1536,7 @@ skipWaitTimeForInstanceTermination setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a skipWaitTimeForInstanceTermination request
@@ -1523,7 +1558,7 @@ __Required Parameters__
 stopDeployment :
     String
     -> (StopDeploymentOptions -> StopDeploymentOptions)
-    -> AWS.Http.UnsignedRequest StopDeploymentOutput
+    -> AWS.Request StopDeploymentOutput
 stopDeployment deploymentId setOptions =
   let
     options = setOptions (StopDeploymentOptions Nothing)
@@ -1536,6 +1571,7 @@ stopDeployment deploymentId setOptions =
             JE.null
         )
         stopDeploymentOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a stopDeployment request
@@ -1555,7 +1591,7 @@ __Required Parameters__
 -}
 updateApplication :
     (UpdateApplicationOptions -> UpdateApplicationOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 updateApplication setOptions =
   let
     options = setOptions (UpdateApplicationOptions Nothing Nothing)
@@ -1568,6 +1604,7 @@ updateApplication setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateApplication request
@@ -1592,7 +1629,7 @@ updateDeploymentGroup :
     String
     -> String
     -> (UpdateDeploymentGroupOptions -> UpdateDeploymentGroupOptions)
-    -> AWS.Http.UnsignedRequest UpdateDeploymentGroupOutput
+    -> AWS.Request UpdateDeploymentGroupOutput
 updateDeploymentGroup applicationName currentDeploymentGroupName setOptions =
   let
     options = setOptions (UpdateDeploymentGroupOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1605,6 +1642,7 @@ updateDeploymentGroup applicationName currentDeploymentGroupName setOptions =
             JE.null
         )
         updateDeploymentGroupOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDeploymentGroup request

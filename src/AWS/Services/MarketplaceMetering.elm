@@ -86,6 +86,7 @@ module AWS.Services.MarketplaceMetering
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -96,16 +97,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "metering.marketplace"
         "2016-01-14"
         "1.1"
         "AWSMETERING.MARKETPLACE_20160114."
         "metering.marketplace.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -123,7 +124,7 @@ __Required Parameters__
 batchMeterUsage :
     (List UsageRecord)
     -> String
-    -> AWS.Http.UnsignedRequest BatchMeterUsageResult
+    -> AWS.Request BatchMeterUsageResult
 batchMeterUsage usageRecords productCode =
     AWS.Http.unsignedRequest
         "BatchMeterUsage"
@@ -133,6 +134,7 @@ batchMeterUsage usageRecords productCode =
             JE.null
         )
         batchMeterUsageResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -154,7 +156,7 @@ meterUsage :
     -> String
     -> Int
     -> Bool
-    -> AWS.Http.UnsignedRequest MeterUsageResult
+    -> AWS.Request MeterUsageResult
 meterUsage productCode timestamp usageDimension usageQuantity dryRun =
     AWS.Http.unsignedRequest
         "MeterUsage"
@@ -164,6 +166,7 @@ meterUsage productCode timestamp usageDimension usageQuantity dryRun =
             JE.null
         )
         meterUsageResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -177,7 +180,7 @@ __Required Parameters__
 -}
 resolveCustomer :
     String
-    -> AWS.Http.UnsignedRequest ResolveCustomerResult
+    -> AWS.Request ResolveCustomerResult
 resolveCustomer registrationToken =
     AWS.Http.unsignedRequest
         "ResolveCustomer"
@@ -187,6 +190,7 @@ resolveCustomer registrationToken =
             JE.null
         )
         resolveCustomerResultDecoder
+        |> AWS.UnsignedRequest
 
 
 

@@ -14,6 +14,11 @@ These are the project goals:
 * Make this a pure elm implementation of the AWS SDK (no falling back to JavaScript AWS SDK)
 * Fully generated. No patching after the generation script is run.
 
+## Preview Docs
+
+* Download <a href="https://raw.githubusercontent.com/ktonon/aws-sdk-elm/master/docs.json" download="download">docs.json</a>
+* Use [Elm Packages Doc Preview](http://package.elm-lang.org/help/docs-preview)
+
 ## Todo
 
 * [x] parse [apis/*.json][] files to get list of AWS APIs

@@ -258,6 +258,7 @@ module AWS.Services.MachineLearning
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -269,16 +270,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "machinelearning"
         "2014-12-12"
         "1.1"
         "AWSMACHINELEARNING_20141212."
         "machinelearning.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -298,7 +299,7 @@ addTags :
     (List Tag)
     -> String
     -> TaggableResourceType
-    -> AWS.Http.UnsignedRequest AddTagsOutput
+    -> AWS.Request AddTagsOutput
 addTags tags resourceId resourceType =
     AWS.Http.unsignedRequest
         "AddTags"
@@ -308,6 +309,7 @@ addTags tags resourceId resourceType =
             JE.null
         )
         addTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -328,7 +330,7 @@ createBatchPrediction :
     -> String
     -> String
     -> (CreateBatchPredictionOptions -> CreateBatchPredictionOptions)
-    -> AWS.Http.UnsignedRequest CreateBatchPredictionOutput
+    -> AWS.Request CreateBatchPredictionOutput
 createBatchPrediction batchPredictionId mLModelId batchPredictionDataSourceId outputUri setOptions =
   let
     options = setOptions (CreateBatchPredictionOptions Nothing)
@@ -341,6 +343,7 @@ createBatchPrediction batchPredictionId mLModelId batchPredictionDataSourceId ou
             JE.null
         )
         createBatchPredictionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createBatchPrediction request
@@ -366,7 +369,7 @@ createDataSourceFromRDS :
     -> RDSDataSpec
     -> String
     -> (CreateDataSourceFromRDSOptions -> CreateDataSourceFromRDSOptions)
-    -> AWS.Http.UnsignedRequest CreateDataSourceFromRDSOutput
+    -> AWS.Request CreateDataSourceFromRDSOutput
 createDataSourceFromRDS dataSourceId rDSData roleARN setOptions =
   let
     options = setOptions (CreateDataSourceFromRDSOptions Nothing Nothing)
@@ -379,6 +382,7 @@ createDataSourceFromRDS dataSourceId rDSData roleARN setOptions =
             JE.null
         )
         createDataSourceFromRDSOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDataSourceFromRDS request
@@ -405,7 +409,7 @@ createDataSourceFromRedshift :
     -> RedshiftDataSpec
     -> String
     -> (CreateDataSourceFromRedshiftOptions -> CreateDataSourceFromRedshiftOptions)
-    -> AWS.Http.UnsignedRequest CreateDataSourceFromRedshiftOutput
+    -> AWS.Request CreateDataSourceFromRedshiftOutput
 createDataSourceFromRedshift dataSourceId dataSpec roleARN setOptions =
   let
     options = setOptions (CreateDataSourceFromRedshiftOptions Nothing Nothing)
@@ -418,6 +422,7 @@ createDataSourceFromRedshift dataSourceId dataSpec roleARN setOptions =
             JE.null
         )
         createDataSourceFromRedshiftOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDataSourceFromRedshift request
@@ -442,7 +447,7 @@ createDataSourceFromS3 :
     String
     -> S3DataSpec
     -> (CreateDataSourceFromS3Options -> CreateDataSourceFromS3Options)
-    -> AWS.Http.UnsignedRequest CreateDataSourceFromS3Output
+    -> AWS.Request CreateDataSourceFromS3Output
 createDataSourceFromS3 dataSourceId dataSpec setOptions =
   let
     options = setOptions (CreateDataSourceFromS3Options Nothing Nothing)
@@ -455,6 +460,7 @@ createDataSourceFromS3 dataSourceId dataSpec setOptions =
             JE.null
         )
         createDataSourceFromS3OutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDataSourceFromS3 request
@@ -481,7 +487,7 @@ createEvaluation :
     -> String
     -> String
     -> (CreateEvaluationOptions -> CreateEvaluationOptions)
-    -> AWS.Http.UnsignedRequest CreateEvaluationOutput
+    -> AWS.Request CreateEvaluationOutput
 createEvaluation evaluationId mLModelId evaluationDataSourceId setOptions =
   let
     options = setOptions (CreateEvaluationOptions Nothing)
@@ -494,6 +500,7 @@ createEvaluation evaluationId mLModelId evaluationDataSourceId setOptions =
             JE.null
         )
         createEvaluationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createEvaluation request
@@ -519,7 +526,7 @@ createMLModel :
     -> MLModelType
     -> String
     -> (CreateMLModelOptions -> CreateMLModelOptions)
-    -> AWS.Http.UnsignedRequest CreateMLModelOutput
+    -> AWS.Request CreateMLModelOutput
 createMLModel mLModelId mLModelType trainingDataSourceId setOptions =
   let
     options = setOptions (CreateMLModelOptions Nothing Nothing Nothing Nothing)
@@ -532,6 +539,7 @@ createMLModel mLModelId mLModelType trainingDataSourceId setOptions =
             JE.null
         )
         createMLModelOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createMLModel request
@@ -555,7 +563,7 @@ __Required Parameters__
 -}
 createRealtimeEndpoint :
     String
-    -> AWS.Http.UnsignedRequest CreateRealtimeEndpointOutput
+    -> AWS.Request CreateRealtimeEndpointOutput
 createRealtimeEndpoint mLModelId =
     AWS.Http.unsignedRequest
         "CreateRealtimeEndpoint"
@@ -565,6 +573,7 @@ createRealtimeEndpoint mLModelId =
             JE.null
         )
         createRealtimeEndpointOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -578,7 +587,7 @@ __Required Parameters__
 -}
 deleteBatchPrediction :
     String
-    -> AWS.Http.UnsignedRequest DeleteBatchPredictionOutput
+    -> AWS.Request DeleteBatchPredictionOutput
 deleteBatchPrediction batchPredictionId =
     AWS.Http.unsignedRequest
         "DeleteBatchPrediction"
@@ -588,6 +597,7 @@ deleteBatchPrediction batchPredictionId =
             JE.null
         )
         deleteBatchPredictionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -601,7 +611,7 @@ __Required Parameters__
 -}
 deleteDataSource :
     String
-    -> AWS.Http.UnsignedRequest DeleteDataSourceOutput
+    -> AWS.Request DeleteDataSourceOutput
 deleteDataSource dataSourceId =
     AWS.Http.unsignedRequest
         "DeleteDataSource"
@@ -611,6 +621,7 @@ deleteDataSource dataSourceId =
             JE.null
         )
         deleteDataSourceOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -624,7 +635,7 @@ __Required Parameters__
 -}
 deleteEvaluation :
     String
-    -> AWS.Http.UnsignedRequest DeleteEvaluationOutput
+    -> AWS.Request DeleteEvaluationOutput
 deleteEvaluation evaluationId =
     AWS.Http.unsignedRequest
         "DeleteEvaluation"
@@ -634,6 +645,7 @@ deleteEvaluation evaluationId =
             JE.null
         )
         deleteEvaluationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -647,7 +659,7 @@ __Required Parameters__
 -}
 deleteMLModel :
     String
-    -> AWS.Http.UnsignedRequest DeleteMLModelOutput
+    -> AWS.Request DeleteMLModelOutput
 deleteMLModel mLModelId =
     AWS.Http.unsignedRequest
         "DeleteMLModel"
@@ -657,6 +669,7 @@ deleteMLModel mLModelId =
             JE.null
         )
         deleteMLModelOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -670,7 +683,7 @@ __Required Parameters__
 -}
 deleteRealtimeEndpoint :
     String
-    -> AWS.Http.UnsignedRequest DeleteRealtimeEndpointOutput
+    -> AWS.Request DeleteRealtimeEndpointOutput
 deleteRealtimeEndpoint mLModelId =
     AWS.Http.unsignedRequest
         "DeleteRealtimeEndpoint"
@@ -680,6 +693,7 @@ deleteRealtimeEndpoint mLModelId =
             JE.null
         )
         deleteRealtimeEndpointOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -697,7 +711,7 @@ deleteTags :
     (List String)
     -> String
     -> TaggableResourceType
-    -> AWS.Http.UnsignedRequest DeleteTagsOutput
+    -> AWS.Request DeleteTagsOutput
 deleteTags tagKeys resourceId resourceType =
     AWS.Http.unsignedRequest
         "DeleteTags"
@@ -707,6 +721,7 @@ deleteTags tagKeys resourceId resourceType =
             JE.null
         )
         deleteTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -719,7 +734,7 @@ __Required Parameters__
 -}
 describeBatchPredictions :
     (DescribeBatchPredictionsOptions -> DescribeBatchPredictionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeBatchPredictionsOutput
+    -> AWS.Request DescribeBatchPredictionsOutput
 describeBatchPredictions setOptions =
   let
     options = setOptions (DescribeBatchPredictionsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -732,6 +747,7 @@ describeBatchPredictions setOptions =
             JE.null
         )
         describeBatchPredictionsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeBatchPredictions request
@@ -761,7 +777,7 @@ __Required Parameters__
 -}
 describeDataSources :
     (DescribeDataSourcesOptions -> DescribeDataSourcesOptions)
-    -> AWS.Http.UnsignedRequest DescribeDataSourcesOutput
+    -> AWS.Request DescribeDataSourcesOutput
 describeDataSources setOptions =
   let
     options = setOptions (DescribeDataSourcesOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -774,6 +790,7 @@ describeDataSources setOptions =
             JE.null
         )
         describeDataSourcesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDataSources request
@@ -803,7 +820,7 @@ __Required Parameters__
 -}
 describeEvaluations :
     (DescribeEvaluationsOptions -> DescribeEvaluationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeEvaluationsOutput
+    -> AWS.Request DescribeEvaluationsOutput
 describeEvaluations setOptions =
   let
     options = setOptions (DescribeEvaluationsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -816,6 +833,7 @@ describeEvaluations setOptions =
             JE.null
         )
         describeEvaluationsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEvaluations request
@@ -845,7 +863,7 @@ __Required Parameters__
 -}
 describeMLModels :
     (DescribeMLModelsOptions -> DescribeMLModelsOptions)
-    -> AWS.Http.UnsignedRequest DescribeMLModelsOutput
+    -> AWS.Request DescribeMLModelsOutput
 describeMLModels setOptions =
   let
     options = setOptions (DescribeMLModelsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -858,6 +876,7 @@ describeMLModels setOptions =
             JE.null
         )
         describeMLModelsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMLModels request
@@ -890,7 +909,7 @@ __Required Parameters__
 describeTags :
     String
     -> TaggableResourceType
-    -> AWS.Http.UnsignedRequest DescribeTagsOutput
+    -> AWS.Request DescribeTagsOutput
 describeTags resourceId resourceType =
     AWS.Http.unsignedRequest
         "DescribeTags"
@@ -900,6 +919,7 @@ describeTags resourceId resourceType =
             JE.null
         )
         describeTagsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -913,7 +933,7 @@ __Required Parameters__
 -}
 getBatchPrediction :
     String
-    -> AWS.Http.UnsignedRequest GetBatchPredictionOutput
+    -> AWS.Request GetBatchPredictionOutput
 getBatchPrediction batchPredictionId =
     AWS.Http.unsignedRequest
         "GetBatchPrediction"
@@ -923,6 +943,7 @@ getBatchPrediction batchPredictionId =
             JE.null
         )
         getBatchPredictionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -937,7 +958,7 @@ __Required Parameters__
 getDataSource :
     String
     -> (GetDataSourceOptions -> GetDataSourceOptions)
-    -> AWS.Http.UnsignedRequest GetDataSourceOutput
+    -> AWS.Request GetDataSourceOutput
 getDataSource dataSourceId setOptions =
   let
     options = setOptions (GetDataSourceOptions Nothing)
@@ -950,6 +971,7 @@ getDataSource dataSourceId setOptions =
             JE.null
         )
         getDataSourceOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDataSource request
@@ -970,7 +992,7 @@ __Required Parameters__
 -}
 getEvaluation :
     String
-    -> AWS.Http.UnsignedRequest GetEvaluationOutput
+    -> AWS.Request GetEvaluationOutput
 getEvaluation evaluationId =
     AWS.Http.unsignedRequest
         "GetEvaluation"
@@ -980,6 +1002,7 @@ getEvaluation evaluationId =
             JE.null
         )
         getEvaluationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -994,7 +1017,7 @@ __Required Parameters__
 getMLModel :
     String
     -> (GetMLModelOptions -> GetMLModelOptions)
-    -> AWS.Http.UnsignedRequest GetMLModelOutput
+    -> AWS.Request GetMLModelOutput
 getMLModel mLModelId setOptions =
   let
     options = setOptions (GetMLModelOptions Nothing)
@@ -1007,6 +1030,7 @@ getMLModel mLModelId setOptions =
             JE.null
         )
         getMLModelOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getMLModel request
@@ -1031,7 +1055,7 @@ predict :
     String
     -> (Dict String String)
     -> String
-    -> AWS.Http.UnsignedRequest PredictOutput
+    -> AWS.Request PredictOutput
 predict mLModelId record predictEndpoint =
     AWS.Http.unsignedRequest
         "Predict"
@@ -1041,6 +1065,7 @@ predict mLModelId record predictEndpoint =
             JE.null
         )
         predictOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1056,7 +1081,7 @@ __Required Parameters__
 updateBatchPrediction :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateBatchPredictionOutput
+    -> AWS.Request UpdateBatchPredictionOutput
 updateBatchPrediction batchPredictionId batchPredictionName =
     AWS.Http.unsignedRequest
         "UpdateBatchPrediction"
@@ -1066,6 +1091,7 @@ updateBatchPrediction batchPredictionId batchPredictionName =
             JE.null
         )
         updateBatchPredictionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1081,7 +1107,7 @@ __Required Parameters__
 updateDataSource :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateDataSourceOutput
+    -> AWS.Request UpdateDataSourceOutput
 updateDataSource dataSourceId dataSourceName =
     AWS.Http.unsignedRequest
         "UpdateDataSource"
@@ -1091,6 +1117,7 @@ updateDataSource dataSourceId dataSourceName =
             JE.null
         )
         updateDataSourceOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1106,7 +1133,7 @@ __Required Parameters__
 updateEvaluation :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateEvaluationOutput
+    -> AWS.Request UpdateEvaluationOutput
 updateEvaluation evaluationId evaluationName =
     AWS.Http.unsignedRequest
         "UpdateEvaluation"
@@ -1116,6 +1143,7 @@ updateEvaluation evaluationId evaluationName =
             JE.null
         )
         updateEvaluationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1130,7 +1158,7 @@ __Required Parameters__
 updateMLModel :
     String
     -> (UpdateMLModelOptions -> UpdateMLModelOptions)
-    -> AWS.Http.UnsignedRequest UpdateMLModelOutput
+    -> AWS.Request UpdateMLModelOutput
 updateMLModel mLModelId setOptions =
   let
     options = setOptions (UpdateMLModelOptions Nothing Nothing)
@@ -1143,6 +1171,7 @@ updateMLModel mLModelId setOptions =
             JE.null
         )
         updateMLModelOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateMLModel request

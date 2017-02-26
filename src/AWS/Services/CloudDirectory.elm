@@ -464,6 +464,7 @@ module AWS.Services.CloudDirectory
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -475,16 +476,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "clouddirectory"
         "2016-05-10"
         "undefined"
         "AWSCLOUDDIRECTORY_20160510."
         "clouddirectory.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -505,7 +506,7 @@ addFacetToObject :
     -> SchemaFacet
     -> ObjectReference
     -> (AddFacetToObjectOptions -> AddFacetToObjectOptions)
-    -> AWS.Http.UnsignedRequest AddFacetToObjectResponse
+    -> AWS.Request AddFacetToObjectResponse
 addFacetToObject directoryArn schemaFacet objectReference setOptions =
   let
     options = setOptions (AddFacetToObjectOptions Nothing)
@@ -518,6 +519,7 @@ addFacetToObject directoryArn schemaFacet objectReference setOptions =
             JE.null
         )
         addFacetToObjectResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a addFacetToObject request
@@ -540,7 +542,7 @@ __Required Parameters__
 applySchema :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ApplySchemaResponse
+    -> AWS.Request ApplySchemaResponse
 applySchema publishedSchemaArn directoryArn =
     AWS.Http.unsignedRequest
         "ApplySchema"
@@ -550,6 +552,7 @@ applySchema publishedSchemaArn directoryArn =
             JE.null
         )
         applySchemaResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -569,7 +572,7 @@ attachObject :
     -> ObjectReference
     -> ObjectReference
     -> String
-    -> AWS.Http.UnsignedRequest AttachObjectResponse
+    -> AWS.Request AttachObjectResponse
 attachObject directoryArn parentReference childReference linkName =
     AWS.Http.unsignedRequest
         "AttachObject"
@@ -579,6 +582,7 @@ attachObject directoryArn parentReference childReference linkName =
             JE.null
         )
         attachObjectResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -595,7 +599,7 @@ attachPolicy :
     ObjectReference
     -> ObjectReference
     -> (AttachPolicyOptions -> AttachPolicyOptions)
-    -> AWS.Http.UnsignedRequest AttachPolicyResponse
+    -> AWS.Request AttachPolicyResponse
 attachPolicy policyReference objectReference setOptions =
   let
     options = setOptions (AttachPolicyOptions Nothing)
@@ -608,6 +612,7 @@ attachPolicy policyReference objectReference setOptions =
             JE.null
         )
         attachPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a attachPolicy request
@@ -632,7 +637,7 @@ attachToIndex :
     String
     -> ObjectReference
     -> ObjectReference
-    -> AWS.Http.UnsignedRequest AttachToIndexResponse
+    -> AWS.Request AttachToIndexResponse
 attachToIndex directoryArn indexReference targetReference =
     AWS.Http.unsignedRequest
         "AttachToIndex"
@@ -642,6 +647,7 @@ attachToIndex directoryArn indexReference targetReference =
             JE.null
         )
         attachToIndexResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -658,7 +664,7 @@ batchRead :
     String
     -> (List BatchReadOperation)
     -> (BatchReadOptions -> BatchReadOptions)
-    -> AWS.Http.UnsignedRequest BatchReadResponse
+    -> AWS.Request BatchReadResponse
 batchRead directoryArn operations setOptions =
   let
     options = setOptions (BatchReadOptions Nothing)
@@ -671,6 +677,7 @@ batchRead directoryArn operations setOptions =
             JE.null
         )
         batchReadResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a batchRead request
@@ -693,7 +700,7 @@ __Required Parameters__
 batchWrite :
     String
     -> (List BatchWriteOperation)
-    -> AWS.Http.UnsignedRequest BatchWriteResponse
+    -> AWS.Request BatchWriteResponse
 batchWrite directoryArn operations =
     AWS.Http.unsignedRequest
         "BatchWrite"
@@ -703,6 +710,7 @@ batchWrite directoryArn operations =
             JE.null
         )
         batchWriteResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -718,7 +726,7 @@ __Required Parameters__
 createDirectory :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateDirectoryResponse
+    -> AWS.Request CreateDirectoryResponse
 createDirectory name schemaArn =
     AWS.Http.unsignedRequest
         "CreateDirectory"
@@ -728,6 +736,7 @@ createDirectory name schemaArn =
             JE.null
         )
         createDirectoryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -746,7 +755,7 @@ createFacet :
     -> String
     -> ObjectType
     -> (CreateFacetOptions -> CreateFacetOptions)
-    -> AWS.Http.UnsignedRequest CreateFacetResponse
+    -> AWS.Request CreateFacetResponse
 createFacet schemaArn name objectType setOptions =
   let
     options = setOptions (CreateFacetOptions Nothing)
@@ -759,6 +768,7 @@ createFacet schemaArn name objectType setOptions =
             JE.null
         )
         createFacetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createFacet request
@@ -784,7 +794,7 @@ createIndex :
     -> (List AttributeKey)
     -> Bool
     -> (CreateIndexOptions -> CreateIndexOptions)
-    -> AWS.Http.UnsignedRequest CreateIndexResponse
+    -> AWS.Request CreateIndexResponse
 createIndex directoryArn orderedIndexedAttributeList isUnique setOptions =
   let
     options = setOptions (CreateIndexOptions Nothing Nothing)
@@ -797,6 +807,7 @@ createIndex directoryArn orderedIndexedAttributeList isUnique setOptions =
             JE.null
         )
         createIndexResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createIndex request
@@ -821,7 +832,7 @@ createObject :
     String
     -> (List SchemaFacet)
     -> (CreateObjectOptions -> CreateObjectOptions)
-    -> AWS.Http.UnsignedRequest CreateObjectResponse
+    -> AWS.Request CreateObjectResponse
 createObject directoryArn schemaFacets setOptions =
   let
     options = setOptions (CreateObjectOptions Nothing Nothing Nothing)
@@ -834,6 +845,7 @@ createObject directoryArn schemaFacets setOptions =
             JE.null
         )
         createObjectResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createObject request
@@ -856,7 +868,7 @@ __Required Parameters__
 -}
 createSchema :
     String
-    -> AWS.Http.UnsignedRequest CreateSchemaResponse
+    -> AWS.Request CreateSchemaResponse
 createSchema name =
     AWS.Http.unsignedRequest
         "CreateSchema"
@@ -866,6 +878,7 @@ createSchema name =
             JE.null
         )
         createSchemaResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -879,7 +892,7 @@ __Required Parameters__
 -}
 deleteDirectory :
     String
-    -> AWS.Http.UnsignedRequest DeleteDirectoryResponse
+    -> AWS.Request DeleteDirectoryResponse
 deleteDirectory directoryArn =
     AWS.Http.unsignedRequest
         "DeleteDirectory"
@@ -889,6 +902,7 @@ deleteDirectory directoryArn =
             JE.null
         )
         deleteDirectoryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -904,7 +918,7 @@ __Required Parameters__
 deleteFacet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DeleteFacetResponse
+    -> AWS.Request DeleteFacetResponse
 deleteFacet schemaArn name =
     AWS.Http.unsignedRequest
         "DeleteFacet"
@@ -914,6 +928,7 @@ deleteFacet schemaArn name =
             JE.null
         )
         deleteFacetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -929,7 +944,7 @@ __Required Parameters__
 deleteObject :
     String
     -> ObjectReference
-    -> AWS.Http.UnsignedRequest DeleteObjectResponse
+    -> AWS.Request DeleteObjectResponse
 deleteObject directoryArn objectReference =
     AWS.Http.unsignedRequest
         "DeleteObject"
@@ -939,6 +954,7 @@ deleteObject directoryArn objectReference =
             JE.null
         )
         deleteObjectResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -952,7 +968,7 @@ __Required Parameters__
 -}
 deleteSchema :
     String
-    -> AWS.Http.UnsignedRequest DeleteSchemaResponse
+    -> AWS.Request DeleteSchemaResponse
 deleteSchema schemaArn =
     AWS.Http.unsignedRequest
         "DeleteSchema"
@@ -962,6 +978,7 @@ deleteSchema schemaArn =
             JE.null
         )
         deleteSchemaResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -979,7 +996,7 @@ detachFromIndex :
     String
     -> ObjectReference
     -> ObjectReference
-    -> AWS.Http.UnsignedRequest DetachFromIndexResponse
+    -> AWS.Request DetachFromIndexResponse
 detachFromIndex directoryArn indexReference targetReference =
     AWS.Http.unsignedRequest
         "DetachFromIndex"
@@ -989,6 +1006,7 @@ detachFromIndex directoryArn indexReference targetReference =
             JE.null
         )
         detachFromIndexResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1006,7 +1024,7 @@ detachObject :
     String
     -> ObjectReference
     -> String
-    -> AWS.Http.UnsignedRequest DetachObjectResponse
+    -> AWS.Request DetachObjectResponse
 detachObject directoryArn parentReference linkName =
     AWS.Http.unsignedRequest
         "DetachObject"
@@ -1016,6 +1034,7 @@ detachObject directoryArn parentReference linkName =
             JE.null
         )
         detachObjectResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1033,7 +1052,7 @@ detachPolicy :
     String
     -> ObjectReference
     -> ObjectReference
-    -> AWS.Http.UnsignedRequest DetachPolicyResponse
+    -> AWS.Request DetachPolicyResponse
 detachPolicy directoryArn policyReference objectReference =
     AWS.Http.unsignedRequest
         "DetachPolicy"
@@ -1043,6 +1062,7 @@ detachPolicy directoryArn policyReference objectReference =
             JE.null
         )
         detachPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1056,7 +1076,7 @@ __Required Parameters__
 -}
 disableDirectory :
     String
-    -> AWS.Http.UnsignedRequest DisableDirectoryResponse
+    -> AWS.Request DisableDirectoryResponse
 disableDirectory directoryArn =
     AWS.Http.unsignedRequest
         "DisableDirectory"
@@ -1066,6 +1086,7 @@ disableDirectory directoryArn =
             JE.null
         )
         disableDirectoryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1079,7 +1100,7 @@ __Required Parameters__
 -}
 enableDirectory :
     String
-    -> AWS.Http.UnsignedRequest EnableDirectoryResponse
+    -> AWS.Request EnableDirectoryResponse
 enableDirectory directoryArn =
     AWS.Http.unsignedRequest
         "EnableDirectory"
@@ -1089,6 +1110,7 @@ enableDirectory directoryArn =
             JE.null
         )
         enableDirectoryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1102,7 +1124,7 @@ __Required Parameters__
 -}
 getDirectory :
     String
-    -> AWS.Http.UnsignedRequest GetDirectoryResponse
+    -> AWS.Request GetDirectoryResponse
 getDirectory directoryArn =
     AWS.Http.unsignedRequest
         "GetDirectory"
@@ -1112,6 +1134,7 @@ getDirectory directoryArn =
             JE.null
         )
         getDirectoryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1127,7 +1150,7 @@ __Required Parameters__
 getFacet :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetFacetResponse
+    -> AWS.Request GetFacetResponse
 getFacet schemaArn name =
     AWS.Http.unsignedRequest
         "GetFacet"
@@ -1137,6 +1160,7 @@ getFacet schemaArn name =
             JE.null
         )
         getFacetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1153,7 +1177,7 @@ getObjectInformation :
     String
     -> ObjectReference
     -> (GetObjectInformationOptions -> GetObjectInformationOptions)
-    -> AWS.Http.UnsignedRequest GetObjectInformationResponse
+    -> AWS.Request GetObjectInformationResponse
 getObjectInformation directoryArn objectReference setOptions =
   let
     options = setOptions (GetObjectInformationOptions Nothing)
@@ -1166,6 +1190,7 @@ getObjectInformation directoryArn objectReference setOptions =
             JE.null
         )
         getObjectInformationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getObjectInformation request
@@ -1186,7 +1211,7 @@ __Required Parameters__
 -}
 getSchemaAsJson :
     String
-    -> AWS.Http.UnsignedRequest GetSchemaAsJsonResponse
+    -> AWS.Request GetSchemaAsJsonResponse
 getSchemaAsJson schemaArn =
     AWS.Http.unsignedRequest
         "GetSchemaAsJson"
@@ -1196,6 +1221,7 @@ getSchemaAsJson schemaArn =
             JE.null
         )
         getSchemaAsJsonResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1210,7 +1236,7 @@ __Required Parameters__
 listAppliedSchemaArns :
     String
     -> (ListAppliedSchemaArnsOptions -> ListAppliedSchemaArnsOptions)
-    -> AWS.Http.UnsignedRequest ListAppliedSchemaArnsResponse
+    -> AWS.Request ListAppliedSchemaArnsResponse
 listAppliedSchemaArns directoryArn setOptions =
   let
     options = setOptions (ListAppliedSchemaArnsOptions Nothing Nothing)
@@ -1223,6 +1249,7 @@ listAppliedSchemaArns directoryArn setOptions =
             JE.null
         )
         listAppliedSchemaArnsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAppliedSchemaArns request
@@ -1247,7 +1274,7 @@ listAttachedIndices :
     String
     -> ObjectReference
     -> (ListAttachedIndicesOptions -> ListAttachedIndicesOptions)
-    -> AWS.Http.UnsignedRequest ListAttachedIndicesResponse
+    -> AWS.Request ListAttachedIndicesResponse
 listAttachedIndices directoryArn targetReference setOptions =
   let
     options = setOptions (ListAttachedIndicesOptions Nothing Nothing Nothing)
@@ -1260,6 +1287,7 @@ listAttachedIndices directoryArn targetReference setOptions =
             JE.null
         )
         listAttachedIndicesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAttachedIndices request
@@ -1281,7 +1309,7 @@ __Required Parameters__
 -}
 listDevelopmentSchemaArns :
     (ListDevelopmentSchemaArnsOptions -> ListDevelopmentSchemaArnsOptions)
-    -> AWS.Http.UnsignedRequest ListDevelopmentSchemaArnsResponse
+    -> AWS.Request ListDevelopmentSchemaArnsResponse
 listDevelopmentSchemaArns setOptions =
   let
     options = setOptions (ListDevelopmentSchemaArnsOptions Nothing Nothing)
@@ -1294,6 +1322,7 @@ listDevelopmentSchemaArns setOptions =
             JE.null
         )
         listDevelopmentSchemaArnsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDevelopmentSchemaArns request
@@ -1314,7 +1343,7 @@ __Required Parameters__
 -}
 listDirectories :
     (ListDirectoriesOptions -> ListDirectoriesOptions)
-    -> AWS.Http.UnsignedRequest ListDirectoriesResponse
+    -> AWS.Request ListDirectoriesResponse
 listDirectories setOptions =
   let
     options = setOptions (ListDirectoriesOptions Nothing Nothing Nothing)
@@ -1327,6 +1356,7 @@ listDirectories setOptions =
             JE.null
         )
         listDirectoriesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDirectories request
@@ -1352,7 +1382,7 @@ listFacetAttributes :
     String
     -> String
     -> (ListFacetAttributesOptions -> ListFacetAttributesOptions)
-    -> AWS.Http.UnsignedRequest ListFacetAttributesResponse
+    -> AWS.Request ListFacetAttributesResponse
 listFacetAttributes schemaArn name setOptions =
   let
     options = setOptions (ListFacetAttributesOptions Nothing Nothing)
@@ -1365,6 +1395,7 @@ listFacetAttributes schemaArn name setOptions =
             JE.null
         )
         listFacetAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listFacetAttributes request
@@ -1387,7 +1418,7 @@ __Required Parameters__
 listFacetNames :
     String
     -> (ListFacetNamesOptions -> ListFacetNamesOptions)
-    -> AWS.Http.UnsignedRequest ListFacetNamesResponse
+    -> AWS.Request ListFacetNamesResponse
 listFacetNames schemaArn setOptions =
   let
     options = setOptions (ListFacetNamesOptions Nothing Nothing)
@@ -1400,6 +1431,7 @@ listFacetNames schemaArn setOptions =
             JE.null
         )
         listFacetNamesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listFacetNames request
@@ -1424,7 +1456,7 @@ listIndex :
     String
     -> ObjectReference
     -> (ListIndexOptions -> ListIndexOptions)
-    -> AWS.Http.UnsignedRequest ListIndexResponse
+    -> AWS.Request ListIndexResponse
 listIndex directoryArn indexReference setOptions =
   let
     options = setOptions (ListIndexOptions Nothing Nothing Nothing Nothing)
@@ -1437,6 +1469,7 @@ listIndex directoryArn indexReference setOptions =
             JE.null
         )
         listIndexResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listIndex request
@@ -1463,7 +1496,7 @@ listObjectAttributes :
     String
     -> ObjectReference
     -> (ListObjectAttributesOptions -> ListObjectAttributesOptions)
-    -> AWS.Http.UnsignedRequest ListObjectAttributesResponse
+    -> AWS.Request ListObjectAttributesResponse
 listObjectAttributes directoryArn objectReference setOptions =
   let
     options = setOptions (ListObjectAttributesOptions Nothing Nothing Nothing)
@@ -1476,6 +1509,7 @@ listObjectAttributes directoryArn objectReference setOptions =
             JE.null
         )
         listObjectAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listObjectAttributes request
@@ -1501,7 +1535,7 @@ listObjectChildren :
     String
     -> ObjectReference
     -> (ListObjectChildrenOptions -> ListObjectChildrenOptions)
-    -> AWS.Http.UnsignedRequest ListObjectChildrenResponse
+    -> AWS.Request ListObjectChildrenResponse
 listObjectChildren directoryArn objectReference setOptions =
   let
     options = setOptions (ListObjectChildrenOptions Nothing Nothing Nothing)
@@ -1514,6 +1548,7 @@ listObjectChildren directoryArn objectReference setOptions =
             JE.null
         )
         listObjectChildrenResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listObjectChildren request
@@ -1539,7 +1574,7 @@ listObjectParents :
     String
     -> ObjectReference
     -> (ListObjectParentsOptions -> ListObjectParentsOptions)
-    -> AWS.Http.UnsignedRequest ListObjectParentsResponse
+    -> AWS.Request ListObjectParentsResponse
 listObjectParents directoryArn objectReference setOptions =
   let
     options = setOptions (ListObjectParentsOptions Nothing Nothing Nothing)
@@ -1552,6 +1587,7 @@ listObjectParents directoryArn objectReference setOptions =
             JE.null
         )
         listObjectParentsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listObjectParents request
@@ -1577,7 +1613,7 @@ listObjectPolicies :
     String
     -> ObjectReference
     -> (ListObjectPoliciesOptions -> ListObjectPoliciesOptions)
-    -> AWS.Http.UnsignedRequest ListObjectPoliciesResponse
+    -> AWS.Request ListObjectPoliciesResponse
 listObjectPolicies directoryArn objectReference setOptions =
   let
     options = setOptions (ListObjectPoliciesOptions Nothing Nothing Nothing)
@@ -1590,6 +1626,7 @@ listObjectPolicies directoryArn objectReference setOptions =
             JE.null
         )
         listObjectPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listObjectPolicies request
@@ -1615,7 +1652,7 @@ listPolicyAttachments :
     String
     -> ObjectReference
     -> (ListPolicyAttachmentsOptions -> ListPolicyAttachmentsOptions)
-    -> AWS.Http.UnsignedRequest ListPolicyAttachmentsResponse
+    -> AWS.Request ListPolicyAttachmentsResponse
 listPolicyAttachments directoryArn policyReference setOptions =
   let
     options = setOptions (ListPolicyAttachmentsOptions Nothing Nothing Nothing)
@@ -1628,6 +1665,7 @@ listPolicyAttachments directoryArn policyReference setOptions =
             JE.null
         )
         listPolicyAttachmentsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPolicyAttachments request
@@ -1649,7 +1687,7 @@ __Required Parameters__
 -}
 listPublishedSchemaArns :
     (ListPublishedSchemaArnsOptions -> ListPublishedSchemaArnsOptions)
-    -> AWS.Http.UnsignedRequest ListPublishedSchemaArnsResponse
+    -> AWS.Request ListPublishedSchemaArnsResponse
 listPublishedSchemaArns setOptions =
   let
     options = setOptions (ListPublishedSchemaArnsOptions Nothing Nothing)
@@ -1662,6 +1700,7 @@ listPublishedSchemaArns setOptions =
             JE.null
         )
         listPublishedSchemaArnsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listPublishedSchemaArns request
@@ -1684,7 +1723,7 @@ __Required Parameters__
 listTagsForResource :
     String
     -> (ListTagsForResourceOptions -> ListTagsForResourceOptions)
-    -> AWS.Http.UnsignedRequest ListTagsForResourceResponse
+    -> AWS.Request ListTagsForResourceResponse
 listTagsForResource resourceArn setOptions =
   let
     options = setOptions (ListTagsForResourceOptions Nothing Nothing)
@@ -1697,6 +1736,7 @@ listTagsForResource resourceArn setOptions =
             JE.null
         )
         listTagsForResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTagsForResource request
@@ -1721,7 +1761,7 @@ lookupPolicy :
     String
     -> ObjectReference
     -> (LookupPolicyOptions -> LookupPolicyOptions)
-    -> AWS.Http.UnsignedRequest LookupPolicyResponse
+    -> AWS.Request LookupPolicyResponse
 lookupPolicy directoryArn objectReference setOptions =
   let
     options = setOptions (LookupPolicyOptions Nothing Nothing)
@@ -1734,6 +1774,7 @@ lookupPolicy directoryArn objectReference setOptions =
             JE.null
         )
         lookupPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a lookupPolicy request
@@ -1758,7 +1799,7 @@ publishSchema :
     String
     -> String
     -> (PublishSchemaOptions -> PublishSchemaOptions)
-    -> AWS.Http.UnsignedRequest PublishSchemaResponse
+    -> AWS.Request PublishSchemaResponse
 publishSchema developmentSchemaArn version setOptions =
   let
     options = setOptions (PublishSchemaOptions Nothing)
@@ -1771,6 +1812,7 @@ publishSchema developmentSchemaArn version setOptions =
             JE.null
         )
         publishSchemaResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a publishSchema request
@@ -1793,7 +1835,7 @@ __Required Parameters__
 putSchemaFromJson :
     String
     -> String
-    -> AWS.Http.UnsignedRequest PutSchemaFromJsonResponse
+    -> AWS.Request PutSchemaFromJsonResponse
 putSchemaFromJson schemaArn document =
     AWS.Http.unsignedRequest
         "PutSchemaFromJson"
@@ -1803,6 +1845,7 @@ putSchemaFromJson schemaArn document =
             JE.null
         )
         putSchemaFromJsonResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1820,7 +1863,7 @@ removeFacetFromObject :
     String
     -> SchemaFacet
     -> ObjectReference
-    -> AWS.Http.UnsignedRequest RemoveFacetFromObjectResponse
+    -> AWS.Request RemoveFacetFromObjectResponse
 removeFacetFromObject directoryArn schemaFacet objectReference =
     AWS.Http.unsignedRequest
         "RemoveFacetFromObject"
@@ -1830,6 +1873,7 @@ removeFacetFromObject directoryArn schemaFacet objectReference =
             JE.null
         )
         removeFacetFromObjectResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1845,7 +1889,7 @@ __Required Parameters__
 tagResource :
     String
     -> (List Tag)
-    -> AWS.Http.UnsignedRequest TagResourceResponse
+    -> AWS.Request TagResourceResponse
 tagResource resourceArn tags =
     AWS.Http.unsignedRequest
         "TagResource"
@@ -1855,6 +1899,7 @@ tagResource resourceArn tags =
             JE.null
         )
         tagResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1870,7 +1915,7 @@ __Required Parameters__
 untagResource :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest UntagResourceResponse
+    -> AWS.Request UntagResourceResponse
 untagResource resourceArn tagKeys =
     AWS.Http.unsignedRequest
         "UntagResource"
@@ -1880,6 +1925,7 @@ untagResource resourceArn tagKeys =
             JE.null
         )
         untagResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1896,7 +1942,7 @@ updateFacet :
     String
     -> String
     -> (UpdateFacetOptions -> UpdateFacetOptions)
-    -> AWS.Http.UnsignedRequest UpdateFacetResponse
+    -> AWS.Request UpdateFacetResponse
 updateFacet schemaArn name setOptions =
   let
     options = setOptions (UpdateFacetOptions Nothing Nothing)
@@ -1909,6 +1955,7 @@ updateFacet schemaArn name setOptions =
             JE.null
         )
         updateFacetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateFacet request
@@ -1934,7 +1981,7 @@ updateObjectAttributes :
     String
     -> ObjectReference
     -> (List ObjectAttributeUpdate)
-    -> AWS.Http.UnsignedRequest UpdateObjectAttributesResponse
+    -> AWS.Request UpdateObjectAttributesResponse
 updateObjectAttributes directoryArn objectReference attributeUpdates =
     AWS.Http.unsignedRequest
         "UpdateObjectAttributes"
@@ -1944,6 +1991,7 @@ updateObjectAttributes directoryArn objectReference attributeUpdates =
             JE.null
         )
         updateObjectAttributesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1959,7 +2007,7 @@ __Required Parameters__
 updateSchema :
     String
     -> String
-    -> AWS.Http.UnsignedRequest UpdateSchemaResponse
+    -> AWS.Request UpdateSchemaResponse
 updateSchema schemaArn name =
     AWS.Http.unsignedRequest
         "UpdateSchema"
@@ -1969,6 +2017,7 @@ updateSchema schemaArn name =
             JE.null
         )
         updateSchemaResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

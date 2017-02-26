@@ -208,6 +208,7 @@ module AWS.Services.CloudWatchLogs
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -217,16 +218,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "logs"
         "2014-03-28"
         "1.1"
         "AWSLOGS_20140328."
         "logs.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -242,7 +243,7 @@ __Required Parameters__
 -}
 cancelExportTask :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 cancelExportTask taskId =
     AWS.Http.unsignedRequest
         "CancelExportTask"
@@ -252,6 +253,7 @@ cancelExportTask taskId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -272,7 +274,7 @@ createExportTask :
     -> Int
     -> String
     -> (CreateExportTaskOptions -> CreateExportTaskOptions)
-    -> AWS.Http.UnsignedRequest CreateExportTaskResponse
+    -> AWS.Request CreateExportTaskResponse
 createExportTask logGroupName from to destination setOptions =
   let
     options = setOptions (CreateExportTaskOptions Nothing Nothing Nothing)
@@ -285,6 +287,7 @@ createExportTask logGroupName from to destination setOptions =
             JE.null
         )
         createExportTaskResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createExportTask request
@@ -308,7 +311,7 @@ __Required Parameters__
 createLogGroup :
     String
     -> (CreateLogGroupOptions -> CreateLogGroupOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createLogGroup logGroupName setOptions =
   let
     options = setOptions (CreateLogGroupOptions Nothing)
@@ -321,6 +324,7 @@ createLogGroup logGroupName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createLogGroup request
@@ -343,7 +347,7 @@ __Required Parameters__
 createLogStream :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 createLogStream logGroupName logStreamName =
     AWS.Http.unsignedRequest
         "CreateLogStream"
@@ -353,6 +357,7 @@ createLogStream logGroupName logStreamName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -366,7 +371,7 @@ __Required Parameters__
 -}
 deleteDestination :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDestination destinationName =
     AWS.Http.unsignedRequest
         "DeleteDestination"
@@ -376,6 +381,7 @@ deleteDestination destinationName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -389,7 +395,7 @@ __Required Parameters__
 -}
 deleteLogGroup :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteLogGroup logGroupName =
     AWS.Http.unsignedRequest
         "DeleteLogGroup"
@@ -399,6 +405,7 @@ deleteLogGroup logGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -414,7 +421,7 @@ __Required Parameters__
 deleteLogStream :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteLogStream logGroupName logStreamName =
     AWS.Http.unsignedRequest
         "DeleteLogStream"
@@ -424,6 +431,7 @@ deleteLogStream logGroupName logStreamName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -439,7 +447,7 @@ __Required Parameters__
 deleteMetricFilter :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteMetricFilter logGroupName filterName =
     AWS.Http.unsignedRequest
         "DeleteMetricFilter"
@@ -449,6 +457,7 @@ deleteMetricFilter logGroupName filterName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -462,7 +471,7 @@ __Required Parameters__
 -}
 deleteRetentionPolicy :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteRetentionPolicy logGroupName =
     AWS.Http.unsignedRequest
         "DeleteRetentionPolicy"
@@ -472,6 +481,7 @@ deleteRetentionPolicy logGroupName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -487,7 +497,7 @@ __Required Parameters__
 deleteSubscriptionFilter :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteSubscriptionFilter logGroupName filterName =
     AWS.Http.unsignedRequest
         "DeleteSubscriptionFilter"
@@ -497,6 +507,7 @@ deleteSubscriptionFilter logGroupName filterName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -509,7 +520,7 @@ __Required Parameters__
 -}
 describeDestinations :
     (DescribeDestinationsOptions -> DescribeDestinationsOptions)
-    -> AWS.Http.UnsignedRequest DescribeDestinationsResponse
+    -> AWS.Request DescribeDestinationsResponse
 describeDestinations setOptions =
   let
     options = setOptions (DescribeDestinationsOptions Nothing Nothing Nothing)
@@ -522,6 +533,7 @@ describeDestinations setOptions =
             JE.null
         )
         describeDestinationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDestinations request
@@ -543,7 +555,7 @@ __Required Parameters__
 -}
 describeExportTasks :
     (DescribeExportTasksOptions -> DescribeExportTasksOptions)
-    -> AWS.Http.UnsignedRequest DescribeExportTasksResponse
+    -> AWS.Request DescribeExportTasksResponse
 describeExportTasks setOptions =
   let
     options = setOptions (DescribeExportTasksOptions Nothing Nothing Nothing Nothing)
@@ -556,6 +568,7 @@ describeExportTasks setOptions =
             JE.null
         )
         describeExportTasksResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeExportTasks request
@@ -578,7 +591,7 @@ __Required Parameters__
 -}
 describeLogGroups :
     (DescribeLogGroupsOptions -> DescribeLogGroupsOptions)
-    -> AWS.Http.UnsignedRequest DescribeLogGroupsResponse
+    -> AWS.Request DescribeLogGroupsResponse
 describeLogGroups setOptions =
   let
     options = setOptions (DescribeLogGroupsOptions Nothing Nothing Nothing)
@@ -591,6 +604,7 @@ describeLogGroups setOptions =
             JE.null
         )
         describeLogGroupsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLogGroups request
@@ -614,7 +628,7 @@ __Required Parameters__
 describeLogStreams :
     String
     -> (DescribeLogStreamsOptions -> DescribeLogStreamsOptions)
-    -> AWS.Http.UnsignedRequest DescribeLogStreamsResponse
+    -> AWS.Request DescribeLogStreamsResponse
 describeLogStreams logGroupName setOptions =
   let
     options = setOptions (DescribeLogStreamsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -627,6 +641,7 @@ describeLogStreams logGroupName setOptions =
             JE.null
         )
         describeLogStreamsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeLogStreams request
@@ -650,7 +665,7 @@ __Required Parameters__
 -}
 describeMetricFilters :
     (DescribeMetricFiltersOptions -> DescribeMetricFiltersOptions)
-    -> AWS.Http.UnsignedRequest DescribeMetricFiltersResponse
+    -> AWS.Request DescribeMetricFiltersResponse
 describeMetricFilters setOptions =
   let
     options = setOptions (DescribeMetricFiltersOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -663,6 +678,7 @@ describeMetricFilters setOptions =
             JE.null
         )
         describeMetricFiltersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeMetricFilters request
@@ -689,7 +705,7 @@ __Required Parameters__
 describeSubscriptionFilters :
     String
     -> (DescribeSubscriptionFiltersOptions -> DescribeSubscriptionFiltersOptions)
-    -> AWS.Http.UnsignedRequest DescribeSubscriptionFiltersResponse
+    -> AWS.Request DescribeSubscriptionFiltersResponse
 describeSubscriptionFilters logGroupName setOptions =
   let
     options = setOptions (DescribeSubscriptionFiltersOptions Nothing Nothing Nothing)
@@ -702,6 +718,7 @@ describeSubscriptionFilters logGroupName setOptions =
             JE.null
         )
         describeSubscriptionFiltersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeSubscriptionFilters request
@@ -725,7 +742,7 @@ __Required Parameters__
 filterLogEvents :
     String
     -> (FilterLogEventsOptions -> FilterLogEventsOptions)
-    -> AWS.Http.UnsignedRequest FilterLogEventsResponse
+    -> AWS.Request FilterLogEventsResponse
 filterLogEvents logGroupName setOptions =
   let
     options = setOptions (FilterLogEventsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -738,6 +755,7 @@ filterLogEvents logGroupName setOptions =
             JE.null
         )
         filterLogEventsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a filterLogEvents request
@@ -767,7 +785,7 @@ getLogEvents :
     String
     -> String
     -> (GetLogEventsOptions -> GetLogEventsOptions)
-    -> AWS.Http.UnsignedRequest GetLogEventsResponse
+    -> AWS.Request GetLogEventsResponse
 getLogEvents logGroupName logStreamName setOptions =
   let
     options = setOptions (GetLogEventsOptions Nothing Nothing Nothing Nothing Nothing)
@@ -780,6 +798,7 @@ getLogEvents logGroupName logStreamName setOptions =
             JE.null
         )
         getLogEventsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getLogEvents request
@@ -804,7 +823,7 @@ __Required Parameters__
 -}
 listTagsLogGroup :
     String
-    -> AWS.Http.UnsignedRequest ListTagsLogGroupResponse
+    -> AWS.Request ListTagsLogGroupResponse
 listTagsLogGroup logGroupName =
     AWS.Http.unsignedRequest
         "ListTagsLogGroup"
@@ -814,6 +833,7 @@ listTagsLogGroup logGroupName =
             JE.null
         )
         listTagsLogGroupResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -831,7 +851,7 @@ putDestination :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest PutDestinationResponse
+    -> AWS.Request PutDestinationResponse
 putDestination destinationName targetArn roleArn =
     AWS.Http.unsignedRequest
         "PutDestination"
@@ -841,6 +861,7 @@ putDestination destinationName targetArn roleArn =
             JE.null
         )
         putDestinationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -856,7 +877,7 @@ __Required Parameters__
 putDestinationPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putDestinationPolicy destinationName accessPolicy =
     AWS.Http.unsignedRequest
         "PutDestinationPolicy"
@@ -866,6 +887,7 @@ putDestinationPolicy destinationName accessPolicy =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -884,7 +906,7 @@ putLogEvents :
     -> String
     -> (List InputLogEvent)
     -> (PutLogEventsOptions -> PutLogEventsOptions)
-    -> AWS.Http.UnsignedRequest PutLogEventsResponse
+    -> AWS.Request PutLogEventsResponse
 putLogEvents logGroupName logStreamName logEvents setOptions =
   let
     options = setOptions (PutLogEventsOptions Nothing)
@@ -897,6 +919,7 @@ putLogEvents logGroupName logStreamName logEvents setOptions =
             JE.null
         )
         putLogEventsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putLogEvents request
@@ -923,7 +946,7 @@ putMetricFilter :
     -> String
     -> String
     -> (List MetricTransformation)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putMetricFilter logGroupName filterName filterPattern metricTransformations =
     AWS.Http.unsignedRequest
         "PutMetricFilter"
@@ -933,6 +956,7 @@ putMetricFilter logGroupName filterName filterPattern metricTransformations =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -948,7 +972,7 @@ __Required Parameters__
 putRetentionPolicy :
     String
     -> Int
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putRetentionPolicy logGroupName retentionInDays =
     AWS.Http.unsignedRequest
         "PutRetentionPolicy"
@@ -958,6 +982,7 @@ putRetentionPolicy logGroupName retentionInDays =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -978,7 +1003,7 @@ putSubscriptionFilter :
     -> String
     -> String
     -> (PutSubscriptionFilterOptions -> PutSubscriptionFilterOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putSubscriptionFilter logGroupName filterName filterPattern destinationArn setOptions =
   let
     options = setOptions (PutSubscriptionFilterOptions Nothing Nothing)
@@ -991,6 +1016,7 @@ putSubscriptionFilter logGroupName filterName filterPattern destinationArn setOp
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putSubscriptionFilter request
@@ -1014,7 +1040,7 @@ __Required Parameters__
 tagLogGroup :
     String
     -> (Dict String String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 tagLogGroup logGroupName tags =
     AWS.Http.unsignedRequest
         "TagLogGroup"
@@ -1024,6 +1050,7 @@ tagLogGroup logGroupName tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1039,7 +1066,7 @@ __Required Parameters__
 testMetricFilter :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest TestMetricFilterResponse
+    -> AWS.Request TestMetricFilterResponse
 testMetricFilter filterPattern logEventMessages =
     AWS.Http.unsignedRequest
         "TestMetricFilter"
@@ -1049,6 +1076,7 @@ testMetricFilter filterPattern logEventMessages =
             JE.null
         )
         testMetricFilterResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1064,7 +1092,7 @@ __Required Parameters__
 untagLogGroup :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 untagLogGroup logGroupName tags =
     AWS.Http.unsignedRequest
         "UntagLogGroup"
@@ -1074,6 +1102,7 @@ untagLogGroup logGroupName tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 

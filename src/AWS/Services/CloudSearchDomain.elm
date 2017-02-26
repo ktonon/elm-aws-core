@@ -92,6 +92,7 @@ module AWS.Services.CloudSearchDomain
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -101,16 +102,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "cloudsearchdomain"
         "2013-01-01"
         "1.1"
         "AWSCLOUDSEARCHDOMAIN_20130101."
         "cloudsearchdomain.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -127,7 +128,7 @@ __Required Parameters__
 search :
     String
     -> (SearchOptions -> SearchOptions)
-    -> AWS.Http.UnsignedRequest SearchResponse
+    -> AWS.Request SearchResponse
 search query setOptions =
   let
     options = setOptions (SearchOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -141,6 +142,7 @@ search query setOptions =
             ]
         )
         searchResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a search request
@@ -176,7 +178,7 @@ suggest :
     String
     -> String
     -> (SuggestOptions -> SuggestOptions)
-    -> AWS.Http.UnsignedRequest SuggestResponse
+    -> AWS.Request SuggestResponse
 suggest query suggester setOptions =
   let
     options = setOptions (SuggestOptions Nothing)
@@ -190,6 +192,7 @@ suggest query suggester setOptions =
             ]
         )
         suggestResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a suggest request
@@ -212,7 +215,7 @@ __Required Parameters__
 uploadDocuments :
     String
     -> ContentType
-    -> AWS.Http.UnsignedRequest UploadDocumentsResponse
+    -> AWS.Request UploadDocumentsResponse
 uploadDocuments documents contentType =
     AWS.Http.unsignedRequest
         "UploadDocuments"
@@ -222,6 +225,7 @@ uploadDocuments documents contentType =
             JE.null
         )
         uploadDocumentsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

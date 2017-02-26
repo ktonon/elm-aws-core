@@ -428,6 +428,7 @@ module AWS.Services.SWF
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -438,16 +439,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "swf"
         "2012-01-25"
         "1.0"
         "AWSSWF_20120125."
         "swf.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -464,7 +465,7 @@ __Required Parameters__
 countClosedWorkflowExecutions :
     String
     -> (CountClosedWorkflowExecutionsOptions -> CountClosedWorkflowExecutionsOptions)
-    -> AWS.Http.UnsignedRequest WorkflowExecutionCount
+    -> AWS.Request WorkflowExecutionCount
 countClosedWorkflowExecutions domain setOptions =
   let
     options = setOptions (CountClosedWorkflowExecutionsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -477,6 +478,7 @@ countClosedWorkflowExecutions domain setOptions =
             JE.null
         )
         workflowExecutionCountDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a countClosedWorkflowExecutions request
@@ -505,7 +507,7 @@ countOpenWorkflowExecutions :
     String
     -> ExecutionTimeFilter
     -> (CountOpenWorkflowExecutionsOptions -> CountOpenWorkflowExecutionsOptions)
-    -> AWS.Http.UnsignedRequest WorkflowExecutionCount
+    -> AWS.Request WorkflowExecutionCount
 countOpenWorkflowExecutions domain startTimeFilter setOptions =
   let
     options = setOptions (CountOpenWorkflowExecutionsOptions Nothing Nothing Nothing)
@@ -518,6 +520,7 @@ countOpenWorkflowExecutions domain startTimeFilter setOptions =
             JE.null
         )
         workflowExecutionCountDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a countOpenWorkflowExecutions request
@@ -542,7 +545,7 @@ __Required Parameters__
 countPendingActivityTasks :
     String
     -> TaskList
-    -> AWS.Http.UnsignedRequest PendingTaskCount
+    -> AWS.Request PendingTaskCount
 countPendingActivityTasks domain taskList =
     AWS.Http.unsignedRequest
         "CountPendingActivityTasks"
@@ -552,6 +555,7 @@ countPendingActivityTasks domain taskList =
             JE.null
         )
         pendingTaskCountDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -567,7 +571,7 @@ __Required Parameters__
 countPendingDecisionTasks :
     String
     -> TaskList
-    -> AWS.Http.UnsignedRequest PendingTaskCount
+    -> AWS.Request PendingTaskCount
 countPendingDecisionTasks domain taskList =
     AWS.Http.unsignedRequest
         "CountPendingDecisionTasks"
@@ -577,6 +581,7 @@ countPendingDecisionTasks domain taskList =
             JE.null
         )
         pendingTaskCountDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -592,7 +597,7 @@ __Required Parameters__
 deprecateActivityType :
     String
     -> ActivityType
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deprecateActivityType domain activityType =
     AWS.Http.unsignedRequest
         "DeprecateActivityType"
@@ -602,6 +607,7 @@ deprecateActivityType domain activityType =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -615,7 +621,7 @@ __Required Parameters__
 -}
 deprecateDomain :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deprecateDomain name =
     AWS.Http.unsignedRequest
         "DeprecateDomain"
@@ -625,6 +631,7 @@ deprecateDomain name =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -640,7 +647,7 @@ __Required Parameters__
 deprecateWorkflowType :
     String
     -> WorkflowType
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deprecateWorkflowType domain workflowType =
     AWS.Http.unsignedRequest
         "DeprecateWorkflowType"
@@ -650,6 +657,7 @@ deprecateWorkflowType domain workflowType =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -665,7 +673,7 @@ __Required Parameters__
 describeActivityType :
     String
     -> ActivityType
-    -> AWS.Http.UnsignedRequest ActivityTypeDetail
+    -> AWS.Request ActivityTypeDetail
 describeActivityType domain activityType =
     AWS.Http.unsignedRequest
         "DescribeActivityType"
@@ -675,6 +683,7 @@ describeActivityType domain activityType =
             JE.null
         )
         activityTypeDetailDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -688,7 +697,7 @@ __Required Parameters__
 -}
 describeDomain :
     String
-    -> AWS.Http.UnsignedRequest DomainDetail
+    -> AWS.Request DomainDetail
 describeDomain name =
     AWS.Http.unsignedRequest
         "DescribeDomain"
@@ -698,6 +707,7 @@ describeDomain name =
             JE.null
         )
         domainDetailDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -713,7 +723,7 @@ __Required Parameters__
 describeWorkflowExecution :
     String
     -> WorkflowExecution
-    -> AWS.Http.UnsignedRequest WorkflowExecutionDetail
+    -> AWS.Request WorkflowExecutionDetail
 describeWorkflowExecution domain execution =
     AWS.Http.unsignedRequest
         "DescribeWorkflowExecution"
@@ -723,6 +733,7 @@ describeWorkflowExecution domain execution =
             JE.null
         )
         workflowExecutionDetailDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -738,7 +749,7 @@ __Required Parameters__
 describeWorkflowType :
     String
     -> WorkflowType
-    -> AWS.Http.UnsignedRequest WorkflowTypeDetail
+    -> AWS.Request WorkflowTypeDetail
 describeWorkflowType domain workflowType =
     AWS.Http.unsignedRequest
         "DescribeWorkflowType"
@@ -748,6 +759,7 @@ describeWorkflowType domain workflowType =
             JE.null
         )
         workflowTypeDetailDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -764,7 +776,7 @@ getWorkflowExecutionHistory :
     String
     -> WorkflowExecution
     -> (GetWorkflowExecutionHistoryOptions -> GetWorkflowExecutionHistoryOptions)
-    -> AWS.Http.UnsignedRequest History
+    -> AWS.Request History
 getWorkflowExecutionHistory domain execution setOptions =
   let
     options = setOptions (GetWorkflowExecutionHistoryOptions Nothing Nothing Nothing)
@@ -777,6 +789,7 @@ getWorkflowExecutionHistory domain execution setOptions =
             JE.null
         )
         historyDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getWorkflowExecutionHistory request
@@ -802,7 +815,7 @@ listActivityTypes :
     String
     -> RegistrationStatus
     -> (ListActivityTypesOptions -> ListActivityTypesOptions)
-    -> AWS.Http.UnsignedRequest ActivityTypeInfos
+    -> AWS.Request ActivityTypeInfos
 listActivityTypes domain registrationStatus setOptions =
   let
     options = setOptions (ListActivityTypesOptions Nothing Nothing Nothing Nothing)
@@ -815,6 +828,7 @@ listActivityTypes domain registrationStatus setOptions =
             JE.null
         )
         activityTypeInfosDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listActivityTypes request
@@ -839,7 +853,7 @@ __Required Parameters__
 listClosedWorkflowExecutions :
     String
     -> (ListClosedWorkflowExecutionsOptions -> ListClosedWorkflowExecutionsOptions)
-    -> AWS.Http.UnsignedRequest WorkflowExecutionInfos
+    -> AWS.Request WorkflowExecutionInfos
 listClosedWorkflowExecutions domain setOptions =
   let
     options = setOptions (ListClosedWorkflowExecutionsOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -852,6 +866,7 @@ listClosedWorkflowExecutions domain setOptions =
             JE.null
         )
         workflowExecutionInfosDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listClosedWorkflowExecutions request
@@ -881,7 +896,7 @@ __Required Parameters__
 listDomains :
     RegistrationStatus
     -> (ListDomainsOptions -> ListDomainsOptions)
-    -> AWS.Http.UnsignedRequest DomainInfos
+    -> AWS.Request DomainInfos
 listDomains registrationStatus setOptions =
   let
     options = setOptions (ListDomainsOptions Nothing Nothing Nothing)
@@ -894,6 +909,7 @@ listDomains registrationStatus setOptions =
             JE.null
         )
         domainInfosDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDomains request
@@ -919,7 +935,7 @@ listOpenWorkflowExecutions :
     String
     -> ExecutionTimeFilter
     -> (ListOpenWorkflowExecutionsOptions -> ListOpenWorkflowExecutionsOptions)
-    -> AWS.Http.UnsignedRequest WorkflowExecutionInfos
+    -> AWS.Request WorkflowExecutionInfos
 listOpenWorkflowExecutions domain startTimeFilter setOptions =
   let
     options = setOptions (ListOpenWorkflowExecutionsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -932,6 +948,7 @@ listOpenWorkflowExecutions domain startTimeFilter setOptions =
             JE.null
         )
         workflowExecutionInfosDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listOpenWorkflowExecutions request
@@ -960,7 +977,7 @@ listWorkflowTypes :
     String
     -> RegistrationStatus
     -> (ListWorkflowTypesOptions -> ListWorkflowTypesOptions)
-    -> AWS.Http.UnsignedRequest WorkflowTypeInfos
+    -> AWS.Request WorkflowTypeInfos
 listWorkflowTypes domain registrationStatus setOptions =
   let
     options = setOptions (ListWorkflowTypesOptions Nothing Nothing Nothing Nothing)
@@ -973,6 +990,7 @@ listWorkflowTypes domain registrationStatus setOptions =
             JE.null
         )
         workflowTypeInfosDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listWorkflowTypes request
@@ -999,7 +1017,7 @@ pollForActivityTask :
     String
     -> TaskList
     -> (PollForActivityTaskOptions -> PollForActivityTaskOptions)
-    -> AWS.Http.UnsignedRequest ActivityTask
+    -> AWS.Request ActivityTask
 pollForActivityTask domain taskList setOptions =
   let
     options = setOptions (PollForActivityTaskOptions Nothing)
@@ -1012,6 +1030,7 @@ pollForActivityTask domain taskList setOptions =
             JE.null
         )
         activityTaskDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a pollForActivityTask request
@@ -1035,7 +1054,7 @@ pollForDecisionTask :
     String
     -> TaskList
     -> (PollForDecisionTaskOptions -> PollForDecisionTaskOptions)
-    -> AWS.Http.UnsignedRequest DecisionTask
+    -> AWS.Request DecisionTask
 pollForDecisionTask domain taskList setOptions =
   let
     options = setOptions (PollForDecisionTaskOptions Nothing Nothing Nothing Nothing)
@@ -1048,6 +1067,7 @@ pollForDecisionTask domain taskList setOptions =
             JE.null
         )
         decisionTaskDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a pollForDecisionTask request
@@ -1072,7 +1092,7 @@ __Required Parameters__
 recordActivityTaskHeartbeat :
     String
     -> (RecordActivityTaskHeartbeatOptions -> RecordActivityTaskHeartbeatOptions)
-    -> AWS.Http.UnsignedRequest ActivityTaskStatus
+    -> AWS.Request ActivityTaskStatus
 recordActivityTaskHeartbeat taskToken setOptions =
   let
     options = setOptions (RecordActivityTaskHeartbeatOptions Nothing)
@@ -1085,6 +1105,7 @@ recordActivityTaskHeartbeat taskToken setOptions =
             JE.null
         )
         activityTaskStatusDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a recordActivityTaskHeartbeat request
@@ -1110,7 +1131,7 @@ registerActivityType :
     -> String
     -> String
     -> (RegisterActivityTypeOptions -> RegisterActivityTypeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 registerActivityType domain name version setOptions =
   let
     options = setOptions (RegisterActivityTypeOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1123,6 +1144,7 @@ registerActivityType domain name version setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerActivityType request
@@ -1152,7 +1174,7 @@ registerDomain :
     String
     -> String
     -> (RegisterDomainOptions -> RegisterDomainOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 registerDomain name workflowExecutionRetentionPeriodInDays setOptions =
   let
     options = setOptions (RegisterDomainOptions Nothing)
@@ -1165,6 +1187,7 @@ registerDomain name workflowExecutionRetentionPeriodInDays setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerDomain request
@@ -1190,7 +1213,7 @@ registerWorkflowType :
     -> String
     -> String
     -> (RegisterWorkflowTypeOptions -> RegisterWorkflowTypeOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 registerWorkflowType domain name version setOptions =
   let
     options = setOptions (RegisterWorkflowTypeOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1203,6 +1226,7 @@ registerWorkflowType domain name version setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerWorkflowType request
@@ -1232,7 +1256,7 @@ requestCancelWorkflowExecution :
     String
     -> String
     -> (RequestCancelWorkflowExecutionOptions -> RequestCancelWorkflowExecutionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 requestCancelWorkflowExecution domain workflowId setOptions =
   let
     options = setOptions (RequestCancelWorkflowExecutionOptions Nothing)
@@ -1245,6 +1269,7 @@ requestCancelWorkflowExecution domain workflowId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a requestCancelWorkflowExecution request
@@ -1266,7 +1291,7 @@ __Required Parameters__
 respondActivityTaskCanceled :
     String
     -> (RespondActivityTaskCanceledOptions -> RespondActivityTaskCanceledOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 respondActivityTaskCanceled taskToken setOptions =
   let
     options = setOptions (RespondActivityTaskCanceledOptions Nothing)
@@ -1279,6 +1304,7 @@ respondActivityTaskCanceled taskToken setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a respondActivityTaskCanceled request
@@ -1300,7 +1326,7 @@ __Required Parameters__
 respondActivityTaskCompleted :
     String
     -> (RespondActivityTaskCompletedOptions -> RespondActivityTaskCompletedOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 respondActivityTaskCompleted taskToken setOptions =
   let
     options = setOptions (RespondActivityTaskCompletedOptions Nothing)
@@ -1313,6 +1339,7 @@ respondActivityTaskCompleted taskToken setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a respondActivityTaskCompleted request
@@ -1334,7 +1361,7 @@ __Required Parameters__
 respondActivityTaskFailed :
     String
     -> (RespondActivityTaskFailedOptions -> RespondActivityTaskFailedOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 respondActivityTaskFailed taskToken setOptions =
   let
     options = setOptions (RespondActivityTaskFailedOptions Nothing Nothing)
@@ -1347,6 +1374,7 @@ respondActivityTaskFailed taskToken setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a respondActivityTaskFailed request
@@ -1369,7 +1397,7 @@ __Required Parameters__
 respondDecisionTaskCompleted :
     String
     -> (RespondDecisionTaskCompletedOptions -> RespondDecisionTaskCompletedOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 respondDecisionTaskCompleted taskToken setOptions =
   let
     options = setOptions (RespondDecisionTaskCompletedOptions Nothing Nothing)
@@ -1382,6 +1410,7 @@ respondDecisionTaskCompleted taskToken setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a respondDecisionTaskCompleted request
@@ -1408,7 +1437,7 @@ signalWorkflowExecution :
     -> String
     -> String
     -> (SignalWorkflowExecutionOptions -> SignalWorkflowExecutionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 signalWorkflowExecution domain workflowId signalName setOptions =
   let
     options = setOptions (SignalWorkflowExecutionOptions Nothing Nothing)
@@ -1421,6 +1450,7 @@ signalWorkflowExecution domain workflowId signalName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a signalWorkflowExecution request
@@ -1447,7 +1477,7 @@ startWorkflowExecution :
     -> String
     -> WorkflowType
     -> (StartWorkflowExecutionOptions -> StartWorkflowExecutionOptions)
-    -> AWS.Http.UnsignedRequest Run
+    -> AWS.Request Run
 startWorkflowExecution domain workflowId workflowType setOptions =
   let
     options = setOptions (StartWorkflowExecutionOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1460,6 +1490,7 @@ startWorkflowExecution domain workflowId workflowType setOptions =
             JE.null
         )
         runDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startWorkflowExecution request
@@ -1490,7 +1521,7 @@ terminateWorkflowExecution :
     String
     -> String
     -> (TerminateWorkflowExecutionOptions -> TerminateWorkflowExecutionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 terminateWorkflowExecution domain workflowId setOptions =
   let
     options = setOptions (TerminateWorkflowExecutionOptions Nothing Nothing Nothing Nothing)
@@ -1503,6 +1534,7 @@ terminateWorkflowExecution domain workflowId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a terminateWorkflowExecution request

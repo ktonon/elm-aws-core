@@ -414,6 +414,7 @@ module AWS.Services.CloudFront
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -424,16 +425,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "cloudfront"
         "2016-11-25"
         "undefined"
         "AWSCLOUDFRONT_20161125."
         "cloudfront.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -449,7 +450,7 @@ __Required Parameters__
 -}
 createCloudFrontOriginAccessIdentity :
     CloudFrontOriginAccessIdentityConfig
-    -> AWS.Http.UnsignedRequest CreateCloudFrontOriginAccessIdentityResult
+    -> AWS.Request CreateCloudFrontOriginAccessIdentityResult
 createCloudFrontOriginAccessIdentity cloudFrontOriginAccessIdentityConfig =
     AWS.Http.unsignedRequest
         "CreateCloudFrontOriginAccessIdentity"
@@ -459,6 +460,7 @@ createCloudFrontOriginAccessIdentity cloudFrontOriginAccessIdentityConfig =
             JE.null
         )
         createCloudFrontOriginAccessIdentityResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -472,7 +474,7 @@ __Required Parameters__
 -}
 createDistribution :
     DistributionConfig
-    -> AWS.Http.UnsignedRequest CreateDistributionResult
+    -> AWS.Request CreateDistributionResult
 createDistribution distributionConfig =
     AWS.Http.unsignedRequest
         "CreateDistribution"
@@ -482,6 +484,7 @@ createDistribution distributionConfig =
             JE.null
         )
         createDistributionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -495,7 +498,7 @@ __Required Parameters__
 -}
 createDistributionWithTags :
     DistributionConfigWithTags
-    -> AWS.Http.UnsignedRequest CreateDistributionWithTagsResult
+    -> AWS.Request CreateDistributionWithTagsResult
 createDistributionWithTags distributionConfigWithTags =
     AWS.Http.unsignedRequest
         "CreateDistributionWithTags"
@@ -505,6 +508,7 @@ createDistributionWithTags distributionConfigWithTags =
             JE.null
         )
         createDistributionWithTagsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -520,7 +524,7 @@ __Required Parameters__
 createInvalidation :
     String
     -> InvalidationBatch
-    -> AWS.Http.UnsignedRequest CreateInvalidationResult
+    -> AWS.Request CreateInvalidationResult
 createInvalidation distributionId invalidationBatch =
     AWS.Http.unsignedRequest
         "CreateInvalidation"
@@ -530,6 +534,7 @@ createInvalidation distributionId invalidationBatch =
             JE.null
         )
         createInvalidationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -543,7 +548,7 @@ __Required Parameters__
 -}
 createStreamingDistribution :
     StreamingDistributionConfig
-    -> AWS.Http.UnsignedRequest CreateStreamingDistributionResult
+    -> AWS.Request CreateStreamingDistributionResult
 createStreamingDistribution streamingDistributionConfig =
     AWS.Http.unsignedRequest
         "CreateStreamingDistribution"
@@ -553,6 +558,7 @@ createStreamingDistribution streamingDistributionConfig =
             JE.null
         )
         createStreamingDistributionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -566,7 +572,7 @@ __Required Parameters__
 -}
 createStreamingDistributionWithTags :
     StreamingDistributionConfigWithTags
-    -> AWS.Http.UnsignedRequest CreateStreamingDistributionWithTagsResult
+    -> AWS.Request CreateStreamingDistributionWithTagsResult
 createStreamingDistributionWithTags streamingDistributionConfigWithTags =
     AWS.Http.unsignedRequest
         "CreateStreamingDistributionWithTags"
@@ -576,6 +582,7 @@ createStreamingDistributionWithTags streamingDistributionConfigWithTags =
             JE.null
         )
         createStreamingDistributionWithTagsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -590,7 +597,7 @@ __Required Parameters__
 deleteCloudFrontOriginAccessIdentity :
     String
     -> (DeleteCloudFrontOriginAccessIdentityOptions -> DeleteCloudFrontOriginAccessIdentityOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteCloudFrontOriginAccessIdentity id setOptions =
   let
     options = setOptions (DeleteCloudFrontOriginAccessIdentityOptions Nothing)
@@ -603,6 +610,7 @@ deleteCloudFrontOriginAccessIdentity id setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteCloudFrontOriginAccessIdentity request
@@ -624,7 +632,7 @@ __Required Parameters__
 deleteDistribution :
     String
     -> (DeleteDistributionOptions -> DeleteDistributionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDistribution id setOptions =
   let
     options = setOptions (DeleteDistributionOptions Nothing)
@@ -637,6 +645,7 @@ deleteDistribution id setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteDistribution request
@@ -658,7 +667,7 @@ __Required Parameters__
 deleteStreamingDistribution :
     String
     -> (DeleteStreamingDistributionOptions -> DeleteStreamingDistributionOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteStreamingDistribution id setOptions =
   let
     options = setOptions (DeleteStreamingDistributionOptions Nothing)
@@ -671,6 +680,7 @@ deleteStreamingDistribution id setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a deleteStreamingDistribution request
@@ -691,7 +701,7 @@ __Required Parameters__
 -}
 getCloudFrontOriginAccessIdentity :
     String
-    -> AWS.Http.UnsignedRequest GetCloudFrontOriginAccessIdentityResult
+    -> AWS.Request GetCloudFrontOriginAccessIdentityResult
 getCloudFrontOriginAccessIdentity id =
     AWS.Http.unsignedRequest
         "GetCloudFrontOriginAccessIdentity"
@@ -702,6 +712,7 @@ getCloudFrontOriginAccessIdentity id =
             ]
         )
         getCloudFrontOriginAccessIdentityResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -715,7 +726,7 @@ __Required Parameters__
 -}
 getCloudFrontOriginAccessIdentityConfig :
     String
-    -> AWS.Http.UnsignedRequest GetCloudFrontOriginAccessIdentityConfigResult
+    -> AWS.Request GetCloudFrontOriginAccessIdentityConfigResult
 getCloudFrontOriginAccessIdentityConfig id =
     AWS.Http.unsignedRequest
         "GetCloudFrontOriginAccessIdentityConfig"
@@ -726,6 +737,7 @@ getCloudFrontOriginAccessIdentityConfig id =
             ]
         )
         getCloudFrontOriginAccessIdentityConfigResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -739,7 +751,7 @@ __Required Parameters__
 -}
 getDistribution :
     String
-    -> AWS.Http.UnsignedRequest GetDistributionResult
+    -> AWS.Request GetDistributionResult
 getDistribution id =
     AWS.Http.unsignedRequest
         "GetDistribution"
@@ -750,6 +762,7 @@ getDistribution id =
             ]
         )
         getDistributionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -763,7 +776,7 @@ __Required Parameters__
 -}
 getDistributionConfig :
     String
-    -> AWS.Http.UnsignedRequest GetDistributionConfigResult
+    -> AWS.Request GetDistributionConfigResult
 getDistributionConfig id =
     AWS.Http.unsignedRequest
         "GetDistributionConfig"
@@ -774,6 +787,7 @@ getDistributionConfig id =
             ]
         )
         getDistributionConfigResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -789,7 +803,7 @@ __Required Parameters__
 getInvalidation :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetInvalidationResult
+    -> AWS.Request GetInvalidationResult
 getInvalidation distributionId id =
     AWS.Http.unsignedRequest
         "GetInvalidation"
@@ -800,6 +814,7 @@ getInvalidation distributionId id =
             ]
         )
         getInvalidationResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -813,7 +828,7 @@ __Required Parameters__
 -}
 getStreamingDistribution :
     String
-    -> AWS.Http.UnsignedRequest GetStreamingDistributionResult
+    -> AWS.Request GetStreamingDistributionResult
 getStreamingDistribution id =
     AWS.Http.unsignedRequest
         "GetStreamingDistribution"
@@ -824,6 +839,7 @@ getStreamingDistribution id =
             ]
         )
         getStreamingDistributionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -837,7 +853,7 @@ __Required Parameters__
 -}
 getStreamingDistributionConfig :
     String
-    -> AWS.Http.UnsignedRequest GetStreamingDistributionConfigResult
+    -> AWS.Request GetStreamingDistributionConfigResult
 getStreamingDistributionConfig id =
     AWS.Http.unsignedRequest
         "GetStreamingDistributionConfig"
@@ -848,6 +864,7 @@ getStreamingDistributionConfig id =
             ]
         )
         getStreamingDistributionConfigResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -860,7 +877,7 @@ __Required Parameters__
 -}
 listCloudFrontOriginAccessIdentities :
     (ListCloudFrontOriginAccessIdentitiesOptions -> ListCloudFrontOriginAccessIdentitiesOptions)
-    -> AWS.Http.UnsignedRequest ListCloudFrontOriginAccessIdentitiesResult
+    -> AWS.Request ListCloudFrontOriginAccessIdentitiesResult
 listCloudFrontOriginAccessIdentities setOptions =
   let
     options = setOptions (ListCloudFrontOriginAccessIdentitiesOptions Nothing Nothing)
@@ -874,6 +891,7 @@ listCloudFrontOriginAccessIdentities setOptions =
             ]
         )
         listCloudFrontOriginAccessIdentitiesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listCloudFrontOriginAccessIdentities request
@@ -894,7 +912,7 @@ __Required Parameters__
 -}
 listDistributions :
     (ListDistributionsOptions -> ListDistributionsOptions)
-    -> AWS.Http.UnsignedRequest ListDistributionsResult
+    -> AWS.Request ListDistributionsResult
 listDistributions setOptions =
   let
     options = setOptions (ListDistributionsOptions Nothing Nothing)
@@ -908,6 +926,7 @@ listDistributions setOptions =
             ]
         )
         listDistributionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDistributions request
@@ -930,7 +949,7 @@ __Required Parameters__
 listDistributionsByWebACLId :
     String
     -> (ListDistributionsByWebACLIdOptions -> ListDistributionsByWebACLIdOptions)
-    -> AWS.Http.UnsignedRequest ListDistributionsByWebACLIdResult
+    -> AWS.Request ListDistributionsByWebACLIdResult
 listDistributionsByWebACLId webACLId setOptions =
   let
     options = setOptions (ListDistributionsByWebACLIdOptions Nothing Nothing)
@@ -944,6 +963,7 @@ listDistributionsByWebACLId webACLId setOptions =
             ]
         )
         listDistributionsByWebACLIdResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDistributionsByWebACLId request
@@ -966,7 +986,7 @@ __Required Parameters__
 listInvalidations :
     String
     -> (ListInvalidationsOptions -> ListInvalidationsOptions)
-    -> AWS.Http.UnsignedRequest ListInvalidationsResult
+    -> AWS.Request ListInvalidationsResult
 listInvalidations distributionId setOptions =
   let
     options = setOptions (ListInvalidationsOptions Nothing Nothing)
@@ -980,6 +1000,7 @@ listInvalidations distributionId setOptions =
             ]
         )
         listInvalidationsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listInvalidations request
@@ -1000,7 +1021,7 @@ __Required Parameters__
 -}
 listStreamingDistributions :
     (ListStreamingDistributionsOptions -> ListStreamingDistributionsOptions)
-    -> AWS.Http.UnsignedRequest ListStreamingDistributionsResult
+    -> AWS.Request ListStreamingDistributionsResult
 listStreamingDistributions setOptions =
   let
     options = setOptions (ListStreamingDistributionsOptions Nothing Nothing)
@@ -1014,6 +1035,7 @@ listStreamingDistributions setOptions =
             ]
         )
         listStreamingDistributionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listStreamingDistributions request
@@ -1035,7 +1057,7 @@ __Required Parameters__
 -}
 listTagsForResource :
     String
-    -> AWS.Http.UnsignedRequest ListTagsForResourceResult
+    -> AWS.Request ListTagsForResourceResult
 listTagsForResource resource =
     AWS.Http.unsignedRequest
         "ListTagsForResource"
@@ -1046,6 +1068,7 @@ listTagsForResource resource =
             ]
         )
         listTagsForResourceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1061,7 +1084,7 @@ __Required Parameters__
 tagResource :
     String
     -> Tags
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 tagResource resource tags =
     AWS.Http.unsignedRequest
         "TagResource"
@@ -1071,6 +1094,7 @@ tagResource resource tags =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1086,7 +1110,7 @@ __Required Parameters__
 untagResource :
     String
     -> TagKeys
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 untagResource resource tagKeys =
     AWS.Http.unsignedRequest
         "UntagResource"
@@ -1096,6 +1120,7 @@ untagResource resource tagKeys =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1112,7 +1137,7 @@ updateCloudFrontOriginAccessIdentity :
     CloudFrontOriginAccessIdentityConfig
     -> String
     -> (UpdateCloudFrontOriginAccessIdentityOptions -> UpdateCloudFrontOriginAccessIdentityOptions)
-    -> AWS.Http.UnsignedRequest UpdateCloudFrontOriginAccessIdentityResult
+    -> AWS.Request UpdateCloudFrontOriginAccessIdentityResult
 updateCloudFrontOriginAccessIdentity cloudFrontOriginAccessIdentityConfig id setOptions =
   let
     options = setOptions (UpdateCloudFrontOriginAccessIdentityOptions Nothing)
@@ -1125,6 +1150,7 @@ updateCloudFrontOriginAccessIdentity cloudFrontOriginAccessIdentityConfig id set
             JE.null
         )
         updateCloudFrontOriginAccessIdentityResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateCloudFrontOriginAccessIdentity request
@@ -1148,7 +1174,7 @@ updateDistribution :
     DistributionConfig
     -> String
     -> (UpdateDistributionOptions -> UpdateDistributionOptions)
-    -> AWS.Http.UnsignedRequest UpdateDistributionResult
+    -> AWS.Request UpdateDistributionResult
 updateDistribution distributionConfig id setOptions =
   let
     options = setOptions (UpdateDistributionOptions Nothing)
@@ -1161,6 +1187,7 @@ updateDistribution distributionConfig id setOptions =
             JE.null
         )
         updateDistributionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDistribution request
@@ -1184,7 +1211,7 @@ updateStreamingDistribution :
     StreamingDistributionConfig
     -> String
     -> (UpdateStreamingDistributionOptions -> UpdateStreamingDistributionOptions)
-    -> AWS.Http.UnsignedRequest UpdateStreamingDistributionResult
+    -> AWS.Request UpdateStreamingDistributionResult
 updateStreamingDistribution streamingDistributionConfig id setOptions =
   let
     options = setOptions (UpdateStreamingDistributionOptions Nothing)
@@ -1197,6 +1224,7 @@ updateStreamingDistribution streamingDistributionConfig id setOptions =
             JE.null
         )
         updateStreamingDistributionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateStreamingDistribution request

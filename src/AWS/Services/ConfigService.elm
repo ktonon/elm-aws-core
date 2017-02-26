@@ -296,6 +296,7 @@ module AWS.Services.ConfigService
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -307,16 +308,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "config"
         "2014-11-12"
         "1.1"
         "AWSCONFIG_20141112."
         "config.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -332,7 +333,7 @@ __Required Parameters__
 -}
 deleteConfigRule :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteConfigRule configRuleName =
     AWS.Http.unsignedRequest
         "DeleteConfigRule"
@@ -342,6 +343,7 @@ deleteConfigRule configRuleName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -355,7 +357,7 @@ __Required Parameters__
 -}
 deleteConfigurationRecorder :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteConfigurationRecorder configurationRecorderName =
     AWS.Http.unsignedRequest
         "DeleteConfigurationRecorder"
@@ -365,6 +367,7 @@ deleteConfigurationRecorder configurationRecorderName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -378,7 +381,7 @@ __Required Parameters__
 -}
 deleteDeliveryChannel :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteDeliveryChannel deliveryChannelName =
     AWS.Http.unsignedRequest
         "DeleteDeliveryChannel"
@@ -388,6 +391,7 @@ deleteDeliveryChannel deliveryChannelName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -401,7 +405,7 @@ __Required Parameters__
 -}
 deleteEvaluationResults :
     String
-    -> AWS.Http.UnsignedRequest DeleteEvaluationResultsResponse
+    -> AWS.Request DeleteEvaluationResultsResponse
 deleteEvaluationResults configRuleName =
     AWS.Http.unsignedRequest
         "DeleteEvaluationResults"
@@ -411,6 +415,7 @@ deleteEvaluationResults configRuleName =
             JE.null
         )
         deleteEvaluationResultsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -424,7 +429,7 @@ __Required Parameters__
 -}
 deliverConfigSnapshot :
     String
-    -> AWS.Http.UnsignedRequest DeliverConfigSnapshotResponse
+    -> AWS.Request DeliverConfigSnapshotResponse
 deliverConfigSnapshot deliveryChannelName =
     AWS.Http.unsignedRequest
         "DeliverConfigSnapshot"
@@ -434,6 +439,7 @@ deliverConfigSnapshot deliveryChannelName =
             JE.null
         )
         deliverConfigSnapshotResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -446,7 +452,7 @@ __Required Parameters__
 -}
 describeComplianceByConfigRule :
     (DescribeComplianceByConfigRuleOptions -> DescribeComplianceByConfigRuleOptions)
-    -> AWS.Http.UnsignedRequest DescribeComplianceByConfigRuleResponse
+    -> AWS.Request DescribeComplianceByConfigRuleResponse
 describeComplianceByConfigRule setOptions =
   let
     options = setOptions (DescribeComplianceByConfigRuleOptions Nothing Nothing Nothing)
@@ -459,6 +465,7 @@ describeComplianceByConfigRule setOptions =
             JE.null
         )
         describeComplianceByConfigRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeComplianceByConfigRule request
@@ -480,7 +487,7 @@ __Required Parameters__
 -}
 describeComplianceByResource :
     (DescribeComplianceByResourceOptions -> DescribeComplianceByResourceOptions)
-    -> AWS.Http.UnsignedRequest DescribeComplianceByResourceResponse
+    -> AWS.Request DescribeComplianceByResourceResponse
 describeComplianceByResource setOptions =
   let
     options = setOptions (DescribeComplianceByResourceOptions Nothing Nothing Nothing Nothing Nothing)
@@ -493,6 +500,7 @@ describeComplianceByResource setOptions =
             JE.null
         )
         describeComplianceByResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeComplianceByResource request
@@ -516,7 +524,7 @@ __Required Parameters__
 -}
 describeConfigRuleEvaluationStatus :
     (DescribeConfigRuleEvaluationStatusOptions -> DescribeConfigRuleEvaluationStatusOptions)
-    -> AWS.Http.UnsignedRequest DescribeConfigRuleEvaluationStatusResponse
+    -> AWS.Request DescribeConfigRuleEvaluationStatusResponse
 describeConfigRuleEvaluationStatus setOptions =
   let
     options = setOptions (DescribeConfigRuleEvaluationStatusOptions Nothing Nothing Nothing)
@@ -529,6 +537,7 @@ describeConfigRuleEvaluationStatus setOptions =
             JE.null
         )
         describeConfigRuleEvaluationStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConfigRuleEvaluationStatus request
@@ -550,7 +559,7 @@ __Required Parameters__
 -}
 describeConfigRules :
     (DescribeConfigRulesOptions -> DescribeConfigRulesOptions)
-    -> AWS.Http.UnsignedRequest DescribeConfigRulesResponse
+    -> AWS.Request DescribeConfigRulesResponse
 describeConfigRules setOptions =
   let
     options = setOptions (DescribeConfigRulesOptions Nothing Nothing)
@@ -563,6 +572,7 @@ describeConfigRules setOptions =
             JE.null
         )
         describeConfigRulesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConfigRules request
@@ -583,7 +593,7 @@ __Required Parameters__
 -}
 describeConfigurationRecorderStatus :
     (DescribeConfigurationRecorderStatusOptions -> DescribeConfigurationRecorderStatusOptions)
-    -> AWS.Http.UnsignedRequest DescribeConfigurationRecorderStatusResponse
+    -> AWS.Request DescribeConfigurationRecorderStatusResponse
 describeConfigurationRecorderStatus setOptions =
   let
     options = setOptions (DescribeConfigurationRecorderStatusOptions Nothing)
@@ -596,6 +606,7 @@ describeConfigurationRecorderStatus setOptions =
             JE.null
         )
         describeConfigurationRecorderStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConfigurationRecorderStatus request
@@ -615,7 +626,7 @@ __Required Parameters__
 -}
 describeConfigurationRecorders :
     (DescribeConfigurationRecordersOptions -> DescribeConfigurationRecordersOptions)
-    -> AWS.Http.UnsignedRequest DescribeConfigurationRecordersResponse
+    -> AWS.Request DescribeConfigurationRecordersResponse
 describeConfigurationRecorders setOptions =
   let
     options = setOptions (DescribeConfigurationRecordersOptions Nothing)
@@ -628,6 +639,7 @@ describeConfigurationRecorders setOptions =
             JE.null
         )
         describeConfigurationRecordersResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeConfigurationRecorders request
@@ -647,7 +659,7 @@ __Required Parameters__
 -}
 describeDeliveryChannelStatus :
     (DescribeDeliveryChannelStatusOptions -> DescribeDeliveryChannelStatusOptions)
-    -> AWS.Http.UnsignedRequest DescribeDeliveryChannelStatusResponse
+    -> AWS.Request DescribeDeliveryChannelStatusResponse
 describeDeliveryChannelStatus setOptions =
   let
     options = setOptions (DescribeDeliveryChannelStatusOptions Nothing)
@@ -660,6 +672,7 @@ describeDeliveryChannelStatus setOptions =
             JE.null
         )
         describeDeliveryChannelStatusResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDeliveryChannelStatus request
@@ -679,7 +692,7 @@ __Required Parameters__
 -}
 describeDeliveryChannels :
     (DescribeDeliveryChannelsOptions -> DescribeDeliveryChannelsOptions)
-    -> AWS.Http.UnsignedRequest DescribeDeliveryChannelsResponse
+    -> AWS.Request DescribeDeliveryChannelsResponse
 describeDeliveryChannels setOptions =
   let
     options = setOptions (DescribeDeliveryChannelsOptions Nothing)
@@ -692,6 +705,7 @@ describeDeliveryChannels setOptions =
             JE.null
         )
         describeDeliveryChannelsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeDeliveryChannels request
@@ -713,7 +727,7 @@ __Required Parameters__
 getComplianceDetailsByConfigRule :
     String
     -> (GetComplianceDetailsByConfigRuleOptions -> GetComplianceDetailsByConfigRuleOptions)
-    -> AWS.Http.UnsignedRequest GetComplianceDetailsByConfigRuleResponse
+    -> AWS.Request GetComplianceDetailsByConfigRuleResponse
 getComplianceDetailsByConfigRule configRuleName setOptions =
   let
     options = setOptions (GetComplianceDetailsByConfigRuleOptions Nothing Nothing Nothing)
@@ -726,6 +740,7 @@ getComplianceDetailsByConfigRule configRuleName setOptions =
             JE.null
         )
         getComplianceDetailsByConfigRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getComplianceDetailsByConfigRule request
@@ -751,7 +766,7 @@ getComplianceDetailsByResource :
     String
     -> String
     -> (GetComplianceDetailsByResourceOptions -> GetComplianceDetailsByResourceOptions)
-    -> AWS.Http.UnsignedRequest GetComplianceDetailsByResourceResponse
+    -> AWS.Request GetComplianceDetailsByResourceResponse
 getComplianceDetailsByResource resourceType resourceId setOptions =
   let
     options = setOptions (GetComplianceDetailsByResourceOptions Nothing Nothing)
@@ -764,6 +779,7 @@ getComplianceDetailsByResource resourceType resourceId setOptions =
             JE.null
         )
         getComplianceDetailsByResourceResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getComplianceDetailsByResource request
@@ -783,7 +799,7 @@ __Required Parameters__
 
 -}
 getComplianceSummaryByConfigRule :
-    AWS.Http.UnsignedRequest GetComplianceSummaryByConfigRuleResponse
+    AWS.Request GetComplianceSummaryByConfigRuleResponse
 getComplianceSummaryByConfigRule =
     AWS.Http.unsignedRequest
         "GetComplianceSummaryByConfigRule"
@@ -793,6 +809,7 @@ getComplianceSummaryByConfigRule =
             JE.null
         )
         getComplianceSummaryByConfigRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -805,7 +822,7 @@ __Required Parameters__
 -}
 getComplianceSummaryByResourceType :
     (GetComplianceSummaryByResourceTypeOptions -> GetComplianceSummaryByResourceTypeOptions)
-    -> AWS.Http.UnsignedRequest GetComplianceSummaryByResourceTypeResponse
+    -> AWS.Request GetComplianceSummaryByResourceTypeResponse
 getComplianceSummaryByResourceType setOptions =
   let
     options = setOptions (GetComplianceSummaryByResourceTypeOptions Nothing)
@@ -818,6 +835,7 @@ getComplianceSummaryByResourceType setOptions =
             JE.null
         )
         getComplianceSummaryByResourceTypeResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getComplianceSummaryByResourceType request
@@ -841,7 +859,7 @@ getResourceConfigHistory :
     ResourceType
     -> String
     -> (GetResourceConfigHistoryOptions -> GetResourceConfigHistoryOptions)
-    -> AWS.Http.UnsignedRequest GetResourceConfigHistoryResponse
+    -> AWS.Request GetResourceConfigHistoryResponse
 getResourceConfigHistory resourceType resourceId setOptions =
   let
     options = setOptions (GetResourceConfigHistoryOptions Nothing Nothing Nothing Nothing Nothing)
@@ -854,6 +872,7 @@ getResourceConfigHistory resourceType resourceId setOptions =
             JE.null
         )
         getResourceConfigHistoryResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getResourceConfigHistory request
@@ -879,7 +898,7 @@ __Required Parameters__
 listDiscoveredResources :
     ResourceType
     -> (ListDiscoveredResourcesOptions -> ListDiscoveredResourcesOptions)
-    -> AWS.Http.UnsignedRequest ListDiscoveredResourcesResponse
+    -> AWS.Request ListDiscoveredResourcesResponse
 listDiscoveredResources resourceType setOptions =
   let
     options = setOptions (ListDiscoveredResourcesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -892,6 +911,7 @@ listDiscoveredResources resourceType setOptions =
             JE.null
         )
         listDiscoveredResourcesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDiscoveredResources request
@@ -916,7 +936,7 @@ __Required Parameters__
 -}
 putConfigRule :
     ConfigRule
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putConfigRule configRule =
     AWS.Http.unsignedRequest
         "PutConfigRule"
@@ -926,6 +946,7 @@ putConfigRule configRule =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -939,7 +960,7 @@ __Required Parameters__
 -}
 putConfigurationRecorder :
     ConfigurationRecorder
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putConfigurationRecorder configurationRecorder =
     AWS.Http.unsignedRequest
         "PutConfigurationRecorder"
@@ -949,6 +970,7 @@ putConfigurationRecorder configurationRecorder =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -962,7 +984,7 @@ __Required Parameters__
 -}
 putDeliveryChannel :
     DeliveryChannel
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 putDeliveryChannel deliveryChannel =
     AWS.Http.unsignedRequest
         "PutDeliveryChannel"
@@ -972,6 +994,7 @@ putDeliveryChannel deliveryChannel =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -986,7 +1009,7 @@ __Required Parameters__
 putEvaluations :
     String
     -> (PutEvaluationsOptions -> PutEvaluationsOptions)
-    -> AWS.Http.UnsignedRequest PutEvaluationsResponse
+    -> AWS.Request PutEvaluationsResponse
 putEvaluations resultToken setOptions =
   let
     options = setOptions (PutEvaluationsOptions Nothing)
@@ -999,6 +1022,7 @@ putEvaluations resultToken setOptions =
             JE.null
         )
         putEvaluationsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putEvaluations request
@@ -1018,7 +1042,7 @@ __Required Parameters__
 -}
 startConfigRulesEvaluation :
     (StartConfigRulesEvaluationOptions -> StartConfigRulesEvaluationOptions)
-    -> AWS.Http.UnsignedRequest StartConfigRulesEvaluationResponse
+    -> AWS.Request StartConfigRulesEvaluationResponse
 startConfigRulesEvaluation setOptions =
   let
     options = setOptions (StartConfigRulesEvaluationOptions Nothing)
@@ -1031,6 +1055,7 @@ startConfigRulesEvaluation setOptions =
             JE.null
         )
         startConfigRulesEvaluationResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a startConfigRulesEvaluation request
@@ -1051,7 +1076,7 @@ __Required Parameters__
 -}
 startConfigurationRecorder :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 startConfigurationRecorder configurationRecorderName =
     AWS.Http.unsignedRequest
         "StartConfigurationRecorder"
@@ -1061,6 +1086,7 @@ startConfigurationRecorder configurationRecorderName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -1074,7 +1100,7 @@ __Required Parameters__
 -}
 stopConfigurationRecorder :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 stopConfigurationRecorder configurationRecorderName =
     AWS.Http.unsignedRequest
         "StopConfigurationRecorder"
@@ -1084,6 +1110,7 @@ stopConfigurationRecorder configurationRecorderName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 

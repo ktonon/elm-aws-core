@@ -228,6 +228,7 @@ module AWS.Services.Glacier
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -237,16 +238,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "glacier"
         "2012-06-01"
         "undefined"
         "AWSGLACIER_20120601."
         "glacier.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -266,7 +267,7 @@ abortMultipartUpload :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 abortMultipartUpload accountId vaultName uploadId =
     AWS.Http.unsignedRequest
         "AbortMultipartUpload"
@@ -276,6 +277,7 @@ abortMultipartUpload accountId vaultName uploadId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -291,7 +293,7 @@ __Required Parameters__
 abortVaultLock :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 abortVaultLock accountId vaultName =
     AWS.Http.unsignedRequest
         "AbortVaultLock"
@@ -301,6 +303,7 @@ abortVaultLock accountId vaultName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -317,7 +320,7 @@ addTagsToVault :
     String
     -> String
     -> (AddTagsToVaultOptions -> AddTagsToVaultOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 addTagsToVault accountId vaultName setOptions =
   let
     options = setOptions (AddTagsToVaultOptions Nothing)
@@ -330,6 +333,7 @@ addTagsToVault accountId vaultName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a addTagsToVault request
@@ -355,7 +359,7 @@ completeMultipartUpload :
     -> String
     -> String
     -> (CompleteMultipartUploadOptions -> CompleteMultipartUploadOptions)
-    -> AWS.Http.UnsignedRequest ArchiveCreationOutput
+    -> AWS.Request ArchiveCreationOutput
 completeMultipartUpload accountId vaultName uploadId setOptions =
   let
     options = setOptions (CompleteMultipartUploadOptions Nothing Nothing)
@@ -368,6 +372,7 @@ completeMultipartUpload accountId vaultName uploadId setOptions =
             JE.null
         )
         archiveCreationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a completeMultipartUpload request
@@ -393,7 +398,7 @@ completeVaultLock :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 completeVaultLock accountId vaultName lockId =
     AWS.Http.unsignedRequest
         "CompleteVaultLock"
@@ -403,6 +408,7 @@ completeVaultLock accountId vaultName lockId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -418,7 +424,7 @@ __Required Parameters__
 createVault :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateVaultOutput
+    -> AWS.Request CreateVaultOutput
 createVault accountId vaultName =
     AWS.Http.unsignedRequest
         "CreateVault"
@@ -428,6 +434,7 @@ createVault accountId vaultName =
             JE.null
         )
         createVaultOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -445,7 +452,7 @@ deleteArchive :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteArchive accountId vaultName archiveId =
     AWS.Http.unsignedRequest
         "DeleteArchive"
@@ -455,6 +462,7 @@ deleteArchive accountId vaultName archiveId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -470,7 +478,7 @@ __Required Parameters__
 deleteVault :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVault accountId vaultName =
     AWS.Http.unsignedRequest
         "DeleteVault"
@@ -480,6 +488,7 @@ deleteVault accountId vaultName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -495,7 +504,7 @@ __Required Parameters__
 deleteVaultAccessPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVaultAccessPolicy accountId vaultName =
     AWS.Http.unsignedRequest
         "DeleteVaultAccessPolicy"
@@ -505,6 +514,7 @@ deleteVaultAccessPolicy accountId vaultName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -520,7 +530,7 @@ __Required Parameters__
 deleteVaultNotifications :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteVaultNotifications accountId vaultName =
     AWS.Http.unsignedRequest
         "DeleteVaultNotifications"
@@ -530,6 +540,7 @@ deleteVaultNotifications accountId vaultName =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -547,7 +558,7 @@ describeJob :
     String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest GlacierJobDescription
+    -> AWS.Request GlacierJobDescription
 describeJob accountId vaultName jobId =
     AWS.Http.unsignedRequest
         "DescribeJob"
@@ -558,6 +569,7 @@ describeJob accountId vaultName jobId =
             ]
         )
         glacierJobDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -573,7 +585,7 @@ __Required Parameters__
 describeVault :
     String
     -> String
-    -> AWS.Http.UnsignedRequest DescribeVaultOutput
+    -> AWS.Request DescribeVaultOutput
 describeVault accountId vaultName =
     AWS.Http.unsignedRequest
         "DescribeVault"
@@ -584,6 +596,7 @@ describeVault accountId vaultName =
             ]
         )
         describeVaultOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -597,7 +610,7 @@ __Required Parameters__
 -}
 getDataRetrievalPolicy :
     String
-    -> AWS.Http.UnsignedRequest GetDataRetrievalPolicyOutput
+    -> AWS.Request GetDataRetrievalPolicyOutput
 getDataRetrievalPolicy accountId =
     AWS.Http.unsignedRequest
         "GetDataRetrievalPolicy"
@@ -608,6 +621,7 @@ getDataRetrievalPolicy accountId =
             ]
         )
         getDataRetrievalPolicyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -626,7 +640,7 @@ getJobOutput :
     -> String
     -> String
     -> (GetJobOutputOptions -> GetJobOutputOptions)
-    -> AWS.Http.UnsignedRequest GetJobOutputOutput
+    -> AWS.Request GetJobOutputOutput
 getJobOutput accountId vaultName jobId setOptions =
   let
     options = setOptions (GetJobOutputOptions Nothing)
@@ -640,6 +654,7 @@ getJobOutput accountId vaultName jobId setOptions =
             ]
         )
         getJobOutputOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getJobOutput request
@@ -662,7 +677,7 @@ __Required Parameters__
 getVaultAccessPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetVaultAccessPolicyOutput
+    -> AWS.Request GetVaultAccessPolicyOutput
 getVaultAccessPolicy accountId vaultName =
     AWS.Http.unsignedRequest
         "GetVaultAccessPolicy"
@@ -673,6 +688,7 @@ getVaultAccessPolicy accountId vaultName =
             ]
         )
         getVaultAccessPolicyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -688,7 +704,7 @@ __Required Parameters__
 getVaultLock :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetVaultLockOutput
+    -> AWS.Request GetVaultLockOutput
 getVaultLock accountId vaultName =
     AWS.Http.unsignedRequest
         "GetVaultLock"
@@ -699,6 +715,7 @@ getVaultLock accountId vaultName =
             ]
         )
         getVaultLockOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -714,7 +731,7 @@ __Required Parameters__
 getVaultNotifications :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetVaultNotificationsOutput
+    -> AWS.Request GetVaultNotificationsOutput
 getVaultNotifications accountId vaultName =
     AWS.Http.unsignedRequest
         "GetVaultNotifications"
@@ -725,6 +742,7 @@ getVaultNotifications accountId vaultName =
             ]
         )
         getVaultNotificationsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -741,7 +759,7 @@ initiateJob :
     String
     -> String
     -> (InitiateJobOptions -> InitiateJobOptions)
-    -> AWS.Http.UnsignedRequest InitiateJobOutput
+    -> AWS.Request InitiateJobOutput
 initiateJob accountId vaultName setOptions =
   let
     options = setOptions (InitiateJobOptions Nothing)
@@ -754,6 +772,7 @@ initiateJob accountId vaultName setOptions =
             JE.null
         )
         initiateJobOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a initiateJob request
@@ -777,7 +796,7 @@ initiateMultipartUpload :
     String
     -> String
     -> (InitiateMultipartUploadOptions -> InitiateMultipartUploadOptions)
-    -> AWS.Http.UnsignedRequest InitiateMultipartUploadOutput
+    -> AWS.Request InitiateMultipartUploadOutput
 initiateMultipartUpload accountId vaultName setOptions =
   let
     options = setOptions (InitiateMultipartUploadOptions Nothing Nothing)
@@ -790,6 +809,7 @@ initiateMultipartUpload accountId vaultName setOptions =
             JE.null
         )
         initiateMultipartUploadOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a initiateMultipartUpload request
@@ -814,7 +834,7 @@ initiateVaultLock :
     String
     -> String
     -> (InitiateVaultLockOptions -> InitiateVaultLockOptions)
-    -> AWS.Http.UnsignedRequest InitiateVaultLockOutput
+    -> AWS.Request InitiateVaultLockOutput
 initiateVaultLock accountId vaultName setOptions =
   let
     options = setOptions (InitiateVaultLockOptions Nothing)
@@ -827,6 +847,7 @@ initiateVaultLock accountId vaultName setOptions =
             JE.null
         )
         initiateVaultLockOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a initiateVaultLock request
@@ -850,7 +871,7 @@ listJobs :
     String
     -> String
     -> (ListJobsOptions -> ListJobsOptions)
-    -> AWS.Http.UnsignedRequest ListJobsOutput
+    -> AWS.Request ListJobsOutput
 listJobs accountId vaultName setOptions =
   let
     options = setOptions (ListJobsOptions Nothing Nothing Nothing Nothing)
@@ -864,6 +885,7 @@ listJobs accountId vaultName setOptions =
             ]
         )
         listJobsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listJobs request
@@ -890,7 +912,7 @@ listMultipartUploads :
     String
     -> String
     -> (ListMultipartUploadsOptions -> ListMultipartUploadsOptions)
-    -> AWS.Http.UnsignedRequest ListMultipartUploadsOutput
+    -> AWS.Request ListMultipartUploadsOutput
 listMultipartUploads accountId vaultName setOptions =
   let
     options = setOptions (ListMultipartUploadsOptions Nothing Nothing)
@@ -904,6 +926,7 @@ listMultipartUploads accountId vaultName setOptions =
             ]
         )
         listMultipartUploadsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listMultipartUploads request
@@ -930,7 +953,7 @@ listParts :
     -> String
     -> String
     -> (ListPartsOptions -> ListPartsOptions)
-    -> AWS.Http.UnsignedRequest ListPartsOutput
+    -> AWS.Request ListPartsOutput
 listParts accountId vaultName uploadId setOptions =
   let
     options = setOptions (ListPartsOptions Nothing Nothing)
@@ -944,6 +967,7 @@ listParts accountId vaultName uploadId setOptions =
             ]
         )
         listPartsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listParts request
@@ -965,7 +989,7 @@ __Required Parameters__
 -}
 listProvisionedCapacity :
     String
-    -> AWS.Http.UnsignedRequest ListProvisionedCapacityOutput
+    -> AWS.Request ListProvisionedCapacityOutput
 listProvisionedCapacity accountId =
     AWS.Http.unsignedRequest
         "ListProvisionedCapacity"
@@ -976,6 +1000,7 @@ listProvisionedCapacity accountId =
             ]
         )
         listProvisionedCapacityOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -991,7 +1016,7 @@ __Required Parameters__
 listTagsForVault :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ListTagsForVaultOutput
+    -> AWS.Request ListTagsForVaultOutput
 listTagsForVault accountId vaultName =
     AWS.Http.unsignedRequest
         "ListTagsForVault"
@@ -1002,6 +1027,7 @@ listTagsForVault accountId vaultName =
             ]
         )
         listTagsForVaultOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1016,7 +1042,7 @@ __Required Parameters__
 listVaults :
     String
     -> (ListVaultsOptions -> ListVaultsOptions)
-    -> AWS.Http.UnsignedRequest ListVaultsOutput
+    -> AWS.Request ListVaultsOutput
 listVaults accountId setOptions =
   let
     options = setOptions (ListVaultsOptions Nothing Nothing)
@@ -1030,6 +1056,7 @@ listVaults accountId setOptions =
             ]
         )
         listVaultsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listVaults request
@@ -1051,7 +1078,7 @@ __Required Parameters__
 -}
 purchaseProvisionedCapacity :
     String
-    -> AWS.Http.UnsignedRequest PurchaseProvisionedCapacityOutput
+    -> AWS.Request PurchaseProvisionedCapacityOutput
 purchaseProvisionedCapacity accountId =
     AWS.Http.unsignedRequest
         "PurchaseProvisionedCapacity"
@@ -1061,6 +1088,7 @@ purchaseProvisionedCapacity accountId =
             JE.null
         )
         purchaseProvisionedCapacityOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1077,7 +1105,7 @@ removeTagsFromVault :
     String
     -> String
     -> (RemoveTagsFromVaultOptions -> RemoveTagsFromVaultOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 removeTagsFromVault accountId vaultName setOptions =
   let
     options = setOptions (RemoveTagsFromVaultOptions Nothing)
@@ -1090,6 +1118,7 @@ removeTagsFromVault accountId vaultName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a removeTagsFromVault request
@@ -1111,7 +1140,7 @@ __Required Parameters__
 setDataRetrievalPolicy :
     String
     -> (SetDataRetrievalPolicyOptions -> SetDataRetrievalPolicyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setDataRetrievalPolicy accountId setOptions =
   let
     options = setOptions (SetDataRetrievalPolicyOptions Nothing)
@@ -1124,6 +1153,7 @@ setDataRetrievalPolicy accountId setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setDataRetrievalPolicy request
@@ -1147,7 +1177,7 @@ setVaultAccessPolicy :
     String
     -> String
     -> (SetVaultAccessPolicyOptions -> SetVaultAccessPolicyOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setVaultAccessPolicy accountId vaultName setOptions =
   let
     options = setOptions (SetVaultAccessPolicyOptions Nothing)
@@ -1160,6 +1190,7 @@ setVaultAccessPolicy accountId vaultName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setVaultAccessPolicy request
@@ -1183,7 +1214,7 @@ setVaultNotifications :
     String
     -> String
     -> (SetVaultNotificationsOptions -> SetVaultNotificationsOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setVaultNotifications accountId vaultName setOptions =
   let
     options = setOptions (SetVaultNotificationsOptions Nothing)
@@ -1196,6 +1227,7 @@ setVaultNotifications accountId vaultName setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setVaultNotifications request
@@ -1219,7 +1251,7 @@ uploadArchive :
     String
     -> String
     -> (UploadArchiveOptions -> UploadArchiveOptions)
-    -> AWS.Http.UnsignedRequest ArchiveCreationOutput
+    -> AWS.Request ArchiveCreationOutput
 uploadArchive vaultName accountId setOptions =
   let
     options = setOptions (UploadArchiveOptions Nothing Nothing Nothing)
@@ -1232,6 +1264,7 @@ uploadArchive vaultName accountId setOptions =
             JE.null
         )
         archiveCreationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a uploadArchive request
@@ -1259,7 +1292,7 @@ uploadMultipartPart :
     -> String
     -> String
     -> (UploadMultipartPartOptions -> UploadMultipartPartOptions)
-    -> AWS.Http.UnsignedRequest UploadMultipartPartOutput
+    -> AWS.Request UploadMultipartPartOutput
 uploadMultipartPart accountId vaultName uploadId setOptions =
   let
     options = setOptions (UploadMultipartPartOptions Nothing Nothing Nothing)
@@ -1272,6 +1305,7 @@ uploadMultipartPart accountId vaultName uploadId setOptions =
             JE.null
         )
         uploadMultipartPartOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a uploadMultipartPart request

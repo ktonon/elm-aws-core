@@ -122,6 +122,7 @@ module AWS.Services.CloudWatchEvents
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -132,16 +133,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "events"
         "2015-10-07"
         "1.1"
         "AWSEVENTS_20151007."
         "events.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -157,7 +158,7 @@ __Required Parameters__
 -}
 deleteRule :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteRule name =
     AWS.Http.unsignedRequest
         "DeleteRule"
@@ -167,6 +168,7 @@ deleteRule name =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -180,7 +182,7 @@ __Required Parameters__
 -}
 describeRule :
     String
-    -> AWS.Http.UnsignedRequest DescribeRuleResponse
+    -> AWS.Request DescribeRuleResponse
 describeRule name =
     AWS.Http.unsignedRequest
         "DescribeRule"
@@ -190,6 +192,7 @@ describeRule name =
             JE.null
         )
         describeRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -203,7 +206,7 @@ __Required Parameters__
 -}
 disableRule :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 disableRule name =
     AWS.Http.unsignedRequest
         "DisableRule"
@@ -213,6 +216,7 @@ disableRule name =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -226,7 +230,7 @@ __Required Parameters__
 -}
 enableRule :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 enableRule name =
     AWS.Http.unsignedRequest
         "EnableRule"
@@ -236,6 +240,7 @@ enableRule name =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -250,7 +255,7 @@ __Required Parameters__
 listRuleNamesByTarget :
     String
     -> (ListRuleNamesByTargetOptions -> ListRuleNamesByTargetOptions)
-    -> AWS.Http.UnsignedRequest ListRuleNamesByTargetResponse
+    -> AWS.Request ListRuleNamesByTargetResponse
 listRuleNamesByTarget targetArn setOptions =
   let
     options = setOptions (ListRuleNamesByTargetOptions Nothing Nothing)
@@ -263,6 +268,7 @@ listRuleNamesByTarget targetArn setOptions =
             JE.null
         )
         listRuleNamesByTargetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRuleNamesByTarget request
@@ -283,7 +289,7 @@ __Required Parameters__
 -}
 listRules :
     (ListRulesOptions -> ListRulesOptions)
-    -> AWS.Http.UnsignedRequest ListRulesResponse
+    -> AWS.Request ListRulesResponse
 listRules setOptions =
   let
     options = setOptions (ListRulesOptions Nothing Nothing Nothing)
@@ -296,6 +302,7 @@ listRules setOptions =
             JE.null
         )
         listRulesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRules request
@@ -319,7 +326,7 @@ __Required Parameters__
 listTargetsByRule :
     String
     -> (ListTargetsByRuleOptions -> ListTargetsByRuleOptions)
-    -> AWS.Http.UnsignedRequest ListTargetsByRuleResponse
+    -> AWS.Request ListTargetsByRuleResponse
 listTargetsByRule rule setOptions =
   let
     options = setOptions (ListTargetsByRuleOptions Nothing Nothing)
@@ -332,6 +339,7 @@ listTargetsByRule rule setOptions =
             JE.null
         )
         listTargetsByRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTargetsByRule request
@@ -353,7 +361,7 @@ __Required Parameters__
 -}
 putEvents :
     (List PutEventsRequestEntry)
-    -> AWS.Http.UnsignedRequest PutEventsResponse
+    -> AWS.Request PutEventsResponse
 putEvents entries =
     AWS.Http.unsignedRequest
         "PutEvents"
@@ -363,6 +371,7 @@ putEvents entries =
             JE.null
         )
         putEventsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -377,7 +386,7 @@ __Required Parameters__
 putRule :
     String
     -> (PutRuleOptions -> PutRuleOptions)
-    -> AWS.Http.UnsignedRequest PutRuleResponse
+    -> AWS.Request PutRuleResponse
 putRule name setOptions =
   let
     options = setOptions (PutRuleOptions Nothing Nothing Nothing Nothing Nothing)
@@ -390,6 +399,7 @@ putRule name setOptions =
             JE.null
         )
         putRuleResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putRule request
@@ -416,7 +426,7 @@ __Required Parameters__
 putTargets :
     String
     -> (List Target)
-    -> AWS.Http.UnsignedRequest PutTargetsResponse
+    -> AWS.Request PutTargetsResponse
 putTargets rule targets =
     AWS.Http.unsignedRequest
         "PutTargets"
@@ -426,6 +436,7 @@ putTargets rule targets =
             JE.null
         )
         putTargetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -441,7 +452,7 @@ __Required Parameters__
 removeTargets :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest RemoveTargetsResponse
+    -> AWS.Request RemoveTargetsResponse
 removeTargets rule ids =
     AWS.Http.unsignedRequest
         "RemoveTargets"
@@ -451,6 +462,7 @@ removeTargets rule ids =
             JE.null
         )
         removeTargetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -466,7 +478,7 @@ __Required Parameters__
 testEventPattern :
     String
     -> String
-    -> AWS.Http.UnsignedRequest TestEventPatternResponse
+    -> AWS.Request TestEventPatternResponse
 testEventPattern eventPattern event =
     AWS.Http.unsignedRequest
         "TestEventPattern"
@@ -476,6 +488,7 @@ testEventPattern eventPattern event =
             JE.null
         )
         testEventPatternResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 

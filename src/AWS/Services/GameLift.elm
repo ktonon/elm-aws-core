@@ -350,6 +350,7 @@ module AWS.Services.GameLift
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -360,16 +361,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "gamelift"
         "2015-10-01"
         "1.1"
         "AWSGAMELIFT_20151001."
         "gamelift.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -388,7 +389,7 @@ createAlias :
     String
     -> RoutingStrategy
     -> (CreateAliasOptions -> CreateAliasOptions)
-    -> AWS.Http.UnsignedRequest CreateAliasOutput
+    -> AWS.Request CreateAliasOutput
 createAlias name routingStrategy setOptions =
   let
     options = setOptions (CreateAliasOptions Nothing)
@@ -401,6 +402,7 @@ createAlias name routingStrategy setOptions =
             JE.null
         )
         createAliasOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createAlias request
@@ -420,7 +422,7 @@ __Required Parameters__
 -}
 createBuild :
     (CreateBuildOptions -> CreateBuildOptions)
-    -> AWS.Http.UnsignedRequest CreateBuildOutput
+    -> AWS.Request CreateBuildOutput
 createBuild setOptions =
   let
     options = setOptions (CreateBuildOptions Nothing Nothing Nothing Nothing)
@@ -433,6 +435,7 @@ createBuild setOptions =
             JE.null
         )
         createBuildOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createBuild request
@@ -461,7 +464,7 @@ createFleet :
     -> String
     -> EC2InstanceType
     -> (CreateFleetOptions -> CreateFleetOptions)
-    -> AWS.Http.UnsignedRequest CreateFleetOutput
+    -> AWS.Request CreateFleetOutput
 createFleet name buildId eC2InstanceType setOptions =
   let
     options = setOptions (CreateFleetOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -474,6 +477,7 @@ createFleet name buildId eC2InstanceType setOptions =
             JE.null
         )
         createFleetOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createFleet request
@@ -502,7 +506,7 @@ __Required Parameters__
 createGameSession :
     Int
     -> (CreateGameSessionOptions -> CreateGameSessionOptions)
-    -> AWS.Http.UnsignedRequest CreateGameSessionOutput
+    -> AWS.Request CreateGameSessionOutput
 createGameSession maximumPlayerSessionCount setOptions =
   let
     options = setOptions (CreateGameSessionOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -515,6 +519,7 @@ createGameSession maximumPlayerSessionCount setOptions =
             JE.null
         )
         createGameSessionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createGameSession request
@@ -542,7 +547,7 @@ __Required Parameters__
 createPlayerSession :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreatePlayerSessionOutput
+    -> AWS.Request CreatePlayerSessionOutput
 createPlayerSession gameSessionId playerId =
     AWS.Http.unsignedRequest
         "CreatePlayerSession"
@@ -552,6 +557,7 @@ createPlayerSession gameSessionId playerId =
             JE.null
         )
         createPlayerSessionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -567,7 +573,7 @@ __Required Parameters__
 createPlayerSessions :
     String
     -> (List String)
-    -> AWS.Http.UnsignedRequest CreatePlayerSessionsOutput
+    -> AWS.Request CreatePlayerSessionsOutput
 createPlayerSessions gameSessionId playerIds =
     AWS.Http.unsignedRequest
         "CreatePlayerSessions"
@@ -577,6 +583,7 @@ createPlayerSessions gameSessionId playerIds =
             JE.null
         )
         createPlayerSessionsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -590,7 +597,7 @@ __Required Parameters__
 -}
 deleteAlias :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteAlias aliasId =
     AWS.Http.unsignedRequest
         "DeleteAlias"
@@ -600,6 +607,7 @@ deleteAlias aliasId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -613,7 +621,7 @@ __Required Parameters__
 -}
 deleteBuild :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteBuild buildId =
     AWS.Http.unsignedRequest
         "DeleteBuild"
@@ -623,6 +631,7 @@ deleteBuild buildId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -636,7 +645,7 @@ __Required Parameters__
 -}
 deleteFleet :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteFleet fleetId =
     AWS.Http.unsignedRequest
         "DeleteFleet"
@@ -646,6 +655,7 @@ deleteFleet fleetId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -661,7 +671,7 @@ __Required Parameters__
 deleteScalingPolicy :
     String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteScalingPolicy name fleetId =
     AWS.Http.unsignedRequest
         "DeleteScalingPolicy"
@@ -671,6 +681,7 @@ deleteScalingPolicy name fleetId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -684,7 +695,7 @@ __Required Parameters__
 -}
 describeAlias :
     String
-    -> AWS.Http.UnsignedRequest DescribeAliasOutput
+    -> AWS.Request DescribeAliasOutput
 describeAlias aliasId =
     AWS.Http.unsignedRequest
         "DescribeAlias"
@@ -694,6 +705,7 @@ describeAlias aliasId =
             JE.null
         )
         describeAliasOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -707,7 +719,7 @@ __Required Parameters__
 -}
 describeBuild :
     String
-    -> AWS.Http.UnsignedRequest DescribeBuildOutput
+    -> AWS.Request DescribeBuildOutput
 describeBuild buildId =
     AWS.Http.unsignedRequest
         "DescribeBuild"
@@ -717,6 +729,7 @@ describeBuild buildId =
             JE.null
         )
         describeBuildOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -729,7 +742,7 @@ __Required Parameters__
 -}
 describeEC2InstanceLimits :
     (DescribeEC2InstanceLimitsOptions -> DescribeEC2InstanceLimitsOptions)
-    -> AWS.Http.UnsignedRequest DescribeEC2InstanceLimitsOutput
+    -> AWS.Request DescribeEC2InstanceLimitsOutput
 describeEC2InstanceLimits setOptions =
   let
     options = setOptions (DescribeEC2InstanceLimitsOptions Nothing)
@@ -742,6 +755,7 @@ describeEC2InstanceLimits setOptions =
             JE.null
         )
         describeEC2InstanceLimitsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeEC2InstanceLimits request
@@ -761,7 +775,7 @@ __Required Parameters__
 -}
 describeFleetAttributes :
     (DescribeFleetAttributesOptions -> DescribeFleetAttributesOptions)
-    -> AWS.Http.UnsignedRequest DescribeFleetAttributesOutput
+    -> AWS.Request DescribeFleetAttributesOutput
 describeFleetAttributes setOptions =
   let
     options = setOptions (DescribeFleetAttributesOptions Nothing Nothing Nothing)
@@ -774,6 +788,7 @@ describeFleetAttributes setOptions =
             JE.null
         )
         describeFleetAttributesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeFleetAttributes request
@@ -795,7 +810,7 @@ __Required Parameters__
 -}
 describeFleetCapacity :
     (DescribeFleetCapacityOptions -> DescribeFleetCapacityOptions)
-    -> AWS.Http.UnsignedRequest DescribeFleetCapacityOutput
+    -> AWS.Request DescribeFleetCapacityOutput
 describeFleetCapacity setOptions =
   let
     options = setOptions (DescribeFleetCapacityOptions Nothing Nothing Nothing)
@@ -808,6 +823,7 @@ describeFleetCapacity setOptions =
             JE.null
         )
         describeFleetCapacityOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeFleetCapacity request
@@ -831,7 +847,7 @@ __Required Parameters__
 describeFleetEvents :
     String
     -> (DescribeFleetEventsOptions -> DescribeFleetEventsOptions)
-    -> AWS.Http.UnsignedRequest DescribeFleetEventsOutput
+    -> AWS.Request DescribeFleetEventsOutput
 describeFleetEvents fleetId setOptions =
   let
     options = setOptions (DescribeFleetEventsOptions Nothing Nothing Nothing Nothing)
@@ -844,6 +860,7 @@ describeFleetEvents fleetId setOptions =
             JE.null
         )
         describeFleetEventsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeFleetEvents request
@@ -867,7 +884,7 @@ __Required Parameters__
 -}
 describeFleetPortSettings :
     String
-    -> AWS.Http.UnsignedRequest DescribeFleetPortSettingsOutput
+    -> AWS.Request DescribeFleetPortSettingsOutput
 describeFleetPortSettings fleetId =
     AWS.Http.unsignedRequest
         "DescribeFleetPortSettings"
@@ -877,6 +894,7 @@ describeFleetPortSettings fleetId =
             JE.null
         )
         describeFleetPortSettingsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -889,7 +907,7 @@ __Required Parameters__
 -}
 describeFleetUtilization :
     (DescribeFleetUtilizationOptions -> DescribeFleetUtilizationOptions)
-    -> AWS.Http.UnsignedRequest DescribeFleetUtilizationOutput
+    -> AWS.Request DescribeFleetUtilizationOutput
 describeFleetUtilization setOptions =
   let
     options = setOptions (DescribeFleetUtilizationOptions Nothing Nothing Nothing)
@@ -902,6 +920,7 @@ describeFleetUtilization setOptions =
             JE.null
         )
         describeFleetUtilizationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeFleetUtilization request
@@ -923,7 +942,7 @@ __Required Parameters__
 -}
 describeGameSessionDetails :
     (DescribeGameSessionDetailsOptions -> DescribeGameSessionDetailsOptions)
-    -> AWS.Http.UnsignedRequest DescribeGameSessionDetailsOutput
+    -> AWS.Request DescribeGameSessionDetailsOutput
 describeGameSessionDetails setOptions =
   let
     options = setOptions (DescribeGameSessionDetailsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -936,6 +955,7 @@ describeGameSessionDetails setOptions =
             JE.null
         )
         describeGameSessionDetailsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeGameSessionDetails request
@@ -960,7 +980,7 @@ __Required Parameters__
 -}
 describeGameSessions :
     (DescribeGameSessionsOptions -> DescribeGameSessionsOptions)
-    -> AWS.Http.UnsignedRequest DescribeGameSessionsOutput
+    -> AWS.Request DescribeGameSessionsOutput
 describeGameSessions setOptions =
   let
     options = setOptions (DescribeGameSessionsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -973,6 +993,7 @@ describeGameSessions setOptions =
             JE.null
         )
         describeGameSessionsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeGameSessions request
@@ -999,7 +1020,7 @@ __Required Parameters__
 describeInstances :
     String
     -> (DescribeInstancesOptions -> DescribeInstancesOptions)
-    -> AWS.Http.UnsignedRequest DescribeInstancesOutput
+    -> AWS.Request DescribeInstancesOutput
 describeInstances fleetId setOptions =
   let
     options = setOptions (DescribeInstancesOptions Nothing Nothing Nothing)
@@ -1012,6 +1033,7 @@ describeInstances fleetId setOptions =
             JE.null
         )
         describeInstancesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeInstances request
@@ -1033,7 +1055,7 @@ __Required Parameters__
 -}
 describePlayerSessions :
     (DescribePlayerSessionsOptions -> DescribePlayerSessionsOptions)
-    -> AWS.Http.UnsignedRequest DescribePlayerSessionsOutput
+    -> AWS.Request DescribePlayerSessionsOutput
 describePlayerSessions setOptions =
   let
     options = setOptions (DescribePlayerSessionsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1046,6 +1068,7 @@ describePlayerSessions setOptions =
             JE.null
         )
         describePlayerSessionsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describePlayerSessions request
@@ -1071,7 +1094,7 @@ __Required Parameters__
 -}
 describeRuntimeConfiguration :
     String
-    -> AWS.Http.UnsignedRequest DescribeRuntimeConfigurationOutput
+    -> AWS.Request DescribeRuntimeConfigurationOutput
 describeRuntimeConfiguration fleetId =
     AWS.Http.unsignedRequest
         "DescribeRuntimeConfiguration"
@@ -1081,6 +1104,7 @@ describeRuntimeConfiguration fleetId =
             JE.null
         )
         describeRuntimeConfigurationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1095,7 +1119,7 @@ __Required Parameters__
 describeScalingPolicies :
     String
     -> (DescribeScalingPoliciesOptions -> DescribeScalingPoliciesOptions)
-    -> AWS.Http.UnsignedRequest DescribeScalingPoliciesOutput
+    -> AWS.Request DescribeScalingPoliciesOutput
 describeScalingPolicies fleetId setOptions =
   let
     options = setOptions (DescribeScalingPoliciesOptions Nothing Nothing Nothing)
@@ -1108,6 +1132,7 @@ describeScalingPolicies fleetId setOptions =
             JE.null
         )
         describeScalingPoliciesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeScalingPolicies request
@@ -1130,7 +1155,7 @@ __Required Parameters__
 -}
 getGameSessionLogUrl :
     String
-    -> AWS.Http.UnsignedRequest GetGameSessionLogUrlOutput
+    -> AWS.Request GetGameSessionLogUrlOutput
 getGameSessionLogUrl gameSessionId =
     AWS.Http.unsignedRequest
         "GetGameSessionLogUrl"
@@ -1140,6 +1165,7 @@ getGameSessionLogUrl gameSessionId =
             JE.null
         )
         getGameSessionLogUrlOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1155,7 +1181,7 @@ __Required Parameters__
 getInstanceAccess :
     String
     -> String
-    -> AWS.Http.UnsignedRequest GetInstanceAccessOutput
+    -> AWS.Request GetInstanceAccessOutput
 getInstanceAccess fleetId instanceId =
     AWS.Http.unsignedRequest
         "GetInstanceAccess"
@@ -1165,6 +1191,7 @@ getInstanceAccess fleetId instanceId =
             JE.null
         )
         getInstanceAccessOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1177,7 +1204,7 @@ __Required Parameters__
 -}
 listAliases :
     (ListAliasesOptions -> ListAliasesOptions)
-    -> AWS.Http.UnsignedRequest ListAliasesOutput
+    -> AWS.Request ListAliasesOutput
 listAliases setOptions =
   let
     options = setOptions (ListAliasesOptions Nothing Nothing Nothing Nothing)
@@ -1190,6 +1217,7 @@ listAliases setOptions =
             JE.null
         )
         listAliasesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAliases request
@@ -1212,7 +1240,7 @@ __Required Parameters__
 -}
 listBuilds :
     (ListBuildsOptions -> ListBuildsOptions)
-    -> AWS.Http.UnsignedRequest ListBuildsOutput
+    -> AWS.Request ListBuildsOutput
 listBuilds setOptions =
   let
     options = setOptions (ListBuildsOptions Nothing Nothing Nothing)
@@ -1225,6 +1253,7 @@ listBuilds setOptions =
             JE.null
         )
         listBuildsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listBuilds request
@@ -1246,7 +1275,7 @@ __Required Parameters__
 -}
 listFleets :
     (ListFleetsOptions -> ListFleetsOptions)
-    -> AWS.Http.UnsignedRequest ListFleetsOutput
+    -> AWS.Request ListFleetsOutput
 listFleets setOptions =
   let
     options = setOptions (ListFleetsOptions Nothing Nothing Nothing)
@@ -1259,6 +1288,7 @@ listFleets setOptions =
             JE.null
         )
         listFleetsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listFleets request
@@ -1295,7 +1325,7 @@ putScalingPolicy :
     -> ComparisonOperatorType
     -> Int
     -> MetricName
-    -> AWS.Http.UnsignedRequest PutScalingPolicyOutput
+    -> AWS.Request PutScalingPolicyOutput
 putScalingPolicy name fleetId scalingAdjustment scalingAdjustmentType threshold comparisonOperator evaluationPeriods metricName =
     AWS.Http.unsignedRequest
         "PutScalingPolicy"
@@ -1305,6 +1335,7 @@ putScalingPolicy name fleetId scalingAdjustment scalingAdjustmentType threshold 
             JE.null
         )
         putScalingPolicyOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1318,7 +1349,7 @@ __Required Parameters__
 -}
 requestUploadCredentials :
     String
-    -> AWS.Http.UnsignedRequest RequestUploadCredentialsOutput
+    -> AWS.Request RequestUploadCredentialsOutput
 requestUploadCredentials buildId =
     AWS.Http.unsignedRequest
         "RequestUploadCredentials"
@@ -1328,6 +1359,7 @@ requestUploadCredentials buildId =
             JE.null
         )
         requestUploadCredentialsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1341,7 +1373,7 @@ __Required Parameters__
 -}
 resolveAlias :
     String
-    -> AWS.Http.UnsignedRequest ResolveAliasOutput
+    -> AWS.Request ResolveAliasOutput
 resolveAlias aliasId =
     AWS.Http.unsignedRequest
         "ResolveAlias"
@@ -1351,6 +1383,7 @@ resolveAlias aliasId =
             JE.null
         )
         resolveAliasOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1363,7 +1396,7 @@ __Required Parameters__
 -}
 searchGameSessions :
     (SearchGameSessionsOptions -> SearchGameSessionsOptions)
-    -> AWS.Http.UnsignedRequest SearchGameSessionsOutput
+    -> AWS.Request SearchGameSessionsOutput
 searchGameSessions setOptions =
   let
     options = setOptions (SearchGameSessionsOptions Nothing Nothing Nothing Nothing Nothing Nothing)
@@ -1376,6 +1409,7 @@ searchGameSessions setOptions =
             JE.null
         )
         searchGameSessionsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a searchGameSessions request
@@ -1402,7 +1436,7 @@ __Required Parameters__
 updateAlias :
     String
     -> (UpdateAliasOptions -> UpdateAliasOptions)
-    -> AWS.Http.UnsignedRequest UpdateAliasOutput
+    -> AWS.Request UpdateAliasOutput
 updateAlias aliasId setOptions =
   let
     options = setOptions (UpdateAliasOptions Nothing Nothing Nothing)
@@ -1415,6 +1449,7 @@ updateAlias aliasId setOptions =
             JE.null
         )
         updateAliasOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateAlias request
@@ -1438,7 +1473,7 @@ __Required Parameters__
 updateBuild :
     String
     -> (UpdateBuildOptions -> UpdateBuildOptions)
-    -> AWS.Http.UnsignedRequest UpdateBuildOutput
+    -> AWS.Request UpdateBuildOutput
 updateBuild buildId setOptions =
   let
     options = setOptions (UpdateBuildOptions Nothing Nothing)
@@ -1451,6 +1486,7 @@ updateBuild buildId setOptions =
             JE.null
         )
         updateBuildOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateBuild request
@@ -1473,7 +1509,7 @@ __Required Parameters__
 updateFleetAttributes :
     String
     -> (UpdateFleetAttributesOptions -> UpdateFleetAttributesOptions)
-    -> AWS.Http.UnsignedRequest UpdateFleetAttributesOutput
+    -> AWS.Request UpdateFleetAttributesOutput
 updateFleetAttributes fleetId setOptions =
   let
     options = setOptions (UpdateFleetAttributesOptions Nothing Nothing Nothing Nothing)
@@ -1486,6 +1522,7 @@ updateFleetAttributes fleetId setOptions =
             JE.null
         )
         updateFleetAttributesOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateFleetAttributes request
@@ -1510,7 +1547,7 @@ __Required Parameters__
 updateFleetCapacity :
     String
     -> (UpdateFleetCapacityOptions -> UpdateFleetCapacityOptions)
-    -> AWS.Http.UnsignedRequest UpdateFleetCapacityOutput
+    -> AWS.Request UpdateFleetCapacityOutput
 updateFleetCapacity fleetId setOptions =
   let
     options = setOptions (UpdateFleetCapacityOptions Nothing Nothing Nothing)
@@ -1523,6 +1560,7 @@ updateFleetCapacity fleetId setOptions =
             JE.null
         )
         updateFleetCapacityOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateFleetCapacity request
@@ -1546,7 +1584,7 @@ __Required Parameters__
 updateFleetPortSettings :
     String
     -> (UpdateFleetPortSettingsOptions -> UpdateFleetPortSettingsOptions)
-    -> AWS.Http.UnsignedRequest UpdateFleetPortSettingsOutput
+    -> AWS.Request UpdateFleetPortSettingsOutput
 updateFleetPortSettings fleetId setOptions =
   let
     options = setOptions (UpdateFleetPortSettingsOptions Nothing Nothing)
@@ -1559,6 +1597,7 @@ updateFleetPortSettings fleetId setOptions =
             JE.null
         )
         updateFleetPortSettingsOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateFleetPortSettings request
@@ -1581,7 +1620,7 @@ __Required Parameters__
 updateGameSession :
     String
     -> (UpdateGameSessionOptions -> UpdateGameSessionOptions)
-    -> AWS.Http.UnsignedRequest UpdateGameSessionOutput
+    -> AWS.Request UpdateGameSessionOutput
 updateGameSession gameSessionId setOptions =
   let
     options = setOptions (UpdateGameSessionOptions Nothing Nothing Nothing Nothing)
@@ -1594,6 +1633,7 @@ updateGameSession gameSessionId setOptions =
             JE.null
         )
         updateGameSessionOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateGameSession request
@@ -1619,7 +1659,7 @@ __Required Parameters__
 updateRuntimeConfiguration :
     String
     -> RuntimeConfiguration
-    -> AWS.Http.UnsignedRequest UpdateRuntimeConfigurationOutput
+    -> AWS.Request UpdateRuntimeConfigurationOutput
 updateRuntimeConfiguration fleetId runtimeConfiguration =
     AWS.Http.unsignedRequest
         "UpdateRuntimeConfiguration"
@@ -1629,6 +1669,7 @@ updateRuntimeConfiguration fleetId runtimeConfiguration =
             JE.null
         )
         updateRuntimeConfigurationOutputDecoder
+        |> AWS.UnsignedRequest
 
 
 

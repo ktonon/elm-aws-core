@@ -380,6 +380,7 @@ module AWS.Services.DeviceFarm
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -391,16 +392,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "devicefarm"
         "2015-06-23"
         "1.1"
         "AWSDEVICEFARM_20150623."
         "devicefarm.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -421,7 +422,7 @@ createDevicePool :
     -> String
     -> (List Rule)
     -> (CreateDevicePoolOptions -> CreateDevicePoolOptions)
-    -> AWS.Http.UnsignedRequest CreateDevicePoolResult
+    -> AWS.Request CreateDevicePoolResult
 createDevicePool projectArn name rules setOptions =
   let
     options = setOptions (CreateDevicePoolOptions Nothing)
@@ -434,6 +435,7 @@ createDevicePool projectArn name rules setOptions =
             JE.null
         )
         createDevicePoolResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createDevicePool request
@@ -454,7 +456,7 @@ __Required Parameters__
 -}
 createProject :
     String
-    -> AWS.Http.UnsignedRequest CreateProjectResult
+    -> AWS.Request CreateProjectResult
 createProject name =
     AWS.Http.unsignedRequest
         "CreateProject"
@@ -464,6 +466,7 @@ createProject name =
             JE.null
         )
         createProjectResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -480,7 +483,7 @@ createRemoteAccessSession :
     String
     -> String
     -> (CreateRemoteAccessSessionOptions -> CreateRemoteAccessSessionOptions)
-    -> AWS.Http.UnsignedRequest CreateRemoteAccessSessionResult
+    -> AWS.Request CreateRemoteAccessSessionResult
 createRemoteAccessSession projectArn deviceArn setOptions =
   let
     options = setOptions (CreateRemoteAccessSessionOptions Nothing Nothing)
@@ -493,6 +496,7 @@ createRemoteAccessSession projectArn deviceArn setOptions =
             JE.null
         )
         createRemoteAccessSessionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createRemoteAccessSession request
@@ -519,7 +523,7 @@ createUpload :
     -> String
     -> UploadType
     -> (CreateUploadOptions -> CreateUploadOptions)
-    -> AWS.Http.UnsignedRequest CreateUploadResult
+    -> AWS.Request CreateUploadResult
 createUpload projectArn name type_ setOptions =
   let
     options = setOptions (CreateUploadOptions Nothing)
@@ -532,6 +536,7 @@ createUpload projectArn name type_ setOptions =
             JE.null
         )
         createUploadResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createUpload request
@@ -552,7 +557,7 @@ __Required Parameters__
 -}
 deleteDevicePool :
     String
-    -> AWS.Http.UnsignedRequest DeleteDevicePoolResult
+    -> AWS.Request DeleteDevicePoolResult
 deleteDevicePool arn =
     AWS.Http.unsignedRequest
         "DeleteDevicePool"
@@ -562,6 +567,7 @@ deleteDevicePool arn =
             JE.null
         )
         deleteDevicePoolResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -575,7 +581,7 @@ __Required Parameters__
 -}
 deleteProject :
     String
-    -> AWS.Http.UnsignedRequest DeleteProjectResult
+    -> AWS.Request DeleteProjectResult
 deleteProject arn =
     AWS.Http.unsignedRequest
         "DeleteProject"
@@ -585,6 +591,7 @@ deleteProject arn =
             JE.null
         )
         deleteProjectResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -598,7 +605,7 @@ __Required Parameters__
 -}
 deleteRemoteAccessSession :
     String
-    -> AWS.Http.UnsignedRequest DeleteRemoteAccessSessionResult
+    -> AWS.Request DeleteRemoteAccessSessionResult
 deleteRemoteAccessSession arn =
     AWS.Http.unsignedRequest
         "DeleteRemoteAccessSession"
@@ -608,6 +615,7 @@ deleteRemoteAccessSession arn =
             JE.null
         )
         deleteRemoteAccessSessionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -621,7 +629,7 @@ __Required Parameters__
 -}
 deleteRun :
     String
-    -> AWS.Http.UnsignedRequest DeleteRunResult
+    -> AWS.Request DeleteRunResult
 deleteRun arn =
     AWS.Http.unsignedRequest
         "DeleteRun"
@@ -631,6 +639,7 @@ deleteRun arn =
             JE.null
         )
         deleteRunResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -644,7 +653,7 @@ __Required Parameters__
 -}
 deleteUpload :
     String
-    -> AWS.Http.UnsignedRequest DeleteUploadResult
+    -> AWS.Request DeleteUploadResult
 deleteUpload arn =
     AWS.Http.unsignedRequest
         "DeleteUpload"
@@ -654,6 +663,7 @@ deleteUpload arn =
             JE.null
         )
         deleteUploadResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -665,7 +675,7 @@ __Required Parameters__
 
 -}
 getAccountSettings :
-    AWS.Http.UnsignedRequest GetAccountSettingsResult
+    AWS.Request GetAccountSettingsResult
 getAccountSettings =
     AWS.Http.unsignedRequest
         "GetAccountSettings"
@@ -675,6 +685,7 @@ getAccountSettings =
             JE.null
         )
         getAccountSettingsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -688,7 +699,7 @@ __Required Parameters__
 -}
 getDevice :
     String
-    -> AWS.Http.UnsignedRequest GetDeviceResult
+    -> AWS.Request GetDeviceResult
 getDevice arn =
     AWS.Http.unsignedRequest
         "GetDevice"
@@ -698,6 +709,7 @@ getDevice arn =
             JE.null
         )
         getDeviceResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -711,7 +723,7 @@ __Required Parameters__
 -}
 getDevicePool :
     String
-    -> AWS.Http.UnsignedRequest GetDevicePoolResult
+    -> AWS.Request GetDevicePoolResult
 getDevicePool arn =
     AWS.Http.unsignedRequest
         "GetDevicePool"
@@ -721,6 +733,7 @@ getDevicePool arn =
             JE.null
         )
         getDevicePoolResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -735,7 +748,7 @@ __Required Parameters__
 getDevicePoolCompatibility :
     String
     -> (GetDevicePoolCompatibilityOptions -> GetDevicePoolCompatibilityOptions)
-    -> AWS.Http.UnsignedRequest GetDevicePoolCompatibilityResult
+    -> AWS.Request GetDevicePoolCompatibilityResult
 getDevicePoolCompatibility devicePoolArn setOptions =
   let
     options = setOptions (GetDevicePoolCompatibilityOptions Nothing Nothing)
@@ -748,6 +761,7 @@ getDevicePoolCompatibility devicePoolArn setOptions =
             JE.null
         )
         getDevicePoolCompatibilityResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getDevicePoolCompatibility request
@@ -769,7 +783,7 @@ __Required Parameters__
 -}
 getJob :
     String
-    -> AWS.Http.UnsignedRequest GetJobResult
+    -> AWS.Request GetJobResult
 getJob arn =
     AWS.Http.unsignedRequest
         "GetJob"
@@ -779,6 +793,7 @@ getJob arn =
             JE.null
         )
         getJobResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -791,7 +806,7 @@ __Required Parameters__
 -}
 getOfferingStatus :
     (GetOfferingStatusOptions -> GetOfferingStatusOptions)
-    -> AWS.Http.UnsignedRequest GetOfferingStatusResult
+    -> AWS.Request GetOfferingStatusResult
 getOfferingStatus setOptions =
   let
     options = setOptions (GetOfferingStatusOptions Nothing)
@@ -804,6 +819,7 @@ getOfferingStatus setOptions =
             JE.null
         )
         getOfferingStatusResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getOfferingStatus request
@@ -824,7 +840,7 @@ __Required Parameters__
 -}
 getProject :
     String
-    -> AWS.Http.UnsignedRequest GetProjectResult
+    -> AWS.Request GetProjectResult
 getProject arn =
     AWS.Http.unsignedRequest
         "GetProject"
@@ -834,6 +850,7 @@ getProject arn =
             JE.null
         )
         getProjectResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -847,7 +864,7 @@ __Required Parameters__
 -}
 getRemoteAccessSession :
     String
-    -> AWS.Http.UnsignedRequest GetRemoteAccessSessionResult
+    -> AWS.Request GetRemoteAccessSessionResult
 getRemoteAccessSession arn =
     AWS.Http.unsignedRequest
         "GetRemoteAccessSession"
@@ -857,6 +874,7 @@ getRemoteAccessSession arn =
             JE.null
         )
         getRemoteAccessSessionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -870,7 +888,7 @@ __Required Parameters__
 -}
 getRun :
     String
-    -> AWS.Http.UnsignedRequest GetRunResult
+    -> AWS.Request GetRunResult
 getRun arn =
     AWS.Http.unsignedRequest
         "GetRun"
@@ -880,6 +898,7 @@ getRun arn =
             JE.null
         )
         getRunResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -893,7 +912,7 @@ __Required Parameters__
 -}
 getSuite :
     String
-    -> AWS.Http.UnsignedRequest GetSuiteResult
+    -> AWS.Request GetSuiteResult
 getSuite arn =
     AWS.Http.unsignedRequest
         "GetSuite"
@@ -903,6 +922,7 @@ getSuite arn =
             JE.null
         )
         getSuiteResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -916,7 +936,7 @@ __Required Parameters__
 -}
 getTest :
     String
-    -> AWS.Http.UnsignedRequest GetTestResult
+    -> AWS.Request GetTestResult
 getTest arn =
     AWS.Http.unsignedRequest
         "GetTest"
@@ -926,6 +946,7 @@ getTest arn =
             JE.null
         )
         getTestResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -939,7 +960,7 @@ __Required Parameters__
 -}
 getUpload :
     String
-    -> AWS.Http.UnsignedRequest GetUploadResult
+    -> AWS.Request GetUploadResult
 getUpload arn =
     AWS.Http.unsignedRequest
         "GetUpload"
@@ -949,6 +970,7 @@ getUpload arn =
             JE.null
         )
         getUploadResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -964,7 +986,7 @@ __Required Parameters__
 installToRemoteAccessSession :
     String
     -> String
-    -> AWS.Http.UnsignedRequest InstallToRemoteAccessSessionResult
+    -> AWS.Request InstallToRemoteAccessSessionResult
 installToRemoteAccessSession remoteAccessSessionArn appArn =
     AWS.Http.unsignedRequest
         "InstallToRemoteAccessSession"
@@ -974,6 +996,7 @@ installToRemoteAccessSession remoteAccessSessionArn appArn =
             JE.null
         )
         installToRemoteAccessSessionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -990,7 +1013,7 @@ listArtifacts :
     String
     -> ArtifactCategory
     -> (ListArtifactsOptions -> ListArtifactsOptions)
-    -> AWS.Http.UnsignedRequest ListArtifactsResult
+    -> AWS.Request ListArtifactsResult
 listArtifacts arn type_ setOptions =
   let
     options = setOptions (ListArtifactsOptions Nothing)
@@ -1003,6 +1026,7 @@ listArtifacts arn type_ setOptions =
             JE.null
         )
         listArtifactsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listArtifacts request
@@ -1024,7 +1048,7 @@ __Required Parameters__
 listDevicePools :
     String
     -> (ListDevicePoolsOptions -> ListDevicePoolsOptions)
-    -> AWS.Http.UnsignedRequest ListDevicePoolsResult
+    -> AWS.Request ListDevicePoolsResult
 listDevicePools arn setOptions =
   let
     options = setOptions (ListDevicePoolsOptions Nothing Nothing)
@@ -1037,6 +1061,7 @@ listDevicePools arn setOptions =
             JE.null
         )
         listDevicePoolsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDevicePools request
@@ -1057,7 +1082,7 @@ __Required Parameters__
 -}
 listDevices :
     (ListDevicesOptions -> ListDevicesOptions)
-    -> AWS.Http.UnsignedRequest ListDevicesResult
+    -> AWS.Request ListDevicesResult
 listDevices setOptions =
   let
     options = setOptions (ListDevicesOptions Nothing Nothing)
@@ -1070,6 +1095,7 @@ listDevices setOptions =
             JE.null
         )
         listDevicesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listDevices request
@@ -1092,7 +1118,7 @@ __Required Parameters__
 listJobs :
     String
     -> (ListJobsOptions -> ListJobsOptions)
-    -> AWS.Http.UnsignedRequest ListJobsResult
+    -> AWS.Request ListJobsResult
 listJobs arn setOptions =
   let
     options = setOptions (ListJobsOptions Nothing)
@@ -1105,6 +1131,7 @@ listJobs arn setOptions =
             JE.null
         )
         listJobsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listJobs request
@@ -1124,7 +1151,7 @@ __Required Parameters__
 -}
 listOfferingTransactions :
     (ListOfferingTransactionsOptions -> ListOfferingTransactionsOptions)
-    -> AWS.Http.UnsignedRequest ListOfferingTransactionsResult
+    -> AWS.Request ListOfferingTransactionsResult
 listOfferingTransactions setOptions =
   let
     options = setOptions (ListOfferingTransactionsOptions Nothing)
@@ -1137,6 +1164,7 @@ listOfferingTransactions setOptions =
             JE.null
         )
         listOfferingTransactionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listOfferingTransactions request
@@ -1156,7 +1184,7 @@ __Required Parameters__
 -}
 listOfferings :
     (ListOfferingsOptions -> ListOfferingsOptions)
-    -> AWS.Http.UnsignedRequest ListOfferingsResult
+    -> AWS.Request ListOfferingsResult
 listOfferings setOptions =
   let
     options = setOptions (ListOfferingsOptions Nothing)
@@ -1169,6 +1197,7 @@ listOfferings setOptions =
             JE.null
         )
         listOfferingsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listOfferings request
@@ -1188,7 +1217,7 @@ __Required Parameters__
 -}
 listProjects :
     (ListProjectsOptions -> ListProjectsOptions)
-    -> AWS.Http.UnsignedRequest ListProjectsResult
+    -> AWS.Request ListProjectsResult
 listProjects setOptions =
   let
     options = setOptions (ListProjectsOptions Nothing Nothing)
@@ -1201,6 +1230,7 @@ listProjects setOptions =
             JE.null
         )
         listProjectsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listProjects request
@@ -1223,7 +1253,7 @@ __Required Parameters__
 listRemoteAccessSessions :
     String
     -> (ListRemoteAccessSessionsOptions -> ListRemoteAccessSessionsOptions)
-    -> AWS.Http.UnsignedRequest ListRemoteAccessSessionsResult
+    -> AWS.Request ListRemoteAccessSessionsResult
 listRemoteAccessSessions arn setOptions =
   let
     options = setOptions (ListRemoteAccessSessionsOptions Nothing)
@@ -1236,6 +1266,7 @@ listRemoteAccessSessions arn setOptions =
             JE.null
         )
         listRemoteAccessSessionsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRemoteAccessSessions request
@@ -1257,7 +1288,7 @@ __Required Parameters__
 listRuns :
     String
     -> (ListRunsOptions -> ListRunsOptions)
-    -> AWS.Http.UnsignedRequest ListRunsResult
+    -> AWS.Request ListRunsResult
 listRuns arn setOptions =
   let
     options = setOptions (ListRunsOptions Nothing)
@@ -1270,6 +1301,7 @@ listRuns arn setOptions =
             JE.null
         )
         listRunsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listRuns request
@@ -1291,7 +1323,7 @@ __Required Parameters__
 listSamples :
     String
     -> (ListSamplesOptions -> ListSamplesOptions)
-    -> AWS.Http.UnsignedRequest ListSamplesResult
+    -> AWS.Request ListSamplesResult
 listSamples arn setOptions =
   let
     options = setOptions (ListSamplesOptions Nothing)
@@ -1304,6 +1336,7 @@ listSamples arn setOptions =
             JE.null
         )
         listSamplesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listSamples request
@@ -1325,7 +1358,7 @@ __Required Parameters__
 listSuites :
     String
     -> (ListSuitesOptions -> ListSuitesOptions)
-    -> AWS.Http.UnsignedRequest ListSuitesResult
+    -> AWS.Request ListSuitesResult
 listSuites arn setOptions =
   let
     options = setOptions (ListSuitesOptions Nothing)
@@ -1338,6 +1371,7 @@ listSuites arn setOptions =
             JE.null
         )
         listSuitesResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listSuites request
@@ -1359,7 +1393,7 @@ __Required Parameters__
 listTests :
     String
     -> (ListTestsOptions -> ListTestsOptions)
-    -> AWS.Http.UnsignedRequest ListTestsResult
+    -> AWS.Request ListTestsResult
 listTests arn setOptions =
   let
     options = setOptions (ListTestsOptions Nothing)
@@ -1372,6 +1406,7 @@ listTests arn setOptions =
             JE.null
         )
         listTestsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listTests request
@@ -1393,7 +1428,7 @@ __Required Parameters__
 listUniqueProblems :
     String
     -> (ListUniqueProblemsOptions -> ListUniqueProblemsOptions)
-    -> AWS.Http.UnsignedRequest ListUniqueProblemsResult
+    -> AWS.Request ListUniqueProblemsResult
 listUniqueProblems arn setOptions =
   let
     options = setOptions (ListUniqueProblemsOptions Nothing)
@@ -1406,6 +1441,7 @@ listUniqueProblems arn setOptions =
             JE.null
         )
         listUniqueProblemsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listUniqueProblems request
@@ -1427,7 +1463,7 @@ __Required Parameters__
 listUploads :
     String
     -> (ListUploadsOptions -> ListUploadsOptions)
-    -> AWS.Http.UnsignedRequest ListUploadsResult
+    -> AWS.Request ListUploadsResult
 listUploads arn setOptions =
   let
     options = setOptions (ListUploadsOptions Nothing)
@@ -1440,6 +1476,7 @@ listUploads arn setOptions =
             JE.null
         )
         listUploadsResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listUploads request
@@ -1459,7 +1496,7 @@ __Required Parameters__
 -}
 purchaseOffering :
     (PurchaseOfferingOptions -> PurchaseOfferingOptions)
-    -> AWS.Http.UnsignedRequest PurchaseOfferingResult
+    -> AWS.Request PurchaseOfferingResult
 purchaseOffering setOptions =
   let
     options = setOptions (PurchaseOfferingOptions Nothing Nothing)
@@ -1472,6 +1509,7 @@ purchaseOffering setOptions =
             JE.null
         )
         purchaseOfferingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a purchaseOffering request
@@ -1492,7 +1530,7 @@ __Required Parameters__
 -}
 renewOffering :
     (RenewOfferingOptions -> RenewOfferingOptions)
-    -> AWS.Http.UnsignedRequest RenewOfferingResult
+    -> AWS.Request RenewOfferingResult
 renewOffering setOptions =
   let
     options = setOptions (RenewOfferingOptions Nothing Nothing)
@@ -1505,6 +1543,7 @@ renewOffering setOptions =
             JE.null
         )
         renewOfferingResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a renewOffering request
@@ -1531,7 +1570,7 @@ scheduleRun :
     -> String
     -> ScheduleRunTest
     -> (ScheduleRunOptions -> ScheduleRunOptions)
-    -> AWS.Http.UnsignedRequest ScheduleRunResult
+    -> AWS.Request ScheduleRunResult
 scheduleRun projectArn devicePoolArn test setOptions =
   let
     options = setOptions (ScheduleRunOptions Nothing Nothing Nothing)
@@ -1544,6 +1583,7 @@ scheduleRun projectArn devicePoolArn test setOptions =
             JE.null
         )
         scheduleRunResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a scheduleRun request
@@ -1566,7 +1606,7 @@ __Required Parameters__
 -}
 stopRemoteAccessSession :
     String
-    -> AWS.Http.UnsignedRequest StopRemoteAccessSessionResult
+    -> AWS.Request StopRemoteAccessSessionResult
 stopRemoteAccessSession arn =
     AWS.Http.unsignedRequest
         "StopRemoteAccessSession"
@@ -1576,6 +1616,7 @@ stopRemoteAccessSession arn =
             JE.null
         )
         stopRemoteAccessSessionResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1589,7 +1630,7 @@ __Required Parameters__
 -}
 stopRun :
     String
-    -> AWS.Http.UnsignedRequest StopRunResult
+    -> AWS.Request StopRunResult
 stopRun arn =
     AWS.Http.unsignedRequest
         "StopRun"
@@ -1599,6 +1640,7 @@ stopRun arn =
             JE.null
         )
         stopRunResultDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -1613,7 +1655,7 @@ __Required Parameters__
 updateDevicePool :
     String
     -> (UpdateDevicePoolOptions -> UpdateDevicePoolOptions)
-    -> AWS.Http.UnsignedRequest UpdateDevicePoolResult
+    -> AWS.Request UpdateDevicePoolResult
 updateDevicePool arn setOptions =
   let
     options = setOptions (UpdateDevicePoolOptions Nothing Nothing Nothing)
@@ -1626,6 +1668,7 @@ updateDevicePool arn setOptions =
             JE.null
         )
         updateDevicePoolResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateDevicePool request
@@ -1649,7 +1692,7 @@ __Required Parameters__
 updateProject :
     String
     -> (UpdateProjectOptions -> UpdateProjectOptions)
-    -> AWS.Http.UnsignedRequest UpdateProjectResult
+    -> AWS.Request UpdateProjectResult
 updateProject arn setOptions =
   let
     options = setOptions (UpdateProjectOptions Nothing)
@@ -1662,6 +1705,7 @@ updateProject arn setOptions =
             JE.null
         )
         updateProjectResultDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateProject request

@@ -172,6 +172,7 @@ module AWS.Services.CognitoIdentity
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -183,16 +184,16 @@ import Dict exposing (Dict)
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "cognito-identity"
         "2014-06-30"
         "1.1"
         "AWSCOGNITO-IDENTITY_20140630."
         "cognito-identity.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -211,7 +212,7 @@ createIdentityPool :
     String
     -> Bool
     -> (CreateIdentityPoolOptions -> CreateIdentityPoolOptions)
-    -> AWS.Http.UnsignedRequest IdentityPool
+    -> AWS.Request IdentityPool
 createIdentityPool identityPoolName allowUnauthenticatedIdentities setOptions =
   let
     options = setOptions (CreateIdentityPoolOptions Nothing Nothing Nothing Nothing Nothing)
@@ -224,6 +225,7 @@ createIdentityPool identityPoolName allowUnauthenticatedIdentities setOptions =
             JE.null
         )
         identityPoolDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a createIdentityPool request
@@ -248,7 +250,7 @@ __Required Parameters__
 -}
 deleteIdentities :
     (List String)
-    -> AWS.Http.UnsignedRequest DeleteIdentitiesResponse
+    -> AWS.Request DeleteIdentitiesResponse
 deleteIdentities identityIdsToDelete =
     AWS.Http.unsignedRequest
         "DeleteIdentities"
@@ -258,6 +260,7 @@ deleteIdentities identityIdsToDelete =
             JE.null
         )
         deleteIdentitiesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -271,7 +274,7 @@ __Required Parameters__
 -}
 deleteIdentityPool :
     String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 deleteIdentityPool identityPoolId =
     AWS.Http.unsignedRequest
         "DeleteIdentityPool"
@@ -281,6 +284,7 @@ deleteIdentityPool identityPoolId =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -294,7 +298,7 @@ __Required Parameters__
 -}
 describeIdentity :
     String
-    -> AWS.Http.UnsignedRequest IdentityDescription
+    -> AWS.Request IdentityDescription
 describeIdentity identityId =
     AWS.Http.unsignedRequest
         "DescribeIdentity"
@@ -304,6 +308,7 @@ describeIdentity identityId =
             JE.null
         )
         identityDescriptionDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -317,7 +322,7 @@ __Required Parameters__
 -}
 describeIdentityPool :
     String
-    -> AWS.Http.UnsignedRequest IdentityPool
+    -> AWS.Request IdentityPool
 describeIdentityPool identityPoolId =
     AWS.Http.unsignedRequest
         "DescribeIdentityPool"
@@ -327,6 +332,7 @@ describeIdentityPool identityPoolId =
             JE.null
         )
         identityPoolDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -341,7 +347,7 @@ __Required Parameters__
 getCredentialsForIdentity :
     String
     -> (GetCredentialsForIdentityOptions -> GetCredentialsForIdentityOptions)
-    -> AWS.Http.UnsignedRequest GetCredentialsForIdentityResponse
+    -> AWS.Request GetCredentialsForIdentityResponse
 getCredentialsForIdentity identityId setOptions =
   let
     options = setOptions (GetCredentialsForIdentityOptions Nothing Nothing)
@@ -354,6 +360,7 @@ getCredentialsForIdentity identityId setOptions =
             JE.null
         )
         getCredentialsForIdentityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getCredentialsForIdentity request
@@ -376,7 +383,7 @@ __Required Parameters__
 getId :
     String
     -> (GetIdOptions -> GetIdOptions)
-    -> AWS.Http.UnsignedRequest GetIdResponse
+    -> AWS.Request GetIdResponse
 getId identityPoolId setOptions =
   let
     options = setOptions (GetIdOptions Nothing Nothing)
@@ -389,6 +396,7 @@ getId identityPoolId setOptions =
             JE.null
         )
         getIdResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getId request
@@ -410,7 +418,7 @@ __Required Parameters__
 -}
 getIdentityPoolRoles :
     String
-    -> AWS.Http.UnsignedRequest GetIdentityPoolRolesResponse
+    -> AWS.Request GetIdentityPoolRolesResponse
 getIdentityPoolRoles identityPoolId =
     AWS.Http.unsignedRequest
         "GetIdentityPoolRoles"
@@ -420,6 +428,7 @@ getIdentityPoolRoles identityPoolId =
             JE.null
         )
         getIdentityPoolRolesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -434,7 +443,7 @@ __Required Parameters__
 getOpenIdToken :
     String
     -> (GetOpenIdTokenOptions -> GetOpenIdTokenOptions)
-    -> AWS.Http.UnsignedRequest GetOpenIdTokenResponse
+    -> AWS.Request GetOpenIdTokenResponse
 getOpenIdToken identityId setOptions =
   let
     options = setOptions (GetOpenIdTokenOptions Nothing)
@@ -447,6 +456,7 @@ getOpenIdToken identityId setOptions =
             JE.null
         )
         getOpenIdTokenResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getOpenIdToken request
@@ -470,7 +480,7 @@ getOpenIdTokenForDeveloperIdentity :
     String
     -> (Dict String String)
     -> (GetOpenIdTokenForDeveloperIdentityOptions -> GetOpenIdTokenForDeveloperIdentityOptions)
-    -> AWS.Http.UnsignedRequest GetOpenIdTokenForDeveloperIdentityResponse
+    -> AWS.Request GetOpenIdTokenForDeveloperIdentityResponse
 getOpenIdTokenForDeveloperIdentity identityPoolId logins setOptions =
   let
     options = setOptions (GetOpenIdTokenForDeveloperIdentityOptions Nothing Nothing)
@@ -483,6 +493,7 @@ getOpenIdTokenForDeveloperIdentity identityPoolId logins setOptions =
             JE.null
         )
         getOpenIdTokenForDeveloperIdentityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a getOpenIdTokenForDeveloperIdentity request
@@ -507,7 +518,7 @@ listIdentities :
     String
     -> Int
     -> (ListIdentitiesOptions -> ListIdentitiesOptions)
-    -> AWS.Http.UnsignedRequest ListIdentitiesResponse
+    -> AWS.Request ListIdentitiesResponse
 listIdentities identityPoolId maxResults setOptions =
   let
     options = setOptions (ListIdentitiesOptions Nothing Nothing)
@@ -520,6 +531,7 @@ listIdentities identityPoolId maxResults setOptions =
             JE.null
         )
         listIdentitiesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listIdentities request
@@ -542,7 +554,7 @@ __Required Parameters__
 listIdentityPools :
     Int
     -> (ListIdentityPoolsOptions -> ListIdentityPoolsOptions)
-    -> AWS.Http.UnsignedRequest ListIdentityPoolsResponse
+    -> AWS.Request ListIdentityPoolsResponse
 listIdentityPools maxResults setOptions =
   let
     options = setOptions (ListIdentityPoolsOptions Nothing)
@@ -555,6 +567,7 @@ listIdentityPools maxResults setOptions =
             JE.null
         )
         listIdentityPoolsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listIdentityPools request
@@ -576,7 +589,7 @@ __Required Parameters__
 lookupDeveloperIdentity :
     String
     -> (LookupDeveloperIdentityOptions -> LookupDeveloperIdentityOptions)
-    -> AWS.Http.UnsignedRequest LookupDeveloperIdentityResponse
+    -> AWS.Request LookupDeveloperIdentityResponse
 lookupDeveloperIdentity identityPoolId setOptions =
   let
     options = setOptions (LookupDeveloperIdentityOptions Nothing Nothing Nothing Nothing)
@@ -589,6 +602,7 @@ lookupDeveloperIdentity identityPoolId setOptions =
             JE.null
         )
         lookupDeveloperIdentityResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a lookupDeveloperIdentity request
@@ -618,7 +632,7 @@ mergeDeveloperIdentities :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest MergeDeveloperIdentitiesResponse
+    -> AWS.Request MergeDeveloperIdentitiesResponse
 mergeDeveloperIdentities sourceUserIdentifier destinationUserIdentifier developerProviderName identityPoolId =
     AWS.Http.unsignedRequest
         "MergeDeveloperIdentities"
@@ -628,6 +642,7 @@ mergeDeveloperIdentities sourceUserIdentifier destinationUserIdentifier develope
             JE.null
         )
         mergeDeveloperIdentitiesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -644,7 +659,7 @@ setIdentityPoolRoles :
     String
     -> (Dict String String)
     -> (SetIdentityPoolRolesOptions -> SetIdentityPoolRolesOptions)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 setIdentityPoolRoles identityPoolId roles setOptions =
   let
     options = setOptions (SetIdentityPoolRolesOptions Nothing)
@@ -657,6 +672,7 @@ setIdentityPoolRoles identityPoolId roles setOptions =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a setIdentityPoolRoles request
@@ -683,7 +699,7 @@ unlinkDeveloperIdentity :
     -> String
     -> String
     -> String
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 unlinkDeveloperIdentity identityId identityPoolId developerProviderName developerUserIdentifier =
     AWS.Http.unsignedRequest
         "UnlinkDeveloperIdentity"
@@ -693,6 +709,7 @@ unlinkDeveloperIdentity identityId identityPoolId developerProviderName develope
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -710,7 +727,7 @@ unlinkIdentity :
     String
     -> (Dict String String)
     -> (List String)
-    -> AWS.Http.UnsignedRequest ()
+    -> AWS.Request ()
 unlinkIdentity identityId logins loginsToRemove =
     AWS.Http.unsignedRequest
         "UnlinkIdentity"
@@ -720,6 +737,7 @@ unlinkIdentity identityId logins loginsToRemove =
             JE.null
         )
         (JD.succeed ())
+        |> AWS.UnsignedRequest
 
 
 
@@ -738,7 +756,7 @@ updateIdentityPool :
     -> String
     -> Bool
     -> (UpdateIdentityPoolOptions -> UpdateIdentityPoolOptions)
-    -> AWS.Http.UnsignedRequest IdentityPool
+    -> AWS.Request IdentityPool
 updateIdentityPool identityPoolId identityPoolName allowUnauthenticatedIdentities setOptions =
   let
     options = setOptions (UpdateIdentityPoolOptions Nothing Nothing Nothing Nothing Nothing)
@@ -751,6 +769,7 @@ updateIdentityPool identityPoolId identityPoolName allowUnauthenticatedIdentitie
             JE.null
         )
         identityPoolDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a updateIdentityPool request

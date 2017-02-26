@@ -128,6 +128,7 @@ module AWS.Services.Shield
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -138,16 +139,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "shield"
         "2016-06-02"
         "1.1"
         "AWSSHIELD_20160602."
         "shield.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -165,7 +166,7 @@ __Required Parameters__
 createProtection :
     String
     -> String
-    -> AWS.Http.UnsignedRequest CreateProtectionResponse
+    -> AWS.Request CreateProtectionResponse
 createProtection name resourceArn =
     AWS.Http.unsignedRequest
         "CreateProtection"
@@ -175,6 +176,7 @@ createProtection name resourceArn =
             JE.null
         )
         createProtectionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -186,7 +188,7 @@ __Required Parameters__
 
 -}
 createSubscription :
-    AWS.Http.UnsignedRequest CreateSubscriptionResponse
+    AWS.Request CreateSubscriptionResponse
 createSubscription =
     AWS.Http.unsignedRequest
         "CreateSubscription"
@@ -196,6 +198,7 @@ createSubscription =
             JE.null
         )
         createSubscriptionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -209,7 +212,7 @@ __Required Parameters__
 -}
 deleteProtection :
     String
-    -> AWS.Http.UnsignedRequest DeleteProtectionResponse
+    -> AWS.Request DeleteProtectionResponse
 deleteProtection protectionId =
     AWS.Http.unsignedRequest
         "DeleteProtection"
@@ -219,6 +222,7 @@ deleteProtection protectionId =
             JE.null
         )
         deleteProtectionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -230,7 +234,7 @@ __Required Parameters__
 
 -}
 deleteSubscription :
-    AWS.Http.UnsignedRequest DeleteSubscriptionResponse
+    AWS.Request DeleteSubscriptionResponse
 deleteSubscription =
     AWS.Http.unsignedRequest
         "DeleteSubscription"
@@ -240,6 +244,7 @@ deleteSubscription =
             JE.null
         )
         deleteSubscriptionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -253,7 +258,7 @@ __Required Parameters__
 -}
 describeAttack :
     String
-    -> AWS.Http.UnsignedRequest DescribeAttackResponse
+    -> AWS.Request DescribeAttackResponse
 describeAttack attackId =
     AWS.Http.unsignedRequest
         "DescribeAttack"
@@ -263,6 +268,7 @@ describeAttack attackId =
             JE.null
         )
         describeAttackResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -276,7 +282,7 @@ __Required Parameters__
 -}
 describeProtection :
     String
-    -> AWS.Http.UnsignedRequest DescribeProtectionResponse
+    -> AWS.Request DescribeProtectionResponse
 describeProtection protectionId =
     AWS.Http.unsignedRequest
         "DescribeProtection"
@@ -286,6 +292,7 @@ describeProtection protectionId =
             JE.null
         )
         describeProtectionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -297,7 +304,7 @@ __Required Parameters__
 
 -}
 describeSubscription :
-    AWS.Http.UnsignedRequest DescribeSubscriptionResponse
+    AWS.Request DescribeSubscriptionResponse
 describeSubscription =
     AWS.Http.unsignedRequest
         "DescribeSubscription"
@@ -307,6 +314,7 @@ describeSubscription =
             JE.null
         )
         describeSubscriptionResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -319,7 +327,7 @@ __Required Parameters__
 -}
 listAttacks :
     (ListAttacksOptions -> ListAttacksOptions)
-    -> AWS.Http.UnsignedRequest ListAttacksResponse
+    -> AWS.Request ListAttacksResponse
 listAttacks setOptions =
   let
     options = setOptions (ListAttacksOptions Nothing Nothing Nothing Nothing Nothing)
@@ -332,6 +340,7 @@ listAttacks setOptions =
             JE.null
         )
         listAttacksResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listAttacks request
@@ -355,7 +364,7 @@ __Required Parameters__
 -}
 listProtections :
     (ListProtectionsOptions -> ListProtectionsOptions)
-    -> AWS.Http.UnsignedRequest ListProtectionsResponse
+    -> AWS.Request ListProtectionsResponse
 listProtections setOptions =
   let
     options = setOptions (ListProtectionsOptions Nothing Nothing)
@@ -368,6 +377,7 @@ listProtections setOptions =
             JE.null
         )
         listProtectionsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a listProtections request

@@ -124,6 +124,7 @@ module AWS.Services.ApplicationAutoScaling
 -}
 
 import AWS
+import AWS.Config
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -134,16 +135,16 @@ import Json.Decode.Extra as JDX
 
 {-| Configuration for this service
 -}
-config : Maybe AWS.Credentials -> AWS.ServiceConfig
-config creds =
-    AWS.ServiceConfig
+config : AWS.ServiceConfig
+config =
+    AWS.Config.Service
         "autoscaling"
         "2016-02-06"
         "1.1"
         "AWSAUTOSCALING_20160206."
         "autoscaling.amazonaws.com"
         "us-east-1"
-        creds
+        |> AWS.ServiceConfig
 
 
 
@@ -165,7 +166,7 @@ deleteScalingPolicy :
     -> ServiceNamespace
     -> String
     -> ScalableDimension
-    -> AWS.Http.UnsignedRequest DeleteScalingPolicyResponse
+    -> AWS.Request DeleteScalingPolicyResponse
 deleteScalingPolicy policyName serviceNamespace resourceId scalableDimension =
     AWS.Http.unsignedRequest
         "DeleteScalingPolicy"
@@ -175,6 +176,7 @@ deleteScalingPolicy policyName serviceNamespace resourceId scalableDimension =
             JE.null
         )
         deleteScalingPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -192,7 +194,7 @@ deregisterScalableTarget :
     ServiceNamespace
     -> String
     -> ScalableDimension
-    -> AWS.Http.UnsignedRequest DeregisterScalableTargetResponse
+    -> AWS.Request DeregisterScalableTargetResponse
 deregisterScalableTarget serviceNamespace resourceId scalableDimension =
     AWS.Http.unsignedRequest
         "DeregisterScalableTarget"
@@ -202,6 +204,7 @@ deregisterScalableTarget serviceNamespace resourceId scalableDimension =
             JE.null
         )
         deregisterScalableTargetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 
@@ -216,7 +219,7 @@ __Required Parameters__
 describeScalableTargets :
     ServiceNamespace
     -> (DescribeScalableTargetsOptions -> DescribeScalableTargetsOptions)
-    -> AWS.Http.UnsignedRequest DescribeScalableTargetsResponse
+    -> AWS.Request DescribeScalableTargetsResponse
 describeScalableTargets serviceNamespace setOptions =
   let
     options = setOptions (DescribeScalableTargetsOptions Nothing Nothing Nothing Nothing)
@@ -229,6 +232,7 @@ describeScalableTargets serviceNamespace setOptions =
             JE.null
         )
         describeScalableTargetsResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeScalableTargets request
@@ -253,7 +257,7 @@ __Required Parameters__
 describeScalingActivities :
     ServiceNamespace
     -> (DescribeScalingActivitiesOptions -> DescribeScalingActivitiesOptions)
-    -> AWS.Http.UnsignedRequest DescribeScalingActivitiesResponse
+    -> AWS.Request DescribeScalingActivitiesResponse
 describeScalingActivities serviceNamespace setOptions =
   let
     options = setOptions (DescribeScalingActivitiesOptions Nothing Nothing Nothing Nothing)
@@ -266,6 +270,7 @@ describeScalingActivities serviceNamespace setOptions =
             JE.null
         )
         describeScalingActivitiesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeScalingActivities request
@@ -290,7 +295,7 @@ __Required Parameters__
 describeScalingPolicies :
     ServiceNamespace
     -> (DescribeScalingPoliciesOptions -> DescribeScalingPoliciesOptions)
-    -> AWS.Http.UnsignedRequest DescribeScalingPoliciesResponse
+    -> AWS.Request DescribeScalingPoliciesResponse
 describeScalingPolicies serviceNamespace setOptions =
   let
     options = setOptions (DescribeScalingPoliciesOptions Nothing Nothing Nothing Nothing Nothing)
@@ -303,6 +308,7 @@ describeScalingPolicies serviceNamespace setOptions =
             JE.null
         )
         describeScalingPoliciesResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a describeScalingPolicies request
@@ -334,7 +340,7 @@ putScalingPolicy :
     -> String
     -> ScalableDimension
     -> (PutScalingPolicyOptions -> PutScalingPolicyOptions)
-    -> AWS.Http.UnsignedRequest PutScalingPolicyResponse
+    -> AWS.Request PutScalingPolicyResponse
 putScalingPolicy policyName serviceNamespace resourceId scalableDimension setOptions =
   let
     options = setOptions (PutScalingPolicyOptions Nothing Nothing)
@@ -347,6 +353,7 @@ putScalingPolicy policyName serviceNamespace resourceId scalableDimension setOpt
             JE.null
         )
         putScalingPolicyResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a putScalingPolicy request
@@ -373,7 +380,7 @@ registerScalableTarget :
     -> String
     -> ScalableDimension
     -> (RegisterScalableTargetOptions -> RegisterScalableTargetOptions)
-    -> AWS.Http.UnsignedRequest RegisterScalableTargetResponse
+    -> AWS.Request RegisterScalableTargetResponse
 registerScalableTarget serviceNamespace resourceId scalableDimension setOptions =
   let
     options = setOptions (RegisterScalableTargetOptions Nothing Nothing Nothing)
@@ -386,6 +393,7 @@ registerScalableTarget serviceNamespace resourceId scalableDimension setOptions 
             JE.null
         )
         registerScalableTargetResponseDecoder
+        |> AWS.UnsignedRequest
 
 
 {-| Options for a registerScalableTarget request
