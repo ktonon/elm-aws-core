@@ -53,7 +53,7 @@ formatDate date =
     date
         |> formatISO8601
         |> Regex.replace All
-            (regex "[-:]")
+            (regex "([-:]|\\.\\d{3})")
             (\_ -> "")
 
 
