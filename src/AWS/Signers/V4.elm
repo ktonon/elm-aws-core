@@ -8,7 +8,6 @@ import Date.Format exposing (formatISO8601)
 import Http
 import Regex exposing (HowMany(All), regex)
 import Native.HMAC
-import Debug
 
 
 -- http://docs.aws.amazon.com/waf/latest/developerguide/authenticating-requests.html
