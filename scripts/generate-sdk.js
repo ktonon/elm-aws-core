@@ -33,4 +33,13 @@ fs.writeFileSync(
   dots.elmPackage(sources),
   'utf8');
 
+fs.writeFileSync(
+  sysPath.resolve(`${__dirname}/../src/Native/HMAC.js`),
+  dots.HMAC({
+    crypto: fs.readFileSync(
+      sysPath.resolve(`${__dirname}/../src/Native/HMAC.out.js`),
+      'utf8'),
+  }),
+  'utf8');
+
 process.stdout.write('\n');

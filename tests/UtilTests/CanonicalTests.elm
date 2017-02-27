@@ -37,7 +37,21 @@ canonicalTests =
                         ]
                     )
                 )
-                    |> Expect.equal """f536975d06c0309214f805bb90ccff089219ecd68b2577efef23edd43b7e1a59"""
+                    |> Expect.equal "f536975d06c0309214f805bb90ccff089219ecd68b2577efef23edd43b7e1a59"
+        , test "does the same request encoding as http://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html#signature-v4-test-suite-example" <|
+            \_ ->
+                (canonical "get"
+                    ""
+                    [ ( "X-Amz-Date", "20150830T123600Z" )
+                    , ( "Host", "example.amazonaws.com" )
+                    ]
+                    (QueryParams
+                        [ ( "Param1", "value1" )
+                        , ( "Param2", "value2" )
+                        ]
+                    )
+                )
+                    |> Expect.equal "816cd5b414d056048ba4f7c5386d6e0533120fb1fcfa93762cf0fc39e2cf19e0"
         ]
 
 
