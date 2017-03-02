@@ -16,7 +16,7 @@ These are the project goals:
 
 ## Preview Docs
 
-* Download <a href="https://raw.githubusercontent.com/ktonon/aws-sdk-elm/master/docs.json" download="download">docs.json</a>
+* Download [docs.json](https://s3.amazonaws.com/aws-sdk-elm/docs.json)
 * Use [Elm Packages Doc Preview](http://package.elm-lang.org/help/docs-preview)
 
 ## Todo
