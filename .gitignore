@@ -1,4 +1,5 @@
 /elm-stuff
 /node_modules
 /npm-debug.log
+/src/AWS/Services
 /src/Native/HMAC.out.js
