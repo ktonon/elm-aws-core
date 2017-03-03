@@ -1,6 +1,5 @@
 module UtilTests.SignerTests exposing (all)
 
-import AWS exposing (..)
 import AWS.Config
 import AWS.Http exposing (RequestParams(..), unsignedRequest)
 import AWS.Signers.V4 exposing (..)
@@ -39,11 +38,10 @@ authorizationTests =
                     config =
                         AWS.Config.Service
                             "service"
+                            (AWS.Config.RegionalEndpoint "service" "us-east-1")
                             "2015-12-08"
-                            "1.1"
+                            (Just "1.1")
                             "AWSACM_20151208."
-                            "example.amazonaws.com"
-                            "us-east-1"
 
                     req =
                         unsignedRequest

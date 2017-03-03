@@ -41,15 +41,14 @@ import Json.Encode as JE
 
 {-| Configuration for this service
 -}
-config : AWS.ServiceConfig
-config =
+config : {{? it.isRegional }}AWS.Region -> {{?}}AWS.ServiceConfig
+config {{? it.isRegional }}region {{?}}=
     AWS.Config.Service
         "{{= it.metadata.endpointPrefix }}"
+        (AWS.Config.{{= it.isRegional ? `RegionalEndpoint "${it.metadata.endpointPrefix}" region` : `GlobalEndpoint "${it.metadata.globalEndpoint}"` }})
         "{{= it.metadata.apiVersion }}"
-        "{{= it.metadata.jsonVersion }}"
+        {{= it.metadata.jsonVersion ? `(Just "${it.metadata.jsonVersion}")` : 'Nothing' }}
         "AWS{{= it.metadata.endpointPrefix.toUpperCase() }}_{{= it.metadata.apiVersion.replace(/-/g, '') }}."
-        "{{= it.metadata.endpointPrefix }}.amazonaws.com"
-        "us-east-1"
         |> AWS.ServiceConfig
 
 

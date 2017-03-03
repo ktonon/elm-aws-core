@@ -1,5 +1,6 @@
 module AWS.Http exposing (..)
 
+import AWS.Config exposing (..)
 import Json.Encode as JE
 import Json.Decode as JD
 import Http
@@ -34,9 +35,22 @@ unsignedRequest target method uri params decoder =
         decoder
 
 
-url : String -> String -> RequestParams -> String
-url host path params =
-    "https://" ++ host ++ path ++ (queryString params)
+url : Endpoint -> String -> RequestParams -> String
+url endpoint path params =
+    "https://"
+        ++ (host endpoint)
+        ++ path
+        ++ (queryString params)
+
+
+host : Endpoint -> String
+host endpoint =
+    case endpoint of
+        RegionalEndpoint prefix region ->
+            prefix ++ "." ++ region ++ ".amazonaws.com"
+
+        GlobalEndpoint host ->
+            host
 
 
 queryString : RequestParams -> String

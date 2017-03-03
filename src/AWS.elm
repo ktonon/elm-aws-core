@@ -4,7 +4,7 @@ module AWS exposing (..)
 
 __Experimental: Work in progress__
 
-@docs ServiceConfig, Credentials, credentials, AccessKeyId, SecretAccessKey, SessionToken
+@docs ServiceConfig, Region, Credentials, credentials, AccessKeyId, SecretAccessKey, SessionToken
 
 ## Request Signing
 
@@ -58,6 +58,14 @@ for use with that service.
 -}
 type ServiceConfig
     = ServiceConfig AWS.Config.Service
+
+
+{-| String representing an AWS region.
+
+For example, `"us-east-1"`
+-}
+type alias Region =
+    String
 
 
 {-| An unsigned AWS Request.

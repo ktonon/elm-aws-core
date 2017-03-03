@@ -67,6 +67,7 @@ module.exports = (data) => {
   const context = {
     categories,
     documentation: data.documentation,
+    isRegional: !data.metadata.globalEndpoint,
     metadata: data.metadata,
     mod,
     operationNames: operations.reduce((acc, op) =>
