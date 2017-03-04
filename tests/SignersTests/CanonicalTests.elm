@@ -1,4 +1,4 @@
-module UtilTests.CanonicalTests exposing (all)
+module SignersTests.CanonicalTests exposing (all)
 
 import AWS.Http exposing (..)
 import AWS.Signers.Canonical exposing (..)

@@ -1,6 +1,7 @@
 module AWS.Http exposing (..)
 
 import AWS.Config exposing (..)
+import AWS.Encode
 import Json.Encode as JE
 import Json.Decode as JD
 import Http
@@ -8,7 +9,8 @@ import QueryString exposing (QueryString)
 
 
 type RequestParams
-    = QueryParams (List ( String, String ))
+    = NoParams
+    | QueryParams (List ( String, String ))
     | JsonBody JE.Value
 
 
@@ -56,11 +58,14 @@ host endpoint =
 queryString : RequestParams -> String
 queryString params =
     case params of
+        QueryParams [] ->
+            ""
+
         QueryParams params ->
             params
                 |> List.foldl
                     (\( key, val ) qs ->
-                        qs |> QueryString.add key val
+                        qs |> QueryString.add (AWS.Encode.uri key) val
                     )
                     QueryString.empty
                 |> QueryString.render

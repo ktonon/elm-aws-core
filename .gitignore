@@ -1,6 +1,7 @@
-/elm-stuff
-/node_modules
-/npm-debug.log
+/docs.json
 /src/AWS/Services
 /src/Native/HMAC.out.js
-docs.json
+/tests/aws4_testsuite
+elm-stuff
+node_modules
+*.log

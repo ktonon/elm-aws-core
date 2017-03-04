@@ -1,16 +1,21 @@
 port module Main exposing (..)
 
+import EnumTests
+import HttpTests
 import Json.Encode exposing (Value)
+import SignersTests
 import Test exposing (describe)
-import Test.Runner.Node exposing (run, TestProgram)
-import UtilTests
+import Test.Runner.Node exposing (TestProgram, run)
 
 
 main : TestProgram
 main =
     run emit
         (describe "AWS"
-            [ UtilTests.all ]
+            [ EnumTests.all
+            , HttpTests.all
+            , SignersTests.all
+            ]
         )
 
 

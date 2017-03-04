@@ -1,8 +1,7 @@
 module AWS.Signers.Canonical exposing (..)
 
+import AWS.Encode
 import AWS.Http exposing (UnsignedRequest, RequestParams(..))
-import Char
-import Hex
 import Json.Encode as JE
 import Regex exposing (regex, HowMany(All))
 import SHA exposing (sha256sum)
@@ -38,7 +37,7 @@ canonicalUri path =
         path
             |> Regex.replace All (regex "/{2,}") (\_ -> "/")
             |> String.split "/"
-            |> List.map encodeUri
+            |> List.map AWS.Encode.uri
             |> String.join "/"
 
 
@@ -102,33 +101,4 @@ removeExtraSpaces x =
 
 encode2Tuple : String -> ( String, String ) -> String
 encode2Tuple separator ( a, b ) =
-    [ encodeUri a, encodeUri b ] |> String.join separator
-
-
-{-| We don't use Http.encodeUri because it misses some characters.
-
-For example, ! ' ( ) etc.
-
-Only "Unreserved Characters" are allowed.
-See http://tools.ietf.org/html/rfc3986
-Section 2.3
--}
-encodeUri : String -> String
-encodeUri x =
-    x
-        |> Regex.replace All
-            (regex "[^-A-Za-z0-9_.~]")
-            (\match ->
-                match.match
-                    |> String.toList
-                    |> List.head
-                    |> Maybe.map
-                        (\char ->
-                            char
-                                |> Char.toCode
-                                |> Hex.toString
-                                |> String.toUpper
-                                |> (++) "%"
-                        )
-                    |> Maybe.withDefault ""
-            )
+    [ AWS.Encode.uri a, AWS.Encode.uri b ] |> String.join separator
