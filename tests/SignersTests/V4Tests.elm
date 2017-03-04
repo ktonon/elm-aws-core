@@ -8,7 +8,6 @@ import Date exposing (fromString, fromTime, Date)
 import Expect
 import Json.Decode as JD
 import Test exposing (describe, test, Test)
-import Time
 
 
 all : Test
@@ -28,14 +27,6 @@ authorizationTests =
                 let
                     creds =
                         AWS.Config.Credentials "AKIDEXAMPLE" "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY" Nothing
-
-                    date =
-                        case (fromString "Sun, 30 Aug 2015 12:36:00") of
-                            Ok date ->
-                                date
-
-                            Err _ ->
-                                fromTime Time.hour
 
                     config =
                         AWS.Config.Service
@@ -139,7 +130,8 @@ creds =
 
 date : Date
 date =
-    Date.fromTime 1440952560000
+    Date.fromString "2015-08-30T12:36:00Z"
+        |> Result.withDefault (Date.fromTime 0)
 
 
 conf : Service

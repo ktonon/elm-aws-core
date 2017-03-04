@@ -1,13 +1,13 @@
 module AWS.Signers.V4 exposing (..)
 
 import AWS.Config exposing (Credentials)
+import AWS.Http exposing (RequestParams, UnsignedRequest)
 import AWS.Signers.Canonical exposing (canonical, signedHeaders)
-import AWS.Http exposing (UnsignedRequest, RequestParams)
 import Date exposing (Date)
-import Date.Format exposing (formatISO8601)
+import Date.Extra exposing (toUtcIsoString)
 import Http
-import Regex exposing (HowMany(All), regex)
 import Native.HMAC
+import Regex exposing (HowMany(All), regex)
 
 
 -- http://docs.aws.amazon.com/waf/latest/developerguide/authenticating-requests.html
@@ -51,7 +51,7 @@ headers config =
 formatDate : Date -> String
 formatDate date =
     date
-        |> formatISO8601
+        |> toUtcIsoString
         |> Regex.replace All
             (regex "([-:]|\\.\\d{3})")
             (\_ -> "")
