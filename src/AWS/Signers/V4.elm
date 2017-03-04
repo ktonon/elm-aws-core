@@ -1,4 +1,4 @@
-module AWS.Signers.V4 exposing (sign, authorization)
+module AWS.Signers.V4 exposing (..)
 
 import AWS.Config exposing (Credentials)
 import AWS.Signers.Canonical exposing (canonical, signedHeaders)
@@ -27,7 +27,7 @@ sign config creds date req =
                 |> addAuthorization config creds date req
                 |> addSessionToken creds
                 |> List.map (\( key, val ) -> Http.header key val)
-        , url = AWS.Http.url config.host req.path req.params
+        , url = AWS.Http.url config.endpoint req.path req.params
         , body = AWS.Http.body req.params
         , expect = Http.expectJson req.decoder
         , timeout = Nothing
@@ -43,7 +43,7 @@ algorithm =
 
 headers : AWS.Config.Service -> List ( String, String )
 headers config =
-    [ ( "Host", config.host ++ ":443" )
+    [ ( "Host", AWS.Http.host config.endpoint )
     , ( "Content-Type", jsonContentType config )
     ]
 
@@ -97,7 +97,7 @@ authorization creds date config req headers =
             canonical req.method req.path headers req.params
 
         scope =
-            credentialScope date config
+            credentialScope date creds config
     in
         [ "AWS4-HMAC-SHA256 Credential="
             ++ creds.accessKeyId
@@ -111,10 +111,10 @@ authorization creds date config req headers =
             |> String.join ", "
 
 
-credentialScope : Date -> AWS.Config.Service -> String
-credentialScope date config =
+credentialScope : Date -> AWS.Config.Credentials -> AWS.Config.Service -> String
+credentialScope date creds config =
     [ date |> formatDate |> String.slice 0 8
-    , config.region
+    , (config.endpoint |> regionForAuth)
     , config.serviceName
     , "aws4_request"
     ]
@@ -126,9 +126,20 @@ signature creds config date toSign =
     Native.HMAC.signatureKey
         creds.secretAccessKey
         (date |> formatDate |> String.slice 0 8)
-        config.region
+        (config.endpoint |> regionForAuth)
         config.serviceName
         toSign
+
+
+regionForAuth : AWS.Config.Endpoint -> String
+regionForAuth endpoint =
+    case endpoint of
+        AWS.Config.RegionalEndpoint _ region ->
+            region
+
+        AWS.Config.GlobalEndpoint _ ->
+            -- See http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html
+            "us-east-1"
 
 
 stringToSign : String -> Date -> String -> String -> String
@@ -143,4 +154,11 @@ stringToSign algorithm date scope canon =
 
 jsonContentType : AWS.Config.Service -> String
 jsonContentType config =
-    "application/x-amz-json-" ++ config.xAmzJsonVersion ++ "; charset=utf-8"
+    (case config.xAmzJsonVersion of
+        Just version ->
+            "application/x-amz-json-" ++ version
+
+        Nothing ->
+            "application/json"
+    )
+        ++ "; charset=utf-8"

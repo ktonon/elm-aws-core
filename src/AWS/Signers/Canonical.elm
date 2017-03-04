@@ -13,6 +13,12 @@ import SHA exposing (sha256sum)
 
 canonical : String -> String -> List ( String, String ) -> RequestParams -> String
 canonical method path headers params =
+    canonicalRaw method path headers params
+        |> sha256sum
+
+
+canonicalRaw : String -> String -> List ( String, String ) -> RequestParams -> String
+canonicalRaw method path headers params =
     [ String.toUpper method
     , canonicalUri path
     , canonicalQueryString params
@@ -22,7 +28,6 @@ canonical method path headers params =
     , canonicalPayload params
     ]
         |> String.join "\n"
-        |> sha256sum
 
 
 canonicalUri : String -> String
