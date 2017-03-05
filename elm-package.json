@@ -99,11 +99,11 @@
     "native-modules": true,
     "dependencies": {
         "Bogdanp/elm-querystring": "1.0.0 <= v < 2.0.0",
+        "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",
         "elm-community/json-extra": "2.1.0 <= v < 3.0.0",
         "elm-lang/core": "5.0.0 <= v < 6.0.0",
         "elm-lang/http": "1.0.0 <= v < 2.0.0",
         "justinmimbs/elm-date-extra": "2.0.3 <= v < 3.0.0",
-        "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",
         "rtfeldman/hex": "1.0.0 <= v < 2.0.0",
         "spisemisu/elm-sha": "1.0.5 <= v < 2.0.0"
     },
