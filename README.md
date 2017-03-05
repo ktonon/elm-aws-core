@@ -1,7 +1,7 @@
 AWS SDK for elm
 ===============
 
-[![CircleCI](https://img.shields.io/circleci/project/github/ktonon/aws-sdk-elm.svg)](https://circleci.com/gh/ktonon/aws-sdk-elm)
+[![CircleCI](https://img.shields.io/circleci/project/github/ktonon/aws-sdk-elm/master.svg)](https://circleci.com/gh/ktonon/aws-sdk-elm)
 
 __Experimental: Work in progress__
 
