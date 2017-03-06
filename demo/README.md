@@ -2,6 +2,8 @@
 
 Using this to test making requests to real AWS services.
 
+__Note that the SDK is currently under development. This demo is intended for developers of the AWS SDK for elm to test making calls to real AWS services.__
+
 ## Setup
 
 Create a file `Config.elm`:
