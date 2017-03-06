@@ -1,5 +1,6 @@
 port module Main exposing (..)
 
+import EncodeTests
 import EnumTests
 import HttpTests
 import Json.Encode exposing (Value)
@@ -12,7 +13,8 @@ main : TestProgram
 main =
     run emit
         (describe "AWS"
-            [ EnumTests.all
+            [ EncodeTests.all
+            , EnumTests.all
             , HttpTests.all
             , SignersTests.all
             ]
