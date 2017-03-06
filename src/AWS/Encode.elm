@@ -2,22 +2,30 @@ module AWS.Encode exposing (..)
 
 import Char
 import Hex
+import Http
 import Regex exposing (regex, HowMany(All))
 
 
-{-| We don't use Http.encodeUri because it misses some characters.
+{-| We don't use Http.encodeUri because it misses some characters. It uses the
+native `encodeURIComponent` under the hood:
 
-For example, ! ' ( ) etc.
+    encodeURIComponent escapes all characters except the following:
+    alphabetic, decimal digits, - _ . ! ~ * ' ( )
 
-Only "Unreserved Characters" are allowed.
+    - from https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+
+For AWS only "Unreserved Characters" are allowed.
 See http://tools.ietf.org/html/rfc3986
 Section 2.3
+
+So basically we need to also cover: ! * ' ( )
 -}
 uri : String -> String
 uri x =
     x
+        |> Http.encodeUri
         |> Regex.replace All
-            (regex "[^-A-Za-z0-9_.~]")
+            (regex "[!*'()]")
             (\match ->
                 match.match
                     |> String.toList
