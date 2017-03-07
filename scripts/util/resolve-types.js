@@ -2,6 +2,7 @@ const { lowCam, upCam, safeIdentifier } = require('./case-conversions');
 const render = require('./render');
 
 const jsonDecode = 'JD';
+const jsonEncode = 'JE';
 
 module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
   const shapes = {};
@@ -26,11 +27,13 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
   resolve.boolean = () => render.nothing({
     type: 'Bool',
     decoder: `${jsonDecode}.bool`,
+    encoder: `${jsonEncode}.bool`,
   });
 
   resolve.float = () => render.nothing({
     type: 'Float',
     decoder: `${jsonDecode}.float`,
+    encoder: `${jsonEncode}.float`,
   });
 
   resolve.double = resolve.float;
@@ -38,6 +41,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
   resolve.integer = () => render.nothing({
     type: 'Int',
     decoder: `${jsonDecode}.int`,
+    encoder: `${jsonEncode}.int`,
   });
 
   resolve.long = resolve.integer;
@@ -47,6 +51,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
     return render.nothing({
       type: `(List ${child.type})`,
       decoder: `(${jsonDecode}.list ${child.decoder})`,
+      encoder: `(List.map (${child.encoder})) >> ${jsonEncode}.list`,
     });
   };
 
@@ -67,7 +72,9 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
       render.nothing({
         type: `(Dict Float ${value.type})`,
         decoder: `(JDX.dict2 ${jsonDecode}.float ${value.decoder})`,
+        encoder: `AWS.Enum.toFloat >> Result.withDefault 0.0 >> ${jsonEncode}.float`,
         extraImports: [
+          'import AWS.Enum',
           'import Dict exposing (Dict)',
           'import Json.Decode.Extra as JDX',
         ],
@@ -75,7 +82,11 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
       render.nothing({
         type: `(Dict String ${value.type})`,
         decoder: `(${jsonDecode}.dict ${value.decoder})`,
-        extraImports: ['import Dict exposing (Dict)'],
+        encoder: `AWS.Enum.toString >> Result.withDefault "" >> ${jsonEncode}.string`,
+        extraImports: [
+          'import AWS.Enum',
+          'import Dict exposing (Dict)',
+        ],
       });
   };
 
@@ -84,6 +95,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
     : render.nothing({
       type: 'String',
       decoder: `${jsonDecode}.string`,
+      encoder: `${jsonEncode}.string`,
     }));
 
   resolve.blob = resolve.string; // TODO:
@@ -91,8 +103,10 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
   resolve.timestamp = () => render.nothing({
     type: 'Date',
     decoder: 'JDX.date',
+    encoder: `toUtcIsoString >> ${jsonEncode}.string`,
     extraImports: [
       'import Date exposing (Date)',
+      'import Date.Extra exposing (toUtcIsoString)',
       'import Json.Decode.Extra as JDX',
     ],
   });
@@ -100,6 +114,10 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
   resolve.enum = sh => render.enum({
     type: sh.name,
     decoder: `${lowCam(sh.name)}Decoder`,
+    encoder: `AWS.Enum.toString >> Result.withDefault "" >> ${jsonEncode}.string`,
+    extraImports: [
+      'import AWS.Enum',
+    ],
     enum: sh.enum.map(safeIdentifier),
     doc: render.enumDoc(sh),
     category: 'union',
@@ -110,6 +128,10 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
     return render.structure({
       type: sh.name,
       decoder: `${lowCam(sh.name)}Decoder`,
+      encoder: `${lowCam(sh.name)}Encoder`,
+      extraImports: [
+        'import AWS.Encode',
+      ],
       members: Object.keys(sh.members).map(key => ({
         required: sh.required && sh.required.indexOf(key) !== -1,
         key: safeIdentifier(lowCam(key)),

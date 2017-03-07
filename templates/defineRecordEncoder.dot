@@ -1,0 +1,5 @@
+{{= it.encoder }} : {{= it.type }} -> JE.Value
+{{= it.encoder }} data =
+    []{{~ it.members :m }}
+        |> {{= it.memberEncoder(m) }}{{~}}
+        |> JE.object

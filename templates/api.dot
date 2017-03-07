@@ -63,4 +63,7 @@ config {{? it.isRegional }}region {{?}}=
 {{? t.decoderDef }}
 {{= t.decoderDef }}
 {{?}}
+{{? t.encoderDef }}
+{{= t.encoderDef }}
+{{?}}
 {{~}}

@@ -3,6 +3,7 @@ module AWS.Encode exposing (..)
 import Char
 import Hex
 import Http
+import Json.Encode as JE
 import Regex exposing (regex, HowMany(All))
 
 
@@ -40,3 +41,17 @@ uri x =
                         )
                     |> Maybe.withDefault ""
             )
+
+
+optionalMember :
+    (a -> JE.Value)
+    -> ( String, Maybe a )
+    -> List ( String, JE.Value )
+    -> List ( String, JE.Value )
+optionalMember encode ( key, maybeValue ) members =
+    case maybeValue of
+        Nothing ->
+            members
+
+        Just value ->
+            ( key, encode value ) :: members
