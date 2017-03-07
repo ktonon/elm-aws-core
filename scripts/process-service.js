@@ -46,6 +46,7 @@ module.exports = (data) => {
         requestPath,
         requiredParams,
         optionalParams,
+        input: op.input && types.findByShape(op.input.shape),
         output: op.output
           ? types.findByShape(op.output.shape)
           : { type: '()', decoder: '(JD.succeed ())' },

@@ -21,10 +21,14 @@ __Required Parameters__
         (AWS.Http.QueryParams
             [
             ]
+        ){{?? it.input }}
+        (({{= it.input.type }}{{~ it.input.members :m }}
+            {{= m.required ? m.key : `options.${m.key}` }}{{~}}
+         )
+            |> {{= it.input.encoder }}
+            |> AWS.Http.JsonBody
         ){{?? true }}
-        (AWS.Http.JsonBody
-            JE.null
-        ){{?}}
+        (AWS.Http.NoParams){{?}}
         {{= it.output.decoder }}
         |> AWS.UnsignedRequest
 {{? it.optionalParams.length }}
