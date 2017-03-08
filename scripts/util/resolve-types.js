@@ -28,12 +28,14 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
     type: 'Bool',
     decoder: `${jsonDecode}.bool`,
     encoder: `${jsonEncode}.bool`,
+    toQueryArg: 'toString',
   });
 
   resolve.float = () => render.nothing({
     type: 'Float',
     decoder: `${jsonDecode}.float`,
     encoder: `${jsonEncode}.float`,
+    toQueryArg: 'toString',
   });
 
   resolve.double = resolve.float;
@@ -42,6 +44,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
     type: 'Int',
     decoder: `${jsonDecode}.int`,
     encoder: `${jsonEncode}.int`,
+    toQueryArg: 'toString',
   });
 
   resolve.long = resolve.integer;
@@ -52,6 +55,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
       type: `(List ${child.type})`,
       decoder: `(${jsonDecode}.list ${child.decoder})`,
       encoder: `(List.map (${child.encoder})) >> ${jsonEncode}.list`,
+      toQueryArg: 'NOT SUPPORTED',
     });
   };
 
@@ -73,6 +77,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
         type: `(Dict Float ${value.type})`,
         decoder: `(JDX.dict2 ${jsonDecode}.float ${value.decoder})`,
         encoder: `AWS.Enum.toFloat >> Result.withDefault 0.0 >> ${jsonEncode}.float`,
+        toQueryArg: 'AWS.Enum.toFloat >> Result.withDefault 0.0 >> toString',
         extraImports: [
           'import AWS.Enum',
           'import Dict exposing (Dict)',
@@ -83,6 +88,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
         type: `(Dict String ${value.type})`,
         decoder: `(${jsonDecode}.dict ${value.decoder})`,
         encoder: `AWS.Enum.toString >> Result.withDefault "" >> ${jsonEncode}.string`,
+        toQueryArg: 'AWS.Enum.toString >> Result.withDefault ""',
         extraImports: [
           'import AWS.Enum',
           'import Dict exposing (Dict)',
@@ -96,6 +102,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
       type: 'String',
       decoder: `${jsonDecode}.string`,
       encoder: `${jsonEncode}.string`,
+      toQueryArg: '\\x -> x',
     }));
 
   resolve.blob = resolve.string; // TODO:
@@ -104,6 +111,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
     type: 'Date',
     decoder: 'JDX.date',
     encoder: `toUtcIsoString >> ${jsonEncode}.string`,
+    toQueryArg: 'toUtcIsoString',
     extraImports: [
       'import Date exposing (Date)',
       'import Date.Extra exposing (toUtcIsoString)',
@@ -115,6 +123,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
     type: sh.name,
     decoder: `${lowCam(sh.name)}Decoder`,
     encoder: `AWS.Enum.toString >> Result.withDefault "" >> ${jsonEncode}.string`,
+    toQueryArg: 'AWS.Enum.toString >> Result.withDefault ""',
     extraImports: [
       'import AWS.Enum',
     ],
@@ -129,6 +138,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
       type: sh.name,
       decoder: `${lowCam(sh.name)}Decoder`,
       encoder: `${lowCam(sh.name)}Encoder`,
+      toQueryArg: 'NOT SUPPORTED',
       extraImports: [
         'import AWS.Encode',
       ],

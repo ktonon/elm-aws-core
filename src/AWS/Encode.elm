@@ -44,10 +44,10 @@ uri x =
 
 
 optionalMember :
-    (a -> JE.Value)
+    (a -> b)
     -> ( String, Maybe a )
-    -> List ( String, JE.Value )
-    -> List ( String, JE.Value )
+    -> List ( String, b )
+    -> List ( String, b )
 optionalMember encode ( key, maybeValue ) members =
     case maybeValue of
         Nothing ->

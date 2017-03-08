@@ -5,13 +5,20 @@ const normalize = key => key.toLowerCase().replace(/[^a-z0-9]/, '');
 const toString = (param) => {
   if (param.value.enum) {
     return {
+      key: param.key,
       value: `(AWS.Enum.toString ${param.key} |> Result.withDefault "")`,
       extraImport: 'import AWS.Enum',
     };
   } else if (param.value.type === 'String') {
-    return { value: param.key };
+    return {
+      key: param.key,
+      value: param.key,
+    };
   }
-  return { value: `(toString ${param.key})` };
+  return {
+    key: param.key,
+    value: `(toString ${param.key})`,
+  };
 };
 
 /*
@@ -44,26 +51,34 @@ const pathParamPattern = /(\{(.+?)[+]?\})/g;
 
 const replaceAll = (path, params) => {
   const extraImports = [];
+  const usedKeys = [];
   const sumValue = path.replace(pathParamPattern, (m, g1, g2) => {
-    const { value, extraImport } = fuzzyFind(g2, params);
+    const { key, value, extraImport } = fuzzyFind(g2, params);
     if (extraImport) {
       extraImports.push(extraImport);
     }
+    usedKeys.push(key);
     return `" ++ ${value} ++ "`;
   });
   return {
     value: sumValue,
     extraImports,
+    unusedParams: params.filter(p => usedKeys.indexOf(p.key) === -1),
   };
 };
 
 module.exports = (path, params) => {
   if (!pathParamPattern.test(path)) {
-    return { requestPath: `"${path}"` };
+    return {
+      requestPath: `"${path}"`,
+      extraImports: [],
+      unusedParams: params,
+    };
   }
-  const { value, extraImports } = replaceAll(path, params);
+  const { value, extraImports, unusedParams } = replaceAll(path, params);
   return {
     requestPath: `("${value}")`,
     extraImports,
+    unusedParams,
   };
 };

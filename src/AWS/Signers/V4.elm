@@ -1,7 +1,7 @@
 module AWS.Signers.V4 exposing (..)
 
 import AWS.Config exposing (Credentials)
-import AWS.Http exposing (RequestParams, UnsignedRequest)
+import AWS.Http exposing (QueryParams, RequestBody(..), UnsignedRequest)
 import AWS.Signers.Canonical exposing (canonical, signedHeaders)
 import Date exposing (Date)
 import Date.Extra exposing (toUtcIsoString)
@@ -27,8 +27,8 @@ sign config creds date req =
                 |> addAuthorization config creds date req
                 |> addSessionToken creds
                 |> List.map (\( key, val ) -> Http.header key val)
-        , url = AWS.Http.url config.endpoint req.path req.params
-        , body = AWS.Http.body req.params
+        , url = AWS.Http.url config.endpoint req.path req.query
+        , body = AWS.Http.body req.body
         , expect = Http.expectJson req.decoder
         , timeout = Nothing
         , withCredentials = False
@@ -44,6 +44,7 @@ algorithm =
 headers : AWS.Config.Service -> List ( String, String )
 headers config =
     [ ( "Host", AWS.Http.host config.endpoint )
+    , ( "Accept", "application/json" )
     , ( "Content-Type", jsonContentType config )
     ]
 
@@ -94,7 +95,7 @@ authorization :
 authorization creds date config req headers =
     let
         canon =
-            canonical req.method req.path headers req.params
+            canonical req.method req.path headers req.query req.body
 
         scope =
             credentialScope date creds config

@@ -1,7 +1,7 @@
 module AWS.Signers.Canonical exposing (..)
 
 import AWS.Encode
-import AWS.Http exposing (UnsignedRequest, RequestParams(..))
+import AWS.Http exposing (QueryParams, RequestBody(..), UnsignedRequest)
 import Json.Encode as JE
 import Regex exposing (regex, HowMany(All))
 import SHA exposing (sha256sum)
@@ -10,21 +10,21 @@ import SHA exposing (sha256sum)
 -- http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html
 
 
-canonical : String -> String -> List ( String, String ) -> RequestParams -> String
-canonical method path headers params =
-    canonicalRaw method path headers params
+canonical : String -> String -> List ( String, String ) -> QueryParams -> RequestBody -> String
+canonical method path headers params body =
+    canonicalRaw method path headers params body
         |> sha256sum
 
 
-canonicalRaw : String -> String -> List ( String, String ) -> RequestParams -> String
-canonicalRaw method path headers params =
+canonicalRaw : String -> String -> List ( String, String ) -> QueryParams -> RequestBody -> String
+canonicalRaw method path headers params body =
     [ String.toUpper method
     , canonicalUri path
     , canonicalQueryString params
     , canonicalHeaders headers
     , ""
     , signedHeaders headers
-    , canonicalPayload params
+    , canonicalPayload body
     ]
         |> String.join "\n"
 
@@ -55,17 +55,12 @@ canonicalUri path =
             |> String.join "/"
 
 
-canonicalQueryString : RequestParams -> String
+canonicalQueryString : QueryParams -> String
 canonicalQueryString params =
-    case params of
-        QueryParams query ->
-            query
-                |> List.sort
-                |> List.map (encode2Tuple "=")
-                |> String.join "&"
-
-        _ ->
-            ""
+    params
+        |> List.sort
+        |> List.map (encode2Tuple "=")
+        |> String.join "&"
 
 
 canonicalHeaders : List ( String, String ) -> String
@@ -87,13 +82,13 @@ signedHeaders headers =
         |> String.join ";"
 
 
-canonicalPayload : RequestParams -> String
-canonicalPayload params =
-    (case params of
+canonicalPayload : RequestBody -> String
+canonicalPayload body =
+    (case body of
         JsonBody value ->
             JE.encode 0 value
 
-        _ ->
+        NoBody ->
             ""
     )
         |> sha256sum

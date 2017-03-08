@@ -32,7 +32,8 @@ module.exports = (data) => {
         : [];
       const requiredParams = params.filter(m => m.required);
       const optionalParams = params.filter(m => !m.required);
-      const { requestPath, extraImports } = replacePathParams(op.http.requestUri, params);
+      const { requestPath, extraImports, unusedParams } =
+        replacePathParams(op.http.requestUri, requiredParams);
       (extraImports || []).forEach(extraImport => sumExtraImports.push(extraImport));
 
       if (!op.http) {
@@ -45,6 +46,7 @@ module.exports = (data) => {
         http: op.http,
         requestPath,
         requiredParams,
+        requiredUnusedParams: unusedParams,
         optionalParams,
         input: op.input && types.findByShape(op.input.shape),
         output: op.output

@@ -8,16 +8,20 @@ import Http
 import QueryString exposing (QueryString)
 
 
-type RequestParams
-    = NoParams
-    | QueryParams (List ( String, String ))
+type alias QueryParams =
+    List ( String, String )
+
+
+type RequestBody
+    = NoBody
     | JsonBody JE.Value
 
 
 type alias UnsignedRequest a =
     { method : String
     , path : String
-    , params : RequestParams
+    , query : QueryParams
+    , body : RequestBody
     , decoder : JD.Decoder a
     }
 
@@ -26,18 +30,20 @@ unsignedRequest :
     String
     -> String
     -> String
-    -> RequestParams
+    -> QueryParams
+    -> RequestBody
     -> JD.Decoder a
     -> UnsignedRequest a
-unsignedRequest target method uri params decoder =
+unsignedRequest target method uri query body decoder =
     UnsignedRequest
         method
         uri
-        params
+        query
+        body
         decoder
 
 
-url : Endpoint -> String -> RequestParams -> String
+url : Endpoint -> String -> QueryParams -> String
 url endpoint path params =
     "https://"
         ++ (host endpoint)
@@ -55,13 +61,13 @@ host endpoint =
             host
 
 
-queryString : RequestParams -> String
+queryString : QueryParams -> String
 queryString params =
     case params of
-        QueryParams [] ->
+        [] ->
             ""
 
-        QueryParams params ->
+        _ ->
             params
                 |> List.foldl
                     (\( key, val ) qs ->
@@ -70,15 +76,12 @@ queryString params =
                     QueryString.empty
                 |> QueryString.render
 
-        _ ->
-            ""
 
-
-body : RequestParams -> Http.Body
-body params =
-    case params of
+body : RequestBody -> Http.Body
+body body =
+    case body of
         JsonBody value ->
             Http.jsonBody value
 
-        _ ->
+        NoBody ->
             Http.emptyBody

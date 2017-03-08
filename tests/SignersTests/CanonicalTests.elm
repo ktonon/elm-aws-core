@@ -31,11 +31,10 @@ canonicalTests =
                     , ( "x-amz-date", "20150830T123600Z" )
                     , ( "host", "  iam.amazonaws.com" )
                     ]
-                    (QueryParams
-                        [ ( "Version", "2010-05-08" )
-                        , ( "Action", "ListUsers" )
-                        ]
-                    )
+                    [ ( "Version", "2010-05-08" )
+                    , ( "Action", "ListUsers" )
+                    ]
+                    NoBody
                 )
                     |> Expect.equal "f536975d06c0309214f805bb90ccff089219ecd68b2577efef23edd43b7e1a59"
         , test "does the same request encoding as http://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html#signature-v4-test-suite-example" <|
@@ -45,11 +44,10 @@ canonicalTests =
                     [ ( "X-Amz-Date", "20150830T123600Z" )
                     , ( "Host", "example.amazonaws.com" )
                     ]
-                    (QueryParams
-                        [ ( "Param1", "value1" )
-                        , ( "Param2", "value2" )
-                        ]
-                    )
+                    [ ( "Param1", "value1" )
+                    , ( "Param2", "value2" )
+                    ]
+                    NoBody
                 )
                     |> Expect.equal "816cd5b414d056048ba4f7c5386d6e0533120fb1fcfa93762cf0fc39e2cf19e0"
         ]
@@ -79,43 +77,37 @@ canonicalUriTests =
 canonicalQueryStringTests : Test
 canonicalQueryStringTests =
     describe "canonicalQueryString"
-        [ test "empty string when no query params are available" <|
+        [ test "empty string when query params is an empty list" <|
             \_ ->
-                JsonBody (JE.string "hello")
-                    |> canonicalQueryString
-                    |> Expect.equal ""
-        , test "empty string when query params is an empty list" <|
-            \_ ->
-                QueryParams []
+                []
                     |> canonicalQueryString
                     |> Expect.equal ""
         , test "sorts by query keys" <|
             \_ ->
-                QueryParams [ ( "bar", "car" ), ( "Foo", "baz" ), ( "alpha", "beta" ) ]
+                [ ( "bar", "car" ), ( "Foo", "baz" ), ( "alpha", "beta" ) ]
                     |> canonicalQueryString
                     |> Expect.equal "Foo=baz&alpha=beta&bar=car"
         , test "encodes a key without a value as key=" <|
             \_ ->
-                QueryParams [ ( "foo", "baz" ), ( "bar", "" ) ]
+                [ ( "foo", "baz" ), ( "bar", "" ) ]
                     |> canonicalQueryString
                     |> Expect.equal "bar=&foo=baz"
         , test "uri encodes keys and values" <|
             \_ ->
-                QueryParams [ ( "one & two", "three=four" ) ]
+                [ ( "one & two", "three=four" ) ]
                     |> canonicalQueryString
                     |> Expect.equal "one%20%26%20two=three%3Dfour"
         , test "does not uri encode 0-9, -, _, ., or ~" <|
             \_ ->
-                QueryParams [ ( "keep-these", "_.~0123456789" ) ]
+                [ ( "keep-these", "_.~0123456789" ) ]
                     |> canonicalQueryString
                     |> Expect.equal "keep-these=_.~0123456789"
         , test "uri encodes all other non-letter characters" <|
             \_ ->
-                QueryParams
-                    [ ( "encode-these"
-                      , " !\"#$%&'()*+,/:;<=>?@[\\]^`{|}"
-                      )
-                    ]
+                [ ( "encode-these"
+                  , " !\"#$%&'()*+,/:;<=>?@[\\]^`{|}"
+                  )
+                ]
                     |> canonicalQueryString
                     |> Expect.equal "encode-these=%20%21%22%23%24%25%26%27%28%29%2A%2B%2C%2F%3A%3B%3C%3D%3E%3F%40%5B%5C%5D%5E%60%7B%7C%7D"
         ]
@@ -183,7 +175,7 @@ canonicalPayloadTests =
                         |> expectMatches hexPattern
             , test "hex encodes an empty body" <|
                 \_ ->
-                    QueryParams []
+                    NoBody
                         |> canonicalPayload
                         |> expectMatches hexPattern
             ]

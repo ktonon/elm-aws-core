@@ -17,18 +17,19 @@ __Required Parameters__
     AWS.Http.unsignedRequest
         "{{= it.name[0].toUpperCase() }}{{= it.name.slice(1) }}"
         "{{= it.http.method }}"
-        {{= it.requestPath }}{{? it.http.method === 'GET' }}
-        (AWS.Http.QueryParams
-            [
-            ]
-        ){{?? it.input }}
+        {{= it.requestPath }}
+        ([]
+            |> (::) ( "Action", "{{= it.name[0].toUpperCase() }}{{= it.name.slice(1) }}" ){{? it.http.method === 'GET' }}{{~ it.requiredUnusedParams :p }}
+            |> (::) ( "{{= p.key }}", {{= p.key }} |> ({{= p.value.toQueryArg }}) ){{~}}{{~ it.optionalParams :p }}
+            |> AWS.Encode.optionalMember ({{= p.value.toQueryArg }}) ( "{{= p.key }}", options.{{= p.key }} ){{~}}{{?}}
+        ){{? it.input && it.http.method !== 'GET' }}
         (({{= it.input.type }}{{~ it.input.members :m }}
             {{= m.required ? m.key : `options.${m.key}` }}{{~}}
          )
             |> {{= it.input.encoder }}
             |> AWS.Http.JsonBody
         ){{?? true }}
-        (AWS.Http.NoParams){{?}}
+        AWS.Http.NoBody{{?}}
         {{= it.output.decoder }}
         |> AWS.UnsignedRequest
 {{? it.optionalParams.length }}

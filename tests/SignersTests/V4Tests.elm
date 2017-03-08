@@ -1,7 +1,7 @@
 module SignersTests.V4Tests exposing (all)
 
 import AWS.Config exposing (..)
-import AWS.Http exposing (RequestParams(..), UnsignedRequest, unsignedRequest)
+import AWS.Http exposing (QueryParams, RequestBody(..), UnsignedRequest, unsignedRequest)
 import AWS.Signers.Canonical exposing (canonical, canonicalRaw)
 import AWS.Signers.V4 as V4 exposing (..)
 import Date exposing (Date, fromString, fromTime)
@@ -41,11 +41,10 @@ authorizationTests =
                             "SomeTarget"
                             "GET"
                             "/"
-                            (QueryParams
-                                [ ( "Param1", "value1" )
-                                , ( "Param2", "value2" )
-                                ]
-                            )
+                            [ ( "Param1", "value1" )
+                            , ( "Param2", "value2" )
+                            ]
+                            NoBody
                             (JD.succeed ())
 
                     headers =
@@ -73,7 +72,8 @@ awsOfficialTest data =
                     data.req.method
                     data.req.path
                     data.req.headers
-                    data.req.params
+                    data.req.query
+                    data.req.body
                     |> Expect.equal data.creq
         , test "string to sign" <|
             \_ ->
@@ -81,7 +81,8 @@ awsOfficialTest data =
                     data.req.method
                     data.req.path
                     data.req.headers
-                    data.req.params
+                    data.req.query
+                    data.req.body
                     |> V4.stringToSign
                         V4.algorithm
                         date
@@ -112,7 +113,8 @@ type alias Req =
     { method : String
     , path : String
     , headers : List ( String, String )
-    , params : RequestParams
+    , query : QueryParams
+    , body : RequestBody
     }
 
 
@@ -149,7 +151,8 @@ req data =
     unsignedRequest ""
         data.method
         data.path
-        data.params
+        data.query
+        data.body
         (JD.succeed ())
 
 
@@ -170,7 +173,8 @@ allData =
             , ( "My-Header1", "value1" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -196,7 +200,8 @@ dc7f04a3abfde8d472b0ab1a418b741b7c67174dad1551b4117b15527fbe966c"""
      value3""" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -223,7 +228,8 @@ b7b6cbfd8a0430b78891e986784da2630c8a135a8595cec25b26ea94f926ee55"""
             , ( "My-Header1", "value2" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -248,7 +254,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "My-Header2", "\"a   b   c\"" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -272,7 +279,8 @@ a726db9b0df21c14f559d0a978e563112acb1b9e05476f0a6a1c7d68f28605c7"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
@@ -294,7 +302,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -316,9 +325,8 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            (QueryParams
-                [ ( "Param1", "value1" ) ]
-            )
+            [ ( "Param1", "value1" ) ]
+            NoBody
         )
         """GET
 /
@@ -340,7 +348,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -362,7 +371,8 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            (QueryParams [ ( "Param2", "value2" ), ( "Param1", "value1" ) ])
+            [ ( "Param2", "value2" ), ( "Param1", "value1" ) ]
+            NoBody
         )
         """GET
 /
@@ -384,12 +394,11 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            (QueryParams
-                [ ( "-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-                  , "-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-                  )
-                ]
-            )
+            [ ( "-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+              , "-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+              )
+            ]
+            NoBody
         )
         """GET
 /
@@ -411,7 +420,8 @@ c30d4703d9f799439be92736156d47ccfb2d879ddf56f5befa6d1d6aab979177"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            (QueryParams [ ( "ሴ", "bar" ) ])
+            [ ( "ሴ", "bar" ) ]
+            NoBody
         )
         """GET
 /
@@ -433,7 +443,8 @@ eb30c5bed55734080471a834cc727ae56beb50e5f39d1bff6d0d38cb192a7073"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /%E1%88%B4
@@ -455,7 +466,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -477,7 +489,8 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -499,7 +512,8 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -521,7 +535,8 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /
@@ -543,7 +558,8 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /example
@@ -565,7 +581,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /example/
@@ -587,7 +604,8 @@ cb96b4ac96d501f7c5c15bc6d67b3035061cfced4af6585ad927f7e6c985c015"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """GET
 /example%20space/
@@ -609,7 +627,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """POST
 /
@@ -632,7 +651,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "My-Header1", "value1" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """POST
 /
@@ -656,7 +676,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "My-Header1", "VALUE1" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """POST
 /
@@ -679,7 +700,8 @@ d51ced243e649e3de6ef63afbbdcbca03131a21a7103a1583706a64618606a93"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """POST
 /
@@ -702,7 +724,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             , ( "X-Amz-Security-Token", "AQoDYXdzEPT//////////wEXAMPLEtc764bNrC9SAPBSM22wDOk4x4HIZ8j4FZTwdQWLWsKWHGBuFqwAeMicRXmxfpSPfIeoIYRqTflfKD8YUuwthAx7mSEI/qkPpKPi/kMcGdQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """POST
 /
@@ -725,7 +748,8 @@ c237e1b440d4c63c32ca95b5b99481081cb7b13c7e40434868e71567c1a882f6"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            NoParams
+            []
+            NoBody
         )
         """POST
 /
@@ -747,7 +771,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            (QueryParams [ ( "Param1", "value1" ) ])
+            [ ( "Param1", "value1" ) ]
+            NoBody
         )
         """POST
 /
@@ -769,7 +794,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            (QueryParams [ ( "Param1", "value1" ) ])
+            [ ( "Param1", "value1" ) ]
+            NoBody
         )
         """POST
 /
@@ -791,7 +817,8 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             [ ( "Host", "example.amazonaws.com" )
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
-            (QueryParams [ ( "@#$%^&+", "/,?><`\";:\\|][{}" ) ])
+            [ ( "@#$%^&+", "/,?><`\";:\\|][{}" ) ]
+            NoBody
         )
         """POST
 /
@@ -813,7 +840,7 @@ eefcefefb33f2f62b17696313b6d0dcb93231d17f4bdf722a1278a1931fa8365"""
       --             [ ( "Host", "example.amazonaws.com" )
       --             , ( "X-Amz-Date", "20150830T123600Z" )
       --             ]
-      --             (QueryParams [ ( "p aram1", "val ue1" ) ])
+      --             [ ( "p aram1", "val ue1" ) ]
       --         )
       --         """POST
       -- /
@@ -835,7 +862,7 @@ eefcefefb33f2f62b17696313b6d0dcb93231d17f4bdf722a1278a1931fa8365"""
       --         [ ( "Host", "example.amazonaws.com" )
       --         , ( "X-Amz-Date", "20150830T123600Z" )
       --         ]
-      --         NoParams
+      --         [] NoBody
       --     )
       --     """"""
       --     """"""
@@ -847,7 +874,7 @@ eefcefefb33f2f62b17696313b6d0dcb93231d17f4bdf722a1278a1931fa8365"""
       --         [ ( "Host", "example.amazonaws.com" )
       --         , ( "X-Amz-Date", "20150830T123600Z" )
       --         ]
-      --         NoParams
+      --         [] NoBody
       --     )
       --     """"""
       --     """"""
