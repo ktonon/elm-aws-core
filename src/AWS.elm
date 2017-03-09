@@ -8,7 +8,7 @@ __Experimental: Work in progress__
 
 ## Request Signing
 
-@docs Request, SignedRequest, signV4
+@docs Request, SignedRequest, sign
 
 -}
 
@@ -86,15 +86,20 @@ type alias SignedRequest a =
 
 {-| Sign an unsigned request, given the current time
 -}
-signV4 :
+sign :
     ServiceConfig
     -> Credentials
     -> Date
     -> Request a
     -> Result String (SignedRequest a)
-signV4 serviceConfig credentials date req =
+sign serviceConfig credentials date req =
     case
         ( serviceConfig, credentials, req )
     of
         ( ServiceConfig config, Credentials creds, UnsignedRequest unsignedReq ) ->
-            AWS.Signers.V4.sign config creds date unsignedReq
+            case config.signatureVersion of
+                AWS.Config.V4Signature ->
+                    AWS.Signers.V4.sign config creds date unsignedReq
+
+                _ ->
+                    Debug.crash "Unsupported signature"

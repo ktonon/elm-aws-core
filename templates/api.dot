@@ -46,6 +46,7 @@ config {{? it.isRegional }}region {{?}}=
     AWS.Config.Service
         "{{= it.metadata.endpointPrefix }}"
         (AWS.Config.{{= it.isRegional ? `RegionalEndpoint "${it.metadata.endpointPrefix}" region` : `GlobalEndpoint "${it.metadata.globalEndpoint}"` }})
+        AWS.Config.{{= it.signatureVersion }}
         "{{= it.metadata.apiVersion }}"
         {{= it.metadata.jsonVersion ? `(Just "${it.metadata.jsonVersion}")` : 'Nothing' }}
         "AWS{{= it.metadata.endpointPrefix.toUpperCase() }}_{{= it.metadata.apiVersion.replace(/-/g, '') }}."

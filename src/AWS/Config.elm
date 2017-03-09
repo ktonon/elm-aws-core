@@ -25,9 +25,16 @@ type Endpoint
     | GlobalEndpoint Host
 
 
+type SignatureVersion
+    = V4Signature
+    | V2Signature
+    | S3Signature
+
+
 type alias Service =
     { serviceName : String
     , endpoint : Endpoint
+    , signatureVersion : SignatureVersion
     , version : String
     , xAmzJsonVersion : Maybe String
     , xAmzTargetPrefix : String

@@ -70,6 +70,7 @@ module.exports = (data) => {
   const context = {
     categories,
     documentation: data.documentation,
+    extraImports: unique(sumExtraImports),
     isRegional: !data.metadata.globalEndpoint,
     metadata: data.metadata,
     mod,
@@ -79,8 +80,8 @@ module.exports = (data) => {
         : [op.name]),
       []),
     operations: operations.map(dots.defineOperation),
+    signatureVersion: `${upCam(data.metadata.signatureVersion)}Signature`,
     types,
-    extraImports: unique(sumExtraImports),
   };
 
   fs.writeFileSync(

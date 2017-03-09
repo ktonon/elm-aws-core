@@ -32,6 +32,7 @@ authorizationTests =
                         AWS.Config.Service
                             "service"
                             (AWS.Config.RegionalEndpoint "service" "us-east-1")
+                            AWS.Config.V4Signature
                             "2015-12-08"
                             (Just "1.1")
                             "AWSACM_20151208."
@@ -141,6 +142,7 @@ conf =
     Service
         "service"
         (RegionalEndpoint "service" "us-east-1")
+        AWS.Config.V4Signature
         ""
         Nothing
         ""
