@@ -6,7 +6,10 @@
   "scripts": {
     "clean": "rm -rf src/AWS/Services/*.elm",
     "build:crypto": "webpack",
-    "build": "npm run clean && npm run build:crypto && node scripts/generate-sdk.js && elm package install -y && elm make --docs=docs.json",
+    "build:gen": "node scripts/generate-sdk.js",
+    "build:docs": "elm package install -y && elm make --docs=docs.json",
+    "build": "npm run clean && npm run build:crypto && npm run build:gen && npm run build:docs",
+    "prepublish": "elm format src/AWS/Services --yes",
     "test": "npm run build && elm test",
     "posttest": "eslint ."
   },

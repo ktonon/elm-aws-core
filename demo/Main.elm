@@ -60,7 +60,7 @@ update msg model =
         GotDate date ->
             ( model
             , Service.listQueues (\x -> x)
-                |> AWS.signV4 (Service.config Config.region) creds date
+                |> AWS.sign (Service.config Config.region) creds date
                 |> Result.map (Http.send GotResult)
                 |> Result.withDefault Cmd.none
             )

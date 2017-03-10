@@ -26,16 +26,12 @@ const memberDecoder = ({ required, key, value }) => (
     : `JDP.optional "${key}" (JD.nullable ${value.decoder}) Nothing`
 );
 
-const memberEncoder = ({ required, key, value }) => (
-  required
-    ? `(::) ( "${key}", data.${key} |> (${value.encoder}) )`
-    : `AWS.Encode.optionalMember (${value.encoder}) ( "${key}", data.${key} )`);
-
 render.structure = sh => Object.assign({
   exposeAs: sh.category !== 'request' ? sh.type : null,
   typeDef: dots.defineRecordType(Object.assign({ memberType }, sh)),
   decoderDef: dots.defineRecordDecoder(Object.assign({ memberDecoder }, sh)),
-  encoderDef: dots.defineRecordEncoder(Object.assign({ memberEncoder }, sh)),
+  jsonEncoderDef: dots.defineRecordJsonEncoder(sh),
+  queryEncoderDef: dots.defineRecordQueryEncoder(sh),
 }, sh);
 
 module.exports = render;

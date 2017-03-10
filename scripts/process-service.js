@@ -41,6 +41,8 @@ module.exports = (data) => {
       }
       return {
         name: lowCam(key),
+        actionName: upCam(key),
+        protocol: data.metadata.protocol,
         optionsName: `${key}Options`,
         doc: op.documentation,
         http: op.http,

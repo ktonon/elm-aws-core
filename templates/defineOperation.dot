@@ -6,37 +6,57 @@ __Required Parameters__
 {{~}}
 {{?}}
 -}
-{{= it.name }} :
-    {{~ it.requiredParams :p }}{{= p.value.type }}
-    -> {{~}}{{? it.optionalParams.length }}({{= it.optionsName }} -> {{= it.optionsName }})
-    -> {{?}}AWS.Request {{= it.output.type }}
-{{= it.name }} {{~ it.requiredParams :p }}{{= p.key }} {{~}}{{? it.optionalParams.length }}setOptions {{?}}={{? it.optionalParams.length }}
-  let
-    options = setOptions ({{= it.optionsName }} {{= it.optionalParams.map(() => 'Nothing').join(' ') }})
-  in{{?}}
-    AWS.Http.unsignedRequest
-        "{{= it.name[0].toUpperCase() }}{{= it.name.slice(1) }}"
-        "{{= it.http.method }}"
-        {{= it.requestPath }}
-        ([]
-            |> (::) ( "Action", "{{= it.name[0].toUpperCase() }}{{= it.name.slice(1) }}" ){{? it.http.method === 'GET' }}{{~ it.requiredUnusedParams :p }}
-            |> (::) ( "{{= p.key }}", {{= p.key }} |> ({{= p.value.toQueryArg }}) ){{~}}{{~ it.optionalParams :p }}
-            |> AWS.Encode.optionalMember ({{= p.value.toQueryArg }}) ( "{{= p.key }}", options.{{= p.key }} ){{~}}{{?}}
-        ){{? it.input && it.http.method !== 'GET' }}
-        (({{= it.input.type }}{{~ it.input.members :m }}
-            {{= m.required ? m.key : `options.${m.key}` }}{{~}}
-         )
-            |> {{= it.input.encoder }}
-            |> AWS.Http.JsonBody
-        ){{?? true }}
-        AWS.Http.NoBody{{?}}
-        {{= it.output.decoder }}
-        |> AWS.UnsignedRequest
-{{? it.optionalParams.length }}
 
+{{= it.name }} :
+  {{~ it.requiredParams :p }}
+    {{= p.value.type }} ->
+  {{~}}
+  {{? it.optionalParams.length }}
+    ( {{= it.optionsName }} -> {{= it.optionsName }} ) ->
+  {{?}}
+    AWS.Request {{= it.output.type }}
+
+{{= it.name }} {{~ it.requiredParams :p }}{{= p.key }} {{~}}{{? it.optionalParams.length }}setOptions {{?}}=
+    {{? it.input }}
+    let
+        requestInput = {{= it.input.type }}
+            {{~ it.input.members :m }}
+            {{= m.required ? m.key : `options.${m.key}` }}
+            {{~}}
+        {{? it.optionalParams.length }}
+        options = setOptions ({{= it.optionsName }} {{= it.optionalParams.map(() => 'Nothing').join(' ') }})
+        {{?}}
+    in
+    {{?}}
+        AWS.Http.unsignedRequest
+            "{{= it.actionName }}"
+            "{{= it.http.method }}"
+            {{= it.requestPath }}
+
+            {{? it.protocol === 'query' && it.input }}
+            ({{= it.input.queryEncoder("") }} requestInput [])
+            {{?? true }}
+            []
+            {{?}}
+
+            {{? it.protocol === 'json' && it.input }}
+            (requestInput
+                |> {{= it.input.jsonEncoder }}
+                |> AWS.Http.JsonBody
+            )
+            {{?? true }}
+            AWS.Http.NoBody
+            {{?}}
+
+            {{= it.output.decoder }}
+            |> AWS.UnsignedRequest
+
+
+{{? it.optionalParams.length }}
 {-| Options for a {{= it.name }} request
 -}
 type alias {{= it.optionsName }} =
-    { {{= it.optionalParams.map(p => `${p.key} : Maybe ${p.value.type}`).join('\n    , ') }}
+    {
+    {{= it.optionalParams.map(p => `${p.key} : Maybe ${p.value.type}`).join(',') }}
     }
 {{?}}

@@ -32,6 +32,7 @@ module AWS.Services.{{= it.mod }}
 
 import AWS
 import AWS.Config
+import AWS.Encode
 import AWS.Http
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -64,14 +65,20 @@ config {{? it.isRegional }}region {{?}}=
 {{? t.decoderDef }}
 {{= t.decoderDef }}
 {{?}}
-{{? t.encoderDef }}
-{{= t.encoderDef }}
-{{?}}
 {{~}}
+
+
 {{~ it.types.filter(t => t.category === 'request') :t }}
 {{= t.typeDef }}
+{{~}}
 
-{{? t.encoderDef }}
-{{= t.encoderDef }}
+
+{{~ it.types.filter(t => t.exposeAs || t.category === 'request') :t }}
+{{? it.metadata.protocol === 'json' && t.jsonEncoderDef }}
+{{= t.jsonEncoderDef }}
+{{?}}
+
+{{? it.metadata.protocol === 'query' && t.queryEncoderDef }}
+{{= t.queryEncoderDef }}
 {{?}}
 {{~}}

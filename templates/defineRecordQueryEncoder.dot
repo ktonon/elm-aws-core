@@ -1,0 +1,15 @@
+{{= it.queryEncoderType }} : {{= it.type }} -> List (String, String)
+{{= it.queryEncoderType }} data =
+    []
+        {{~ it.members :m }}
+        {{? m.required }}
+        |> {{= m.value.queryEncoder(m.key) }} data.{{= m.key }}
+        {{?? true }}
+        |> (case data.{{= m.key }} of
+            Just value ->
+                {{= m.value.queryEncoder(m.key) }} value
+            Nothing ->
+                AWS.Encode.unchangedQueryArgs
+        )
+        {{?}}
+        {{~}}

@@ -3,7 +3,6 @@ module AWS.Encode exposing (..)
 import Char
 import Hex
 import Http
-import Json.Encode as JE
 import Regex exposing (regex, HowMany(All))
 
 
@@ -41,6 +40,59 @@ uri x =
                         )
                     |> Maybe.withDefault ""
             )
+
+
+unchangedQueryArgs : List ( String, String ) -> List ( String, String )
+unchangedQueryArgs args =
+    args
+
+
+addOneToQueryArgs : (a -> String) -> String -> a -> List ( String, String ) -> List ( String, String )
+addOneToQueryArgs transform key value =
+    (::) ( key, transform value )
+
+
+addListToQueryArgs : (a -> List ( String, String ) -> List ( String, String )) -> String -> List a -> List ( String, String ) -> List ( String, String )
+addListToQueryArgs transform base values =
+    values
+        |> List.indexedMap
+            (\index rawValue ->
+                rawValue
+                    |> (\x -> transform x [])
+                    |> List.map
+                        (\( key, value ) ->
+                            ( base ++ ".member." ++ (toString index) ++ "." ++ key
+                            , value
+                            )
+                        )
+            )
+        |> List.concat
+        |> List.append
+
+
+addRecordToQueryArgs :
+    (record -> List ( String, String ))
+    -> String
+    -> record
+    -> List ( String, String )
+    -> List ( String, String )
+addRecordToQueryArgs transform base record =
+    let
+        prefix =
+            if String.isEmpty base then
+                ""
+            else
+                base ++ "."
+    in
+        record
+            |> transform
+            |> List.map
+                (\( key, value ) ->
+                    ( prefix ++ key
+                    , value
+                    )
+                )
+            |> List.append
 
 
 optionalMember :
