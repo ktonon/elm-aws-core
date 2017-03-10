@@ -33,8 +33,12 @@ __Required Parameters__
             "{{= it.http.method }}"
             {{= it.requestPath }}
 
-            {{? it.protocol === 'query' && it.input }}
-            ({{= it.input.queryEncoder("") }} requestInput [])
+            {{? it.protocol === 'query' }}
+            ([("Action", "{{= it.actionName }}")]
+            {{? it.input }}
+                |> {{= it.input.queryEncoder("") }} requestInput
+            {{?}}
+            )
             {{?? true }}
             []
             {{?}}
