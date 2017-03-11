@@ -32,6 +32,7 @@ module AWS.Services.{{= it.mod }}
 
 import AWS
 import AWS.Config
+import AWS.Decode
 import AWS.Encode
 import AWS.Http
 import Json.Decode as JD

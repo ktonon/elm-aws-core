@@ -10,9 +10,13 @@ __Experimental: Work in progress__
 
 @docs Request, SignedRequest, sign
 
+## Response
+
+@docs Response, responseData
 -}
 
 import AWS.Config
+import AWS.Decode
 import AWS.Signers.V4 exposing (sign)
 import AWS.Http
 import Date exposing (Date)
@@ -103,3 +107,16 @@ sign serviceConfig credentials date req =
 
                 _ ->
                     Debug.crash "Unsupported signature"
+
+
+{-| Response from an AWS service.
+-}
+type alias Response a =
+    AWS.Decode.ResponseWrapper a
+
+
+{-| Extract the data from the AWS response
+-}
+responseData : Response a -> a
+responseData resp =
+    resp.response.data

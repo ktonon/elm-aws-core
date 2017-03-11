@@ -23,12 +23,12 @@ main =
 -- MODEL
 
 
-type alias Response =
+type alias Data =
     Service.ListQueuesResult
 
 
 type alias Model =
-    { val : Maybe Response
+    { response : Maybe (AWS.Response Data)
     , err : Maybe Http.Error
     }
 
@@ -51,7 +51,7 @@ creds =
 
 type Msg
     = GotDate Date
-    | GotResult (Result Http.Error Response)
+    | GotResult (Result Http.Error (AWS.Response Data))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -67,8 +67,8 @@ update msg model =
 
         GotResult result ->
             case result of
-                Ok val ->
-                    ( { model | val = Just val }, Cmd.none )
+                Ok response ->
+                    ( { model | response = Just response }, Cmd.none )
 
                 Err err ->
                     ( { model | err = Just err }, Cmd.none )
@@ -89,5 +89,18 @@ subscriptions _ =
 
 view : Model -> Html Msg
 view model =
-    div []
-        []
+    ul []
+        (case model.response of
+            Just resp ->
+                resp
+                    |> AWS.responseData
+                    |> .queueUrls
+                    |> Maybe.withDefault []
+                    |> List.map
+                        (\url ->
+                            li [] [ text url ]
+                        )
+
+            Nothing ->
+                []
+        )

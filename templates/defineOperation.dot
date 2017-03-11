@@ -14,7 +14,7 @@ __Required Parameters__
   {{? it.optionalParams.length }}
     ( {{= it.optionsName }} -> {{= it.optionsName }} ) ->
   {{?}}
-    AWS.Request {{= it.output.type }}
+    AWS.Request (AWS.Response {{= it.output.type }})
 
 {{= it.name }} {{~ it.requiredParams :p }}{{= p.key }} {{~}}{{? it.optionalParams.length }}setOptions {{?}}=
     {{? it.input }}
@@ -52,7 +52,7 @@ __Required Parameters__
             AWS.Http.NoBody
             {{?}}
 
-            {{= it.output.decoder }}
+            (AWS.Decode.responseWrapperDecoder "{{= it.actionName }}" "{{= it.output.type }}" {{= it.output.decoder }})
             |> AWS.UnsignedRequest
 
 
