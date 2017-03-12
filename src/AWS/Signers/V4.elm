@@ -18,7 +18,7 @@ sign :
     -> AWS.Config.Credentials
     -> Date
     -> UnsignedRequest a
-    -> Result String (Http.Request a)
+    -> Http.Request a
 sign config creds date req =
     Http.request
         { method = req.method
@@ -33,7 +33,6 @@ sign config creds date req =
         , timeout = Nothing
         , withCredentials = False
         }
-        |> Ok
 
 
 algorithm : String

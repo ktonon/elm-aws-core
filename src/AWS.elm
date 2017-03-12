@@ -95,7 +95,7 @@ sign :
     -> Credentials
     -> Date
     -> Request a
-    -> Result String (SignedRequest a)
+    -> SignedRequest a
 sign serviceConfig credentials date req =
     case
         ( serviceConfig, credentials, req )

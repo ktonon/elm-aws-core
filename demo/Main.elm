@@ -61,8 +61,7 @@ update msg model =
             ( model
             , Service.listQueues (\x -> x)
                 |> AWS.sign (Service.config Config.region) creds date
-                |> Result.map (Http.send GotResult)
-                |> Result.withDefault Cmd.none
+                |> Http.send GotResult
             )
 
         GotResult result ->
