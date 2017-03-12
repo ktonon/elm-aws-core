@@ -1,9 +1,8 @@
 module Main exposing (..)
 
 import AWS
-import AWS.Services.SQS as Service
+import AWS.Services.SQS as SQS
 import Config
-import Date exposing (Date)
 import Html exposing (..)
 import Http
 import Task
@@ -23,20 +22,18 @@ main =
 -- MODEL
 
 
-type alias Data =
-    Service.ListQueuesResult
-
-
 type alias Model =
-    { response : Maybe (AWS.Response Data)
+    { queueUrls : List String
     , err : Maybe Http.Error
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model Nothing Nothing
-    , Task.perform GotDate Date.now
+    ( Model [] Nothing
+    , SQS.listQueues AWS.defaultOptions
+        |> AWS.toTask (SQS.config Config.region) creds
+        |> Task.attempt ListQueues
     )
 
 
@@ -50,24 +47,24 @@ creds =
 
 
 type Msg
-    = GotDate Date
-    | GotResult (Result Http.Error (AWS.Response Data))
+    = ListQueues (Result Http.Error (AWS.Response SQS.ListQueuesResult))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GotDate date ->
-            ( model
-            , Service.listQueues (\x -> x)
-                |> AWS.sign (Service.config Config.region) creds date
-                |> Http.send GotResult
-            )
-
-        GotResult result ->
+        ListQueues result ->
             case result of
                 Ok response ->
-                    ( { model | response = Just response }, Cmd.none )
+                    ( { model
+                        | queueUrls =
+                            response
+                                |> AWS.responseData
+                                |> .queueUrls
+                                |> Maybe.withDefault []
+                      }
+                    , Cmd.none
+                    )
 
                 Err err ->
                     ( { model | err = Just err }, Cmd.none )
@@ -88,18 +85,6 @@ subscriptions _ =
 
 view : Model -> Html Msg
 view model =
-    ul []
-        (case model.response of
-            Just resp ->
-                resp
-                    |> AWS.responseData
-                    |> .queueUrls
-                    |> Maybe.withDefault []
-                    |> List.map
-                        (\url ->
-                            li [] [ text url ]
-                        )
-
-            Nothing ->
-                []
-        )
+    model.queueUrls
+        |> List.map (\url -> li [] [ text url ])
+        |> ul []

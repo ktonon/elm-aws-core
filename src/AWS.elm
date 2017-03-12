@@ -1,4 +1,18 @@
-module AWS exposing (..)
+module AWS
+    exposing
+        ( credentials
+        , defaultOptions
+        , responseData
+        , toTask
+        , AccessKeyId
+        , Credentials
+        , Region
+        , Request(UnsignedRequest)
+        , Response
+        , SecretAccessKey
+        , ServiceConfig(ServiceConfig)
+        , SessionToken
+        )
 
 {-| AWS SDK for elm.
 
@@ -6,9 +20,9 @@ __Experimental: Work in progress__
 
 @docs ServiceConfig, Region, Credentials, credentials, AccessKeyId, SecretAccessKey, SessionToken
 
-## Request Signing
+## Request
 
-@docs Request, SignedRequest, sign
+@docs Request, defaultOptions, toTask
 
 ## Response
 
@@ -17,10 +31,11 @@ __Experimental: Work in progress__
 
 import AWS.Config
 import AWS.Decode
-import AWS.Signers.V4 exposing (sign)
+import AWS.Signers.V4 as V4
 import AWS.Http
 import Date exposing (Date)
 import Http
+import Task
 
 
 {-| Credentials for accessing AWS services.
@@ -80,22 +95,21 @@ type Request a
     = UnsignedRequest (AWS.Http.UnsignedRequest a)
 
 
-{-| Alias for Http.Request
+{-| Leaves the default options unchanged.
 
-See http://package.elm-lang.org/packages/elm-lang/http/1.0.0/Http#Request
+Alias for the identity function.
 -}
-type alias SignedRequest a =
-    Http.Request a
+defaultOptions : a -> a
+defaultOptions options =
+    options
 
 
-{-| Sign an unsigned request, given the current time
--}
 sign :
     ServiceConfig
     -> Credentials
     -> Date
     -> Request a
-    -> SignedRequest a
+    -> Http.Request a
 sign serviceConfig credentials date req =
     case
         ( serviceConfig, credentials, req )
@@ -103,10 +117,26 @@ sign serviceConfig credentials date req =
         ( ServiceConfig config, Credentials creds, UnsignedRequest unsignedReq ) ->
             case config.signatureVersion of
                 AWS.Config.V4Signature ->
-                    AWS.Signers.V4.sign config creds date unsignedReq
+                    V4.sign config creds date unsignedReq
 
                 _ ->
                     Debug.crash "Unsupported signature"
+
+
+{-| Signs and sends an AWS Request.
+-}
+toTask :
+    ServiceConfig
+    -> Credentials
+    -> Request a
+    -> Task.Task Http.Error a
+toTask serviceConfig credentials req =
+    Date.now
+        |> Task.andThen
+            (\date ->
+                sign serviceConfig credentials date req
+                    |> Http.toTask
+            )
 
 
 {-| Response from an AWS service.
