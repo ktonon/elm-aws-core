@@ -52,16 +52,27 @@ addOneToQueryArgs transform key value =
     (::) ( key, transform value )
 
 
-addListToQueryArgs : (a -> List ( String, String ) -> List ( String, String )) -> String -> List a -> List ( String, String ) -> List ( String, String )
+addListToQueryArgs :
+    (a -> List ( String, String ) -> List ( String, String ))
+    -> String
+    -> List a
+    -> List ( String, String )
+    -> List ( String, String )
 addListToQueryArgs transform base values =
     values
         |> List.indexedMap
             (\index rawValue ->
-                rawValue
-                    |> (\x -> transform x [])
+                transform rawValue []
                     |> List.map
                         (\( key, value ) ->
-                            ( base ++ ".member." ++ (toString index) ++ "." ++ key
+                            ( base
+                                ++ "."
+                                ++ (toString (index + 1))
+                                ++ (if String.isEmpty key then
+                                        ""
+                                    else
+                                        "." ++ key
+                                   )
                             , value
                             )
                         )

@@ -1,8 +1,10 @@
 module Main exposing (..)
 
+import Array exposing (Array)
 import AWS
 import AWS.Services.SQS as SQS
 import Config
+import Dict exposing (Dict)
 import Html exposing (..)
 import Http
 import Task
@@ -24,16 +26,14 @@ main =
 
 type alias Model =
     { queueUrls : List String
-    , err : Maybe Http.Error
+    , attributes : Array (Dict String String)
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model [] Nothing
-    , SQS.listQueues AWS.defaultOptions
-        |> AWS.toTask (SQS.config Config.region) creds
-        |> Task.attempt ListQueues
+    ( Model [] Array.empty
+    , listQueues
     )
 
 
@@ -47,27 +47,63 @@ creds =
 
 
 type Msg
-    = ListQueues (Result Http.Error (AWS.Response SQS.ListQueuesResult))
+    = Queues (Result Http.Error (AWS.Response SQS.ListQueuesResult))
+    | QueueAttributes Int (Result Http.Error (AWS.Response SQS.GetQueueAttributesResult))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ListQueues result ->
-            case result of
-                Ok response ->
-                    ( { model
-                        | queueUrls =
-                            response
-                                |> AWS.responseData
-                                |> .queueUrls
-                                |> Maybe.withDefault []
-                      }
-                    , Cmd.none
-                    )
+        Queues result ->
+            let
+                queueUrls =
+                    result
+                        |> Result.toMaybe
+                        |> Maybe.andThen (AWS.responseData >> .queueUrls)
+                        |> Maybe.withDefault []
+            in
+                ( { model | queueUrls = queueUrls }
+                , queueUrls
+                    |> List.indexedMap getQueueAttributes
+                    |> Cmd.batch
+                )
 
-                Err err ->
-                    ( { model | err = Just err }, Cmd.none )
+        QueueAttributes index result ->
+            let
+                attrs =
+                    result
+                        |> Result.toMaybe
+                        |> Maybe.andThen (AWS.responseData >> .attributes)
+                        |> Maybe.withDefault Dict.empty
+            in
+                ( { model
+                    | attributes = Array.set index attrs model.attributes
+                  }
+                , Cmd.none
+                )
+
+
+
+-- REQUESTS
+
+
+listQueues : Cmd Msg
+listQueues =
+    SQS.listQueues AWS.defaultOptions
+        |> AWS.toTask (SQS.config Config.region) creds
+        |> Task.attempt Queues
+
+
+getQueueAttributes : Int -> String -> Cmd Msg
+getQueueAttributes index url =
+    SQS.getQueueAttributes url
+        (\opt ->
+            { opt
+                | attributeNames = Just [ SQS.QueueAttributeName_All ]
+            }
+        )
+        |> AWS.toTask (SQS.config Config.region) creds
+        |> Task.attempt (QueueAttributes index)
 
 
 
@@ -85,6 +121,22 @@ subscriptions _ =
 
 view : Model -> Html Msg
 view model =
-    model.queueUrls
-        |> List.map (\url -> li [] [ text url ])
+    div []
+        [ h2 [] [ text "Queues" ]
+        , model.queueUrls
+            |> List.map (\url -> li [] [ text url ])
+            |> ul []
+        , h2 [] [ text "Attributes of first queue" ]
+        , model.attributes
+            |> Array.toList
+            |> List.map attributesView
+            |> div []
+        ]
+
+
+attributesView : Dict String String -> Html Msg
+attributesView attrs =
+    attrs
+        |> Dict.toList
+        |> List.map (\( key, val ) -> li [] [ text (key ++ " = " ++ val) ])
         |> ul []

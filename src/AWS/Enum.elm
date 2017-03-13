@@ -30,7 +30,7 @@ toString value =
                         w =
                             t |> String.join ("_")
                     in
-                        if contains (regex "[^_A-Z0-9]") w then
+                        if contains (regex "[^_A-Za-z0-9]") w then
                             "Not an enum value, contains invalid characters: " ++ (Basics.toString value) |> Err
                         else
                             Ok w
