@@ -3,11 +3,11 @@
     []
         {{~ it.members :m }}
         {{? m.required }}
-        |> {{= m.value.queryEncoder(m.key) }} data.{{= m.key }}
+        |> {{= m.value.queryEncoder(m.rawKey) }} data.{{= m.key }}
         {{?? true }}
         |> (case data.{{= m.key }} of
             Just value ->
-                {{= m.value.queryEncoder(m.key) }} value
+                {{= m.value.queryEncoder(m.rawKey) }} value
             Nothing ->
                 AWS.Encode.unchangedQueryArgs
         )

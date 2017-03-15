@@ -157,6 +157,8 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
       members: Object.keys(sh.members).map(key => ({
         required: sh.required && sh.required.indexOf(key) !== -1,
         key: safeIdentifier(lowCam(key)),
+        rawKey: key,
+        decodeKeys: Array.from(new Set([key, lowCam(key), upCam(key)])),
         value: resolve.shape(sh.members[key]),
       })),
       doc: category === 'response'

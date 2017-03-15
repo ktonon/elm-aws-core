@@ -20,16 +20,10 @@ const memberType = ({ required, key, value }) => (
     : `${key} : Maybe ${value.type}`
 );
 
-const memberDecoder = ({ required, key, value }) => (
-  required
-    ? `JDP.required "${key}" ${value.decoder}`
-    : `JDP.optional "${key}" (JD.nullable ${value.decoder}) Nothing`
-);
-
 render.structure = sh => Object.assign({
   exposeAs: sh.category !== 'request' ? sh.type : null,
   typeDef: dots.defineRecordType(Object.assign({ memberType }, sh)),
-  decoderDef: dots.defineRecordDecoder(Object.assign({ memberDecoder }, sh)),
+  decoderDef: dots.defineRecordDecoder(sh),
   jsonEncoderDef: dots.defineRecordJsonEncoder(sh),
   queryEncoderDef: dots.defineRecordQueryEncoder(sh),
 }, sh);

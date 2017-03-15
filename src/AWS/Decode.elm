@@ -29,3 +29,51 @@ responseWrapperDecoder actionName dataName dataDecoder =
                         |> JDP.required "RequestId" JD.string
                     )
             )
+
+
+tryFields : List String -> JD.Decoder a -> JD.Decoder (Maybe JD.Value)
+tryFields fields decoder =
+    fields
+        |> List.map
+            (\field ->
+                JD.field field (JD.maybe JD.value)
+            )
+        |> JD.oneOf
+
+
+required : List String -> JD.Decoder a -> JD.Decoder a
+required fields decoder =
+    tryFields fields decoder
+        |> JD.andThen
+            (\maybeValue ->
+                case maybeValue of
+                    Nothing ->
+                        JD.fail ("Missing required fields with key of either: " ++ (toString fields))
+
+                    Just value ->
+                        case JD.decodeValue decoder value of
+                            Ok x ->
+                                JD.succeed x
+
+                            Err err ->
+                                JD.fail (toString err)
+            )
+
+
+optional : List String -> JD.Decoder a -> JD.Decoder (Maybe a)
+optional fields decoder =
+    tryFields fields decoder
+        |> JD.andThen
+            (\maybeValue ->
+                case maybeValue of
+                    Nothing ->
+                        JD.succeed Nothing
+
+                    Just value ->
+                        case JD.decodeValue decoder value of
+                            Ok x ->
+                                JD.succeed (Just x)
+
+                            Err err ->
+                                JD.fail (toString err)
+            )

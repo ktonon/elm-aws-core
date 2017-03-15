@@ -58,6 +58,7 @@ update msg model =
             let
                 queueUrls =
                     result
+                        |> logError
                         |> Result.toMaybe
                         |> Maybe.andThen (AWS.responseData >> .queueUrls)
                         |> Maybe.withDefault []
@@ -72,6 +73,7 @@ update msg model =
             let
                 attrs =
                     result
+                        |> logError
                         |> Result.toMaybe
                         |> Maybe.andThen (AWS.responseData >> .attributes)
                         |> Maybe.withDefault Dict.empty
@@ -81,6 +83,16 @@ update msg model =
                   }
                 , Cmd.none
                 )
+
+
+logError : Result a b -> Result a b
+logError result =
+    case result of
+        Err err ->
+            Debug.log "Error" err |> Err
+
+        Ok val ->
+            Ok val
 
 
 

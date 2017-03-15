@@ -3,11 +3,11 @@
     []
         {{~ it.members :m }}
         {{? m.required }}
-        |> (::) ("{{= m.key }}", data.{{= m.key }} |> ({{= m.value.jsonEncoder }}))
+        |> (::) ("{{= m.rawKey }}", data.{{= m.key }} |> ({{= m.value.jsonEncoder }}))
         {{?? true }}
         |> AWS.Encode.optionalMember
             ({{= m.value.jsonEncoder }})
-            ("{{= m.key }}", data.{{= m.key }})
+            ("{{= m.rawKey }}", data.{{= m.key }})
         {{?}}
         {{~}}
         |> JE.object
