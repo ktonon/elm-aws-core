@@ -1,4 +1,12 @@
-module AWS.Decode exposing (..)
+module AWS.Decode
+    exposing
+        ( Metadata
+        , Response
+        , ResponseWrapper
+        , optional
+        , required
+        , responseWrapperDecoder
+        )
 
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
@@ -34,11 +42,9 @@ responseWrapperDecoder actionName dataName dataDecoder =
 tryFields : List String -> JD.Decoder a -> JD.Decoder (Maybe JD.Value)
 tryFields fields decoder =
     fields
-        |> List.map
-            (\field ->
-                JD.field field (JD.maybe JD.value)
-            )
+        |> List.map (\field -> JD.field field JD.value)
         |> JD.oneOf
+        |> JD.maybe
 
 
 required : List String -> JD.Decoder a -> JD.Decoder a

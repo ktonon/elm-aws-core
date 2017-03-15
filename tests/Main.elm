@@ -1,5 +1,6 @@
 port module Main exposing (..)
 
+import DecodeTests
 import EncodeTests
 import EnumTests
 import HttpTests
@@ -13,7 +14,8 @@ main : TestProgram
 main =
     run emit
         (describe "AWS"
-            [ EncodeTests.all
+            [ DecodeTests.all
+            , EncodeTests.all
             , EnumTests.all
             , HttpTests.all
             , SignersTests.all
