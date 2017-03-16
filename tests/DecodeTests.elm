@@ -1,7 +1,10 @@
 module DecodeTests exposing (all)
 
-import AWS.Decode
+import AWS.Decode exposing (Response, ResponseWrapper, Metadata)
+import AWS.Services.SQS exposing (GetQueueAttributesResult)
+import Dict exposing (Dict)
 import Json.Decode as JD
+import Json.Decode.Pipeline as JDP
 import Test exposing (Test, describe, test)
 import Test.Extra exposing (DecoderExpectation(..), describeDecoder)
 
@@ -9,8 +12,10 @@ import Test.Extra exposing (DecoderExpectation(..), describeDecoder)
 all : Test
 all =
     describe "Decode"
-        [ optionalTests
+        [ dictTests
+        , optionalTests
         , requiredTests
+        , compositionTests
         ]
 
 
@@ -39,4 +44,81 @@ optionalTests =
         , ( """{ "fooBar": "car" }""", FailsToDecode )
         , ( """{ "FOOBAR": 4 }""", DecodesTo (Nothing) )
         , ( """{}""", DecodesTo (Nothing) )
+        ]
+
+
+dictTests : Test
+dictTests =
+    describeDecoder "dict string"
+        (AWS.Decode.dict JD.string)
+        [ ( """{}""", DecodesTo Dict.empty )
+        , ( """{ "foo": "bar", "baz": "car" }"""
+          , DecodesTo (Dict.fromList [ ( "foo", "bar" ), ( "baz", "car" ) ])
+          )
+        , ( """[]""", DecodesTo Dict.empty )
+        , ( """[
+{ "Name": "foo", "Value": "bar" },
+{ "Name": "baz", "Value": "car" }
+]"""
+          , DecodesTo (Dict.fromList [ ( "foo", "bar" ), ( "baz", "car" ) ])
+          )
+        ]
+
+
+compositionTests : Test
+compositionTests =
+    describe "more complex decoders"
+        [ describeDecoder "response wrapped getQueueAttributes decoder"
+            (JDP.decode GetQueueAttributesResult
+                |> JDP.custom
+                    (AWS.Decode.optional
+                        [ "Attributes", "attributes" ]
+                        (AWS.Decode.dict JD.string)
+                    )
+                |> AWS.Decode.responseWrapperDecoder
+                    "GetQueueAttributes"
+                    "GetQueueAttributesResult"
+            )
+            [ ( """{
+  "GetQueueAttributesResponse": {
+    "GetQueueAttributesResult": {
+      "Attributes": [
+        {
+          "Name": "QueueArn",
+          "Value": "arn:aws:sqs:us-east-1:1234567890:elm-test-queue"
+        },
+        {
+          "Name": "ApproximateNumberOfMessages",
+          "Value": "0"
+        },
+        {
+          "Name": "ApproximateNumberOfMessagesNotVisible",
+          "Value": "0"
+        }
+      ]
+    },
+    "ResponseMetadata": {
+      "RequestId": "some-id"
+    }
+  }
+}"""
+              , DecodesTo
+                    ((ResponseWrapper
+                        (Response
+                            (GetQueueAttributesResult
+                                (Just
+                                    (Dict.fromList
+                                        [ ( "QueueArn", "arn:aws:sqs:us-east-1:1234567890:elm-test-queue" )
+                                        , ( "ApproximateNumberOfMessages", "0" )
+                                        , ( "ApproximateNumberOfMessagesNotVisible", "0" )
+                                        ]
+                                    )
+                                )
+                            )
+                            (Metadata "some-id")
+                        )
+                     )
+                    )
+              )
+            ]
         ]

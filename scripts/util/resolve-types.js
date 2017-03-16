@@ -96,7 +96,7 @@ module.exports = (shapesWithoutNames, { inputShapes, outputShapes }) => {
       }) :
       render.nothing({
         type: `(Dict String ${value.type})`,
-        decoder: `(${jsonDecode}.dict ${value.decoder})`,
+        decoder: `(AWS.Decode.dict ${value.decoder})`,
         jsonEncoder: `AWS.Enum.toString >> Result.withDefault "" >> ${jsonEncode}.string`,
         queryEncoderType,
         queryEncoder,

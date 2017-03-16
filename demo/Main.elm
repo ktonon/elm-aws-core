@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Array exposing (Array)
+import Array.Extra
 import AWS
 import AWS.Services.SQS as SQS
 import Config
@@ -24,15 +25,20 @@ main =
 -- MODEL
 
 
+type alias Queue =
+    { attrs : Dict String String
+    , url : String
+    }
+
+
 type alias Model =
-    { queueUrls : List String
-    , attributes : Array (Dict String String)
+    { queues : Array Queue
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model [] Array.empty
+    ( Model Array.empty
     , listQueues
     )
 
@@ -63,7 +69,12 @@ update msg model =
                         |> Maybe.andThen (AWS.responseData >> .queueUrls)
                         |> Maybe.withDefault []
             in
-                ( { model | queueUrls = queueUrls }
+                ( { model
+                    | queues =
+                        queueUrls
+                            |> List.map (Queue Dict.empty)
+                            |> Array.fromList
+                  }
                 , queueUrls
                     |> List.indexedMap getQueueAttributes
                     |> Cmd.batch
@@ -79,7 +90,10 @@ update msg model =
                         |> Maybe.withDefault Dict.empty
             in
                 ( { model
-                    | attributes = Array.set index attrs model.attributes
+                    | queues =
+                        model.queues
+                            |> Array.Extra.update index
+                                (\queue -> { queue | attrs = attrs })
                   }
                 , Cmd.none
                 )
@@ -134,15 +148,17 @@ subscriptions _ =
 view : Model -> Html Msg
 view model =
     div []
-        [ h2 [] [ text "Queues" ]
-        , model.queueUrls
-            |> List.map (\url -> li [] [ text url ])
-            |> ul []
-        , h2 [] [ text "Attributes of first queue" ]
-        , model.attributes
+        (model.queues
             |> Array.toList
-            |> List.map attributesView
-            |> div []
+            |> List.map queueView
+        )
+
+
+queueView : Queue -> Html Msg
+queueView queue =
+    div []
+        [ h3 [] [ text queue.url ]
+        , attributesView queue.attrs
         ]
 
 
@@ -150,5 +166,11 @@ attributesView : Dict String String -> Html Msg
 attributesView attrs =
     attrs
         |> Dict.toList
-        |> List.map (\( key, val ) -> li [] [ text (key ++ " = " ++ val) ])
-        |> ul []
+        |> List.map
+            (\( key, val ) ->
+                tr []
+                    [ td [] [ text key ]
+                    , td [] [ text val ]
+                    ]
+            )
+        |> table []

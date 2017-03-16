@@ -3,11 +3,13 @@ module AWS.Decode
         ( Metadata
         , Response
         , ResponseWrapper
+        , dict
         , optional
         , required
         , responseWrapperDecoder
         )
 
+import Dict exposing (Dict)
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 
@@ -39,12 +41,8 @@ responseWrapperDecoder actionName dataName dataDecoder =
             )
 
 
-tryFields : List String -> JD.Decoder a -> JD.Decoder (Maybe JD.Value)
-tryFields fields decoder =
-    fields
-        |> List.map (\field -> JD.field field JD.value)
-        |> JD.oneOf
-        |> JD.maybe
+
+-- required and optional member decoders
 
 
 required : List String -> JD.Decoder a -> JD.Decoder a
@@ -83,3 +81,45 @@ optional fields decoder =
                             Err err ->
                                 JD.fail (toString err)
             )
+
+
+tryFields : List String -> JD.Decoder a -> JD.Decoder (Maybe JD.Value)
+tryFields fields decoder =
+    fields
+        |> List.map (\field -> JD.field field JD.value)
+        |> JD.oneOf
+        |> JD.maybe
+
+
+
+-- dict and helpers
+
+
+dict : JD.Decoder a -> JD.Decoder (Dict String a)
+dict valueDecoder =
+    [ JD.dict valueDecoder
+    , dictAsList valueDecoder
+    ]
+        |> JD.oneOf
+
+
+dictAsList : JD.Decoder a -> JD.Decoder (Dict String a)
+dictAsList valueDecoder =
+    JD.list (nameValueDecoder valueDecoder)
+        |> JD.map
+            (List.map (\pair -> ( pair.name, pair.value ))
+                >> Dict.fromList
+            )
+
+
+type alias NameValuePair a =
+    { name : String
+    , value : a
+    }
+
+
+nameValueDecoder : JD.Decoder a -> JD.Decoder (NameValuePair a)
+nameValueDecoder valueDecoder =
+    JDP.decode NameValuePair
+        |> JDP.required "Name" JD.string
+        |> JDP.required "Value" valueDecoder
