@@ -42,8 +42,7 @@ algorithm =
 
 headers : AWS.Config.Service -> List ( String, String )
 headers config =
-    [ ( "Host", AWS.Http.host config.endpoint )
-    , ( "Accept", "application/json" )
+    [ ( "Accept", "application/json" )
     , ( "Content-Type", jsonContentType config )
     ]
 
@@ -79,7 +78,13 @@ addAuthorization :
     -> List ( String, String )
 addAuthorization config creds date req headers =
     [ ( "X-Amz-Date", formatDate date )
-    , ( "Authorization", authorization creds date config req headers )
+    , ( "Authorization"
+      , authorization creds
+            date
+            config
+            req
+            (headers |> (::) ( "Host", AWS.Http.host config.endpoint ))
+      )
     ]
         |> List.append headers
 
