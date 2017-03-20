@@ -69,15 +69,18 @@ compositionTests : Test
 compositionTests =
     describe "more complex decoders"
         [ describeDecoder "response wrapped getQueueAttributes decoder"
-            (JDP.decode GetQueueAttributesResult
-                |> JDP.custom
-                    (AWS.Decode.optional
-                        [ "Attributes", "attributes" ]
-                        (AWS.Decode.dict JD.string)
-                    )
-                |> AWS.Decode.responseWrapperDecoder
-                    "GetQueueAttributes"
+            (AWS.Decode.responseWrapperDecoder
+                "GetQueueAttributes"
+                (AWS.Decode.ResultDecoder
                     "GetQueueAttributesResult"
+                    (JDP.decode GetQueueAttributesResult
+                        |> JDP.custom
+                            (AWS.Decode.optional
+                                [ "Attributes", "attributes" ]
+                                (AWS.Decode.dict JD.string)
+                            )
+                    )
+                )
             )
             [ ( """{
   "GetQueueAttributesResponse": {

@@ -3,6 +3,7 @@ module AWS.Decode
         ( Metadata
         , Response
         , ResponseWrapper
+        , ResultDecoder(..)
         , dict
         , optional
         , required
@@ -28,17 +29,32 @@ type alias Metadata =
     { requestId : String }
 
 
-responseWrapperDecoder : String -> String -> JD.Decoder a -> JD.Decoder (ResponseWrapper a)
-responseWrapperDecoder actionName dataName dataDecoder =
+type ResultDecoder a
+    = ResultDecoder String (JD.Decoder a)
+    | FixedResult a
+
+
+responseWrapperDecoder : String -> ResultDecoder a -> JD.Decoder (ResponseWrapper a)
+responseWrapperDecoder actionName resultDecoder =
     JDP.decode ResponseWrapper
         |> JDP.required (actionName ++ "Response")
             (JDP.decode Response
-                |> JDP.required dataName dataDecoder
+                |> resultWrapperDecoder resultDecoder
                 |> JDP.required "ResponseMetadata"
                     (JDP.decode Metadata
                         |> JDP.required "RequestId" JD.string
                     )
             )
+
+
+resultWrapperDecoder : ResultDecoder a -> JD.Decoder (a -> b) -> JD.Decoder b
+resultWrapperDecoder resultDecoder =
+    case resultDecoder of
+        ResultDecoder dataName dataDecoder ->
+            JDP.required dataName dataDecoder
+
+        FixedResult value ->
+            JDP.hardcoded value
 
 
 

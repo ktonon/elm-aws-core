@@ -4,9 +4,11 @@ import Array exposing (Array)
 import Array.Extra
 import AWS
 import AWS.Services.SQS as SQS
+import AWS.Services.CloudFormation as CF
 import Config
 import Dict exposing (Dict)
 import Html exposing (..)
+import Html.Attributes exposing (href)
 import Http
 import Task
 
@@ -33,13 +35,14 @@ type alias Queue =
 
 type alias Model =
     { queues : Array Queue
+    , costEstimateUrl : String
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model Array.empty
-    , listQueues
+    ( Model Array.empty ""
+    , Cmd.batch [ estimateCosts, listQueues ]
     )
 
 
@@ -53,13 +56,26 @@ creds =
 
 
 type Msg
-    = Queues (Result Http.Error (AWS.Response SQS.ListQueuesResult))
+    = CostUrl (Result Http.Error (AWS.Response CF.EstimateTemplateCostOutput))
+    | Queues (Result Http.Error (AWS.Response SQS.ListQueuesResult))
     | QueueAttributes Int (Result Http.Error (AWS.Response SQS.GetQueueAttributesResult))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        CostUrl result ->
+            ( { model
+                | costEstimateUrl =
+                    result
+                        |> logError
+                        |> Result.toMaybe
+                        |> Maybe.andThen (AWS.responseData >> .url)
+                        |> Maybe.withDefault ""
+              }
+            , Cmd.none
+            )
+
         Queues result ->
             let
                 queueUrls =
@@ -113,6 +129,26 @@ logError result =
 -- REQUESTS
 
 
+estimateCosts : Cmd Msg
+estimateCosts =
+    CF.estimateTemplateCost
+        (\opt ->
+            { opt
+                | templateURL =
+                    Just "https://s3.amazonaws.com/aws-sdk-elm/DynamoDB_Table.template"
+                , parameters =
+                    Just
+                        [ CF.Parameter
+                            (Just "HashKeyElementName")
+                            (Just "key")
+                            (Just False)
+                        ]
+            }
+        )
+        |> AWS.toTask (CF.config Config.region) creds
+        |> Task.attempt CostUrl
+
+
 listQueues : Cmd Msg
 listQueues =
     SQS.listQueues AWS.defaultOptions
@@ -125,7 +161,12 @@ getQueueAttributes index url =
     SQS.getQueueAttributes url
         (\opt ->
             { opt
-                | attributeNames = Just [ SQS.QueueAttributeName_All ]
+                | attributeNames =
+                    Just
+                        [ SQS.QueueAttributeName_ApproximateNumberOfMessages
+                        , SQS.QueueAttributeName_ApproximateNumberOfMessagesDelayed
+                        , SQS.QueueAttributeName_ApproximateNumberOfMessagesNotVisible
+                        ]
             }
         )
         |> AWS.toTask (SQS.config Config.region) creds
@@ -148,10 +189,15 @@ subscriptions _ =
 view : Model -> Html Msg
 view model =
     div []
-        (model.queues
-            |> Array.toList
-            |> List.map queueView
-        )
+        [ h1 [] [ text "Testing SQS" ]
+        , div []
+            (model.queues
+                |> Array.toList
+                |> List.map queueView
+            )
+        , h1 [] [ text "Testing CloudFormation" ]
+        , div [] [ estimateCostsLink model.costEstimateUrl ]
+        ]
 
 
 queueView : Queue -> Html Msg
@@ -174,3 +220,11 @@ attributesView attrs =
                     ]
             )
         |> table []
+
+
+estimateCostsLink : String -> Html Msg
+estimateCostsLink url =
+    if String.isEmpty url then
+        span [] []
+    else
+        a [ href url ] [ text "Estimate costs" ]

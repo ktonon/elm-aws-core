@@ -52,7 +52,14 @@ __Required Parameters__
             AWS.Http.NoBody
             {{?}}
 
-            (AWS.Decode.responseWrapperDecoder "{{= it.actionName }}" "{{= it.output.type }}" {{= it.output.decoder }})
+            (AWS.Decode.responseWrapperDecoder
+                "{{= it.actionName }}"
+                {{? it.outputResultWrapper === "()" }}
+                (AWS.Decode.FixedResult ())
+                {{?? true }}
+                (AWS.Decode.ResultDecoder "{{= it.outputResultWrapper }}" {{= it.output.decoder }})
+                {{?}}
+            )
             |> AWS.UnsignedRequest
 
 

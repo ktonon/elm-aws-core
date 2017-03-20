@@ -1,4 +1,13 @@
-module AWS.Encode exposing (..)
+module AWS.Encode
+    exposing
+        ( uri
+        , bool
+        , unchangedQueryArgs
+        , addOneToQueryArgs
+        , addListToQueryArgs
+        , addRecordToQueryArgs
+        , optionalMember
+        )
 
 import Char
 import Hex
@@ -42,6 +51,22 @@ uri x =
             )
 
 
+
+-- QUERY ENCODE SIMPLE TYPES
+
+
+bool : Bool -> String
+bool val =
+    if val then
+        "true"
+    else
+        "false"
+
+
+
+-- QUERY ENCODE IN A PIPELINE
+
+
 unchangedQueryArgs : List ( String, String ) -> List ( String, String )
 unchangedQueryArgs args =
     args
@@ -53,32 +78,42 @@ addOneToQueryArgs transform key value =
 
 
 addListToQueryArgs :
-    (a -> List ( String, String ) -> List ( String, String ))
+    Bool
+    -> (a -> List ( String, String ) -> List ( String, String ))
     -> String
     -> List a
     -> List ( String, String )
     -> List ( String, String )
-addListToQueryArgs transform base values =
+addListToQueryArgs flattened transform base values =
     values
         |> List.indexedMap
             (\index rawValue ->
                 transform rawValue []
                     |> List.map
                         (\( key, value ) ->
-                            ( base
-                                ++ "."
-                                ++ (toString (index + 1))
-                                ++ (if String.isEmpty key then
-                                        ""
-                                    else
-                                        "." ++ key
-                                   )
+                            ( listItemKey flattened index base key
                             , value
                             )
                         )
             )
         |> List.concat
         |> List.append
+
+
+listItemKey : Bool -> Int -> String -> String -> String
+listItemKey flattened index base key =
+    base
+        ++ (if flattened then
+                "."
+            else
+                ".member."
+           )
+        ++ (toString (index + 1))
+        ++ (if String.isEmpty key then
+                ""
+            else
+                "." ++ key
+           )
 
 
 addRecordToQueryArgs :

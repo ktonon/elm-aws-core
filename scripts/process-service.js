@@ -53,7 +53,13 @@ module.exports = (data) => {
         input: op.input && types.findByShape(op.input.shape),
         output: op.output
           ? types.findByShape(op.output.shape)
-          : { type: '()', decoder: '(JD.succeed ())' },
+          : {
+            type: '()',
+            decoder: '(JD.succeed ())',
+          },
+        outputResultWrapper: op.output
+          ? op.output.resultWrapper || op.output.shape
+          : '()',
         errors: op.errors,
       };
     });
