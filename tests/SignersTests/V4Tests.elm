@@ -1,4 +1,8 @@
-module SignersTests.V4Tests exposing (all)
+module SignersTests.V4Tests
+    exposing
+        ( authorizationTests
+        , awsOfficialSuite
+        )
 
 import AWS.Config exposing (..)
 import AWS.Http exposing (QueryParams, RequestBody(..), UnsignedRequest, unsignedRequest)
@@ -8,14 +12,6 @@ import Date exposing (Date, fromString, fromTime)
 import Expect
 import Json.Decode as JD
 import Test exposing (Test, describe, test)
-
-
-all : Test
-all =
-    describe "Signer"
-        [ authorizationTests
-        , awsOfficialSuite
-        ]
 
 
 authorizationTests : Test
@@ -53,8 +49,8 @@ authorizationTests =
                         , ( "X-Amz-Date", "20150830T123600Z" )
                         ]
                 in
-                    Expect.equal (authorization creds date config req headers)
-                        "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20150830/us-east-1/service/aws4_request, SignedHeaders=host;x-amz-date, Signature=b97d918cfa904a5beff61c982a1b6f458b799221646efd99d3219ec94cdf2500"
+                Expect.equal (authorization creds date config req headers)
+                    "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20150830/us-east-1/service/aws4_request, SignedHeaders=host;x-amz-date, Signature=b97d918cfa904a5beff61c982a1b6f458b799221646efd99d3219ec94cdf2500"
         ]
 
 
@@ -835,50 +831,51 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
 20150830/us-east-1/service/aws4_request
 eefcefefb33f2f62b17696313b6d0dcb93231d17f4bdf722a1278a1931fa8365"""
         "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20150830/us-east-1/service/aws4_request, SignedHeaders=host;x-amz-date, Signature=88d3e39e4fa54b971f51c0a09140368e1a51aafb76c4652d9998f93cf3038074"
-      --     , V4TestData
-      --         "post-vanilla-query-space"
-      --         (Req "POST"
-      --             "/"
-      --             [ ( "Host", "example.amazonaws.com" )
-      --             , ( "X-Amz-Date", "20150830T123600Z" )
-      --             ]
-      --             [ ( "p aram1", "val ue1" ) ]
-      --         )
-      --         """POST
-      -- /
-      -- p=
-      -- host:example.amazonaws.com
-      -- x-amz-date:20150830T123600Z
-      --
-      -- host;x-amz-date
-      -- e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
-      --         """AWS4-HMAC-SHA256
-      -- 20150830T123600Z
-      -- 20150830/us-east-1/service/aws4_request
-      -- 64d815da3176ec9c192c391374e9d4084588659309187ce60e0fcffcbc8c81c5"""
-      --         "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20150830/us-east-1/service/aws4_request, SignedHeaders=host;x-amz-date, Signature=e71688addb58a26418614085fb730ba3faa623b461c17f48f2fbdb9361b94a9b"
-      -- , V4TestData
-      --     "post-x-www-form-urlencoded"
-      --     (Req "POST"
-      --         "/"
-      --         [ ( "Host", "example.amazonaws.com" )
-      --         , ( "X-Amz-Date", "20150830T123600Z" )
-      --         ]
-      --         [] NoBody
-      --     )
-      --     """"""
-      --     """"""
-      --     ""
-      -- , V4TestData
-      --     "post-x-www-form-urlencoded-parameters"
-      --     (Req "POST"
-      --         "/"
-      --         [ ( "Host", "example.amazonaws.com" )
-      --         , ( "X-Amz-Date", "20150830T123600Z" )
-      --         ]
-      --         [] NoBody
-      --     )
-      --     """"""
-      --     """"""
-      --     ""
+
+    --     , V4TestData
+    --         "post-vanilla-query-space"
+    --         (Req "POST"
+    --             "/"
+    --             [ ( "Host", "example.amazonaws.com" )
+    --             , ( "X-Amz-Date", "20150830T123600Z" )
+    --             ]
+    --             [ ( "p aram1", "val ue1" ) ]
+    --         )
+    --         """POST
+    -- /
+    -- p=
+    -- host:example.amazonaws.com
+    -- x-amz-date:20150830T123600Z
+    --
+    -- host;x-amz-date
+    -- e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
+    --         """AWS4-HMAC-SHA256
+    -- 20150830T123600Z
+    -- 20150830/us-east-1/service/aws4_request
+    -- 64d815da3176ec9c192c391374e9d4084588659309187ce60e0fcffcbc8c81c5"""
+    --         "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20150830/us-east-1/service/aws4_request, SignedHeaders=host;x-amz-date, Signature=e71688addb58a26418614085fb730ba3faa623b461c17f48f2fbdb9361b94a9b"
+    -- , V4TestData
+    --     "post-x-www-form-urlencoded"
+    --     (Req "POST"
+    --         "/"
+    --         [ ( "Host", "example.amazonaws.com" )
+    --         , ( "X-Amz-Date", "20150830T123600Z" )
+    --         ]
+    --         [] NoBody
+    --     )
+    --     """"""
+    --     """"""
+    --     ""
+    -- , V4TestData
+    --     "post-x-www-form-urlencoded-parameters"
+    --     (Req "POST"
+    --         "/"
+    --         [ ( "Host", "example.amazonaws.com" )
+    --         , ( "X-Amz-Date", "20150830T123600Z" )
+    --         ]
+    --         [] NoBody
+    --     )
+    --     """"""
+    --     """"""
+    --     ""
     ]

@@ -3,11 +3,13 @@ module AWS.Signers.V4 exposing (..)
 import AWS.Config exposing (Credentials)
 import AWS.Http exposing (QueryParams, RequestBody(..), UnsignedRequest)
 import AWS.Signers.Canonical exposing (canonical, signedHeaders)
+import Crypto.HMAC exposing (sha256)
 import Date exposing (Date)
 import Date.Extra exposing (toUtcIsoString)
 import Http
-import Native.HMAC
 import Regex exposing (HowMany(All), regex)
+import Word.Bytes as Bytes
+import Word.Hex as Hex
 
 
 -- http://docs.aws.amazon.com/waf/latest/developerguide/authenticating-requests.html
@@ -104,22 +106,22 @@ authorization creds date config req headers =
         scope =
             credentialScope date creds config
     in
-        [ "AWS4-HMAC-SHA256 Credential="
-            ++ creds.accessKeyId
-            ++ "/"
-            ++ scope
-        , "SignedHeaders="
-            ++ signedHeaders headers
-        , "Signature="
-            ++ signature creds config date (stringToSign algorithm date scope canon)
-        ]
-            |> String.join ", "
+    [ "AWS4-HMAC-SHA256 Credential="
+        ++ creds.accessKeyId
+        ++ "/"
+        ++ scope
+    , "SignedHeaders="
+        ++ signedHeaders headers
+    , "Signature="
+        ++ signature creds config date (stringToSign algorithm date scope canon)
+    ]
+        |> String.join ", "
 
 
 credentialScope : Date -> AWS.Config.Credentials -> AWS.Config.Service -> String
 credentialScope date creds config =
     [ date |> formatDate |> String.slice 0 8
-    , (config.endpoint |> regionForAuth)
+    , config.endpoint |> regionForAuth
     , config.serviceName
     , "aws4_request"
     ]
@@ -128,12 +130,21 @@ credentialScope date creds config =
 
 signature : Credentials -> AWS.Config.Service -> Date -> String -> String
 signature creds config date toSign =
-    Native.HMAC.signatureKey
-        creds.secretAccessKey
-        (date |> formatDate |> String.slice 0 8)
-        (config.endpoint |> regionForAuth)
-        config.serviceName
-        toSign
+    let
+        digest =
+            \message key ->
+                Crypto.HMAC.digestBytes sha256
+                    key
+                    (Bytes.fromUTF8 message)
+    in
+    ("AWS4" ++ creds.secretAccessKey)
+        |> Bytes.fromUTF8
+        |> digest (formatDate date |> String.slice 0 8)
+        |> digest (regionForAuth config.endpoint)
+        |> digest config.serviceName
+        |> digest "aws4_request"
+        |> digest toSign
+        |> Hex.fromByteList
 
 
 regionForAuth : AWS.Config.Endpoint -> String

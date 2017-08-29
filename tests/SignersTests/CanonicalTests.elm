@@ -1,23 +1,19 @@
-module SignersTests.CanonicalTests exposing (all)
+module SignersTests.CanonicalTests
+    exposing
+        ( canonicalHeadersTests
+        , canonicalPayloadTests
+        , canonicalQueryStringTests
+        , canonicalTests
+        , canonicalUriTests
+        , signedHeadersTests
+        )
 
 import AWS.Http exposing (..)
 import AWS.Signers.Canonical exposing (..)
 import Expect
 import Json.Encode as JE
-import Test exposing (describe, test, Test)
+import Test exposing (Test, describe, test)
 import TestHelpers exposing (expectMatches)
-
-
-all : Test
-all =
-    describe "Canonical"
-        [ canonicalQueryStringTests
-        , canonicalUriTests
-        , canonicalHeadersTests
-        , signedHeadersTests
-        , canonicalPayloadTests
-        , canonicalTests
-        ]
 
 
 canonicalTests : Test
@@ -25,7 +21,7 @@ canonicalTests =
     describe "canonical"
         [ test "does the same request encoding as http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html" <|
             \_ ->
-                (canonical "get"
+                canonical "get"
                     ""
                     [ ( "Content-Type", "application/x-www-form-urlencoded;  charset=utf-8" )
                     , ( "x-amz-date", "20150830T123600Z" )
@@ -35,11 +31,10 @@ canonicalTests =
                     , ( "Action", "ListUsers" )
                     ]
                     NoBody
-                )
                     |> Expect.equal "f536975d06c0309214f805bb90ccff089219ecd68b2577efef23edd43b7e1a59"
         , test "does the same request encoding as http://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html#signature-v4-test-suite-example" <|
             \_ ->
-                (canonical "get"
+                canonical "get"
                     ""
                     [ ( "X-Amz-Date", "20150830T123600Z" )
                     , ( "Host", "example.amazonaws.com" )
@@ -48,7 +43,6 @@ canonicalTests =
                     , ( "Param2", "value2" )
                     ]
                     NoBody
-                )
                     |> Expect.equal "816cd5b414d056048ba4f7c5386d6e0533120fb1fcfa93762cf0fc39e2cf19e0"
         ]
 
@@ -126,7 +120,7 @@ canonicalHeadersTests =
                          , "three-3:c"
                          , "two-2:b"
                          ]
-                            |> String.join ("\n")
+                            |> String.join "\n"
                         )
         , test "removes extra spaces from the values" <|
             \_ ->
@@ -162,20 +156,20 @@ canonicalPayloadTests =
         hexPattern =
             "^[0-9a-f]+$"
     in
-        describe "canonicalPayload"
-            [ test "hex encodes a JSON body" <|
-                \_ ->
-                    JsonBody
-                        (JE.object
-                            [ ( "name", JE.string "george" )
-                            , ( "age", JE.int 6 )
-                            ]
-                        )
-                        |> canonicalPayload
-                        |> expectMatches hexPattern
-            , test "hex encodes an empty body" <|
-                \_ ->
-                    NoBody
-                        |> canonicalPayload
-                        |> expectMatches hexPattern
-            ]
+    describe "canonicalPayload"
+        [ test "hex encodes a JSON body" <|
+            \_ ->
+                JsonBody
+                    (JE.object
+                        [ ( "name", JE.string "george" )
+                        , ( "age", JE.int 6 )
+                        ]
+                    )
+                    |> canonicalPayload
+                    |> expectMatches hexPattern
+        , test "hex encodes an empty body" <|
+            \_ ->
+                NoBody
+                    |> canonicalPayload
+                    |> expectMatches hexPattern
+        ]

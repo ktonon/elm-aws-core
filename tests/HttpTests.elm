@@ -1,15 +1,8 @@
-module HttpTests exposing (all)
+module HttpTests exposing (queryStringTests)
 
 import AWS.Http exposing (..)
 import Expect
 import Test exposing (Test, describe, test)
-
-
-all : Test
-all =
-    describe "Http"
-        [ queryStringTests
-        ]
 
 
 queryStringTests : Test

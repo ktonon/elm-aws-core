@@ -1,18 +1,18 @@
 module AWS.Encode
     exposing
-        ( uri
-        , bool
-        , unchangedQueryArgs
+        ( addListToQueryArgs
         , addOneToQueryArgs
-        , addListToQueryArgs
         , addRecordToQueryArgs
+        , bool
         , optionalMember
+        , unchangedQueryArgs
+        , uri
         )
 
 import Char
-import Hex
 import Http
-import Regex exposing (regex, HowMany(All))
+import Regex exposing (HowMany(All), regex)
+import Word.Hex as Hex
 
 
 {-| We don't use Http.encodeUri because it misses some characters. It uses the
@@ -24,10 +24,11 @@ native `encodeURIComponent` under the hood:
     - from https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
 
 For AWS only "Unreserved Characters" are allowed.
-See http://tools.ietf.org/html/rfc3986
+See <http://tools.ietf.org/html/rfc3986>
 Section 2.3
 
 So basically we need to also cover: ! * ' ( )
+
 -}
 uri : String -> String
 uri x =
@@ -43,7 +44,7 @@ uri x =
                         (\char ->
                             char
                                 |> Char.toCode
-                                |> Hex.toString
+                                |> Hex.fromByte
                                 |> String.toUpper
                                 |> (++) "%"
                         )
@@ -108,7 +109,7 @@ listItemKey flattened index base key =
             else
                 ".member."
            )
-        ++ (toString (index + 1))
+        ++ toString (index + 1)
         ++ (if String.isEmpty key then
                 ""
             else
@@ -130,15 +131,15 @@ addRecordToQueryArgs transform base record =
             else
                 base ++ "."
     in
-        record
-            |> transform
-            |> List.map
-                (\( key, value ) ->
-                    ( prefix ++ key
-                    , value
-                    )
+    record
+        |> transform
+        |> List.map
+            (\( key, value ) ->
+                ( prefix ++ key
+                , value
                 )
-            |> List.append
+            )
+        |> List.append
 
 
 optionalMember :

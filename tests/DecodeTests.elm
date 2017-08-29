@@ -1,6 +1,6 @@
-module DecodeTests exposing (all)
+module DecodeTests exposing (compositionTests, dictTests, optionalTests, requiredTests)
 
-import AWS.Decode exposing (Response, ResponseWrapper, Metadata)
+import AWS.Decode exposing (Metadata, Response, ResponseWrapper)
 import AWS.Services.SQS exposing (GetQueueAttributesResult)
 import Dict exposing (Dict)
 import Json.Decode as JD
@@ -9,30 +9,20 @@ import Test exposing (Test, describe, test)
 import Test.Extra exposing (DecoderExpectation(..), describeDecoder)
 
 
-all : Test
-all =
-    describe "Decode"
-        [ dictTests
-        , optionalTests
-        , requiredTests
-        , compositionTests
-        ]
-
-
 requiredTests : Test
 requiredTests =
     let
         missingKeyMsg =
             "I ran into a `fail` decoder: Missing required fields with key of either: [\"FooBar\",\"fooBar\"]"
     in
-        describeDecoder """required [ "FooBar", "fooBar" ] string"""
-            (AWS.Decode.required [ "FooBar", "fooBar" ] JD.string)
-            [ ( """{ "fooBar": "car" }""", DecodesTo "car" )
-            , ( """{ "FooBar": "car" }""", DecodesTo "car" )
-            , ( """{ "fooBar": 4 }""", FailsToDecode )
-            , ( """{ "FOOBAR": "car" }""", FailsToDecodeWith missingKeyMsg )
-            , ( """{}""", FailsToDecodeWith missingKeyMsg )
-            ]
+    describeDecoder """required [ "FooBar", "fooBar" ] string"""
+        (AWS.Decode.required [ "FooBar", "fooBar" ] JD.string)
+        [ ( """{ "fooBar": "car" }""", DecodesTo "car" )
+        , ( """{ "FooBar": "car" }""", DecodesTo "car" )
+        , ( """{ "fooBar": 4 }""", FailsToDecode )
+        , ( """{ "FOOBAR": "car" }""", FailsToDecodeWith missingKeyMsg )
+        , ( """{}""", FailsToDecodeWith missingKeyMsg )
+        ]
 
 
 optionalTests : Test
@@ -42,8 +32,8 @@ optionalTests =
         [ ( """{ "fooBar": 4 }""", DecodesTo (Just 4) )
         , ( """{ "FooBar": 5 }""", DecodesTo (Just 5) )
         , ( """{ "fooBar": "car" }""", FailsToDecode )
-        , ( """{ "FOOBAR": 4 }""", DecodesTo (Nothing) )
-        , ( """{}""", DecodesTo (Nothing) )
+        , ( """{ "FOOBAR": 4 }""", DecodesTo Nothing )
+        , ( """{}""", DecodesTo Nothing )
         ]
 
 
@@ -106,7 +96,7 @@ compositionTests =
   }
 }"""
               , DecodesTo
-                    ((ResponseWrapper
+                    (ResponseWrapper
                         (Response
                             (GetQueueAttributesResult
                                 (Just
@@ -120,7 +110,6 @@ compositionTests =
                             )
                             (Metadata "some-id")
                         )
-                     )
                     )
               )
             ]

@@ -2,9 +2,9 @@ module AWS.Signers.Canonical exposing (..)
 
 import AWS.Encode
 import AWS.Http exposing (QueryParams, RequestBody(..), UnsignedRequest)
+import Crypto.Hash exposing (sha256)
 import Json.Encode as JE
-import Regex exposing (regex, HowMany(All))
-import SHA exposing (sha256sum)
+import Regex exposing (HowMany(All), regex)
 
 
 -- http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html
@@ -13,7 +13,7 @@ import SHA exposing (sha256sum)
 canonical : String -> String -> List ( String, String ) -> QueryParams -> RequestBody -> String
 canonical method path headers params body =
     canonicalRaw method path headers params body
-        |> sha256sum
+        |> sha256
 
 
 canonicalRaw : String -> String -> List ( String, String ) -> QueryParams -> RequestBody -> String
@@ -91,7 +91,7 @@ canonicalPayload body =
         NoBody ->
             ""
     )
-        |> sha256sum
+        |> sha256
 
 
 
@@ -102,21 +102,21 @@ resolveRelativePath : String -> String
 resolveRelativePath path =
     let
         rel =
-            (regex "(([^/]+)/[.]{2}|/[.])/?")
+            regex "(([^/]+)/[.]{2}|/[.])/?"
     in
-        if Regex.contains rel path then
-            path
-                |> Regex.replace All
-                    rel
-                    (\{ match } ->
-                        if match == "/./" || match == "/." then
-                            "/"
-                        else
-                            ""
-                    )
-                |> resolveRelativePath
-        else
-            path
+    if Regex.contains rel path then
+        path
+            |> Regex.replace All
+                rel
+                (\{ match } ->
+                    if match == "/./" || match == "/." then
+                        "/"
+                    else
+                        ""
+                )
+            |> resolveRelativePath
+    else
+        path
 
 
 normalizeHeader : ( String, String ) -> ( String, String )

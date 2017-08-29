@@ -1,17 +1,9 @@
-module EnumTests exposing (all)
+module EnumTests exposing (toFloatTests, toStringTests)
 
-import AWS.Services.APIGateway exposing (CacheClusterSize(..), IntegrationType(..))
 import AWS.Enum as Enum
-import Test exposing (describe, Test)
+import AWS.Services.APIGateway exposing (CacheClusterSize(..), IntegrationType(..))
+import Test exposing (Test, describe)
 import TestHelpers exposing (..)
-
-
-all : Test
-all =
-    describe "Enum"
-        [ toStringTests
-        , toFloatTests
-        ]
 
 
 toStringTests : Test
