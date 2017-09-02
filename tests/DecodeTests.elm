@@ -1,10 +1,8 @@
-module DecodeTests exposing (compositionTests, dictTests, optionalTests, requiredTests)
+module DecodeTests exposing (dictTests, optionalTests, requiredTests)
 
 import AWS.Decode exposing (Metadata, Response, ResponseWrapper)
-import AWS.Services.SQS exposing (GetQueueAttributesResult)
 import Dict exposing (Dict)
 import Json.Decode as JD
-import Json.Decode.Pipeline as JDP
 import Test exposing (Test, describe, test)
 import Test.Extra exposing (DecoderExpectation(..), describeDecoder)
 
@@ -52,65 +50,4 @@ dictTests =
 ]"""
           , DecodesTo (Dict.fromList [ ( "foo", "bar" ), ( "baz", "car" ) ])
           )
-        ]
-
-
-compositionTests : Test
-compositionTests =
-    describe "more complex decoders"
-        [ describeDecoder "response wrapped getQueueAttributes decoder"
-            (AWS.Decode.responseWrapperDecoder
-                "GetQueueAttributes"
-                (AWS.Decode.ResultDecoder
-                    "GetQueueAttributesResult"
-                    (JDP.decode GetQueueAttributesResult
-                        |> JDP.custom
-                            (AWS.Decode.optional
-                                [ "Attributes", "attributes" ]
-                                (AWS.Decode.dict JD.string)
-                            )
-                    )
-                )
-            )
-            [ ( """{
-  "GetQueueAttributesResponse": {
-    "GetQueueAttributesResult": {
-      "Attributes": [
-        {
-          "Name": "QueueArn",
-          "Value": "arn:aws:sqs:us-east-1:1234567890:elm-test-queue"
-        },
-        {
-          "Name": "ApproximateNumberOfMessages",
-          "Value": "0"
-        },
-        {
-          "Name": "ApproximateNumberOfMessagesNotVisible",
-          "Value": "0"
-        }
-      ]
-    },
-    "ResponseMetadata": {
-      "RequestId": "some-id"
-    }
-  }
-}"""
-              , DecodesTo
-                    (ResponseWrapper
-                        (Response
-                            (GetQueueAttributesResult
-                                (Just
-                                    (Dict.fromList
-                                        [ ( "QueueArn", "arn:aws:sqs:us-east-1:1234567890:elm-test-queue" )
-                                        , ( "ApproximateNumberOfMessages", "0" )
-                                        , ( "ApproximateNumberOfMessagesNotVisible", "0" )
-                                        ]
-                                    )
-                                )
-                            )
-                            (Metadata "some-id")
-                        )
-                    )
-              )
-            ]
         ]

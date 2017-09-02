@@ -3,7 +3,7 @@
 set -e
 
 SYSCONFCPUS="$HOME/sysconfcpus"
-ELM_MAKE="$HOME/$CIRCLE_PROJECT_REPONAME/node_modules/.bin/elm-make"
+ELM_MAKE="$(npm bin -g)/elm-make"
 
 # Check if we have already patched it
 if [ -f "${ELM_MAKE}-old" ];

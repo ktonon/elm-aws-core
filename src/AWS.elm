@@ -1,10 +1,6 @@
 module AWS
     exposing
-        ( credentials
-        , defaultOptions
-        , responseData
-        , toTask
-        , AccessKeyId
+        ( AccessKeyId
         , Credentials
         , Region
         , Request(UnsignedRequest)
@@ -12,27 +8,32 @@ module AWS
         , SecretAccessKey
         , ServiceConfig(ServiceConfig)
         , SessionToken
+        , credentials
+        , defaultOptions
+        , responseData
+        , toTask
         )
 
 {-| AWS SDK for elm.
 
-__Experimental: Work in progress__
-
 @docs ServiceConfig, Region, Credentials, credentials, AccessKeyId, SecretAccessKey, SessionToken
+
 
 ## Request
 
 @docs Request, defaultOptions, toTask
 
+
 ## Response
 
 @docs Response, responseData
+
 -}
 
 import AWS.Config
 import AWS.Decode
-import AWS.Signers.V4 as V4
 import AWS.Http
+import AWS.Signers.V4 as V4
 import Date exposing (Date)
 import Http
 import Task
@@ -74,6 +75,7 @@ credentials accessKeyId secretAccessKey maybeToken =
 
 Each service module exposes a `config` function which returns a ServiceConfig
 for use with that service.
+
 -}
 type ServiceConfig
     = ServiceConfig AWS.Config.Service
@@ -82,6 +84,7 @@ type ServiceConfig
 {-| String representing an AWS region.
 
 For example, `"us-east-1"`
+
 -}
 type alias Region =
     String
@@ -90,6 +93,7 @@ type alias Region =
 {-| An unsigned AWS Request.
 
 Call signV4 to produce a signed Http.Request
+
 -}
 type Request a
     = UnsignedRequest (AWS.Http.UnsignedRequest a)
@@ -98,6 +102,7 @@ type Request a
 {-| Leaves the default options unchanged.
 
 Alias for the identity function.
+
 -}
 defaultOptions : a -> a
 defaultOptions options =
@@ -145,7 +150,7 @@ type alias Response a =
     AWS.Decode.ResponseWrapper a
 
 
-{-| Extract the data from the AWS response
+{-| Extract the data from the AWS response.
 -}
 responseData : Response a -> a
 responseData resp =

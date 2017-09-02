@@ -1,5 +1,0 @@
-{{? it.doc }}{{= it.doc }}
-
-{{?}}One of
-{{~ it.enum :val }}
-* `{{= it.name }}_{{= val }}`{{~}}

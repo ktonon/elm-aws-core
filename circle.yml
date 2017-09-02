@@ -1,12 +1,19 @@
 machine:
-  node:
-    version: 6.2.2
+  pre:
+    - npm install --silent -g elm@0.18.0
+    - npm install -g elm-test@0.18.7 elm-doc-test
 
 dependencies:
   cache_directories:
     - ~/sysconfcpus
-    - node_modules
     - elm-stuff
   override:
-    - npm install
+    - elm package install -y
     - ./scripts/ci-elm-hack.sh
+
+test:
+  pre:
+    - elm make --yes
+  override:
+    - elm-doc-test
+    - elm-test
