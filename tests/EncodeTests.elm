@@ -1,6 +1,6 @@
 module EncodeTests exposing (all)
 
-import AWS.Encode
+import AWS.Core.Encode
 import Expect
 import Test exposing (Test, describe, test)
 
@@ -11,6 +11,6 @@ all =
         [ test "handles utf8" <|
             \_ ->
                 "ሴ"
-                    |> AWS.Encode.uri
+                    |> AWS.Core.Encode.uri
                     |> Expect.equal "%E1%88%B4"
         ]

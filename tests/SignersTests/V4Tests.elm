@@ -4,10 +4,13 @@ module SignersTests.V4Tests
         , awsOfficialSuite
         )
 
-import AWS.Config exposing (..)
-import AWS.Http exposing (QueryParams, RequestBody(..), UnsignedRequest, unsignedRequest)
-import AWS.Signers.Canonical exposing (canonical, canonicalRaw)
-import AWS.Signers.V4 as V4 exposing (..)
+import AWS.Core.Body exposing (Body)
+import AWS.Core.Credentials as Credentials exposing (Credentials)
+import AWS.Core.Http exposing (Method(..), Query)
+import AWS.Core.Request exposing (Unsigned)
+import AWS.Core.Service as Service exposing (Service)
+import AWS.Core.Signers.Canonical exposing (canonical, canonicalRaw)
+import AWS.Core.Signers.V4 as V4 exposing (..)
 import Date exposing (Date, fromString, fromTime)
 import Expect
 import Json.Decode as JD
@@ -22,26 +25,27 @@ authorizationTests =
             \_ ->
                 let
                     creds =
-                        AWS.Config.Credentials "AKIDEXAMPLE" "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY" Nothing
+                        Credentials.fromAccessKeys
+                            "AKIDEXAMPLE"
+                            "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY"
 
                     config =
-                        AWS.Config.Service
+                        Service.defineRegional
                             "service"
-                            (AWS.Config.RegionalEndpoint "service" "us-east-1")
-                            AWS.Config.V4Signature
                             "2015-12-08"
+                            Service.query
+                            Service.signV4
                             (Just "1.1")
-                            "AWSACM_20151208."
+                            "us-east-1"
 
                     req =
-                        unsignedRequest
-                            "SomeTarget"
-                            "GET"
+                        AWS.Core.Http.request
+                            GET
                             "/"
                             [ ( "Param1", "value1" )
                             , ( "Param2", "value2" )
                             ]
-                            NoBody
+                            AWS.Core.Body.empty
                             (JD.succeed ())
 
                     headers =
@@ -110,8 +114,8 @@ type alias Req =
     { method : String
     , path : String
     , headers : List ( String, String )
-    , query : QueryParams
-    , body : RequestBody
+    , query : Query
+    , body : Body
     }
 
 
@@ -121,10 +125,9 @@ type alias Req =
 
 creds : Credentials
 creds =
-    Credentials
+    Credentials.fromAccessKeys
         "AKIDEXAMPLE"
         "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY"
-        Nothing
 
 
 date : Date
@@ -135,18 +138,17 @@ date =
 
 conf : Service
 conf =
-    Service
-        "service"
-        (RegionalEndpoint "service" "us-east-1")
-        AWS.Config.V4Signature
+    Service.defineRegional "service"
         ""
+        Service.query
+        Service.signV4
         Nothing
-        ""
+        "us-east-1"
 
 
-req : Req -> UnsignedRequest ()
+req : Req -> AWS.Core.Request.Unsigned ()
 req data =
-    unsignedRequest ""
+    AWS.Core.Request.unsigned
         data.method
         data.path
         data.query
@@ -172,7 +174,7 @@ allData =
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -199,7 +201,7 @@ dc7f04a3abfde8d472b0ab1a418b741b7c67174dad1551b4117b15527fbe966c"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -227,7 +229,7 @@ b7b6cbfd8a0430b78891e986784da2630c8a135a8595cec25b26ea94f926ee55"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -253,7 +255,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -278,7 +280,7 @@ a726db9b0df21c14f559d0a978e563112acb1b9e05476f0a6a1c7d68f28605c7"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
@@ -301,7 +303,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -324,7 +326,7 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             [ ( "Param1", "value1" ) ]
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -347,7 +349,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -370,7 +372,7 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             [ ( "Param2", "value2" ), ( "Param1", "value1" ) ]
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -396,7 +398,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
               , "-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
               )
             ]
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -419,7 +421,7 @@ c30d4703d9f799439be92736156d47ccfb2d879ddf56f5befa6d1d6aab979177"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             [ ( "ሴ", "bar" ) ]
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -442,7 +444,7 @@ eb30c5bed55734080471a834cc727ae56beb50e5f39d1bff6d0d38cb192a7073"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /%E1%88%B4
@@ -465,7 +467,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -488,7 +490,7 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -511,7 +513,7 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -534,7 +536,7 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /
@@ -557,7 +559,7 @@ bb579772317eb040ac9ed261061d46c1f17a8133879d6129b6e1c25292927e63"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /example
@@ -580,7 +582,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /example/
@@ -603,7 +605,7 @@ cb96b4ac96d501f7c5c15bc6d67b3035061cfced4af6585ad927f7e6c985c015"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """GET
 /example%20space/
@@ -626,7 +628,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """POST
 /
@@ -650,7 +652,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """POST
 /
@@ -675,7 +677,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """POST
 /
@@ -699,7 +701,7 @@ d51ced243e649e3de6ef63afbbdcbca03131a21a7103a1583706a64618606a93"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """POST
 /
@@ -723,7 +725,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Security-Token", "AQoDYXdzEPT//////////wEXAMPLEtc764bNrC9SAPBSM22wDOk4x4HIZ8j4FZTwdQWLWsKWHGBuFqwAeMicRXmxfpSPfIeoIYRqTflfKD8YUuwthAx7mSEI/qkPpKPi/kMcGdQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """POST
 /
@@ -747,7 +749,7 @@ c237e1b440d4c63c32ca95b5b99481081cb7b13c7e40434868e71567c1a882f6"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             []
-            NoBody
+            AWS.Core.Body.empty
         )
         """POST
 /
@@ -770,7 +772,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             [ ( "Param1", "value1" ) ]
-            NoBody
+            AWS.Core.Body.empty
         )
         """POST
 /
@@ -793,7 +795,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             [ ( "Param1", "value1" ) ]
-            NoBody
+            AWS.Core.Body.empty
         )
         """POST
 /
@@ -816,7 +818,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
             , ( "X-Amz-Date", "20150830T123600Z" )
             ]
             [ ( "@#$%^&+", "/,?><`\";:\\|][{}" ) ]
-            NoBody
+            AWS.Core.Body.empty
         )
         """POST
 /
@@ -861,7 +863,7 @@ eefcefefb33f2f62b17696313b6d0dcb93231d17f4bdf722a1278a1931fa8365"""
     --         [ ( "Host", "example.amazonaws.com" )
     --         , ( "X-Amz-Date", "20150830T123600Z" )
     --         ]
-    --         [] NoBody
+    --         [] AWS.Core.Body.empty
     --     )
     --     """"""
     --     """"""
@@ -873,7 +875,7 @@ eefcefefb33f2f62b17696313b6d0dcb93231d17f4bdf722a1278a1931fa8365"""
     --         [ ( "Host", "example.amazonaws.com" )
     --         , ( "X-Amz-Date", "20150830T123600Z" )
     --         ]
-    --         [] NoBody
+    --         [] AWS.Core.Body.empty
     --     )
     --     """"""
     --     """"""

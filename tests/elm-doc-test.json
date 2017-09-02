@@ -1,4 +1,7 @@
 {
-  "root": "../src",
-  "tests": []
+    "root": "../src",
+    "tests": [
+        "AWS",
+        "AWS.Core.Service"
+    ]
 }

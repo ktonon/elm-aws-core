@@ -1,4 +1,4 @@
-module AWS.Encode
+module AWS.Core.Encode
     exposing
         ( addListToQueryArgs
         , addOneToQueryArgs

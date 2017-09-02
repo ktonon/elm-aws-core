@@ -1,157 +1,30 @@
-module AWS
-    exposing
-        ( AccessKeyId
-        , Credentials
-        , Region
-        , Request(UnsignedRequest)
-        , Response
-        , SecretAccessKey
-        , ServiceConfig(ServiceConfig)
-        , SessionToken
-        , credentials
-        , defaultOptions
-        , responseData
-        , toTask
-        )
+module AWS exposing (version)
 
 {-| AWS SDK for elm.
 
-@docs ServiceConfig, Region, Credentials, credentials, AccessKeyId, SecretAccessKey, SessionToken
+The elm-aws-core package provides functions and types that facilitate making
+HTTP requests to AWS services. Use it to create user-friendly clients to
+specific AWS services.
 
 
-## Request
+# Modules in this package
 
-@docs Request, defaultOptions, toTask
+  - [AWS.Core.Service](AWS-Core-Service): Create a service definition. Every service client should define its own `Service` definition.
+  - [AWS.Core.Credentials](AWS-Core-Credentials): Create AWS credentials used to sign requests.
+  - [AWS.Core.Http](AWS-Core-Http): Create requests, sign, and send them. Signing and sending a request requires both a `Service` and `Credentials`.
+  - [AWS.Core.Enum](AWS-Core-Enum): Many AWS services define enumerations. This small module provides functions to convert from Elm types to string values.
 
-
-## Response
-
-@docs Response, responseData
-
--}
-
-import AWS.Config
-import AWS.Decode
-import AWS.Http
-import AWS.Signers.V4 as V4
-import Date exposing (Date)
-import Http
-import Task
-
-
-{-| Credentials for accessing AWS services.
--}
-type Credentials
-    = Credentials AWS.Config.Credentials
-
-
-{-| The AWS access key ID.
--}
-type alias AccessKeyId =
-    String
-
-
-{-| The AWS secret access key.
--}
-type alias SecretAccessKey =
-    String
-
-
-{-| An optional AWS session token.
--}
-type alias SessionToken =
-    String
-
-
-{-| Constructor for AWS Credentials
--}
-credentials : AccessKeyId -> SecretAccessKey -> Maybe SessionToken -> Credentials
-credentials accessKeyId secretAccessKey maybeToken =
-    AWS.Config.Credentials accessKeyId secretAccessKey maybeToken
-        |> Credentials
-
-
-{-| Configuration for an AWS service.
-
-Each service module exposes a `config` function which returns a ServiceConfig
-for use with that service.
+@docs version
 
 -}
-type ServiceConfig
-    = ServiceConfig AWS.Config.Service
 
 
-{-| String representing an AWS region.
+{-| elm-aws-core package version.
 
-For example, `"us-east-1"`
-
--}
-type alias Region =
-    String
-
-
-{-| An unsigned AWS Request.
-
-Call signV4 to produce a signed Http.Request
+    AWS.version
+    --> "1.0.0"
 
 -}
-type Request a
-    = UnsignedRequest (AWS.Http.UnsignedRequest a)
-
-
-{-| Leaves the default options unchanged.
-
-Alias for the identity function.
-
--}
-defaultOptions : a -> a
-defaultOptions options =
-    options
-
-
-sign :
-    ServiceConfig
-    -> Credentials
-    -> Date
-    -> Request a
-    -> Http.Request a
-sign serviceConfig credentials date req =
-    case
-        ( serviceConfig, credentials, req )
-    of
-        ( ServiceConfig config, Credentials creds, UnsignedRequest unsignedReq ) ->
-            case config.signatureVersion of
-                AWS.Config.V4Signature ->
-                    V4.sign config creds date unsignedReq
-
-                _ ->
-                    Debug.crash "Unsupported signature"
-
-
-{-| Signs and sends an AWS Request.
--}
-toTask :
-    ServiceConfig
-    -> Credentials
-    -> Request a
-    -> Task.Task Http.Error a
-toTask serviceConfig credentials req =
-    Date.now
-        |> Task.andThen
-            (\date ->
-                sign serviceConfig credentials date req
-                    |> Http.toTask
-            )
-
-
-{-| Response from an AWS service.
--}
-type alias Response a =
-    AWS.Decode.ResponseWrapper a
-
-
-{-| Extract the data from the AWS response.
--}
-responseData : Response a -> a
-responseData resp =
-    resp.response.data
+version : String
+version =
+    "1.0.0"

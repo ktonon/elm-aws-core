@@ -1,22 +1,21 @@
-module AWS.Signers.Canonical exposing (..)
+module AWS.Core.Signers.Canonical exposing (..)
 
-import AWS.Encode
-import AWS.Http exposing (QueryParams, RequestBody(..), UnsignedRequest)
+import AWS.Core.Body exposing (Body)
+import AWS.Core.Encode
 import Crypto.Hash exposing (sha256)
-import Json.Encode as JE
 import Regex exposing (HowMany(All), regex)
 
 
 -- http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html
 
 
-canonical : String -> String -> List ( String, String ) -> QueryParams -> RequestBody -> String
+canonical : String -> String -> List ( String, String ) -> List ( String, String ) -> Body -> String
 canonical method path headers params body =
     canonicalRaw method path headers params body
         |> sha256
 
 
-canonicalRaw : String -> String -> List ( String, String ) -> QueryParams -> RequestBody -> String
+canonicalRaw : String -> String -> List ( String, String ) -> List ( String, String ) -> Body -> String
 canonicalRaw method path headers params body =
     [ String.toUpper method
     , canonicalUri path
@@ -51,11 +50,11 @@ canonicalUri path =
             |> Regex.replace All (regex "/{2,}") (\_ -> "/")
             |> resolveRelativePath
             |> String.split "/"
-            |> List.map AWS.Encode.uri
+            |> List.map AWS.Core.Encode.uri
             |> String.join "/"
 
 
-canonicalQueryString : QueryParams -> String
+canonicalQueryString : List ( String, String ) -> String
 canonicalQueryString params =
     params
         |> List.sort
@@ -82,16 +81,9 @@ signedHeaders headers =
         |> String.join ";"
 
 
-canonicalPayload : RequestBody -> String
-canonicalPayload body =
-    (case body of
-        JsonBody value ->
-            JE.encode 0 value
-
-        NoBody ->
-            ""
-    )
-        |> sha256
+canonicalPayload : Body -> String
+canonicalPayload =
+    AWS.Core.Body.toString >> sha256
 
 
 
@@ -149,4 +141,4 @@ joinHeader ( key, val ) =
 
 encode2Tuple : String -> ( String, String ) -> String
 encode2Tuple separator ( a, b ) =
-    [ AWS.Encode.uri a, AWS.Encode.uri b ] |> String.join separator
+    [ AWS.Core.Encode.uri a, AWS.Core.Encode.uri b ] |> String.join separator

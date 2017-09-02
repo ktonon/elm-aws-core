@@ -1,6 +1,6 @@
 module DecodeTests exposing (dictTests, optionalTests, requiredTests)
 
-import AWS.Decode exposing (Metadata, Response, ResponseWrapper)
+import AWS.Core.Decode exposing (Metadata, Response, ResponseWrapper)
 import Dict exposing (Dict)
 import Json.Decode as JD
 import Test exposing (Test, describe, test)
@@ -14,7 +14,7 @@ requiredTests =
             "I ran into a `fail` decoder: Missing required fields with key of either: [\"FooBar\",\"fooBar\"]"
     in
     describeDecoder """required [ "FooBar", "fooBar" ] string"""
-        (AWS.Decode.required [ "FooBar", "fooBar" ] JD.string)
+        (AWS.Core.Decode.required [ "FooBar", "fooBar" ] JD.string)
         [ ( """{ "fooBar": "car" }""", DecodesTo "car" )
         , ( """{ "FooBar": "car" }""", DecodesTo "car" )
         , ( """{ "fooBar": 4 }""", FailsToDecode )
@@ -26,7 +26,7 @@ requiredTests =
 optionalTests : Test
 optionalTests =
     describeDecoder """optional [ "FooBar", "fooBar" ] int"""
-        (AWS.Decode.optional [ "FooBar", "fooBar" ] JD.int)
+        (AWS.Core.Decode.optional [ "FooBar", "fooBar" ] JD.int)
         [ ( """{ "fooBar": 4 }""", DecodesTo (Just 4) )
         , ( """{ "FooBar": 5 }""", DecodesTo (Just 5) )
         , ( """{ "fooBar": "car" }""", FailsToDecode )
@@ -38,7 +38,7 @@ optionalTests =
 dictTests : Test
 dictTests =
     describeDecoder "dict string"
-        (AWS.Decode.dict JD.string)
+        (AWS.Core.Decode.dict JD.string)
         [ ( """{}""", DecodesTo Dict.empty )
         , ( """{ "foo": "bar", "baz": "car" }"""
           , DecodesTo (Dict.fromList [ ( "foo", "bar" ), ( "baz", "car" ) ])

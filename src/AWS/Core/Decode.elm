@@ -1,4 +1,4 @@
-module AWS.Decode
+module AWS.Core.Decode
     exposing
         ( Metadata
         , Response
@@ -68,7 +68,7 @@ required fields decoder =
             (\maybeValue ->
                 case maybeValue of
                     Nothing ->
-                        JD.fail ("Missing required fields with key of either: " ++ (toString fields))
+                        JD.fail ("Missing required fields with key of either: " ++ toString fields)
 
                     Just value ->
                         case JD.decodeValue decoder value of

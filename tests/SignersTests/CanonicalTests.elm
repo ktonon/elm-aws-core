@@ -8,8 +8,8 @@ module SignersTests.CanonicalTests
         , signedHeadersTests
         )
 
-import AWS.Http exposing (..)
-import AWS.Signers.Canonical exposing (..)
+import AWS.Core.Http
+import AWS.Core.Signers.Canonical exposing (..)
 import Expect
 import Json.Encode as JE
 import Test exposing (Test, describe, test)
@@ -30,7 +30,7 @@ canonicalTests =
                     [ ( "Version", "2010-05-08" )
                     , ( "Action", "ListUsers" )
                     ]
-                    NoBody
+                    AWS.Core.Http.emptyBody
                     |> Expect.equal "f536975d06c0309214f805bb90ccff089219ecd68b2577efef23edd43b7e1a59"
         , test "does the same request encoding as http://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html#signature-v4-test-suite-example" <|
             \_ ->
@@ -42,7 +42,7 @@ canonicalTests =
                     [ ( "Param1", "value1" )
                     , ( "Param2", "value2" )
                     ]
-                    NoBody
+                    AWS.Core.Http.emptyBody
                     |> Expect.equal "816cd5b414d056048ba4f7c5386d6e0533120fb1fcfa93762cf0fc39e2cf19e0"
         ]
 
@@ -159,7 +159,7 @@ canonicalPayloadTests =
     describe "canonicalPayload"
         [ test "hex encodes a JSON body" <|
             \_ ->
-                JsonBody
+                AWS.Core.Http.jsonBody
                     (JE.object
                         [ ( "name", JE.string "george" )
                         , ( "age", JE.int 6 )
@@ -169,7 +169,7 @@ canonicalPayloadTests =
                     |> expectMatches hexPattern
         , test "hex encodes an empty body" <|
             \_ ->
-                NoBody
+                AWS.Core.Http.emptyBody
                     |> canonicalPayload
                     |> expectMatches hexPattern
         ]

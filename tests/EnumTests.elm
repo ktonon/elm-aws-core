@@ -1,6 +1,6 @@
 module EnumTests exposing (toFloatTests, toStringTests)
 
-import AWS.Enum as Enum
+import AWS.Core.Enum as Enum
 import Test exposing (Test, describe)
 import TestHelpers exposing (..)
 

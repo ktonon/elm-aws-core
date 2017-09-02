@@ -1,13 +1,13 @@
-module HttpTests exposing (queryStringTests)
+module RequestTests exposing (queryStringTests)
 
-import AWS.Http exposing (..)
+import AWS.Core.Request exposing (queryString)
 import Expect
 import Test exposing (Test, describe, test)
 
 
 queryStringTests : Test
 queryStringTests =
-    describe "queryString"
+    describe "Request.queryString"
         [ test "An empty list produces an empty string" <|
             \_ ->
                 []

@@ -1,8 +1,10 @@
-module AWS.Signers.V4 exposing (..)
+module AWS.Core.Signers.V4 exposing (..)
 
-import AWS.Config exposing (Credentials)
-import AWS.Http exposing (QueryParams, RequestBody(..), UnsignedRequest)
-import AWS.Signers.Canonical exposing (canonical, signedHeaders)
+import AWS.Core.Body exposing (Body)
+import AWS.Core.Credentials as Credentials exposing (Credentials)
+import AWS.Core.Request exposing (Unsigned)
+import AWS.Core.Service as Service exposing (Service)
+import AWS.Core.Signers.Canonical exposing (canonical, signedHeaders)
 import Crypto.HMAC exposing (sha256)
 import Date exposing (Date)
 import Date.Extra exposing (toUtcIsoString)
@@ -16,21 +18,21 @@ import Word.Hex as Hex
 
 
 sign :
-    AWS.Config.Service
-    -> AWS.Config.Credentials
+    Service
+    -> Credentials
     -> Date
-    -> UnsignedRequest a
+    -> Unsigned a
     -> Http.Request a
-sign config creds date req =
+sign service creds date req =
     Http.request
         { method = req.method
         , headers =
-            headers config
-                |> addAuthorization config creds date req
+            headers service
+                |> addAuthorization service creds date req
                 |> addSessionToken creds
                 |> List.map (\( key, val ) -> Http.header key val)
-        , url = AWS.Http.url config.endpoint req.path req.query
-        , body = AWS.Http.body req.body
+        , url = AWS.Core.Request.url service req
+        , body = AWS.Core.Body.toHttp req.body
         , expect = Http.expectJson req.decoder
         , timeout = Nothing
         , withCredentials = False
@@ -42,10 +44,10 @@ algorithm =
     "AWS4-HMAC-SHA256"
 
 
-headers : AWS.Config.Service -> List ( String, String )
-headers config =
+headers : Service -> List ( String, String )
+headers service =
     [ ( "Accept", "application/json" )
-    , ( "Content-Type", jsonContentType config )
+    , ( "Content-Type", Service.jsonContentType service )
     ]
 
 
@@ -59,11 +61,12 @@ formatDate date =
 
 
 addSessionToken :
-    AWS.Config.Credentials
+    Credentials
     -> List ( String, String )
     -> List ( String, String )
 addSessionToken creds headers =
-    creds.sessionToken
+    creds
+        |> Credentials.sessionToken
         |> Maybe.map
             (\token ->
                 ( "x-amz-security-token", token ) :: headers
@@ -72,20 +75,20 @@ addSessionToken creds headers =
 
 
 addAuthorization :
-    AWS.Config.Service
-    -> AWS.Config.Credentials
+    Service
+    -> Credentials
     -> Date
-    -> UnsignedRequest a
+    -> Unsigned a
     -> List ( String, String )
     -> List ( String, String )
-addAuthorization config creds date req headers =
+addAuthorization service creds date req headers =
     [ ( "X-Amz-Date", formatDate date )
     , ( "Authorization"
       , authorization creds
             date
-            config
+            service
             req
-            (headers |> (::) ( "Host", AWS.Http.host config.endpoint ))
+            (headers |> (::) ( "Host", Service.host service ))
       )
     ]
         |> List.append headers
@@ -94,42 +97,42 @@ addAuthorization config creds date req headers =
 authorization :
     Credentials
     -> Date
-    -> AWS.Config.Service
-    -> UnsignedRequest a
+    -> Service
+    -> Unsigned a
     -> List ( String, String )
     -> String
-authorization creds date config req headers =
+authorization creds date service req headers =
     let
         canon =
             canonical req.method req.path headers req.query req.body
 
         scope =
-            credentialScope date creds config
+            credentialScope date creds service
     in
     [ "AWS4-HMAC-SHA256 Credential="
-        ++ creds.accessKeyId
+        ++ Credentials.accessKeyId creds
         ++ "/"
         ++ scope
     , "SignedHeaders="
         ++ signedHeaders headers
     , "Signature="
-        ++ signature creds config date (stringToSign algorithm date scope canon)
+        ++ signature creds service date (stringToSign algorithm date scope canon)
     ]
         |> String.join ", "
 
 
-credentialScope : Date -> AWS.Config.Credentials -> AWS.Config.Service -> String
-credentialScope date creds config =
+credentialScope : Date -> Credentials -> Service -> String
+credentialScope date creds service =
     [ date |> formatDate |> String.slice 0 8
-    , config.endpoint |> regionForAuth
-    , config.serviceName
+    , Service.region service
+    , Service.name service
     , "aws4_request"
     ]
         |> String.join "/"
 
 
-signature : Credentials -> AWS.Config.Service -> Date -> String -> String
-signature creds config date toSign =
+signature : Credentials -> Service -> Date -> String -> String
+signature creds service date toSign =
     let
         digest =
             \message key ->
@@ -137,25 +140,16 @@ signature creds config date toSign =
                     key
                     (Bytes.fromUTF8 message)
     in
-    ("AWS4" ++ creds.secretAccessKey)
+    creds
+        |> Credentials.secretAccessKey
+        |> (++) "AWS4"
         |> Bytes.fromUTF8
         |> digest (formatDate date |> String.slice 0 8)
-        |> digest (regionForAuth config.endpoint)
-        |> digest config.serviceName
+        |> digest (Service.region service)
+        |> digest (Service.name service)
         |> digest "aws4_request"
         |> digest toSign
         |> Hex.fromByteList
-
-
-regionForAuth : AWS.Config.Endpoint -> String
-regionForAuth endpoint =
-    case endpoint of
-        AWS.Config.RegionalEndpoint _ region ->
-            region
-
-        AWS.Config.GlobalEndpoint _ ->
-            -- See http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html
-            "us-east-1"
 
 
 stringToSign : String -> Date -> String -> String -> String
@@ -166,15 +160,3 @@ stringToSign algorithm date scope canon =
     , canon
     ]
         |> String.join "\n"
-
-
-jsonContentType : AWS.Config.Service -> String
-jsonContentType config =
-    (case config.xAmzJsonVersion of
-        Just version ->
-            "application/x-amz-json-" ++ version
-
-        Nothing ->
-            "application/json"
-    )
-        ++ "; charset=utf-8"
