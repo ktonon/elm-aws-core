@@ -125,7 +125,7 @@ credentialScope : Date -> Credentials -> Service -> String
 credentialScope date creds service =
     [ date |> formatDate |> String.slice 0 8
     , Service.region service
-    , Service.name service
+    , Service.endpointPrefix service
     , "aws4_request"
     ]
         |> String.join "/"
@@ -146,7 +146,7 @@ signature creds service date toSign =
         |> Bytes.fromUTF8
         |> digest (formatDate date |> String.slice 0 8)
         |> digest (Service.region service)
-        |> digest (Service.name service)
+        |> digest (Service.endpointPrefix service)
         |> digest "aws4_request"
         |> digest toSign
         |> Hex.fromByteList

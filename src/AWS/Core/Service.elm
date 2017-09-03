@@ -1,21 +1,24 @@
 module AWS.Core.Service
     exposing
-        ( Protocol
+        ( ApiVersion
+        , Protocol
         , Region
         , Service
         , Signer
-        , Version
         , defineGlobal
         , defineRegional
         , ec2
+        , endpointPrefix
         , host
         , json
         , jsonContentType
-        , name
         , query
         , region
         , restJson
         , restXml
+        , setJsonVersion
+        , setSigningName
+        , setTargetPrefix
         , signS3
         , signV2
         , signV4
@@ -37,14 +40,14 @@ module AWS.Core.Service
 
 # Types
 
-@docs Service, Version, Region, Protocol, Signer
+@docs Service, ApiVersion, Region, Protocol, Signer
 
 
 # Constructors
 
 Use either one of these to create a service definition.
 
-@docs defineGlobal, defineRegional
+@docs defineGlobal, defineRegional, setJsonVersion, setSigningName, setTargetPrefix
 
 
 # Protocols
@@ -56,7 +59,7 @@ Use these functions to specify the AWS request protocol used by the service.
 
 # Signatures
 
-Use these functions to specify the signature version used by a service.
+Use these functions to specify the signature apiVersion used by a service.
 
 @docs signV4, signV2, signS3
 
@@ -67,7 +70,7 @@ These functions are exposed so that [AWS.Core.Http](AWS-Core-Http) can properly
 sign requests. They can be useful for debugging, testing, and logging, but
 otherwise are not required.
 
-@docs name, region, host, signer, targetPrefix, jsonContentType
+@docs endpointPrefix, region, host, signer, targetPrefix, jsonContentType
 
 -}
 
@@ -81,49 +84,54 @@ import AWS.Core.InternalTypes exposing (Protocol(..), Signer(..))
 -}
 type Service
     = Service
-        { name : String
-        , version : Version
+        { endpointPrefix : String
+        , apiVersion : ApiVersion
         , protocol : Protocol
         , signer : Signer
-        , xAmzTargetPrefix : String
-        , xAmzJsonVersion : Maybe String
+        , targetPrefix : String
+        , jsonVersion : Maybe String
+        , signingName : Maybe String
         , endpoint : Endpoint
         }
 
 
+
+-- Still need to extend Service to include these
+-- | uid | serviceAbbreviation | xmlNamespace | timestampFormat | checksumFormat |
+
+
 {-| Version of a service.
 -}
-type alias Version =
+type alias ApiVersion =
     String
 
 
-{-| Specifies JSON version.
+{-| Specifies JSON apiVersion.
 -}
 type alias JsonVersion =
     String
 
 
 define :
-    Endpoint
-    -> String
-    -> Version
+    String
+    -> ApiVersion
     -> Protocol
     -> Signer
-    -> Maybe JsonVersion
     -> Service
-define endpoint name version protocol signer jsonVersion =
+define endpointPrefix apiVersion protocol signer =
     Service
-        { name = name
-        , endpoint = endpoint
+        { endpointPrefix = endpointPrefix
         , protocol = protocol
         , signer = signer
-        , version = version
-        , xAmzTargetPrefix =
+        , apiVersion = apiVersion
+        , targetPrefix =
             "AWS"
-                ++ String.toUpper name
+                ++ String.toUpper endpointPrefix
                 ++ "_"
-                ++ (version |> String.split "-" |> String.join "")
-        , xAmzJsonVersion = jsonVersion
+                ++ (apiVersion |> String.split "-" |> String.join "")
+        , jsonVersion = Nothing
+        , signingName = Nothing
+        , endpoint = GlobalEndpoint
         }
 
 
@@ -134,9 +142,8 @@ define endpoint name version protocol signer jsonVersion =
             "2011-06-15"
             query
             signV4
-            Nothing -- No JSON version
     in
-    ( sts |> name
+    ( sts |> endpointPrefix
     , sts |> host
     )
     --> ( "sts"
@@ -146,26 +153,25 @@ define endpoint name version protocol signer jsonVersion =
 -}
 defineGlobal :
     String
-    -> Version
+    -> ApiVersion
     -> Protocol
     -> Signer
-    -> Maybe JsonVersion
     -> Service
 defineGlobal =
-    define GlobalEndpoint
+    define
 
 
 {-| Creates a regional service definition.
 
     let
-        acm = AWS.Core.Service.defineRegional "acm"
+        serviceMaker = AWS.Core.Service.defineRegional "acm"
             "2015-12-08"
             json
             signV4
-            (Just "1.1")
-            "ca-central-1"
+            (setJsonVersion "1.1")
+        acm = serviceMaker "ca-central-1"
     in
-    ( acm |> name
+    ( acm |> endpointPrefix
     , acm |> host
     )
     --> ( "acm"
@@ -178,38 +184,68 @@ a function `Region -> Service` by leaving out the last argument.
 -}
 defineRegional :
     String
-    -> Version
+    -> ApiVersion
     -> Protocol
     -> Signer
-    -> Maybe JsonVersion
+    -> (Service -> Service)
     -> Region
     -> Service
-defineRegional name version protocol signer jsonVersion region =
-    define (RegionalEndpoint region) name version protocol signer jsonVersion
+defineRegional endpointPrefix apiVersion protocol signer extra region =
+    case
+        define endpointPrefix apiVersion protocol signer
+            |> extra
+    of
+        Service s ->
+            Service { s | endpoint = RegionalEndpoint region }
 
 
-{-| Set the JSON version.
+{-| Set the JSON apiVersion.
 -}
 setJsonVersion : String -> Service -> Service
 setJsonVersion jsonVersion (Service service) =
-    Service { service | xAmzJsonVersion = Just jsonVersion }
+    Service { service | jsonVersion = Just jsonVersion }
+
+
+{-| Set the signing name for the service.
+
+Use if the service has a non-standard signing name.
+
+-}
+setSigningName : String -> Service -> Service
+setSigningName name (Service service) =
+    Service { service | signingName = Just name }
+
+
+{-| Set the target prefix for the service.
+
+Use this if the target prefix does NOT follow the format:
+
+    "AWS"
+        ++ String.toUpper endpointPrefix
+        ++ "_"
+        ++ (apiVersion |> String.split "-" |> String.join "")
+
+-}
+setTargetPrefix : String -> Service -> Service
+setTargetPrefix prefix (Service service) =
+    Service { service | targetPrefix = prefix }
 
 
 {-| Set the target prefix.
 -}
 targetPrefix : Service -> String
-targetPrefix (Service { xAmzTargetPrefix }) =
-    xAmzTargetPrefix
+targetPrefix (Service { targetPrefix }) =
+    targetPrefix
 
 
 {-| Name of the service.
 -}
-name : Service -> String
-name (Service { name }) =
-    name
+endpointPrefix : Service -> String
+endpointPrefix (Service { endpointPrefix }) =
+    endpointPrefix
 
 
-{-| Service signature version.
+{-| Service signature apiVersion.
 -}
 signer : Service -> Signer
 signer (Service { signer }) =
@@ -219,10 +255,10 @@ signer (Service { signer }) =
 {-| Gets the service JSON content type header value.
 -}
 jsonContentType : Service -> String
-jsonContentType (Service { xAmzJsonVersion }) =
-    (case xAmzJsonVersion of
-        Just version ->
-            "application/x-amz-json-" ++ version
+jsonContentType (Service { jsonVersion }) =
+    (case jsonVersion of
+        Just apiVersion ->
+            "application/x-amz-json-" ++ apiVersion
 
         Nothing ->
             "application/json"
@@ -267,13 +303,13 @@ globalEndpoint =
 {-| Service endpoint as a hostname.
 -}
 host : Service -> String
-host (Service { endpoint, name }) =
+host (Service { endpoint, endpointPrefix }) =
     case endpoint of
         GlobalEndpoint ->
-            name ++ ".amazonaws.com"
+            endpointPrefix ++ ".amazonaws.com"
 
         RegionalEndpoint region ->
-            name ++ "." ++ region ++ ".amazonaws.com"
+            endpointPrefix ++ "." ++ region ++ ".amazonaws.com"
 
 
 {-| Service region.

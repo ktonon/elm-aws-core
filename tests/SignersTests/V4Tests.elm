@@ -35,7 +35,7 @@ authorizationTests =
                             "2015-12-08"
                             Service.query
                             Service.signV4
-                            (Just "1.1")
+                            (Service.setJsonVersion "1.1")
                             "us-east-1"
 
                     req =
@@ -142,7 +142,7 @@ conf =
         ""
         Service.query
         Service.signV4
-        Nothing
+        identity
         "us-east-1"
 
 
