@@ -5,25 +5,31 @@ module AWS.Core.Service
         , Region
         , Service
         , Signer
+        , TimestampFormat
         , defineGlobal
         , defineRegional
         , ec2
         , endpointPrefix
         , host
+        , iso8601
         , json
         , jsonContentType
         , query
         , region
         , restJson
         , restXml
+        , rfc822
         , setJsonVersion
         , setSigningName
         , setTargetPrefix
+        , setTimestampFormat
+        , setXmlNamespace
         , signS3
         , signV2
         , signV4
         , signer
         , targetPrefix
+        , unixTimestamp
         )
 
 {-| AWS service configuration.
@@ -35,19 +41,20 @@ module AWS.Core.Service
   - [Constructors](#constructors)
   - [Protocols](#protocols)
   - [Signatures](#signatures)
+  - [Timestamp Formats](#timestamp-formats)
   - [Attributes](#attributes)
 
 
 # Types
 
-@docs Service, ApiVersion, Region, Protocol, Signer
+@docs Service, ApiVersion, Region, Protocol, Signer, TimestampFormat
 
 
 # Constructors
 
 Use either one of these to create a service definition.
 
-@docs defineGlobal, defineRegional, setJsonVersion, setSigningName, setTargetPrefix
+@docs defineGlobal, defineRegional, setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace
 
 
 # Protocols
@@ -59,9 +66,16 @@ Use these functions to specify the AWS request protocol used by the service.
 
 # Signatures
 
-Use these functions to specify the signature apiVersion used by a service.
+Use these functions to specify the signature version used by a service.
 
 @docs signV4, signV2, signS3
+
+
+# Timestamp Formats
+
+Use these functions to specify the timestamp format used by a service.
+
+@docs iso8601, rfc822, unixTimestamp
 
 
 # Attributes
@@ -74,7 +88,12 @@ otherwise are not required.
 
 -}
 
-import AWS.Core.InternalTypes exposing (Protocol(..), Signer(..))
+import AWS.Core.InternalTypes
+    exposing
+        ( Protocol(..)
+        , Signer(..)
+        , TimestampFormat(..)
+        )
 
 
 -- SERVICES
@@ -88,16 +107,13 @@ type Service
         , apiVersion : ApiVersion
         , protocol : Protocol
         , signer : Signer
-        , targetPrefix : String
         , jsonVersion : Maybe String
         , signingName : Maybe String
+        , targetPrefix : String
+        , timestampFormat : TimestampFormat
+        , xmlNamespace : Maybe String
         , endpoint : Endpoint
         }
-
-
-
--- Still need to extend Service to include these
--- | uid | serviceAbbreviation | xmlNamespace | timestampFormat | checksumFormat |
 
 
 {-| Version of a service.
@@ -106,7 +122,7 @@ type alias ApiVersion =
     String
 
 
-{-| Specifies JSON apiVersion.
+{-| Specifies JSON version.
 -}
 type alias JsonVersion =
     String
@@ -124,13 +140,11 @@ define endpointPrefix apiVersion protocol signer =
         , protocol = protocol
         , signer = signer
         , apiVersion = apiVersion
-        , targetPrefix =
-            "AWS"
-                ++ String.toUpper endpointPrefix
-                ++ "_"
-                ++ (apiVersion |> String.split "-" |> String.join "")
         , jsonVersion = Nothing
         , signingName = Nothing
+        , targetPrefix = defaultTargetPrefix endpointPrefix apiVersion
+        , timestampFormat = defaultTimestampFormat protocol
+        , xmlNamespace = Nothing
         , endpoint = GlobalEndpoint
         }
 
@@ -138,16 +152,16 @@ define endpointPrefix apiVersion protocol signer =
 {-| Creates a global service definition.
 
     let
-        sts = AWS.Core.Service.defineGlobal "sts"
-            "2011-06-15"
-            query
-            signV4
+        service = defineGlobal "sts" "2011-06-15" query signV4
+            |> setXmlNamespace "https://sts.amazonaws.com/doc/2011-06-15/"
     in
-    ( sts |> endpointPrefix
-    , sts |> host
+    ( service |> endpointPrefix
+    , service |> host
+    , service |> targetPrefix
     )
     --> ( "sts"
     --> , "sts.amazonaws.com"
+    --> , "AWSSTS_20110615"
     --> )
 
 -}
@@ -164,18 +178,17 @@ defineGlobal =
 {-| Creates a regional service definition.
 
     let
-        serviceMaker = AWS.Core.Service.defineRegional "acm"
-            "2015-12-08"
-            json
-            signV4
-            (setJsonVersion "1.1")
-        acm = serviceMaker "ca-central-1"
+        acm = defineRegional "acm" "2015-12-08" json signV4
+            (setJsonVersion "1.1" >> setTargetPrefix "CertificateManager")
+        service = acm "ca-central-1"
     in
-    ( acm |> endpointPrefix
-    , acm |> host
+    ( service |> endpointPrefix
+    , service |> host
+    , service |> targetPrefix
     )
     --> ( "acm"
     --> , "acm.ca-central-1.amazonaws.com"
+    --> , "CertificateManager"
     --> )
 
 Your client library should not provide the region. Instead it should expose
@@ -199,7 +212,14 @@ defineRegional endpointPrefix apiVersion protocol signer extra region =
             Service { s | endpoint = RegionalEndpoint region }
 
 
+
+-- OPTIONAL SETTERS
+
+
 {-| Set the JSON apiVersion.
+
+Use this if `jsonVersion` is provided in the metadata.
+
 -}
 setJsonVersion : String -> Service -> Service
 setJsonVersion jsonVersion (Service service) =
@@ -208,7 +228,7 @@ setJsonVersion jsonVersion (Service service) =
 
 {-| Set the signing name for the service.
 
-Use if the service has a non-standard signing name.
+Use this if `signingName` is provided in the metadata.
 
 -}
 setSigningName : String -> Service -> Service
@@ -218,17 +238,36 @@ setSigningName name (Service service) =
 
 {-| Set the target prefix for the service.
 
-Use this if the target prefix does NOT follow the format:
-
-    "AWS"
-        ++ String.toUpper endpointPrefix
-        ++ "_"
-        ++ (apiVersion |> String.split "-" |> String.join "")
+Use this if `targetPrefix` is provided in the metadata.
 
 -}
 setTargetPrefix : String -> Service -> Service
 setTargetPrefix prefix (Service service) =
     Service { service | targetPrefix = prefix }
+
+
+{-| Set the timestamp format for the service.
+
+Use this if `timestampFormat` is provided in the metadata.
+
+-}
+setTimestampFormat : TimestampFormat -> Service -> Service
+setTimestampFormat format (Service service) =
+    Service { service | timestampFormat = format }
+
+
+{-| Set the XML namespace for the service.
+
+Use this if `xmlNamespace` is provided in the metadata.
+
+-}
+setXmlNamespace : String -> Service -> Service
+setXmlNamespace namespace (Service service) =
+    Service { service | xmlNamespace = Just namespace }
+
+
+
+-- GETTERS
 
 
 {-| Set the target prefix.
@@ -245,7 +284,7 @@ endpointPrefix (Service { endpointPrefix }) =
     endpointPrefix
 
 
-{-| Service signature apiVersion.
+{-| Service signature version.
 -}
 signer : Service -> Signer
 signer (Service { signer }) =
@@ -405,3 +444,67 @@ signV2 =
 signS3 : Signer
 signS3 =
     SignS3
+
+
+
+-- TIMESTAMP FORMATS
+
+
+{-| Enumerates timestamp formats.
+
+See [Timestamp Formats](#timestamp-formats) for constructors.
+
+-}
+type alias TimestampFormat =
+    AWS.Core.InternalTypes.TimestampFormat
+
+
+{-| Use the timestamp format ISO8601.
+-}
+iso8601 : TimestampFormat
+iso8601 =
+    ISO8601
+
+
+{-| Use the timestamp format RCF822.
+-}
+rfc822 : TimestampFormat
+rfc822 =
+    RFC822
+
+
+{-| Use the timestamp format UnixTimestamp.
+-}
+unixTimestamp : TimestampFormat
+unixTimestamp =
+    UnixTimestamp
+
+
+
+-- HELPERS
+
+
+defaultTargetPrefix : String -> ApiVersion -> String
+defaultTargetPrefix endpointPrefix apiVersion =
+    "AWS"
+        ++ String.toUpper endpointPrefix
+        ++ "_"
+        ++ (apiVersion |> String.split "-" |> String.join "")
+
+
+{-| See aws-sdk-js
+
+`lib/model/shape.js`: function TimestampShape
+
+-}
+defaultTimestampFormat : Protocol -> TimestampFormat
+defaultTimestampFormat protocol =
+    case protocol of
+        JSON ->
+            UnixTimestamp
+
+        REST_JSON ->
+            UnixTimestamp
+
+        _ ->
+            ISO8601
