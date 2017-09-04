@@ -133,8 +133,9 @@ define :
     -> ApiVersion
     -> Protocol
     -> Signer
+    -> (Service -> Service)
     -> Service
-define endpointPrefix apiVersion protocol signer =
+define endpointPrefix apiVersion protocol signer extra =
     Service
         { endpointPrefix = endpointPrefix
         , protocol = protocol
@@ -147,13 +148,14 @@ define endpointPrefix apiVersion protocol signer =
         , xmlNamespace = Nothing
         , endpoint = GlobalEndpoint
         }
+        |> extra
 
 
 {-| Creates a global service definition.
 
     let
         service = defineGlobal "sts" "2011-06-15" query signV4
-            |> setXmlNamespace "https://sts.amazonaws.com/doc/2011-06-15/"
+            (setXmlNamespace "https://sts.amazonaws.com/doc/2011-06-15/")
     in
     ( service |> endpointPrefix
     , service |> host
@@ -170,6 +172,7 @@ defineGlobal :
     -> ApiVersion
     -> Protocol
     -> Signer
+    -> (Service -> Service)
     -> Service
 defineGlobal =
     define
@@ -205,8 +208,7 @@ defineRegional :
     -> Service
 defineRegional endpointPrefix apiVersion protocol signer extra region =
     case
-        define endpointPrefix apiVersion protocol signer
-            |> extra
+        define endpointPrefix apiVersion protocol signer extra
     of
         Service s ->
             Service { s | endpoint = RegionalEndpoint region }
