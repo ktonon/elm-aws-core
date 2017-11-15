@@ -24,6 +24,7 @@ module AWS.Core.Service
         , setTargetPrefix
         , setTimestampFormat
         , setXmlNamespace
+        , setHost
         , signS3
         , signV2
         , signV4
@@ -54,7 +55,7 @@ module AWS.Core.Service
 
 Use either one of these to create a service definition.
 
-@docs defineGlobal, defineRegional, setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace
+@docs defineGlobal, defineRegional, setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace, setHost
 
 
 # Protocols
@@ -113,6 +114,7 @@ type Service
         , timestampFormat : TimestampFormat
         , xmlNamespace : Maybe String
         , endpoint : Endpoint
+        , host : Maybe String
         }
 
 
@@ -147,6 +149,7 @@ define endpointPrefix apiVersion protocol signer extra =
         , timestampFormat = defaultTimestampFormat protocol
         , xmlNamespace = Nothing
         , endpoint = GlobalEndpoint
+        , host = Nothing
         }
         |> extra
 
@@ -268,6 +271,17 @@ setXmlNamespace namespace (Service service) =
     Service { service | xmlNamespace = Just namespace }
 
 
+{-| Set the host for service.
+
+Use this to override the default method for computing the host.
+
+The default works for AWS, but not for Digital Ocean Spaces.
+
+-}
+setHost : Maybe String -> Service -> Service
+setHost host (Service service) =
+    Service { service | host = host }
+
 
 -- GETTERS
 
@@ -344,13 +358,18 @@ globalEndpoint =
 {-| Service endpoint as a hostname.
 -}
 host : Service -> String
-host (Service { endpoint, endpointPrefix }) =
-    case endpoint of
-        GlobalEndpoint ->
-            endpointPrefix ++ ".amazonaws.com"
+host (Service { endpoint, endpointPrefix, host }) =
+    case host of
+        Just h ->
+            h
 
-        RegionalEndpoint region ->
-            endpointPrefix ++ "." ++ region ++ ".amazonaws.com"
+        Nothing ->
+            case endpoint of
+                GlobalEndpoint ->
+                    endpointPrefix ++ ".amazonaws.com"
+
+                RegionalEndpoint region ->
+                    endpointPrefix ++ "." ++ region ++ ".amazonaws.com"
 
 
 {-| Service region.

@@ -124,7 +124,7 @@ sign :
 sign service creds date req =
     case Service.signer service of
         SignV4 ->
-            V4.sign service creds date req
+            Debug.log "signed req" <| V4.sign service creds date req
 
         SignV2 ->
             Debug.crash "Unsupported signature"
