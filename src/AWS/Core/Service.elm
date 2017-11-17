@@ -14,6 +14,7 @@ module AWS.Core.Service
         , iso8601
         , json
         , jsonContentType
+        , acceptType
         , query
         , region
         , restJson
@@ -85,7 +86,7 @@ These functions are exposed so that [AWS.Core.Http](AWS-Core-Http) can properly
 sign requests. They can be useful for debugging, testing, and logging, but
 otherwise are not required.
 
-@docs endpointPrefix, region, host, signer, targetPrefix, jsonContentType
+@docs endpointPrefix, region, host, signer, targetPrefix, jsonContentType, acceptType
 
 -}
 
@@ -310,16 +311,28 @@ signer (Service { signer }) =
 {-| Gets the service JSON content type header value.
 -}
 jsonContentType : Service -> String
-jsonContentType (Service { jsonVersion }) =
-    (case jsonVersion of
-        Just apiVersion ->
-            "application/x-amz-json-" ++ apiVersion
+jsonContentType (Service { protocol, jsonVersion }) =
+    (if protocol == restXml then
+         "application/xml"
+     else
+         case jsonVersion of
+             Just apiVersion ->
+                 "application/x-amz-json-" ++ apiVersion
 
-        Nothing ->
-            "application/json"
+             Nothing ->
+                 "application/json"
     )
         ++ "; charset=utf-8"
 
+
+{-| Gets the service Accept header value.
+-}
+acceptType : Service -> String
+acceptType (Service { protocol }) =
+    if protocol == restXml then
+        "application/xml"
+    else
+        "application/json"
 
 
 -- ENDPOINTS

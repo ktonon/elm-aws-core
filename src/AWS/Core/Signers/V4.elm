@@ -46,7 +46,7 @@ algorithm =
 
 headers : Service -> List ( String, String )
 headers service =
-    [ ( "Accept", "application/json" )
+    [ ( "Accept", Service.acceptType service )
     , ( "Content-Type", Service.jsonContentType service )
     ]
 
