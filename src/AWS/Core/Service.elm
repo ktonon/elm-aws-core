@@ -395,7 +395,7 @@ region (Service { endpoint, isDigitalOcean }) =
 
         GlobalEndpoint ->
             if isDigitalOcean then
-                "ny3c"
+                "nyc3"
             else
                 -- See http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html
                 "us-east-1"
