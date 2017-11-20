@@ -4,7 +4,7 @@ import AWS.Core.Body exposing (Body)
 import AWS.Core.Credentials as Credentials exposing (Credentials)
 import AWS.Core.Request exposing (Unsigned)
 import AWS.Core.Service as Service exposing (Service)
-import AWS.Core.Signers.Canonical exposing (canonical, signedHeaders)
+import AWS.Core.Signers.Canonical exposing (canonical, signedHeaders, canonicalPayload)
 import Crypto.HMAC exposing (sha256)
 import Date exposing (Date)
 import Date.Extra exposing (toUtcIsoString)
@@ -27,7 +27,7 @@ sign service creds date req =
     Http.request
         { method = req.method
         , headers =
-            headers service
+            headers service date req.body
                 |> addAuthorization service creds date req
                 |> addSessionToken creds
                 |> List.map (\( key, val ) -> Http.header key val)
@@ -44,9 +44,11 @@ algorithm =
     "AWS4-HMAC-SHA256"
 
 
-headers : Service -> List ( String, String )
-headers service =
-    [ ( "Accept", Service.acceptType service )
+headers : Service -> Date -> Body -> List ( String, String )
+headers service date body =
+    [ ( "x-amz-date", formatDate date )
+    , ( "x-amz-content-sha256", canonicalPayload body )
+    , ( "Accept", Service.acceptType service )
     , ( "Content-Type", Service.jsonContentType service )
     ]
 
@@ -82,8 +84,7 @@ addAuthorization :
     -> List ( String, String )
     -> List ( String, String )
 addAuthorization service creds date req headers =
-    [ ( "X-Amz-Date", formatDate date )
-    , ( "Authorization"
+    [ ( "Authorization"
       , authorization creds
             date
             service

@@ -25,7 +25,7 @@ module AWS.Core.Service
         , setTargetPrefix
         , setTimestampFormat
         , setXmlNamespace
-        , setHost
+        , setIsDigitalOcean
         , signS3
         , signV2
         , signV4
@@ -115,7 +115,7 @@ type Service
         , timestampFormat : TimestampFormat
         , xmlNamespace : Maybe String
         , endpoint : Endpoint
-        , host : Maybe String
+        , isDigitalOcean : Bool
         }
 
 
@@ -150,7 +150,7 @@ define endpointPrefix apiVersion protocol signer extra =
         , timestampFormat = defaultTimestampFormat protocol
         , xmlNamespace = Nothing
         , endpoint = GlobalEndpoint
-        , host = Nothing
+        , isDigitalOcean = False
         }
         |> extra
 
@@ -272,16 +272,14 @@ setXmlNamespace namespace (Service service) =
     Service { service | xmlNamespace = Just namespace }
 
 
-{-| Set the host for service.
+{-| Set the flag for Digital Ocean's Spaces service.
 
-Use this to override the default method for computing the host.
-
-The default works for AWS, but not for Digital Ocean Spaces.
+This defaults to False, meaning you're using Amazon's S3.
 
 -}
-setHost : Maybe String -> Service -> Service
-setHost host (Service service) =
-    Service { service | host = host }
+setIsDigitalOcean : Bool -> Service -> Service
+setIsDigitalOcean isDigitalOcean (Service service) =
+    Service { service | isDigitalOcean = isDigitalOcean }
 
 
 -- GETTERS
@@ -371,32 +369,36 @@ globalEndpoint =
 {-| Service endpoint as a hostname.
 -}
 host : Service -> String
-host (Service { endpoint, endpointPrefix, host }) =
-    case host of
-        Just h ->
-            h
+host (Service { endpoint, endpointPrefix, isDigitalOcean }) =
+    if isDigitalOcean then
+        case endpoint of
+            GlobalEndpoint ->
+                "nyc3.digitaloceanspaces.com"
+                    
+            RegionalEndpoint region ->
+                region ++ ".digitaloceanspaces.com"
+    else
+        case endpoint of
+            GlobalEndpoint ->
+                endpointPrefix ++ ".amazonaws.com"
 
-        Nothing ->
-            case endpoint of
-                GlobalEndpoint ->
-                    endpointPrefix ++ ".amazonaws.com"
-
-                RegionalEndpoint region ->
-                    endpointPrefix ++ "." ++ region ++ ".amazonaws.com"
-
+            RegionalEndpoint region ->
+                endpointPrefix ++ "." ++ region ++ ".amazonaws.com"
 
 {-| Service region.
 -}
 region : Service -> String
-region (Service { endpoint }) =
+region (Service { endpoint, isDigitalOcean }) =
     case endpoint of
         RegionalEndpoint region ->
             region
 
         GlobalEndpoint ->
-            -- See http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html
-            "us-east-1"
-
+            if isDigitalOcean then
+                "ny3c"
+            else
+                -- See http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html
+                "us-east-1"
 
 
 -- PROTOCOLS
