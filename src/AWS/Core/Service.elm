@@ -6,6 +6,7 @@ module AWS.Core.Service
         , Service
         , Signer
         , TimestampFormat
+        , Getters
         , defineGlobal
         , defineRegional
         , ec2
@@ -25,7 +26,10 @@ module AWS.Core.Service
         , setTargetPrefix
         , setTimestampFormat
         , setXmlNamespace
-        , setIsDigitalOcean
+        , getters
+        , setGetters
+        , digitalOceanGetters
+        , s3Getters
         , signS3
         , signV2
         , signV4
@@ -49,15 +53,21 @@ module AWS.Core.Service
 
 # Types
 
-@docs Service, ApiVersion, Region, Protocol, Signer, TimestampFormat
+@docs Service, ApiVersion, Region, Protocol, Signer, TimestampFormat, Getters
 
 
 # Constructors
 
 Use either one of these to create a service definition.
 
-@docs defineGlobal, defineRegional, setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace, setHost
+@docs defineGlobal, defineRegional
 
+# Property Setters
+
+@docs setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace, getters, setGetters
+
+# Constants
+@docs s3Getters, digitalOceanGetters
 
 # Protocols
 
@@ -115,7 +125,7 @@ type Service
         , timestampFormat : TimestampFormat
         , xmlNamespace : Maybe String
         , endpoint : Endpoint
-        , isDigitalOcean : Bool
+        , getters : Getters
         }
 
 
@@ -130,6 +140,29 @@ type alias ApiVersion =
 type alias JsonVersion =
     String
 
+
+{-| Functions to get a Service's host and region.
+-}
+type alias Getters =
+    { hostGetter : Service -> String
+    , regionGetter : Service -> String
+    }
+
+{-| Functions to get host and region for Amazon S3.
+-}
+s3Getters : Getters
+s3Getters =
+    { hostGetter = s3Host
+    , regionGetter = s3Region
+    }
+
+{-| Functions to get host and region for Digital Ocean Spaces.
+-}
+digitalOceanGetters : Getters
+digitalOceanGetters =
+    { hostGetter = digitalOceanHost
+    , regionGetter = digitalOceanRegion
+    }
 
 define :
     String
@@ -150,7 +183,7 @@ define endpointPrefix apiVersion protocol signer extra =
         , timestampFormat = defaultTimestampFormat protocol
         , xmlNamespace = Nothing
         , endpoint = GlobalEndpoint
-        , isDigitalOcean = False
+        , getters = s3Getters
         }
         |> extra
 
@@ -272,15 +305,6 @@ setXmlNamespace namespace (Service service) =
     Service { service | xmlNamespace = Just namespace }
 
 
-{-| Set the flag for Digital Ocean's Spaces service.
-
-This defaults to False, meaning you're using Amazon's S3.
-
--}
-setIsDigitalOcean : Bool -> Service -> Service
-setIsDigitalOcean isDigitalOcean (Service service) =
-    Service { service | isDigitalOcean = isDigitalOcean }
-
 
 -- GETTERS
 
@@ -369,36 +393,70 @@ globalEndpoint =
 {-| Service endpoint as a hostname.
 -}
 host : Service -> String
-host (Service { endpoint, endpointPrefix, isDigitalOcean }) =
-    if isDigitalOcean then
-        case endpoint of
-            GlobalEndpoint ->
-                "nyc3.digitaloceanspaces.com"
-                    
-            RegionalEndpoint region ->
-                region ++ ".digitaloceanspaces.com"
-    else
-        case endpoint of
-            GlobalEndpoint ->
-                endpointPrefix ++ ".amazonaws.com"
+host ((Service s) as service) =
+    s.getters.hostGetter service
 
-            RegionalEndpoint region ->
-                endpointPrefix ++ "." ++ region ++ ".amazonaws.com"
+
+s3Host : Service -> String
+s3Host (Service { endpoint, endpointPrefix }) =
+    case endpoint of
+        GlobalEndpoint ->
+            endpointPrefix ++ ".amazonaws.com"
+
+        RegionalEndpoint region ->
+            endpointPrefix ++ "." ++ region ++ ".amazonaws.com"
+
+
+digitalOceanHost : Service -> String
+digitalOceanHost (Service { endpoint, endpointPrefix }) =
+    case endpoint of
+        GlobalEndpoint ->
+            "nyc3.digitaloceanspaces.com"
+                    
+        RegionalEndpoint region ->
+            region ++ ".digitaloceanspaces.com"
+
 
 {-| Service region.
 -}
 region : Service -> String
-region (Service { endpoint, isDigitalOcean }) =
+region ((Service s) as service) =
+    s.getters.regionGetter service
+
+
+s3Region : Service -> String
+s3Region (Service { endpoint }) =
     case endpoint of
         RegionalEndpoint region ->
             region
 
         GlobalEndpoint ->
-            if isDigitalOcean then
-                "nyc3"
-            else
-                -- See http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html
-                "us-east-1"
+            -- See http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html
+            "us-east-1"
+
+
+digitalOceanRegion : Service -> String
+digitalOceanRegion (Service { endpoint } ) =
+    case endpoint of
+        RegionalEndpoint region ->
+            region
+
+        GlobalEndpoint ->
+            "nyc3"
+
+
+{-| Service getters. User-settable functions to get host and region.
+-}
+getters : Service -> Getters
+getters (Service service) =
+    service.getters
+
+
+{-| Set the functions to get host and region.
+-}
+setGetters : Getters -> Service -> Service
+setGetters getters (Service service) =
+    Service { service | getters = getters }
 
 
 -- PROTOCOLS
