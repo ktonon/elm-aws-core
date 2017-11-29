@@ -8,6 +8,8 @@ module AWS.Core.Http
         , Response
         , emptyBody
         , jsonBody
+        , htmlBody
+        , stringBody
         , request
         , responseData
         , send
@@ -100,6 +102,20 @@ emptyBody =
 jsonBody : Json.Encode.Value -> Body
 jsonBody =
     AWS.Core.Body.json
+
+
+{-| Create a body containing an Html string
+-}
+htmlBody : String -> Body
+htmlBody =
+    AWS.Core.Body.html
+
+
+{-| Create a body containing a mimetype/String value.
+-}
+stringBody : String -> String -> Body
+stringBody =
+    AWS.Core.Body.string
 
 
 {-| Create an AWS HTTP unsigned request.
