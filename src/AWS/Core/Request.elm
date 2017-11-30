@@ -9,6 +9,7 @@ import QueryString
 
 type alias Unsigned a =
     { method : String
+    , headers : List (String, String)
     , path : String
     , query : List ( String, String )
     , body : Body
@@ -26,6 +27,25 @@ unsigned :
 unsigned method uri query body decoder =
     Unsigned
         method
+        []
+        uri
+        query
+        body
+        decoder
+
+
+unsignedWithHeaders :
+    String
+    -> List ( String, String )
+    -> String
+    -> List ( String, String )
+    -> Body
+    -> Json.Decode.Decoder a
+    -> Unsigned a
+unsignedWithHeaders method headers uri query body decoder =
+    Unsigned
+        method
+        headers
         uri
         query
         body

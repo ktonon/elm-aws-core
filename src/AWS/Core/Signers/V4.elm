@@ -27,7 +27,7 @@ sign service creds date req =
     Http.request
         { method = req.method
         , headers =
-            headers service date req.body
+            headers service date req.body req.headers
                 |> addAuthorization service creds date req
                 |> addSessionToken creds
                 |> List.map (\( key, val ) -> Http.header key val)
@@ -44,13 +44,15 @@ algorithm =
     "AWS4-HMAC-SHA256"
 
 
-headers : Service -> Date -> Body -> List ( String, String )
-headers service date body =
-    [ ( "x-amz-date", formatDate date )
-    , ( "x-amz-content-sha256", canonicalPayload body )
-    , ( "Accept", Service.acceptType service )
-    , ( "Content-Type", Service.jsonContentType service )
-    ]
+headers : Service -> Date -> Body -> List ( String, String ) -> List ( String, String )
+headers service date body extraHeaders =
+    List.append
+        extraHeaders
+        [ ( "x-amz-date", formatDate date )
+        , ( "x-amz-content-sha256", canonicalPayload body )
+        , ( "Accept", Service.acceptType service )
+        , ( "Content-Type", Service.jsonContentType service )
+        ]
 
 
 formatDate : Date -> String

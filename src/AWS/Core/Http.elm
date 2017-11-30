@@ -11,6 +11,7 @@ module AWS.Core.Http
         , htmlBody
         , stringBody
         , request
+        , requestWithHeaders
         , responseData
         , send
         )
@@ -129,6 +130,20 @@ request :
     -> Request a
 request method =
     AWS.Core.Request.unsigned (toString method)
+
+
+{-| Create an AWS HTTP unsigned request with additional headers.
+-}
+requestWithHeaders :
+    Method
+    -> Query
+    -> Path
+    -> Query
+    -> Body
+    -> Json.Decode.Decoder a
+    -> Request a
+requestWithHeaders method =
+    AWS.Core.Request.unsignedWithHeaders (toString method)
 
 
 sign :
