@@ -6,6 +6,7 @@ module AWS.Core.Service
         , Service
         , Signer
         , TimestampFormat
+        , Getters
         , defineGlobal
         , defineRegional
         , ec2
@@ -14,6 +15,7 @@ module AWS.Core.Service
         , iso8601
         , json
         , jsonContentType
+        , acceptType
         , query
         , region
         , restJson
@@ -24,6 +26,10 @@ module AWS.Core.Service
         , setTargetPrefix
         , setTimestampFormat
         , setXmlNamespace
+        , getters
+        , setGetters
+        , digitalOceanGetters
+        , s3Getters
         , signS3
         , signV2
         , signV4
@@ -47,15 +53,21 @@ module AWS.Core.Service
 
 # Types
 
-@docs Service, ApiVersion, Region, Protocol, Signer, TimestampFormat
+@docs Service, ApiVersion, Region, Protocol, Signer, TimestampFormat, Getters
 
 
 # Constructors
 
 Use either one of these to create a service definition.
 
-@docs defineGlobal, defineRegional, setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace
+@docs defineGlobal, defineRegional
 
+# Property Setters
+
+@docs setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace, getters, setGetters
+
+# Constants
+@docs s3Getters, digitalOceanGetters
 
 # Protocols
 
@@ -84,7 +96,7 @@ These functions are exposed so that [AWS.Core.Http](AWS-Core-Http) can properly
 sign requests. They can be useful for debugging, testing, and logging, but
 otherwise are not required.
 
-@docs endpointPrefix, region, host, signer, targetPrefix, jsonContentType
+@docs endpointPrefix, region, host, signer, targetPrefix, jsonContentType, acceptType
 
 -}
 
@@ -113,6 +125,7 @@ type Service
         , timestampFormat : TimestampFormat
         , xmlNamespace : Maybe String
         , endpoint : Endpoint
+        , getters : Getters
         }
 
 
@@ -127,6 +140,29 @@ type alias ApiVersion =
 type alias JsonVersion =
     String
 
+
+{-| Functions to get a Service's host and region.
+-}
+type alias Getters =
+    { hostGetter : Service -> String
+    , regionGetter : Service -> String
+    }
+
+{-| Functions to get host and region for Amazon S3.
+-}
+s3Getters : Getters
+s3Getters =
+    { hostGetter = s3Host
+    , regionGetter = s3Region
+    }
+
+{-| Functions to get host and region for Digital Ocean Spaces.
+-}
+digitalOceanGetters : Getters
+digitalOceanGetters =
+    { hostGetter = digitalOceanHost
+    , regionGetter = digitalOceanRegion
+    }
 
 define :
     String
@@ -147,6 +183,7 @@ define endpointPrefix apiVersion protocol signer extra =
         , timestampFormat = defaultTimestampFormat protocol
         , xmlNamespace = Nothing
         , endpoint = GlobalEndpoint
+        , getters = s3Getters
         }
         |> extra
 
@@ -296,16 +333,28 @@ signer (Service { signer }) =
 {-| Gets the service JSON content type header value.
 -}
 jsonContentType : Service -> String
-jsonContentType (Service { jsonVersion }) =
-    (case jsonVersion of
-        Just apiVersion ->
-            "application/x-amz-json-" ++ apiVersion
+jsonContentType (Service { protocol, jsonVersion }) =
+    (if protocol == restXml then
+         "application/xml"
+     else
+         case jsonVersion of
+             Just apiVersion ->
+                 "application/x-amz-json-" ++ apiVersion
 
-        Nothing ->
-            "application/json"
+             Nothing ->
+                 "application/json"
     )
         ++ "; charset=utf-8"
 
+
+{-| Gets the service Accept header value.
+-}
+acceptType : Service -> String
+acceptType (Service { protocol }) =
+    if protocol == restXml then
+        "application/xml"
+    else
+        "application/json"
 
 
 -- ENDPOINTS
@@ -344,7 +393,12 @@ globalEndpoint =
 {-| Service endpoint as a hostname.
 -}
 host : Service -> String
-host (Service { endpoint, endpointPrefix }) =
+host ((Service s) as service) =
+    s.getters.hostGetter service
+
+
+s3Host : Service -> String
+s3Host (Service { endpoint, endpointPrefix }) =
     case endpoint of
         GlobalEndpoint ->
             endpointPrefix ++ ".amazonaws.com"
@@ -353,10 +407,25 @@ host (Service { endpoint, endpointPrefix }) =
             endpointPrefix ++ "." ++ region ++ ".amazonaws.com"
 
 
+digitalOceanHost : Service -> String
+digitalOceanHost (Service { endpoint, endpointPrefix }) =
+    case endpoint of
+        GlobalEndpoint ->
+            "nyc3.digitaloceanspaces.com"
+                    
+        RegionalEndpoint region ->
+            region ++ ".digitaloceanspaces.com"
+
+
 {-| Service region.
 -}
 region : Service -> String
-region (Service { endpoint }) =
+region ((Service s) as service) =
+    s.getters.regionGetter service
+
+
+s3Region : Service -> String
+s3Region (Service { endpoint }) =
     case endpoint of
         RegionalEndpoint region ->
             region
@@ -365,6 +434,29 @@ region (Service { endpoint }) =
             -- See http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html
             "us-east-1"
 
+
+digitalOceanRegion : Service -> String
+digitalOceanRegion (Service { endpoint } ) =
+    case endpoint of
+        RegionalEndpoint region ->
+            region
+
+        GlobalEndpoint ->
+            "nyc3"
+
+
+{-| Service getters. User-settable functions to get host and region.
+-}
+getters : Service -> Getters
+getters (Service service) =
+    service.getters
+
+
+{-| Set the functions to get host and region.
+-}
+setGetters : Getters -> Service -> Service
+setGetters getters (Service service) =
+    Service { service | getters = getters }
 
 
 -- PROTOCOLS

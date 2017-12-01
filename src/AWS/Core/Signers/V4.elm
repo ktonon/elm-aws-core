@@ -4,7 +4,7 @@ import AWS.Core.Body exposing (Body)
 import AWS.Core.Credentials as Credentials exposing (Credentials)
 import AWS.Core.Request exposing (Unsigned)
 import AWS.Core.Service as Service exposing (Service)
-import AWS.Core.Signers.Canonical exposing (canonical, signedHeaders)
+import AWS.Core.Signers.Canonical exposing (canonical, signedHeaders, canonicalPayload)
 import Crypto.HMAC exposing (sha256)
 import Date exposing (Date)
 import Date.Extra exposing (toUtcIsoString)
@@ -27,7 +27,7 @@ sign service creds date req =
     Http.request
         { method = req.method
         , headers =
-            headers service
+            headers service date req.body req.headers
                 |> addAuthorization service creds date req
                 |> addSessionToken creds
                 |> List.map (\( key, val ) -> Http.header key val)
@@ -44,11 +44,15 @@ algorithm =
     "AWS4-HMAC-SHA256"
 
 
-headers : Service -> List ( String, String )
-headers service =
-    [ ( "Accept", "application/json" )
-    , ( "Content-Type", Service.jsonContentType service )
-    ]
+headers : Service -> Date -> Body -> List ( String, String ) -> List ( String, String )
+headers service date body extraHeaders =
+    List.append
+        extraHeaders
+        [ ( "x-amz-date", formatDate date )
+        , ( "x-amz-content-sha256", canonicalPayload body )
+        , ( "Accept", Service.acceptType service )
+        , ( "Content-Type", Service.jsonContentType service )
+        ]
 
 
 formatDate : Date -> String
@@ -82,8 +86,7 @@ addAuthorization :
     -> List ( String, String )
     -> List ( String, String )
 addAuthorization service creds date req headers =
-    [ ( "X-Amz-Date", formatDate date )
-    , ( "Authorization"
+    [ ( "Authorization"
       , authorization creds
             date
             service
@@ -94,6 +97,16 @@ addAuthorization service creds date req headers =
         |> List.append headers
 
 
+-- Expects headersToRemove to be all lower-case
+filterHeaders : List String -> List ( String, String ) -> List ( String, String )
+filterHeaders headersToRemove headers =
+    let matches = (\(head, _) ->
+                     not <| List.member (String.toLower head) headersToRemove
+                  )
+    in
+        List.filter matches headers
+                    
+
 authorization :
     Credentials
     -> Date
@@ -101,8 +114,10 @@ authorization :
     -> Unsigned a
     -> List ( String, String )
     -> String
-authorization creds date service req headers =
+authorization creds date service req rawHeaders =
     let
+        -- Content-Type & Accept tend to be amended by Http.request
+        headers = filterHeaders ["content-type", "accept"] rawHeaders
         canon =
             canonical req.method req.path headers req.query req.body
 

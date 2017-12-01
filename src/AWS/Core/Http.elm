@@ -8,7 +8,10 @@ module AWS.Core.Http
         , Response
         , emptyBody
         , jsonBody
+        , htmlBody
+        , stringBody
         , request
+        , requestWithHeaders
         , responseData
         , send
         )
@@ -102,6 +105,20 @@ jsonBody =
     AWS.Core.Body.json
 
 
+{-| Create a body containing an Html string
+-}
+htmlBody : String -> Body
+htmlBody =
+    AWS.Core.Body.html
+
+
+{-| Create a body containing a mimetype/String value.
+-}
+stringBody : String -> String -> Body
+stringBody =
+    AWS.Core.Body.string
+
+
 {-| Create an AWS HTTP unsigned request.
 -}
 request :
@@ -115,6 +132,20 @@ request method =
     AWS.Core.Request.unsigned (toString method)
 
 
+{-| Create an AWS HTTP unsigned request with additional headers.
+-}
+requestWithHeaders :
+    Method
+    -> Query
+    -> Path
+    -> Query
+    -> Body
+    -> Json.Decode.Decoder a
+    -> Request a
+requestWithHeaders method =
+    AWS.Core.Request.unsignedWithHeaders (toString method)
+
+
 sign :
     Service
     -> Credentials
@@ -124,7 +155,7 @@ sign :
 sign service creds date req =
     case Service.signer service of
         SignV4 ->
-            V4.sign service creds date req
+            Debug.log "signed req" <| V4.sign service creds date req
 
         SignV2 ->
             Debug.crash "Unsupported signature"
