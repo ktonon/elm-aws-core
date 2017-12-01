@@ -16,7 +16,6 @@ type Protocol
 
 type Signer
     = SignV4
-    | SignV2
     | SignS3
 
 

@@ -125,7 +125,7 @@ authorization creds date service req rawHeaders =
             filterHeaders [ "content-type", "accept" ] rawHeaders
 
         canon =
-            canonical req.method req.path headers req.query req.body
+            canonical (Service.signer service) req.method req.path headers req.query req.body
 
         scope =
             credentialScope date creds service

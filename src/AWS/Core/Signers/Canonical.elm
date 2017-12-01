@@ -2,6 +2,7 @@ module AWS.Core.Signers.Canonical exposing (..)
 
 import AWS.Core.Body exposing (Body)
 import AWS.Core.Encode
+import AWS.Core.InternalTypes exposing (Signer(..))
 import Crypto.Hash exposing (sha256)
 import Regex exposing (HowMany(All), regex)
 
@@ -9,16 +10,16 @@ import Regex exposing (HowMany(All), regex)
 -- http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html
 
 
-canonical : String -> String -> List ( String, String ) -> List ( String, String ) -> Body -> String
-canonical method path headers params body =
-    canonicalRaw method path headers params body
+canonical : Signer -> String -> String -> List ( String, String ) -> List ( String, String ) -> Body -> String
+canonical signer method path headers params body =
+    canonicalRaw signer method path headers params body
         |> sha256
 
 
-canonicalRaw : String -> String -> List ( String, String ) -> List ( String, String ) -> Body -> String
-canonicalRaw method path headers params body =
+canonicalRaw : Signer -> String -> String -> List ( String, String ) -> List ( String, String ) -> Body -> String
+canonicalRaw signer method path headers params body =
     [ String.toUpper method
-    , canonicalUri path
+    , canonicalUri signer path
     , canonicalQueryString params
     , canonicalHeaders headers
     , ""
@@ -28,30 +29,34 @@ canonicalRaw method path headers params body =
         |> String.join "\n"
 
 
-canonicalUri : String -> String
-canonicalUri path =
-    if String.isEmpty path then
-        "/"
-    else
-        -- TODO: vvv
-        -- In exception to this, you do not normalize URI paths for requests to
-        -- Amazon S3. For example, if you have a bucket with an object named
-        --
-        --    my-object//example//photo.user
-        --
-        -- use that path. Normalizing the path to
-        --    my-object/example/photo.user
-        --
-        -- will cause the request to fail. For more information, see
-        -- Task 1: Create a Canonical Request in the Amazon Simple Storage
-        -- Service API Reference:
-        -- http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html#canonical-request
-        path
-            |> Regex.replace All (regex "/{2,}") (\_ -> "/")
-            |> resolveRelativePath
-            |> String.split "/"
-            |> List.map AWS.Core.Encode.uri
-            |> String.join "/"
+canonicalUri : Signer -> String -> String
+canonicalUri signer path =
+    case signer of
+        SignS3 ->
+            -- Do not normalize URI paths for requests to Amazon S3.
+            -- For example, if you have a bucket with an object named
+            --
+            --    my-object//example//photo.user
+            --
+            -- use that path. Normalizing the path to
+            --    my-object/example/photo.user
+            --
+            -- will cause the request to fail. For more information, see
+            -- Task 1: Create a Canonical Request in the Amazon Simple Storage
+            -- Service API Reference:
+            -- http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html#canonical-request
+            path
+
+        SignV4 ->
+            if String.isEmpty path then
+                "/"
+            else
+                path
+                    |> Regex.replace All (regex "/{2,}") (\_ -> "/")
+                    |> resolveRelativePath
+                    |> String.split "/"
+                    |> List.map AWS.Core.Encode.uri
+                    |> String.join "/"
 
 
 canonicalQueryString : List ( String, String ) -> String

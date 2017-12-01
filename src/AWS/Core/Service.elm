@@ -1,7 +1,7 @@
 module AWS.Core.Service
     exposing
         ( ApiVersion
-        , Getters
+        , Endpoint(..)
         , Protocol
         , Region
         , Service
@@ -10,10 +10,8 @@ module AWS.Core.Service
         , acceptType
         , defineGlobal
         , defineRegional
-        , digitalOceanGetters
         , ec2
         , endpointPrefix
-        , getters
         , host
         , iso8601
         , json
@@ -23,18 +21,16 @@ module AWS.Core.Service
         , restJson
         , restXml
         , rfc822
-        , s3Getters
-        , setGetters
         , setJsonVersion
         , setSigningName
         , setTargetPrefix
         , setTimestampFormat
         , setXmlNamespace
         , signS3
-        , signV2
         , signV4
         , signer
         , targetPrefix
+        , toDigitalOceanSpaces
         , unixTimestamp
         )
 
@@ -45,6 +41,7 @@ module AWS.Core.Service
 
   - [Types](#types)
   - [Constructors](#constructors)
+  - [Property Setters](#property-setters)
   - [Protocols](#protocols)
   - [Signatures](#signatures)
   - [Timestamp Formats](#timestamp-formats)
@@ -53,7 +50,7 @@ module AWS.Core.Service
 
 # Types
 
-@docs Service, ApiVersion, Region, Protocol, Signer, TimestampFormat, Getters
+@docs Service, ApiVersion, Region, Protocol, Signer, TimestampFormat, Endpoint
 
 
 # Constructors
@@ -65,12 +62,7 @@ Use either one of these to create a service definition.
 
 # Property Setters
 
-@docs setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace, getters, setGetters
-
-
-# Constants
-
-@docs s3Getters, digitalOceanGetters
+@docs setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace, toDigitalOceanSpaces
 
 
 # Protocols
@@ -84,7 +76,7 @@ Use these functions to specify the AWS request protocol used by the service.
 
 Use these functions to specify the signature version used by a service.
 
-@docs signV4, signV2, signS3
+@docs signV4, signS3
 
 
 # Timestamp Formats
@@ -129,7 +121,8 @@ type Service
         , timestampFormat : TimestampFormat
         , xmlNamespace : Maybe String
         , endpoint : Endpoint
-        , getters : Getters
+        , hostResolver : Endpoint -> String -> String
+        , regionResolver : Endpoint -> String
         }
 
 
@@ -143,32 +136,6 @@ type alias ApiVersion =
 -}
 type alias JsonVersion =
     String
-
-
-{-| Functions to get a Service's host and region.
--}
-type alias Getters =
-    { hostGetter : Service -> String
-    , regionGetter : Service -> String
-    }
-
-
-{-| Functions to get host and region for Amazon S3.
--}
-s3Getters : Getters
-s3Getters =
-    { hostGetter = s3Host
-    , regionGetter = s3Region
-    }
-
-
-{-| Functions to get host and region for Digital Ocean Spaces.
--}
-digitalOceanGetters : Getters
-digitalOceanGetters =
-    { hostGetter = digitalOceanHost
-    , regionGetter = digitalOceanRegion
-    }
 
 
 define :
@@ -190,7 +157,8 @@ define endpointPrefix apiVersion protocol signer extra =
         , timestampFormat = defaultTimestampFormat protocol
         , xmlNamespace = Nothing
         , endpoint = GlobalEndpoint
-        , getters = s3Getters
+        , hostResolver = defaultHostResolver
+        , regionResolver = defaultRegionResolver
         }
         |> extra
 
@@ -270,6 +238,34 @@ Use this if `jsonVersion` is provided in the metadata.
 setJsonVersion : String -> Service -> Service
 setJsonVersion jsonVersion (Service service) =
     Service { service | jsonVersion = Just jsonVersion }
+
+
+{-| Use Digital Ocean Spaces as the backend service provider.
+
+Changes the way hostnames are resolved.
+
+-}
+toDigitalOceanSpaces : Service -> Service
+toDigitalOceanSpaces (Service service) =
+    Service
+        { service
+            | hostResolver =
+                \endpoint endpointPrefix ->
+                    case endpoint of
+                        GlobalEndpoint ->
+                            "nyc3.digitaloceanspaces.com"
+
+                        RegionalEndpoint region ->
+                            region ++ ".digitaloceanspaces.com"
+            , regionResolver =
+                \endpoint ->
+                    case endpoint of
+                        GlobalEndpoint ->
+                            "nyc3"
+
+                        RegionalEndpoint region ->
+                            region
+        }
 
 
 {-| Set the signing name for the service.
@@ -401,12 +397,12 @@ globalEndpoint =
 {-| Service endpoint as a hostname.
 -}
 host : Service -> String
-host ((Service s) as service) =
-    s.getters.hostGetter service
+host (Service { hostResolver, endpoint, endpointPrefix }) =
+    hostResolver endpoint endpointPrefix
 
 
-s3Host : Service -> String
-s3Host (Service { endpoint, endpointPrefix }) =
+defaultHostResolver : Endpoint -> String -> String
+defaultHostResolver endpoint endpointPrefix =
     case endpoint of
         GlobalEndpoint ->
             endpointPrefix ++ ".amazonaws.com"
@@ -415,25 +411,15 @@ s3Host (Service { endpoint, endpointPrefix }) =
             endpointPrefix ++ "." ++ region ++ ".amazonaws.com"
 
 
-digitalOceanHost : Service -> String
-digitalOceanHost (Service { endpoint, endpointPrefix }) =
-    case endpoint of
-        GlobalEndpoint ->
-            "nyc3.digitaloceanspaces.com"
-
-        RegionalEndpoint region ->
-            region ++ ".digitaloceanspaces.com"
-
-
 {-| Service region.
 -}
 region : Service -> String
-region ((Service s) as service) =
-    s.getters.regionGetter service
+region (Service { endpoint, regionResolver }) =
+    regionResolver endpoint
 
 
-s3Region : Service -> String
-s3Region (Service { endpoint }) =
+defaultRegionResolver : Endpoint -> String
+defaultRegionResolver endpoint =
     case endpoint of
         RegionalEndpoint region ->
             region
@@ -441,30 +427,6 @@ s3Region (Service { endpoint }) =
         GlobalEndpoint ->
             -- See http://docs.aws.amazon.com/general/latest/gr/sigv4_changes.html
             "us-east-1"
-
-
-digitalOceanRegion : Service -> String
-digitalOceanRegion (Service { endpoint }) =
-    case endpoint of
-        RegionalEndpoint region ->
-            region
-
-        GlobalEndpoint ->
-            "nyc3"
-
-
-{-| Service getters. User-settable functions to get host and region.
--}
-getters : Service -> Getters
-getters (Service service) =
-    service.getters
-
-
-{-| Set the functions to get host and region.
--}
-setGetters : Getters -> Service -> Service
-setGetters getters (Service service) =
-    Service { service | getters = getters }
 
 
 
@@ -535,14 +497,10 @@ signV4 =
     SignV4
 
 
-{-| Use V2 signing.
--}
-signV2 : Signer
-signV2 =
-    SignV2
+{-| A variation on V4 signing for use with AWS S3.
 
+See <http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html#canonical-request>
 
-{-| Use S3 signing.
 -}
 signS3 : Signer
 signS3 =

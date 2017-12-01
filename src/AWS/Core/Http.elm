@@ -40,7 +40,6 @@ Examples assume the following imports:
 
 import AWS.Core.Body
 import AWS.Core.Credentials exposing (Credentials)
-import AWS.Core.InternalTypes exposing (Signer(..))
 import AWS.Core.Request
 import AWS.Core.Service as Service exposing (Service)
 import AWS.Core.Signers.V4 as V4
@@ -171,24 +170,6 @@ addQuery query req =
     { req | query = List.append req.query query }
 
 
-sign :
-    Service
-    -> Credentials
-    -> Date
-    -> Request a
-    -> Http.Request a
-sign service creds date req =
-    case Service.signer service of
-        SignV4 ->
-            Debug.log "signed req" <| V4.sign service creds date req
-
-        SignV2 ->
-            Debug.crash "Unsupported signature"
-
-        SignS3 ->
-            Debug.crash "Unsupported signature"
-
-
 {-| Signs and sends an AWS Request.
 -}
 send :
@@ -200,6 +181,6 @@ send serviceConfig credentials req =
     Date.now
         |> Task.andThen
             (\date ->
-                sign serviceConfig credentials date req
+                V4.sign serviceConfig credentials date req
                     |> Http.toTask
             )

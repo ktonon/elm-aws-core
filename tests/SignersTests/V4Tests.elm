@@ -7,6 +7,7 @@ module SignersTests.V4Tests
 import AWS.Core.Body exposing (Body)
 import AWS.Core.Credentials as Credentials exposing (Credentials)
 import AWS.Core.Http exposing (Method(..))
+import AWS.Core.InternalTypes exposing (Signer(SignV4))
 import AWS.Core.Request exposing (Unsigned)
 import AWS.Core.Service as Service exposing (Service)
 import AWS.Core.Signers.Canonical exposing (canonical, canonicalRaw)
@@ -71,6 +72,7 @@ awsOfficialTest data =
         [ test "canonical" <|
             \_ ->
                 canonicalRaw
+                    SignV4
                     data.req.method
                     data.req.path
                     data.req.headers
@@ -80,6 +82,7 @@ awsOfficialTest data =
         , test "string to sign" <|
             \_ ->
                 canonical
+                    SignV4
                     data.req.method
                     data.req.path
                     data.req.headers
