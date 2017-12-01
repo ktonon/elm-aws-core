@@ -1,35 +1,35 @@
 module AWS.Core.Service
     exposing
         ( ApiVersion
+        , Getters
         , Protocol
         , Region
         , Service
         , Signer
         , TimestampFormat
-        , Getters
+        , acceptType
         , defineGlobal
         , defineRegional
+        , digitalOceanGetters
         , ec2
         , endpointPrefix
+        , getters
         , host
         , iso8601
         , json
         , jsonContentType
-        , acceptType
         , query
         , region
         , restJson
         , restXml
         , rfc822
+        , s3Getters
+        , setGetters
         , setJsonVersion
         , setSigningName
         , setTargetPrefix
         , setTimestampFormat
         , setXmlNamespace
-        , getters
-        , setGetters
-        , digitalOceanGetters
-        , s3Getters
         , signS3
         , signV2
         , signV4
@@ -62,12 +62,16 @@ Use either one of these to create a service definition.
 
 @docs defineGlobal, defineRegional
 
+
 # Property Setters
 
 @docs setJsonVersion, setSigningName, setTargetPrefix, setTimestampFormat, setXmlNamespace, getters, setGetters
 
+
 # Constants
+
 @docs s3Getters, digitalOceanGetters
+
 
 # Protocols
 
@@ -148,6 +152,7 @@ type alias Getters =
     , regionGetter : Service -> String
     }
 
+
 {-| Functions to get host and region for Amazon S3.
 -}
 s3Getters : Getters
@@ -156,6 +161,7 @@ s3Getters =
     , regionGetter = s3Region
     }
 
+
 {-| Functions to get host and region for Digital Ocean Spaces.
 -}
 digitalOceanGetters : Getters
@@ -163,6 +169,7 @@ digitalOceanGetters =
     { hostGetter = digitalOceanHost
     , regionGetter = digitalOceanRegion
     }
+
 
 define :
     String
@@ -335,14 +342,14 @@ signer (Service { signer }) =
 jsonContentType : Service -> String
 jsonContentType (Service { protocol, jsonVersion }) =
     (if protocol == restXml then
-         "application/xml"
+        "application/xml"
      else
-         case jsonVersion of
-             Just apiVersion ->
-                 "application/x-amz-json-" ++ apiVersion
+        case jsonVersion of
+            Just apiVersion ->
+                "application/x-amz-json-" ++ apiVersion
 
-             Nothing ->
-                 "application/json"
+            Nothing ->
+                "application/json"
     )
         ++ "; charset=utf-8"
 
@@ -355,6 +362,7 @@ acceptType (Service { protocol }) =
         "application/xml"
     else
         "application/json"
+
 
 
 -- ENDPOINTS
@@ -412,7 +420,7 @@ digitalOceanHost (Service { endpoint, endpointPrefix }) =
     case endpoint of
         GlobalEndpoint ->
             "nyc3.digitaloceanspaces.com"
-                    
+
         RegionalEndpoint region ->
             region ++ ".digitaloceanspaces.com"
 
@@ -436,7 +444,7 @@ s3Region (Service { endpoint }) =
 
 
 digitalOceanRegion : Service -> String
-digitalOceanRegion (Service { endpoint } ) =
+digitalOceanRegion (Service { endpoint }) =
     case endpoint of
         RegionalEndpoint region ->
             region
@@ -457,6 +465,7 @@ getters (Service service) =
 setGetters : Getters -> Service -> Service
 setGetters getters (Service service) =
     Service { service | getters = getters }
+
 
 
 -- PROTOCOLS

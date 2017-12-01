@@ -10,6 +10,7 @@ type Body
     | HtmlBody String
     | StringBody String String
 
+
 toHttp : Body -> Http.Body
 toHttp body =
     case body of

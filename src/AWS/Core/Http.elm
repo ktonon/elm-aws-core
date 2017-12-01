@@ -2,18 +2,19 @@ module AWS.Core.Http
     exposing
         ( Body
         , Method(..)
+        , MimeType
         , Path
         , Query
         , Request
         , Response
         , emptyBody
-        , jsonBody
         , htmlBody
-        , stringBody
+        , jsonBody
         , request
         , requestWithHeaders
         , responseData
         , send
+        , stringBody
         )
 
 {-| AWS requests and responses.
@@ -28,7 +29,7 @@ module AWS.Core.Http
 
 # Requests
 
-@docs Request, request, send, Method, Path, Query
+@docs Request, request, requestWithHeaders, send, Method, Path, Query
 
 
 # Responses
@@ -38,7 +39,7 @@ module AWS.Core.Http
 
 # Body
 
-@docs Body, emptyBody, jsonBody
+@docs Body, MimeType, emptyBody, htmlBody, jsonBody, stringBody
 
 -}
 
@@ -91,6 +92,15 @@ type alias Body =
     AWS.Core.Body.Body
 
 
+{-| MIME type.
+
+See <https://en.wikipedia.org/wiki/Media_type>
+
+-}
+type alias MimeType =
+    String
+
+
 {-| Create an empty body.
 -}
 emptyBody : Body
@@ -114,7 +124,7 @@ htmlBody =
 
 {-| Create a body containing a mimetype/String value.
 -}
-stringBody : String -> String -> Body
+stringBody : MimeType -> String -> Body
 stringBody =
     AWS.Core.Body.string
 

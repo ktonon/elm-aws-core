@@ -4,7 +4,7 @@ import AWS.Core.Body exposing (Body)
 import AWS.Core.Credentials as Credentials exposing (Credentials)
 import AWS.Core.Request exposing (Unsigned)
 import AWS.Core.Service as Service exposing (Service)
-import AWS.Core.Signers.Canonical exposing (canonical, signedHeaders, canonicalPayload)
+import AWS.Core.Signers.Canonical exposing (canonical, canonicalPayload, signedHeaders)
 import Crypto.HMAC exposing (sha256)
 import Date exposing (Date)
 import Date.Extra exposing (toUtcIsoString)
@@ -97,15 +97,19 @@ addAuthorization service creds date req headers =
         |> List.append headers
 
 
+
 -- Expects headersToRemove to be all lower-case
+
+
 filterHeaders : List String -> List ( String, String ) -> List ( String, String )
 filterHeaders headersToRemove headers =
-    let matches = (\(head, _) ->
-                     not <| List.member (String.toLower head) headersToRemove
-                  )
+    let
+        matches =
+            \( head, _ ) ->
+                not <| List.member (String.toLower head) headersToRemove
     in
-        List.filter matches headers
-                    
+    List.filter matches headers
+
 
 authorization :
     Credentials
@@ -117,7 +121,9 @@ authorization :
 authorization creds date service req rawHeaders =
     let
         -- Content-Type & Accept tend to be amended by Http.request
-        headers = filterHeaders ["content-type", "accept"] rawHeaders
+        headers =
+            filterHeaders [ "content-type", "accept" ] rawHeaders
+
         canon =
             canonical req.method req.path headers req.query req.body
 

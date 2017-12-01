@@ -9,7 +9,7 @@ import QueryString
 
 type alias Unsigned a =
     { method : String
-    , headers : List (String, String)
+    , headers : List ( String, String )
     , path : String
     , query : List ( String, String )
     , body : Body
