@@ -97,6 +97,16 @@ addAuthorization service creds date req headers =
         |> List.append headers
 
 
+-- Expects headersToRemove to be all lower-case
+filterHeaders : List String -> List ( String, String ) -> List ( String, String )
+filterHeaders headersToRemove headers =
+    let matches = (\(head, _) ->
+                     not <| List.member (String.toLower head) headersToRemove
+                  )
+    in
+        List.filter matches headers
+                    
+
 authorization :
     Credentials
     -> Date
@@ -104,8 +114,10 @@ authorization :
     -> Unsigned a
     -> List ( String, String )
     -> String
-authorization creds date service req headers =
+authorization creds date service req rawHeaders =
     let
+        -- Content-Type & Accept tend to be amended by Http.request
+        headers = filterHeaders ["content-type", "accept"] rawHeaders
         canon =
             canonical req.method req.path headers req.query req.body
 
