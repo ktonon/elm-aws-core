@@ -9,6 +9,7 @@ module SignersTests.CanonicalTests
         )
 
 import AWS.Core.Http
+import AWS.Core.InternalTypes exposing (Signer(..))
 import AWS.Core.Signers.Canonical exposing (..)
 import Expect
 import Json.Encode as JE
@@ -21,7 +22,8 @@ canonicalTests =
     describe "canonical"
         [ test "does the same request encoding as http://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html" <|
             \_ ->
-                canonical "get"
+                canonical SignV4
+                    "get"
                     ""
                     [ ( "Content-Type", "application/x-www-form-urlencoded;  charset=utf-8" )
                     , ( "x-amz-date", "20150830T123600Z" )
@@ -34,7 +36,8 @@ canonicalTests =
                     |> Expect.equal "f536975d06c0309214f805bb90ccff089219ecd68b2577efef23edd43b7e1a59"
         , test "does the same request encoding as http://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html#signature-v4-test-suite-example" <|
             \_ ->
-                canonical "get"
+                canonical SignV4
+                    "get"
                     ""
                     [ ( "X-Amz-Date", "20150830T123600Z" )
                     , ( "Host", "example.amazonaws.com" )
@@ -53,17 +56,22 @@ canonicalUriTests =
         [ test "converts an empty path to /" <|
             \_ ->
                 ""
-                    |> canonicalUri
+                    |> canonicalUri SignV4
                     |> Expect.equal "/"
         , test "removes redundant separators (i.e. slash /)" <|
             \_ ->
                 "//foo//bar/car"
-                    |> canonicalUri
+                    |> canonicalUri SignV4
                     |> Expect.equal "/foo/bar/car"
+        , test "leaves redundant separators when signing for S3" <|
+            \_ ->
+                "//foo//bar/car"
+                    |> canonicalUri SignS3
+                    |> Expect.equal "//foo//bar/car"
         , test "uri encodes path components" <|
             \_ ->
                 "/foo-bar/biz baz/one=two"
-                    |> canonicalUri
+                    |> canonicalUri SignV4
                     |> Expect.equal "/foo-bar/biz%20baz/one%3Dtwo"
         ]
 

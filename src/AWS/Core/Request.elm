@@ -1,6 +1,12 @@
-module AWS.Core.Request exposing (..)
+module AWS.Core.Request
+    exposing
+        ( Unsigned
+        , queryString
+        , unsigned
+        , url
+        )
 
-import AWS.Core.Body exposing (Body)
+import AWS.Core.Body as Body exposing (Body)
 import AWS.Core.Encode
 import AWS.Core.Service as Service exposing (Service)
 import Json.Decode exposing (Decoder)
@@ -9,47 +15,28 @@ import QueryString
 
 type alias Unsigned a =
     { method : String
-    , headers : List (String, String)
     , path : String
-    , query : List ( String, String )
     , body : Body
     , decoder : Decoder a
+    , headers : List ( String, String )
+    , query : List ( String, String )
     }
 
 
 unsigned :
     String
     -> String
-    -> List ( String, String )
     -> Body
-    -> Json.Decode.Decoder a
+    -> Decoder a
     -> Unsigned a
-unsigned method uri query body decoder =
+unsigned method uri body decoder =
     Unsigned
         method
+        uri
+        body
+        decoder
         []
-        uri
-        query
-        body
-        decoder
-
-
-unsignedWithHeaders :
-    String
-    -> List ( String, String )
-    -> String
-    -> List ( String, String )
-    -> Body
-    -> Json.Decode.Decoder a
-    -> Unsigned a
-unsignedWithHeaders method headers uri query body decoder =
-    Unsigned
-        method
-        headers
-        uri
-        query
-        body
-        decoder
+        []
 
 
 url : Service -> Unsigned a -> String

@@ -1,62 +1,59 @@
-module AWS.Core.Body exposing (..)
+module AWS.Core.Body
+    exposing
+        ( Body
+        , empty
+        , json
+        , string
+        , toHttp
+        , toString
+        )
 
 import Http
 import Json.Encode
 
 
 type Body
-    = EmptyBody
-    | JsonBody Json.Encode.Value
-    | HtmlBody String
-    | StringBody String String
+    = Empty
+    | Json Json.Encode.Value
+    | String String String
+
 
 toHttp : Body -> Http.Body
 toHttp body =
     case body of
-        StringBody mimetype string ->
-            Http.stringBody mimetype string
+        Empty ->
+            Http.emptyBody
 
-        HtmlBody string ->
-            Http.stringBody "text/html" string
-
-        JsonBody value ->
+        Json value ->
             Http.jsonBody value
 
-        EmptyBody ->
-            Http.emptyBody
+        String mimetype string ->
+            Http.stringBody mimetype string
 
 
 toString : Body -> String
 toString body =
     case body of
-        StringBody _ string ->
-            string
-
-        HtmlBody string ->
-            string
-
-        JsonBody value ->
+        Json value ->
             Json.Encode.encode 0 value
 
-        EmptyBody ->
+        Empty ->
             ""
+
+        String _ string ->
+            string
 
 
 empty : Body
 empty =
-    EmptyBody
+    Empty
 
 
 json : Json.Encode.Value -> Body
 json =
-    JsonBody
-
-
-html : String -> Body
-html =
-    HtmlBody
+    Json
 
 
 string : String -> String -> Body
 string =
-    StringBody
+    String

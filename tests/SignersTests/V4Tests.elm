@@ -6,7 +6,8 @@ module SignersTests.V4Tests
 
 import AWS.Core.Body exposing (Body)
 import AWS.Core.Credentials as Credentials exposing (Credentials)
-import AWS.Core.Http exposing (Method(..), Query)
+import AWS.Core.Http exposing (Method(..))
+import AWS.Core.InternalTypes exposing (Signer(SignV4))
 import AWS.Core.Request exposing (Unsigned)
 import AWS.Core.Service as Service exposing (Service)
 import AWS.Core.Signers.Canonical exposing (canonical, canonicalRaw)
@@ -42,11 +43,12 @@ authorizationTests =
                         AWS.Core.Http.request
                             GET
                             "/"
-                            [ ( "Param1", "value1" )
-                            , ( "Param2", "value2" )
-                            ]
                             AWS.Core.Body.empty
                             (JD.succeed ())
+                            |> AWS.Core.Http.addQuery
+                                [ ( "Param1", "value1" )
+                                , ( "Param2", "value2" )
+                                ]
 
                     headers =
                         [ ( "Host", "example.amazonaws.com" )
@@ -70,6 +72,7 @@ awsOfficialTest data =
         [ test "canonical" <|
             \_ ->
                 canonicalRaw
+                    SignV4
                     data.req.method
                     data.req.path
                     data.req.headers
@@ -79,6 +82,7 @@ awsOfficialTest data =
         , test "string to sign" <|
             \_ ->
                 canonical
+                    SignV4
                     data.req.method
                     data.req.path
                     data.req.headers
@@ -114,7 +118,7 @@ type alias Req =
     { method : String
     , path : String
     , headers : List ( String, String )
-    , query : Query
+    , query : List ( String, String )
     , body : Body
     }
 
@@ -148,12 +152,13 @@ conf =
 
 req : Req -> AWS.Core.Request.Unsigned ()
 req data =
-    AWS.Core.Request.unsigned
+    AWS.Core.Request.Unsigned
         data.method
         data.path
-        data.query
         data.body
         (JD.succeed ())
+        []
+        data.query
 
 
 
