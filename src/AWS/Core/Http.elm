@@ -4,15 +4,12 @@ module AWS.Core.Http
         , Method(..)
         , MimeType
         , Path
-        , Query
         , Request
-        , Response
+        , addHeaders
+        , addQuery
         , emptyBody
-        , htmlBody
         , jsonBody
         , request
-        , requestWithHeaders
-        , responseData
         , send
         , stringBody
         )
@@ -23,29 +20,26 @@ module AWS.Core.Http
 # Table of Contents
 
   - [Requests](#requests)
-  - [Responses](#responses)
   - [Body](#body)
+
+Examples assume the following imports:
+
+    import Json.Decode
 
 
 # Requests
 
-@docs Request, request, requestWithHeaders, send, Method, Path, Query
-
-
-# Responses
-
-@docs Response, responseData
+@docs Request, request, addHeaders, addQuery, send, Method, Path
 
 
 # Body
 
-@docs Body, MimeType, emptyBody, htmlBody, jsonBody, stringBody
+@docs Body, MimeType, emptyBody, stringBody, jsonBody
 
 -}
 
 import AWS.Core.Body
 import AWS.Core.Credentials exposing (Credentials)
-import AWS.Core.Decode
 import AWS.Core.InternalTypes exposing (Signer(..))
 import AWS.Core.Request
 import AWS.Core.Service as Service exposing (Service)
@@ -80,12 +74,6 @@ type alias Path =
     String
 
 
-{-| Request query arguments.
--}
-type alias Query =
-    List ( String, String )
-
-
 {-| Holds a request body.
 -}
 type alias Body =
@@ -109,20 +97,19 @@ emptyBody =
 
 
 {-| Create a body containing a JSON value.
+
+This will automatically add the `Content-Type: application/json` header.
+
 -}
 jsonBody : Json.Encode.Value -> Body
 jsonBody =
     AWS.Core.Body.json
 
 
-{-| Create a body containing an Html string
--}
-htmlBody : String -> Body
-htmlBody =
-    AWS.Core.Body.html
+{-| Create a body with a custom MIME type and the given string as content.
 
+    stringBody "text/html" "<html><body><h1>Hello</h1></body></html>"
 
-{-| Create a body containing a mimetype/String value.
 -}
 stringBody : MimeType -> String -> Body
 stringBody =
@@ -130,11 +117,15 @@ stringBody =
 
 
 {-| Create an AWS HTTP unsigned request.
+
+    request GET "/" emptyBody Json.Decode.value
+        |> toString
+    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [] }"
+
 -}
 request :
     Method
     -> Path
-    -> Query
     -> Body
     -> Json.Decode.Decoder a
     -> Request a
@@ -142,18 +133,42 @@ request method =
     AWS.Core.Request.unsigned (toString method)
 
 
-{-| Create an AWS HTTP unsigned request with additional headers.
+{-| Appends headers to an AWS HTTP unsigned request.
+
+    request GET "/" emptyBody Json.Decode.value
+        |> addHeaders
+            [ ( "x-custom-1", "value 1" )
+            , ( "x-Custom-2", "value 2" )
+            ]
+        |> addHeaders
+            [ ( "x-custom-3", "value 3" )
+            ]
+        |> toString
+    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [(\"x-custom-1\",\"value 1\"),(\"x-Custom-2\",\"value 2\"),(\"x-custom-3\",\"value 3\")], query = [] }"
+
 -}
-requestWithHeaders :
-    Method
-    -> Query
-    -> Path
-    -> Query
-    -> Body
-    -> Json.Decode.Decoder a
-    -> Request a
-requestWithHeaders method =
-    AWS.Core.Request.unsignedWithHeaders (toString method)
+addHeaders : List ( String, String ) -> Request a -> Request a
+addHeaders headers req =
+    { req | headers = List.append req.headers headers }
+
+
+{-| Appends query arguments to an AWS HTTP unsigned request.
+
+    request GET "/" emptyBody Json.Decode.value
+        |> addQuery
+            [ ( "key1", "value 1" )
+            , ( "Key2", "value 2" )
+            ]
+        |> addQuery
+            [ ( "key3", "value 3" )
+            ]
+        |> toString
+    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [(\"key1\",\"value 1\"),(\"Key2\",\"value 2\"),(\"key3\",\"value 3\")] }"
+
+-}
+addQuery : List ( String, String ) -> Request a -> Request a
+addQuery query req =
+    { req | query = List.append req.query query }
 
 
 sign :
@@ -188,20 +203,3 @@ send serviceConfig credentials req =
                 sign serviceConfig credentials date req
                     |> Http.toTask
             )
-
-
-
--- RESPONSE
-
-
-{-| Response from an AWS service.
--}
-type alias Response a =
-    AWS.Core.Decode.ResponseWrapper a
-
-
-{-| Extract the data from the AWS response.
--}
-responseData : Response a -> a
-responseData { response } =
-    response.data
