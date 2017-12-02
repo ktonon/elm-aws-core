@@ -1,6 +1,6 @@
 module AWS.Core.Signers.V4 exposing (..)
 
-import AWS.Core.Body exposing (Body, mimetype)
+import AWS.Core.Body exposing (Body, explicitMimetype)
 import AWS.Core.Credentials as Credentials exposing (Credentials)
 import AWS.Core.Request exposing (Unsigned)
 import AWS.Core.Service as Service exposing (Service)
@@ -27,7 +27,7 @@ sign service creds date req =
     Http.request
         { method = req.method
         , headers =
-            headers service date req.body (Debug.log "req.headers" req.headers)
+            headers service date req.body req.headers
                 |> addAuthorization service creds date req
                 |> addSessionToken creds
                 |> List.map (\( key, val ) -> Http.header key val)
@@ -66,7 +66,7 @@ headers service date body extraHeaders =
             []
           else
             [ ( "Accept", Service.acceptType service ) ]
-        , if List.member "content-type" extraNames || mimetype body /= Nothing then
+        , if List.member "content-type" extraNames || explicitMimetype body /= Nothing then
             []
           else
             [ ( "Content-Type", Service.jsonContentType service ) ]

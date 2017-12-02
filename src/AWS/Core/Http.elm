@@ -173,9 +173,9 @@ addQuery query req =
 
 {-| Set a parser for the entire Http.Response. Overrides the request decoder.
 -}
-setResponseParser : Maybe (Http.Response String -> Result String a) -> Request a -> Request a
+setResponseParser : (Http.Response String -> Result String a) -> Request a -> Request a
 setResponseParser parser req =
-    { req | responseParser = parser }
+    { req | responseParser = Just parser }
 
 
 {-| Signs and sends an AWS Request.

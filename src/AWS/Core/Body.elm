@@ -2,8 +2,8 @@ module AWS.Core.Body
     exposing
         ( Body
         , empty
+        , explicitMimetype
         , json
-        , mimetype
         , string
         , toHttp
         , toString
@@ -32,8 +32,8 @@ toHttp body =
             Http.stringBody mimetype string
 
 
-mimetype : Body -> Maybe String
-mimetype body =
+explicitMimetype : Body -> Maybe String
+explicitMimetype body =
     case body of
         String typ _ ->
             Just typ

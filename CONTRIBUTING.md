@@ -15,7 +15,10 @@ See [Editor Integration](https://github.com/avh4/elm-format#editor-integration) 
 Please ensure that the tests succeed before you create a pull request.
 
 ```shell
+# Do once
+npm install -g elm-doc-test@4.0.0 elm-test@0.18.10
+
+# Do before every pull request
 cd .../elm-aws-core
-elm-doc-test
-elm-test
+elm-make --docs=docs.json && elm-doc-test && elm-test
 ```
