@@ -3,6 +3,7 @@ module AWS.Core.Body
         ( Body
         , empty
         , json
+        , mimetype
         , string
         , toHttp
         , toString
@@ -29,6 +30,16 @@ toHttp body =
 
         String mimetype string ->
             Http.stringBody mimetype string
+
+
+mimetype : Body -> Maybe String
+mimetype body =
+    case body of
+        String typ _ ->
+            Just typ
+
+        _ ->
+            Nothing
 
 
 toString : Body -> String
