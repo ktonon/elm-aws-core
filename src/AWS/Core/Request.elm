@@ -9,6 +9,7 @@ module AWS.Core.Request
 import AWS.Core.Body as Body exposing (Body)
 import AWS.Core.Encode
 import AWS.Core.Service as Service exposing (Service)
+import Http
 import Json.Decode exposing (Decoder)
 import QueryString
 
@@ -20,6 +21,7 @@ type alias Unsigned a =
     , decoder : Decoder a
     , headers : List ( String, String )
     , query : List ( String, String )
+    , responseParser : Maybe (Http.Response String -> Result String a)
     }
 
 
@@ -37,6 +39,7 @@ unsigned method uri body decoder =
         decoder
         []
         []
+        Nothing
 
 
 url : Service -> Unsigned a -> String

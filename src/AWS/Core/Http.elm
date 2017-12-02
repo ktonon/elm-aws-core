@@ -11,6 +11,7 @@ module AWS.Core.Http
         , jsonBody
         , request
         , send
+        , setResponseParser
         , stringBody
         )
 
@@ -29,7 +30,7 @@ Examples assume the following imports:
 
 # Requests
 
-@docs Request, request, addHeaders, addQuery, send, Method, Path
+@docs Request, request, addHeaders, addQuery, setResponseParser, send, Method, Path
 
 
 # Body
@@ -168,6 +169,13 @@ addHeaders headers req =
 addQuery : List ( String, String ) -> Request a -> Request a
 addQuery query req =
     { req | query = List.append req.query query }
+
+
+{-| Set a parser for the entire Http.Response. Overrides the request decoder.
+-}
+setResponseParser : Maybe (Http.Response String -> Result String a) -> Request a -> Request a
+setResponseParser parser req =
+    { req | responseParser = parser }
 
 
 {-| Signs and sends an AWS Request.

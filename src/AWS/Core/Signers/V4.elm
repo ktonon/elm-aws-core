@@ -33,7 +33,13 @@ sign service creds date req =
                 |> List.map (\( key, val ) -> Http.header key val)
         , url = AWS.Core.Request.url service req
         , body = AWS.Core.Body.toHttp req.body
-        , expect = Http.expectJson req.decoder
+        , expect =
+            case req.responseParser of
+                Just parser ->
+                    Http.expectStringResponse parser
+
+                Nothing ->
+                    Http.expectJson req.decoder
         , timeout = Nothing
         , withCredentials = False
         }
