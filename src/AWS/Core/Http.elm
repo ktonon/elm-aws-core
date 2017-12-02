@@ -120,7 +120,7 @@ stringBody =
 
     request GET "/" emptyBody Json.Decode.value
         |> toString
-    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [] }"
+    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [], responseParser = Nothing }"
 
 -}
 request :
@@ -144,7 +144,7 @@ request method =
             [ ( "x-custom-3", "value 3" )
             ]
         |> toString
-    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [(\"x-custom-1\",\"value 1\"),(\"x-Custom-2\",\"value 2\"),(\"x-custom-3\",\"value 3\")], query = [] }"
+    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [(\"x-custom-1\",\"value 1\"),(\"x-Custom-2\",\"value 2\"),(\"x-custom-3\",\"value 3\")], query = [], responseParser = Nothing }"
 
 -}
 addHeaders : List ( String, String ) -> Request a -> Request a
@@ -163,7 +163,7 @@ addHeaders headers req =
             [ ( "key3", "value 3" )
             ]
         |> toString
-    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [(\"key1\",\"value 1\"),(\"Key2\",\"value 2\"),(\"key3\",\"value 3\")] }"
+    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [(\"key1\",\"value 1\"),(\"Key2\",\"value 2\"),(\"key3\",\"value 3\")], responseParser = Nothing }"
 
 -}
 addQuery : List ( String, String ) -> Request a -> Request a
