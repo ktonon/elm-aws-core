@@ -11,6 +11,7 @@ module AWS.Core.Http
         , jsonBody
         , request
         , send
+        , setResponseParser
         , stringBody
         )
 
@@ -29,7 +30,7 @@ Examples assume the following imports:
 
 # Requests
 
-@docs Request, request, addHeaders, addQuery, send, Method, Path
+@docs Request, request, addHeaders, addQuery, setResponseParser, send, Method, Path
 
 
 # Body
@@ -119,7 +120,7 @@ stringBody =
 
     request GET "/" emptyBody Json.Decode.value
         |> toString
-    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [] }"
+    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [], responseParser = Nothing }"
 
 -}
 request :
@@ -143,7 +144,7 @@ request method =
             [ ( "x-custom-3", "value 3" )
             ]
         |> toString
-    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [(\"x-custom-1\",\"value 1\"),(\"x-Custom-2\",\"value 2\"),(\"x-custom-3\",\"value 3\")], query = [] }"
+    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [(\"x-custom-1\",\"value 1\"),(\"x-Custom-2\",\"value 2\"),(\"x-custom-3\",\"value 3\")], query = [], responseParser = Nothing }"
 
 -}
 addHeaders : List ( String, String ) -> Request a -> Request a
@@ -162,12 +163,19 @@ addHeaders headers req =
             [ ( "key3", "value 3" )
             ]
         |> toString
-    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [(\"key1\",\"value 1\"),(\"Key2\",\"value 2\"),(\"key3\",\"value 3\")] }"
+    --> "{ method = \"GET\", path = \"/\", body = Empty, decoder = <decoder>, headers = [], query = [(\"key1\",\"value 1\"),(\"Key2\",\"value 2\"),(\"key3\",\"value 3\")], responseParser = Nothing }"
 
 -}
 addQuery : List ( String, String ) -> Request a -> Request a
 addQuery query req =
     { req | query = List.append req.query query }
+
+
+{-| Set a parser for the entire Http.Response. Overrides the request decoder.
+-}
+setResponseParser : (Http.Response String -> Result String a) -> Request a -> Request a
+setResponseParser parser req =
+    { req | responseParser = Just parser }
 
 
 {-| Signs and sends an AWS Request.

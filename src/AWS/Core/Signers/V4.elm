@@ -1,6 +1,6 @@
 module AWS.Core.Signers.V4 exposing (..)
 
-import AWS.Core.Body exposing (Body)
+import AWS.Core.Body exposing (Body, explicitMimetype)
 import AWS.Core.Credentials as Credentials exposing (Credentials)
 import AWS.Core.Request exposing (Unsigned)
 import AWS.Core.Service as Service exposing (Service)
@@ -33,7 +33,13 @@ sign service creds date req =
                 |> List.map (\( key, val ) -> Http.header key val)
         , url = AWS.Core.Request.url service req
         , body = AWS.Core.Body.toHttp req.body
-        , expect = Http.expectJson req.decoder
+        , expect =
+            case req.responseParser of
+                Just parser ->
+                    Http.expectStringResponse parser
+
+                Nothing ->
+                    Http.expectJson req.decoder
         , timeout = Nothing
         , withCredentials = False
         }
@@ -46,12 +52,24 @@ algorithm =
 
 headers : Service -> Date -> Body -> List ( String, String ) -> List ( String, String )
 headers service date body extraHeaders =
-    List.append
-        extraHeaders
-        [ ( "x-amz-date", formatDate date )
-        , ( "x-amz-content-sha256", canonicalPayload body )
-        , ( "Accept", Service.acceptType service )
-        , ( "Content-Type", Service.jsonContentType service )
+    let
+        extraNames =
+            List.map Tuple.first extraHeaders
+                |> List.map String.toLower
+    in
+    List.concat
+        [ extraHeaders
+        , [ ( "x-amz-date", formatDate date )
+          , ( "x-amz-content-sha256", canonicalPayload body )
+          ]
+        , if List.member "accept" extraNames then
+            []
+          else
+            [ ( "Accept", Service.acceptType service ) ]
+        , if List.member "content-type" extraNames || explicitMimetype body /= Nothing then
+            []
+          else
+            [ ( "Content-Type", Service.jsonContentType service ) ]
         ]
 
 
