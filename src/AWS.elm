@@ -67,9 +67,9 @@ specific AWS services.
 {-| elm-aws-core package version.
 
     AWS.version
-    --> "1.0.0"
+    --> "1.1.0"
 
 -}
 version : String
 version =
-    "1.0.0"
+    "1.1.0"

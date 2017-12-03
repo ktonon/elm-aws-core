@@ -1,6 +1,6 @@
 # elm-aws-core
 
-[![elm-package](https://img.shields.io/badge/elm-1.0.0-blue.svg)](http://package.elm-lang.org/packages/ktonon/elm-aws-core/latest)
+[![elm-package](https://img.shields.io/badge/elm-1.1.0-blue.svg)](http://package.elm-lang.org/packages/ktonon/elm-aws-core/latest)
 [![CircleCI](https://img.shields.io/circleci/project/github/ktonon/elm-aws-core/master.svg)](https://circleci.com/gh/ktonon/elm-aws-core)
 
 Make authenticated REST requests to AWS services.
